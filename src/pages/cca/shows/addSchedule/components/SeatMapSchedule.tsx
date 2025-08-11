@@ -6,6 +6,7 @@ import { formatSectionName } from "../../../../../utils/seatmap.ts";
 interface Props {
   seatClick: (seat: FlattenedSeat) => void;
   rowClick: (seats: FlattenedSeat[]) => void;
+  sectionClick: (seats: FlattenedSeat[]) => void;
   seatMap: FlattenedSeatMap;
   disabled?: boolean;
 }
@@ -28,13 +29,14 @@ const getSeatColor = (seat: FlattenedSeat) => {
 
 type ContextType = { contentRef: React.RefObject<HTMLDivElement> };
 
-const SeatMapSchedule = ({ seatClick, rowClick, seatMap, disabled = false }: Props) => {
+const SeatMapSchedule = ({ seatClick, rowClick, sectionClick, seatMap, disabled = false }: Props) => {
   const { contentRef } = useOutletContext<ContextType>();
   const tooltipRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [scale, setScale] = useState(1);
   const [hoveredSeat, setHoveredSeat] = useState<null | FlattenedSeat>(null);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+  const [hoveredSection, setHoveredSection] = useState<string | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -158,6 +160,7 @@ const SeatMapSchedule = ({ seatClick, rowClick, seatMap, disabled = false }: Pro
                           stroke="black"
                           className={`transition-colors 
                             ${disabled ? "cursor-not-allowed" : "cursor-pointer"} 
+                            ${hoveredSection === `${sectionName}` ? "fill-blue-200" : !disabled ? "hover:fill-blue-200" : ""}
                             ${hoveredRow === `${sectionName}-${rowName}` ? "fill-blue-200" : !disabled ? "hover:fill-blue-200" : ""}
                             ${seat.ticketControlNumber != 0 && !seat.isComplimentary ? "fill-orange-400" : ""}
                             ${seat.ticketControlNumber != 0 && seat.isComplimentary ? "fill-blue-400" : ""}
@@ -177,7 +180,22 @@ const SeatMapSchedule = ({ seatClick, rowClick, seatMap, disabled = false }: Pro
                   const minX = Math.min(...allSeats.map((seat) => seat.x));
                   const minY = Math.min(...allSeats.map((seat) => seat.y));
                   return (
-                    <text x={minX} y={minY - 10} fontSize="12" fontWeight="bold" fill="black">
+                    <text
+                      className="hover:underline cursor-pointer"
+                      onMouseEnter={() => setHoveredSection(`${sectionName}`)}
+                      onMouseLeave={() => setHoveredSection(null)}
+                      onClick={() => {
+                        const sectionSeats = Object.entries(rows)
+                          .map(([_, rows]) => rows)
+                          .flat();
+                        sectionClick(sectionSeats);
+                      }}
+                      x={minX}
+                      y={minY - 10}
+                      fontSize="12"
+                      fontWeight="bold"
+                      fill="black"
+                    >
                       {sectionName.replace(/_/g, " ").toUpperCase()}
                     </text>
                   );

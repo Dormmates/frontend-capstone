@@ -22,7 +22,6 @@ import {
   AddSchedule,
   Shows,
   ViewShow,
-  MajorProduction,
   PerformingGroups,
   SeatMap,
   CCADashboard,
@@ -78,7 +77,6 @@ const AppRoute = () => {
               <Route path="reservations" element={<ScheduleReservations />} />
             </Route>
             <Route path="shows/:id" element={<ViewShow />} />
-            <Route path="major-production" element={<MajorProduction />} />
             <Route path="performing-groups" element={<PerformingGroups />} />
             <Route path="manage/trainers" element={<Trainers />} />
             <Route path="manage/distributors" element={<Distributors />} />

@@ -22,7 +22,7 @@ export interface ShowData {
   title: string;
   description: string;
   showType: ShowType;
-  department: Department;
+  department?: Department;
   createdBy: string;
   createdAt: string;
   isArchived: boolean;

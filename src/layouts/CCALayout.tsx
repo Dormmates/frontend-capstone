@@ -3,12 +3,11 @@ import SideBar, { type SideBarItems } from "../components/navigation/SideBar";
 
 import accounts from "../assets/icons/accounts.png";
 import dashboard from "../assets/icons/dashboard.png";
-import majorProd from "../assets/icons/major-prod.png";
 import groups from "../assets/icons/performing-groups.png";
 import seat from "../assets/icons/seat.png";
 import shows from "../assets/icons/shows.png";
 import Header from "../components/Header";
-import { useAuthContext } from "../context/AuthContext";
+
 import { useRef } from "react";
 
 const sideBarItems: SideBarItems[] = [
@@ -21,11 +20,6 @@ const sideBarItems: SideBarItems[] = [
     icon: shows,
     name: "Shows",
     path: "/shows",
-  },
-  {
-    icon: majorProd,
-    name: "Major Production",
-    path: "/major-production",
   },
   {
     icon: groups,

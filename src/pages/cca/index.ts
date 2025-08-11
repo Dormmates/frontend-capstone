@@ -16,7 +16,6 @@ import ScheduleTallyData from "./shows/schedules/pages/ScheduleTallyData";
 import ScheduleTickets from "./shows/schedules/pages/ScheduleTickets";
 import ScheduleSummary from "./shows/schedules/pages/ScheduleSummary";
 
-import MajorProduction from "./MajorProduction";
 import PerformingGroups from "./PerformingGroups";
 import SeatMap from "./SeatMap";
 import CCADashboard from "./CCADashboard";
@@ -33,7 +32,6 @@ export {
   AddSchedule,
   Shows,
   ViewShow,
-  MajorProduction,
   PerformingGroups,
   SeatMap,
   CCADashboard,

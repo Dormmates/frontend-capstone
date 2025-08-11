@@ -208,11 +208,11 @@ const CreateShow = () => {
               <Dropdown
                 isError={!!errors.group}
                 errorMessage={errors.group}
-                disabled={user?.role !== "head" || isUploading}
+                disabled={user?.role !== "head" || isUploading || showData.productionType == "majorProduction"}
                 className="w-full"
                 label="Performing Group"
-                options={groupOptions}
-                value={showData.group}
+                options={showData.productionType == "majorProduction" ? [{ label: "All Department", value: "all" }] : groupOptions}
+                value={showData.productionType == "majorProduction" ? "all" : showData.group}
                 onChange={(value) => setShowData((prev) => ({ ...prev, group: value }))}
               />
               <Dropdown
@@ -221,7 +221,7 @@ const CreateShow = () => {
                 errorMessage={errors.productionType}
                 className="w-full"
                 label="Production Type"
-                options={productionType}
+                options={user?.role === "head" ? [...productionType, { label: "Major Production", value: "majorProduction" }] : productionType}
                 value={showData.productionType}
                 onChange={(value) => setShowData((prev) => ({ ...prev, productionType: value }))}
               />

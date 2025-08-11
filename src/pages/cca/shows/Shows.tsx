@@ -22,6 +22,7 @@ const showTypes = [
   { label: "All Show Type", value: "" },
   { label: "Major Concert", value: "majorConcert" },
   { label: "Show Case", value: "showCase" },
+  { label: "Major Production", value: "majorProduction" },
 ];
 
 const parseDepartments = (departments: Department[]) => {
@@ -53,7 +54,7 @@ const Shows = () => {
     return showsData.shows.filter((show) => {
       const matchTitle = show.title.toLowerCase().includes(debouncedSearch.toLowerCase());
       const matchType = !showType || show.showType === showType;
-      const matchDepartment = !selectedDepartment || show.department.departmentId === selectedDepartment;
+      const matchDepartment = !selectedDepartment || show.department?.departmentId === selectedDepartment || !show.department;
       return matchTitle && matchType && matchDepartment;
     });
   }, [showsData?.shows, debouncedSearch, showType, selectedDepartment]);
@@ -80,6 +81,11 @@ const Shows = () => {
           <SimpleCard label="Total Show" value={filteredShows.length} />
           <SimpleCard className="border-l-red" label="Major Concert" value={filteredShows.filter((s) => s.showType === "majorConcert").length} />
           <SimpleCard className="border-l-orange-300" label="Show Case" value={filteredShows.filter((s) => s.showType === "showCase").length} />
+          <SimpleCard
+            className="border-l-green"
+            label="Major Production"
+            value={filteredShows.filter((s) => s.showType === "majorProduction").length}
+          />
         </div>
         <Link className="self-end" to={"/shows/add"}>
           <Button className="text-black">Add New Show</Button>
@@ -131,7 +137,7 @@ const Shows = () => {
                     </div>
                   </TableCell>
                   <TableCell className="capitalize">{show.showType}</TableCell>
-                  <TableCell>{show.department.name}</TableCell>
+                  <TableCell>{show.department ? show.department.name : "All Department"}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end items-center gap-2">
                       <Link to={`/shows/${show.showId}`}>

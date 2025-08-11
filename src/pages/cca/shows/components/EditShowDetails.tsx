@@ -16,6 +16,7 @@ import { useQueryClient } from "@tanstack/react-query";
 const productionType = [
   { label: "Showcase", value: "showCase" },
   { label: "Major Concert", value: "majorConcert" },
+  { label: "Major Production", value: "majorProduction" },
 ];
 
 const EditShowDetails = ({ selectedShow, close }: { selectedShow: ShowData; close: () => void }) => {
@@ -32,7 +33,7 @@ const EditShowDetails = ({ selectedShow, close }: { selectedShow: ShowData; clos
   }>({});
   const [showData, setShowData] = useState({
     title: selectedShow?.title,
-    group: selectedShow.department.departmentId || user?.department?.departmentId || "",
+    group: selectedShow.department?.departmentId || user?.department?.departmentId || "",
     productionType: selectedShow?.showType,
     description: selectedShow?.description,
     genre: selectedShow?.genreNames,
@@ -49,7 +50,7 @@ const EditShowDetails = ({ selectedShow, close }: { selectedShow: ShowData; clos
 
     return (
       showData.title.trim() !== selectedShow.title.trim() ||
-      showData.group !== (selectedShow.department.departmentId || user?.department?.departmentId || "") ||
+      showData.group !== (selectedShow.department?.departmentId || user?.department?.departmentId || "") ||
       showData.productionType !== selectedShow.showType ||
       showData.description.trim() !== selectedShow.description.trim() ||
       JSON.stringify(showData.genre) !== JSON.stringify(selectedShow.genreNames) ||
@@ -213,20 +214,20 @@ const EditShowDetails = ({ selectedShow, close }: { selectedShow: ShowData; clos
               <Dropdown
                 isError={!!errors.group}
                 errorMessage={errors.group}
-                disabled={user?.role !== "head" || isUploading}
+                disabled={user?.role !== "head" || isUploading || showData.productionType == "majorProduction"}
                 className="w-full"
                 label="Performing Group"
-                options={groupOptions}
-                value={showData.group}
+                options={showData.productionType == "majorProduction" ? [{ label: "All Department", value: "all" }] : groupOptions}
+                value={showData.productionType == "majorProduction" ? "all" : showData.group}
                 onChange={(value) => setShowData((prev) => ({ ...prev, group: value }))}
               />
               <Dropdown
-                disabled={isUploading}
+                disabled={(user?.role === "trainer" && selectedShow.showType === "majorProduction") || isUploading}
                 isError={!!errors.productionType}
                 errorMessage={errors.productionType}
                 className="w-full"
                 label="Production Type"
-                options={productionType}
+                options={user?.role === "head" ? [...productionType, { label: "Major Production", value: "majorProduction" }] : productionType}
                 value={showData.productionType}
                 onChange={(value) => setShowData((prev) => ({ ...prev, productionType: value as ShowType }))}
               />

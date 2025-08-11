@@ -38,7 +38,6 @@ export const useUpdateShow = () => {
         formData.append("oldFileId", data.oldFileId);
       }
 
-      console.log("Image: " + data.image);
       const res = await request<any>("/api/show", data, "patchFormData");
       return res.data;
     },

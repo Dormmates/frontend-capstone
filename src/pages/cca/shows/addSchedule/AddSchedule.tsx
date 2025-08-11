@@ -72,6 +72,7 @@ const AddSchedule = () => {
 
   const [selectedSeats, setSelectedSeats] = useState<FlattenedSeat[]>();
   const [rowToggle, setRowToggle] = useState(false);
+  const [sectionToggle, setSectionToggle] = useState(false);
   const [seatToggle, setSeatToggle] = useState(false);
 
   const [ticketInput, setTicketInput] = useState({ controlNumber: "", isComplimentary: false });
@@ -93,17 +94,19 @@ const AddSchedule = () => {
     return <h1>Error Fetching show</h1>;
   }
 
-  const handleOpenTicketModal = (type: "seat" | "row") => {
+  const handleOpenTicketModal = (type: "seat" | "row" | "section") => {
     if (!validateControlNumbers()) {
       ToastNotification.error("Please enter valid values for ticket control number first");
       return;
     }
 
-    if (type == "seat") {
-      setSeatToggle(true);
-    } else {
-      setRowToggle(true);
-    }
+    const toggles = {
+      seat: setSeatToggle,
+      row: setRowToggle,
+      section: setSectionToggle,
+    };
+
+    toggles[type](true);
   };
 
   const addAnotherDate = () => {
@@ -386,6 +389,7 @@ const AddSchedule = () => {
   const validateTicketInput = () => {
     const section = selectedSeats?.[0]?.section;
     const isRow = rowToggle;
+    const isSection = sectionToggle;
     const controlStr = ticketInput.controlNumber.trim();
     const isComplimentary = ticketInput.isComplimentary;
 
@@ -420,25 +424,25 @@ const AddSchedule = () => {
         return;
       }
     }
-
-    if (isRow && controlNums.length !== selectedSeats?.length) {
-      ToastNotification.error(`Control number count (${controlNums.length}) must match seat count (${selectedSeats?.length})`);
+    if ((isRow || isSection) && controlNums.length > (selectedSeats?.length || 0)) {
+      ToastNotification.error(`Control number count (${controlNums.length}) must not be greater than required (${selectedSeats?.length || 0})`);
       return;
     }
 
-    // Assign to seats
+    if (!selectedSeats?.length) return;
+
+    const seatMap = new Map(selectedSeats.slice(0, controlNums.length).map((s, i) => [s.seatNumber, controlNums[i]]));
+
     setSeatData((prev) =>
-      prev.map((seat) => {
-        if (selectedSeats?.some((s) => s.seatNumber === seat.seatNumber)) {
-          const index = selectedSeats.findIndex((s) => s.seatNumber === seat.seatNumber);
-          return {
-            ...seat,
-            ticketControlNumber: controlNums[index] || controlNums[0],
-            isComplimentary: ticketInput.isComplimentary,
-          };
-        }
-        return seat;
-      })
+      prev.map((seat) =>
+        seatMap.has(seat.seatNumber)
+          ? {
+              ...seat,
+              ticketControlNumber: seatMap.get(seat.seatNumber)!,
+              isComplimentary: ticketInput.isComplimentary,
+            }
+          : seat
+      )
     );
 
     assignControlNumbers(controlNums, getSection(!isComplimentary ? section : "complimentary"));
@@ -447,6 +451,7 @@ const AddSchedule = () => {
     // Close modal
     setSeatToggle(false);
     setRowToggle(false);
+    setSectionToggle(false);
     setTicketInput({ controlNumber: "", isComplimentary: false });
   };
 
@@ -610,30 +615,42 @@ const AddSchedule = () => {
                 handleOpenTicketModal("seat");
               }}
               rowClick={(clickedSeats: FlattenedSeat[]) => {
-                setSelectedSeats(clickedSeats);
+                setSelectedSeats(clickedSeats.filter((seat) => seat.ticketControlNumber === 0));
                 handleOpenTicketModal("row");
+              }}
+              sectionClick={(clickedSeats: FlattenedSeat[]) => {
+                setSelectedSeats(clickedSeats.filter((seat) => seat.ticketControlNumber === 0));
+                handleOpenTicketModal("section");
+                console.log("Section Toggle: " + sectionToggle);
               }}
             />
 
-            {(seatToggle || rowToggle) && (
+            {(seatToggle || rowToggle || sectionToggle) && (
               <Modal
                 className="flex flex-col max-w-[500px]"
                 title="Assign Ticket Control Number"
                 onClose={() => {
-                  seatToggle ? setSeatToggle(false) : setRowToggle(false);
+                  setSeatToggle(false);
+                  setRowToggle(false);
+                  setSectionToggle(false);
                   setTicketInput({ controlNumber: "", isComplimentary: false });
                 }}
-                isOpen={seatToggle || rowToggle}
+                isOpen={seatToggle || rowToggle || sectionToggle}
               >
                 <div className="mt-5 bg-zinc-100 border border-darkGrey p-2">
                   <p>Section: {formatSectionName(selectedSeats?.[0]?.section || "")}</p>
                   {rowToggle ? <p>{getRowLabel(selectedSeats)}</p> : <p>Seat Number: {selectedSeats?.[0]?.seatNumber}</p>}
                   <p>PHP {selectedSeats?.[0]?.ticketPrice?.toFixed(2) || "0.00"}</p>
 
-                  {selectedSeats?.[0].ticketControlNumber == 0 && (
+                  {selectedSeats?.[0]?.ticketControlNumber == 0 && (
                     <div className="mt-2 text-sm text-gray-700 !max-w-fit">
-                      Unassigned Control Numbers:{" "}
-                      <span className="font-medium text-black">
+                      Unassigned Control Numbers (
+                      <span className="font-medium">
+                        {getRemainingControlNumbers(ticketInput.isComplimentary ? "complimentary" : selectedSeats?.[0]?.section || "").length || " 0"}
+                        tickets{" "}
+                      </span>
+                      ) :
+                      <span className="font-normal text-black">
                         {getRemainingControlNumbers(ticketInput.isComplimentary ? "complimentary" : selectedSeats?.[0]?.section || "").join(", ") ||
                           "None"}
                       </span>
