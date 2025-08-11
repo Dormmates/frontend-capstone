@@ -1,6 +1,17 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 
-type RequestType = "get" | "post" | "delete" | "postFormData" | "postWithoutToken" | "postFormDataWithoutToken";
+type RequestType =
+  | "get"
+  | "post"
+  | "delete"
+  | "patch"
+  | "postFormData"
+  | "patchFormData"
+  | "postWithoutToken"
+  | "patchWithoutToken"
+  | "postFormDataWithoutToken"
+  | "patchFormDataWithoutToken";
+
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const request = async <T>(
@@ -19,7 +30,7 @@ export const request = async <T>(
 
   const config: AxiosRequestConfig = {
     url: baseUrl + endpoint,
-    method: type === "get" ? "get" : type === "delete" ? "delete" : "post",
+    method: type === "get" ? "get" : type === "delete" ? "delete" : type.includes("patch") ? "patch" : "post",
     headers,
     withCredentials: requiresAuth,
     ...configs,

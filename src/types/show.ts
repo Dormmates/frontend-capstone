@@ -12,6 +12,11 @@ export interface NewShowPayload {
   image: File;
 }
 
+export interface UpdateShowPayload extends NewShowPayload {
+  oldFileId?: string;
+  showId: string;
+}
+
 export interface ShowData {
   showId: string;
   title: string;

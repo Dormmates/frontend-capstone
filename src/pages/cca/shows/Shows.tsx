@@ -173,7 +173,7 @@ const Shows = () => {
 
       {isEditDetails && (
         <Modal isOpen={isEditDetails} title="Edit Show Details" onClose={() => setIsEditDetails(false)}>
-          <EditShowDetails selectedShow={selectedShow as ShowData} />
+          <EditShowDetails close={() => setIsEditDetails(false)} selectedShow={selectedShow as ShowData} />
         </Modal>
       )}
     </ContentWrapper>

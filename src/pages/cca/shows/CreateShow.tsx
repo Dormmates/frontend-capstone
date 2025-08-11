@@ -265,7 +265,12 @@ const CreateShow = () => {
                     );
                   })}
                 </div>
-                <Button disabled={isUploading} type="button" className="flex items-center w-5 h-5 !p-3 justify-center" onClick={addGenre}>
+                <Button
+                  disabled={isUploading}
+                  type="button"
+                  className={`flex items-center w-5 h-5 !p-3 justify-center ${genres.genres.length === showData.genre.length && "hidden"}`}
+                  onClick={addGenre}
+                >
                   +
                 </Button>
               </div>
