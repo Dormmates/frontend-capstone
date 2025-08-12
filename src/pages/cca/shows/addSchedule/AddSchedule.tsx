@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetShow } from "../../../../_lib/@react-client-query/show";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useState } from "react";
 import { ContentWrapper } from "../../../../components/layout/Wrapper";
 import BreadCrumb from "../../../../components/ui/BreadCrumb";
 import Button from "../../../../components/ui/Button";
