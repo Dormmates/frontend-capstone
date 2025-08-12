@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type JSX } from "react";
+import { useState, type ChangeEvent } from "react";
 import InputLabel from "./InputLabel";
 
 interface TextInputProps {

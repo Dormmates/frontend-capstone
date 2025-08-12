@@ -3,7 +3,6 @@ import { useAuthContext } from "../context/AuthContext";
 
 import CCALayout from "../layouts/CCALayout";
 import DistributorLayout from "../layouts/DistributorLayout";
-import CustomerLayout from "../layouts/CustomerLayout";
 
 import ProtectedRoute from "./ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";

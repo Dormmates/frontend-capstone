@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useParams } from "react-router-dom";
+import { NavLink, Outlet, useParams } from "react-router-dom";
 import BreadCrumb from "../../../../components/ui/BreadCrumb";
 import { useGetShow } from "../../../../_lib/@react-client-query/show";
 import { ContentWrapper } from "../../../../components/layout/Wrapper";

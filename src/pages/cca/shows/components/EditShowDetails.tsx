@@ -123,10 +123,6 @@ const EditShowDetails = ({ selectedShow, close }: { selectedShow: ShowData; clos
     }));
   };
 
-  const handleSumbit = () => {
-    if (!validate()) return;
-  };
-
   const confirmShowUpdate = () => {
     if (!validate()) return;
     setIsUploading(true);
