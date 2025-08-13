@@ -8,12 +8,12 @@ import seat from "../assets/icons/seat.png";
 import shows from "../assets/icons/shows.png";
 import Header from "../components/Header";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useAuthContext } from "../context/AuthContext";
 
 const CCALayout = () => {
   const { user } = useAuthContext();
-  const [sideBarItems, setSideBarItems] = useState<SideBarItems[]>([
+  const sideBarItems: SideBarItems[] = [
     {
       icon: dashboard,
       name: "Dashboard",
@@ -47,7 +47,7 @@ const CCALayout = () => {
       path: "/seat",
       hidden: user?.role === "trainer",
     },
-  ]);
+  ];
 
   const contentRef = useRef<HTMLDivElement>(null);
   return (
