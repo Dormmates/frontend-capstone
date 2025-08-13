@@ -21,6 +21,7 @@ import Modal from "../../../../components/ui/Modal";
 import SeatMapSchedule from "./components/SeatMapSchedule";
 import ToastNotification from "../../../../utils/toastNotification";
 import { useAddSchedule, type AddSchedulePayload } from "../../../../_lib/@react-client-query/schedule";
+import { useQueryClient } from "@tanstack/react-query";
 
 type ControlKey = "orchestraControlNumber" | "balconyControlNumber" | "complimentaryControlNumber";
 
@@ -44,6 +45,7 @@ const getRowLabel = (seats: FlattenedSeat[] | undefined) => {
 const AddSchedule = () => {
   const navigate = useNavigate();
   const addSchedule = useAddSchedule();
+  const queryClient = useQueryClient();
   const { id } = useParams();
   const { data, isLoading, isError, error } = useGetShow(id as string);
   const [seatData, setSeatData] = useState(() => flattenSeatMap(seatMap));
@@ -521,6 +523,7 @@ const AddSchedule = () => {
           balconyMiddle: "",
           balconyRight: "",
         });
+        queryClient.invalidateQueries({ exact: true, queryKey: ["schedules", id] });
 
         navigate(`/shows/${id}`);
         ToastNotification.success("Schedule Addded");

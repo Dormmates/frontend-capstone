@@ -1,7 +1,7 @@
 import AccountRequests from "./accounts/AccountRequests";
 import CCAHead from "./accounts/CCAHead";
 import Distributors from "./accounts/Distributors";
-import Trainers from "./accounts/Trainers";
+import Trainers from "./accounts/trainer/Trainers";
 
 import CreateShow from "./shows/CreateShow";
 import AddSchedule from "./shows/addSchedule/AddSchedule";

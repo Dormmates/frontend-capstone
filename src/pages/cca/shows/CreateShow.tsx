@@ -174,7 +174,7 @@ const CreateShow = () => {
     return <h1>Server Error</h1>;
   }
 
-  const groupOptions = (groups.departments ?? []).map((dept) => ({
+  const groupOptions = (groups ?? []).map((dept) => ({
     label: dept.name,
     value: dept.departmentId,
   }));

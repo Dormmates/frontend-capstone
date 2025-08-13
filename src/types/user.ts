@@ -15,3 +15,19 @@ export interface User {
   };
   department?: Department;
 }
+
+export interface Trainer {
+  department?: {
+    departmentId: string;
+    name: string;
+  };
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+  isArchived: boolean;
+  isLocked: boolean;
+  role: "trainer";
+}

@@ -14,7 +14,7 @@ import { useDebounce } from "../../../hooks/useDeabounce";
 import archiveIcon from "../../../assets/icons/archive.png";
 import Modal from "../../../components/ui/Modal";
 import type { ShowData } from "../../../types/show";
-import EditShowDetails from "./components/EditShowDetails";
+import EditShowDetails from "./EditShowDetails";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -46,7 +46,7 @@ const Shows = () => {
   const [selectedShow, setSelectedShow] = useState<ShowData | null>();
 
   const departments = useMemo(() => {
-    return parseDepartments(departmentsData?.departments ?? []);
+    return parseDepartments(departmentsData ?? []);
   }, [departmentsData]);
 
   const filteredShows = useMemo(() => {

@@ -5,7 +5,8 @@ import { useState } from "react";
 export interface SideBarItems {
   icon: string;
   name: string;
-  items?: { name: string; path: string }[];
+  items?: { name: string; path: string; hidden?: boolean }[];
+  hidden?: boolean;
   path: string;
 }
 
@@ -33,55 +34,59 @@ const SideBar = ({ items, className }: SideBarProps) => {
       </button>
 
       <div className={merge("flex flex-col gap-5 h-full transition-all duration-300 mt-16", toggle ? "items-start pl-4" : "items-center", className)}>
-        {items.map((item, index) => {
-          const isActive =
-            (item.path === "/" ? location.pathname === "/" : location.pathname.startsWith(item.path + "/") || location.pathname === item.path) ||
-            (item.items && item.items.some((sub) => location.pathname === sub.path));
+        {items
+          .filter((item) => !item.hidden)
+          .map((item, index) => {
+            const isActive =
+              (item.path === "/" ? location.pathname === "/" : location.pathname.startsWith(item.path + "/") || location.pathname === item.path) ||
+              (item.items && item.items.some((sub) => location.pathname === sub.path));
 
-          return (
-            <div key={index} className="w-full">
-              <div onClick={() => (item.items ? handleToggleSubmenu(index) : null)} className="cursor-pointer w-full">
-                <Link
-                  to={item.path}
-                  className={merge(
-                    "flex items-center gap-2 text-sm font-medium  w-full px-2 py-5 transition hover:opacity-80",
-                    isActive ? "bg-primaryTwo pointer-events-none" : "",
-                    toggle ? "justify-start" : "justify-center"
-                  )}
-                >
-                  {toggle ? (
-                    <div className="flex items-center gap-2">
+            return (
+              <div key={index} className="w-full">
+                <div onClick={() => (item.items ? handleToggleSubmenu(index) : null)} className="cursor-pointer w-full">
+                  <Link
+                    to={item.path}
+                    className={merge(
+                      "flex items-center gap-2 text-sm font-medium  w-full px-2 py-5 transition hover:opacity-80",
+                      isActive ? "bg-primaryTwo pointer-events-none" : "",
+                      toggle ? "justify-start" : "justify-center"
+                    )}
+                  >
+                    {toggle ? (
+                      <div className="flex items-center gap-2">
+                        <img src={item.icon} alt={item.name} />
+                        <p>{item.name}</p>
+                      </div>
+                    ) : (
                       <img src={item.icon} alt={item.name} />
-                      <p>{item.name}</p>
-                    </div>
-                  ) : (
-                    <img src={item.icon} alt={item.name} />
-                  )}
-                </Link>
-              </div>
-
-              {toggle && item.items && openIndex === index && (
-                <div className="ml-6 mt-5 flex flex-col gap-5">
-                  {item.items.map((subItem, subIndex) => {
-                    const isSubActive = location.pathname === subItem.path;
-                    return (
-                      <Link
-                        key={subIndex}
-                        to={subItem.path}
-                        className={merge(
-                          "text-sm px-2 py-1 rounded hover:opacity-80 transition",
-                          isSubActive ? "font-bold pointer-events-none" : "text-gray-600"
-                        )}
-                      >
-                        {subItem.name}
-                      </Link>
-                    );
-                  })}
+                    )}
+                  </Link>
                 </div>
-              )}
-            </div>
-          );
-        })}
+
+                {toggle && item.items && openIndex === index && (
+                  <div className="ml-6 mt-5 flex flex-col gap-5">
+                    {item.items
+                      .filter((item) => !item.hidden)
+                      .map((subItem, subIndex) => {
+                        const isSubActive = location.pathname === subItem.path;
+                        return (
+                          <Link
+                            key={subIndex}
+                            to={subItem.path}
+                            className={merge(
+                              "text-sm px-2 py-1 rounded hover:opacity-80 transition",
+                              isSubActive ? "font-bold pointer-events-none" : "text-gray-600"
+                            )}
+                          >
+                            {subItem.name}
+                          </Link>
+                        );
+                      })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
       </div>
     </aside>
   );

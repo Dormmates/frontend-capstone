@@ -8,43 +8,47 @@ import seat from "../assets/icons/seat.png";
 import shows from "../assets/icons/shows.png";
 import Header from "../components/Header";
 
-import { useRef } from "react";
-
-const sideBarItems: SideBarItems[] = [
-  {
-    icon: dashboard,
-    name: "Dashboard",
-    path: "/",
-  },
-  {
-    icon: shows,
-    name: "Shows",
-    path: "/shows",
-  },
-  {
-    icon: groups,
-    name: "Performing Groups",
-    path: "/performing-groups",
-  },
-  {
-    icon: accounts,
-    name: "Manage Accounts",
-    items: [
-      { name: "Trainer", path: "/manage/trainers" },
-      { name: "Distributor", path: "/manage/distributors" },
-      { name: "CCA Head", path: "/manage/cca-head" },
-      { name: "Account Request", path: "/manage/request" },
-    ],
-    path: "/manage/trainers",
-  },
-  {
-    icon: seat,
-    name: "Seat Map",
-    path: "/seat",
-  },
-];
+import { useRef, useState } from "react";
+import { useAuthContext } from "../context/AuthContext";
 
 const CCALayout = () => {
+  const { user } = useAuthContext();
+  const [sideBarItems, setSideBarItems] = useState<SideBarItems[]>([
+    {
+      icon: dashboard,
+      name: "Dashboard",
+      path: "/",
+    },
+    {
+      icon: shows,
+      name: "Shows",
+      path: "/shows",
+    },
+    {
+      icon: groups,
+      name: "Performing Groups",
+      path: "/performing-groups",
+      hidden: user?.role === "trainer",
+    },
+    {
+      icon: accounts,
+      name: "Manage Accounts",
+      items: [
+        { name: "Trainer", path: "/manage/trainers", hidden: user?.role === "trainer" },
+        { name: "Distributor", path: "/manage/distributors" },
+        { name: "CCA Head", path: "/manage/cca-head", hidden: user?.role === "trainer" },
+        { name: "Account Request", path: "/manage/request" },
+      ],
+      path: user?.role === "trainer" ? "/manage/distributors" : "/manage/trainers",
+    },
+    {
+      icon: seat,
+      name: "Seat Map",
+      path: "/seat",
+      hidden: user?.role === "trainer",
+    },
+  ]);
+
   const contentRef = useRef<HTMLDivElement>(null);
   return (
     <div className="min-w-[1200px] ">

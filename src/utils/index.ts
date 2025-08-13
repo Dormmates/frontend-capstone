@@ -4,3 +4,8 @@ export const getFileId = (url: string) => {
 
   return fileId;
 };
+
+export const isValidEmail = (email: string) => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email.trim());
+};

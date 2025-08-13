@@ -1,22 +1,21 @@
 import { useMemo, useState } from "react";
-import type { ShowData, ShowType } from "../../../../types/show";
-import { ContentWrapper } from "../../../../components/layout/Wrapper";
-import TextInput, { TextArea } from "../../../../components/ui/TextInput";
-import Dropdown from "../../../../components/ui/Dropdown";
-import InputLabel from "../../../../components/ui/InputLabel";
-import Button from "../../../../components/ui/Button";
-import { useAuthContext } from "../../../../context/AuthContext";
-import { useGetDepartments } from "../../../../_lib/@react-client-query/department";
-import { useGetGenres } from "../../../../_lib/@react-client-query/genre";
-import { useUpdateShow } from "../../../../_lib/@react-client-query/show";
-import { getFileId } from "../../../../utils";
-import ToastNotification from "../../../../utils/toastNotification";
+import type { ShowData, ShowType } from "../../../types/show";
+import { ContentWrapper } from "../../../components/layout/Wrapper";
+import TextInput, { TextArea } from "../../../components/ui/TextInput";
+import Dropdown from "../../../components/ui/Dropdown";
+import InputLabel from "../../../components/ui/InputLabel";
+import Button from "../../../components/ui/Button";
+import { useAuthContext } from "../../../context/AuthContext";
+import { useGetDepartments } from "../../../_lib/@react-client-query/department";
+import { useGetGenres } from "../../../_lib/@react-client-query/genre";
+import { useUpdateShow } from "../../../_lib/@react-client-query/show";
+import { getFileId } from "../../../utils";
+import ToastNotification from "../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 
 const productionType = [
   { label: "Showcase", value: "showCase" },
   { label: "Major Concert", value: "majorConcert" },
-  { label: "Major Production", value: "majorProduction" },
 ];
 
 const EditShowDetails = ({ selectedShow, close }: { selectedShow: ShowData; close: () => void }) => {
@@ -179,7 +178,7 @@ const EditShowDetails = ({ selectedShow, close }: { selectedShow: ShowData; clos
     return <h1>Server Error</h1>;
   }
 
-  const groupOptions = (groups.departments ?? []).map((dept) => ({
+  const groupOptions = (groups ?? []).map((dept) => ({
     label: dept.name,
     value: dept.departmentId,
   }));

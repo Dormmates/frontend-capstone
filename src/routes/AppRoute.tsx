@@ -76,19 +76,17 @@ const AppRoute = () => {
               <Route path="reservations" element={<ScheduleReservations />} />
             </Route>
             <Route path="shows/:id" element={<ViewShow />} />
-            <Route path="performing-groups" element={<PerformingGroups />} />
-            <Route path="manage/trainers" element={<Trainers />} />
             <Route path="manage/distributors" element={<Distributors />} />
-            <Route path="manage/cca-head" element={<CCAHead />} />
             <Route path="manage/request" element={<AccountRequests />} />
-            <Route
-              path="seat"
-              element={
-                <ProtectedRoute allowedRoles={["head"]}>
-                  <SeatMap />
-                </ProtectedRoute>
-              }
-            />
+
+            {user?.role === "head" && (
+              <>
+                <Route path="performing-groups" element={<PerformingGroups />} />
+                <Route path="manage/trainers" element={<Trainers />} />
+                <Route path="manage/cca-head" element={<CCAHead />} />
+                <Route path="seat" element={<SeatMap />} />
+              </>
+            )}
           </>
         )}
       </Route>
