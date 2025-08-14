@@ -5,23 +5,27 @@ import Button from "../../../../components/ui/Button";
 import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../components/ui/Table";
 
 import archiveIcon from "../../../../assets/icons/archive.png";
+import unassign from "../../../../assets/icons/unassign.png";
+
 import { useGetTrainers, useNewTrainer } from "../../../../_lib/@react-client-query/accounts";
 import TextInput from "../../../../components/ui/TextInput";
 import { useMemo, useState } from "react";
 import { useDebounce } from "../../../../hooks/useDeabounce";
 import Modal from "../../../../components/ui/Modal";
-import { useGetDepartments } from "../../../../_lib/@react-client-query/department";
+import { useGetDepartments, useRemoveDepartmentTrainerByTrainerId } from "../../../../_lib/@react-client-query/department";
 import Dropdown from "../../../../components/ui/Dropdown";
 import { isValidEmail } from "../../../../utils";
 import ToastNotification from "../../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Trainer } from "../../../../types/user";
 import EditTrainer from "./EditTrainer";
+import InputLabel from "../../../../components/ui/InputLabel";
 
 const ITEMS_PER_PAGE = 5;
 
 const Trainers = () => {
   const addTrainer = useNewTrainer();
+  const removeTrainer = useRemoveDepartmentTrainerByTrainerId();
   const queryClient = useQueryClient();
 
   const [isAddTrainer, setIsAddTrainer] = useState(false);
@@ -31,9 +35,11 @@ const Trainers = () => {
   const { data: trainers, isLoading: loadingTrainers } = useGetTrainers();
   const { data: departments, isLoading: loadingDepartments } = useGetDepartments();
 
-  const [newTrainer, setNewTrainer] = useState({ firstName: "", lastName: "", email: "", group: "" });
+  const [newTrainer, setNewTrainer] = useState({ firstName: "", lastName: "", email: "", group: "", assignDepartment: false });
   const [selectedTrainer, setSelectedTrainer] = useState<Trainer | null>(null);
   const [errors, setErrors] = useState<{ firstName?: string; lastName?: string; email?: string; group?: string }>();
+
+  const [unassignTrainer, setUnassignTrainer] = useState({ userId: "", openModal: false });
 
   const searchedTrainers = useMemo(() => {
     if (!trainers) return [];
@@ -87,7 +93,7 @@ const Trainers = () => {
       isValid = false;
     }
 
-    if (!newTrainer.group) {
+    if (newTrainer.assignDepartment && groupOptions.length !== 0 && !newTrainer.group) {
       newErrors.group = "Please Select a Group to assign this trainer";
       isValid = false;
     }
@@ -109,9 +115,24 @@ const Trainers = () => {
     addTrainer.mutate(payload, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
-        setNewTrainer({ firstName: "", lastName: "", email: "", group: "" });
+        queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
+        setNewTrainer({ firstName: "", lastName: "", email: "", group: "", assignDepartment: false });
         setIsAddTrainer(false);
         ToastNotification.success("Created Trainer");
+      },
+      onError: (err) => {
+        ToastNotification.error(err.message);
+      },
+    });
+  };
+
+  const handleRemoveTrainerDepartment = () => {
+    removeTrainer.mutate(unassignTrainer.userId, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
+        queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
+        ToastNotification.success("Trainer Department Removed");
+        setUnassignTrainer({ userId: "", openModal: false });
       },
       onError: (err) => {
         ToastNotification.error(err.message);
@@ -172,13 +193,29 @@ const Trainers = () => {
                       <Button onClick={() => setSelectedTrainer(trainer)} className="!bg-gray !text-black !border-lightGrey border-2">
                         Edit Details
                       </Button>
-                      <div className="relative group">
-                        <Button variant="plain">
-                          <img src={archiveIcon} alt="archive" />
-                        </Button>
+                      <div className="flex items-center gap-2">
+                        <div className="relative group">
+                          <Button
+                            onClick={() => setUnassignTrainer({ userId: trainer.userId, openModal: true })}
+                            disabled={!trainer.department}
+                            className="!p-0"
+                            variant="plain"
+                          >
+                            <img src={unassign} alt="archive" />
+                          </Button>
 
-                        <div className="absolute  -left-20 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
-                          Archive Trainer
+                          <div className="absolute  -left-48 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
+                            Remove Department Assignment
+                          </div>
+                        </div>
+                        <div className="relative group">
+                          <Button className="!p-0" variant="plain">
+                            <img src={archiveIcon} alt="archive" />
+                          </Button>
+
+                          <div className="absolute  -left-24 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
+                            Archive Trainer
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -233,16 +270,31 @@ const Trainers = () => {
                   value={newTrainer.email}
                   onChange={handleInputChange}
                 />
-                <Dropdown
-                  isError={!!errors?.group}
-                  errorMessage={errors?.group}
-                  disabled={addTrainer.isPending}
-                  onChange={(value) => setNewTrainer((prev) => ({ ...prev, group: value }))}
-                  className="w-full"
-                  options={groupOptions}
-                  value={newTrainer.group}
-                  label="Performing Group"
-                />
+              </div>
+              <div>
+                <div className="flex gap-2 items-center">
+                  <input
+                    disabled={addTrainer.isPending}
+                    type="checkbox"
+                    onChange={(e) => setNewTrainer((prev) => ({ ...prev, assignDepartment: e.target.checked }))}
+                  />
+                  <InputLabel className="!m-0" label="Assign to a performing group?" />
+                </div>
+                {newTrainer.assignDepartment &&
+                  (groupOptions.length !== 0 ? (
+                    <Dropdown
+                      isError={!!errors?.group}
+                      errorMessage={errors?.group}
+                      disabled={addTrainer.isPending}
+                      onChange={(value) => setNewTrainer((prev) => ({ ...prev, group: value }))}
+                      className="mt-5 w-full"
+                      options={groupOptions}
+                      value={newTrainer.group}
+                      label="Performing Group"
+                    />
+                  ) : (
+                    <h1 className="text-center mt-2 font-medium">All performing groups have respective trainers already</h1>
+                  ))}
               </div>
             </div>
           </div>
@@ -254,7 +306,7 @@ const Trainers = () => {
               disabled={addTrainer.isPending}
               onClick={() => {
                 setIsAddTrainer(false);
-                setNewTrainer({ firstName: "", lastName: "", email: "", group: "" });
+                setNewTrainer({ firstName: "", lastName: "", email: "", group: "", assignDepartment: false });
               }}
               className="!bg-red"
             >
@@ -266,7 +318,27 @@ const Trainers = () => {
 
       {selectedTrainer && (
         <Modal className="max-w-[800px] w-full" title="Trainer Details" onClose={() => setSelectedTrainer(null)} isOpen={!!selectedTrainer}>
-          <EditTrainer trainer={selectedTrainer} departments={departments} />
+          <EditTrainer closeModal={() => setSelectedTrainer(null)} trainer={selectedTrainer} departments={departments} />
+        </Modal>
+      )}
+
+      {unassignTrainer.openModal && (
+        <Modal
+          title="Unassign Trainer"
+          className="max-w-[500px] w-full"
+          isOpen={unassignTrainer.openModal}
+          onClose={() => setUnassignTrainer({ userId: "", openModal: false })}
+        >
+          <h1 className="text-center text-xl mt-5">Are you sure you want to unassign this trainer?</h1>
+
+          <div className="flex items-center justify-end mt-5 gap-5 ">
+            <Button disabled={removeTrainer.isPending} onClick={handleRemoveTrainerDepartment} className="!bg-green">
+              Confirm
+            </Button>
+            <Button disabled={removeTrainer.isPending} className="!bg-red" onClick={() => setUnassignTrainer({ userId: "", openModal: false })}>
+              Cancel
+            </Button>
+          </div>
         </Modal>
       )}
 

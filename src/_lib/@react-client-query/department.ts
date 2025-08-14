@@ -56,3 +56,12 @@ export const useDeleteDepartment = () => {
     },
   });
 };
+
+export const useRemoveDepartmentTrainerByTrainerId = () => {
+  return useMutation<any, Error, string>({
+    mutationFn: async (userId: string) => {
+      const res = await request<any>(`/api/department/remove-trainer`, { userId }, "patch");
+      return res.data;
+    },
+  });
+};

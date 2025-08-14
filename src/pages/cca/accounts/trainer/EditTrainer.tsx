@@ -6,13 +6,19 @@ import type { Department } from "../../../../types/department";
 import Button from "../../../../components/ui/Button";
 import { isValidEmail } from "../../../../utils";
 import ToastNotification from "../../../../utils/toastNotification";
+import { useEditTrainer } from "../../../../_lib/@react-client-query/accounts";
+import InputLabel from "../../../../components/ui/InputLabel";
+import { useQueryClient } from "@tanstack/react-query";
 
-const EditTrainer = ({ trainer, departments }: { trainer: Trainer; departments: Department[] }) => {
+const EditTrainer = ({ trainer, departments, closeModal }: { trainer: Trainer; departments: Department[]; closeModal: () => void }) => {
+  const editTrainer = useEditTrainer();
+  const queryClient = useQueryClient();
   const [trainerData, setTrainerData] = useState({
     firstName: trainer.firstName,
     lastName: trainer.lastName,
     email: trainer.email,
     group: trainer.department?.departmentId,
+    assignDepartment: false,
   });
   const [errors, setErrors] = useState<{ firstName?: string; lastName?: string; email?: string; group?: string }>();
 
@@ -49,7 +55,7 @@ const EditTrainer = ({ trainer, departments }: { trainer: Trainer; departments: 
       isValid = false;
     }
 
-    if (!trainerData.group) {
+    if (trainerData.assignDepartment && groupOptions.length !== 0 && !trainerData.group) {
       newErrors.group = "Please Select a Group to assign this trainer";
       isValid = false;
     }
@@ -71,7 +77,28 @@ const EditTrainer = ({ trainer, departments }: { trainer: Trainer; departments: 
       ToastNotification.info("No Changes Detected");
       return;
     }
+
+    const payload = {
+      userId: trainer.userId,
+      firstName: trainerData.firstName.trim(),
+      lastName: trainerData.lastName.trim(),
+      email: trainerData.email.trim(),
+      departmentId: trainerData.group as string,
+    };
+
+    editTrainer.mutate(payload, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
+        queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
+        ToastNotification.success("Updated Trainer Data");
+        closeModal();
+      },
+      onError: (err) => {
+        ToastNotification.error(err.message);
+      },
+    });
   };
+
   return (
     <div>
       <div className="border border-lightGrey rounded-md p-5 mt-5">
@@ -80,6 +107,7 @@ const EditTrainer = ({ trainer, departments }: { trainer: Trainer; departments: 
         <div className="mt-5 flex flex-col gap-5">
           <div className="flex gap-5">
             <TextInput
+              disabled={editTrainer.isPending}
               isError={!!errors?.firstName}
               errorMessage={errors?.firstName}
               placeholder="eg. Juan"
@@ -89,6 +117,7 @@ const EditTrainer = ({ trainer, departments }: { trainer: Trainer; departments: 
               onChange={handleInputChange}
             />
             <TextInput
+              disabled={editTrainer.isPending}
               isError={!!errors?.lastName}
               errorMessage={errors?.lastName}
               placeholder="eg. Dela Cruz"
@@ -100,6 +129,7 @@ const EditTrainer = ({ trainer, departments }: { trainer: Trainer; departments: 
           </div>
           <div className="flex gap-5">
             <TextInput
+              disabled={editTrainer.isPending}
               isError={!!errors?.email}
               errorMessage={errors?.email}
               type="email"
@@ -109,20 +139,46 @@ const EditTrainer = ({ trainer, departments }: { trainer: Trainer; departments: 
               value={trainerData.email}
               onChange={handleInputChange}
             />
-            <Dropdown
-              isError={!!errors?.group}
-              errorMessage={errors?.group}
-              className="w-full"
-              options={groupOptions}
-              value={trainerData.group as string}
-              label="Performing Group"
-              onChange={(value) => setTrainerData((prev) => ({ ...prev, group: value }))}
-            />
+          </div>
+          <div>
+            <div className="flex gap-2 items-center">
+              <input
+                disabled={editTrainer.isPending}
+                type="checkbox"
+                onChange={(e) =>
+                  setTrainerData((prev) => {
+                    const { checked } = e.target;
+                    return {
+                      ...prev,
+                      assignDepartment: checked,
+                      ...(checked ? {} : { group: trainer.department?.departmentId }),
+                    };
+                  })
+                }
+              />
+
+              <InputLabel className="!m-0" label={trainer.department ? "Change Performing Group?" : "Assign Performing Group?"} />
+            </div>
+            {trainerData.assignDepartment &&
+              (groupOptions.length !== 0 ? (
+                <Dropdown
+                  isError={!!errors?.group}
+                  errorMessage={errors?.group}
+                  disabled={editTrainer.isPending}
+                  onChange={(value) => setTrainerData((prev) => ({ ...prev, group: value }))}
+                  className="mt-5 w-full"
+                  options={groupOptions}
+                  value={trainerData.group as string}
+                  label="Performing Group"
+                />
+              ) : (
+                <h1 className="text-center mt-2 font-medium">All performing groups have respective trainers already</h1>
+              ))}
           </div>
         </div>
       </div>
       <div className="flex justify-end mt-5 gap-2">
-        <Button onClick={handleSubmit} className="!bg-green">
+        <Button disabled={editTrainer.isPending} onClick={handleSubmit} className="!bg-green">
           Save Changes
         </Button>
       </div>

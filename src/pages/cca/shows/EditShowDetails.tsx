@@ -12,16 +12,23 @@ import { useUpdateShow } from "../../../_lib/@react-client-query/show";
 import { getFileId } from "../../../utils";
 import ToastNotification from "../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
+import type { Department } from "../../../types/department";
 
 const productionType = [
   { label: "Showcase", value: "showCase" },
   { label: "Major Concert", value: "majorConcert" },
 ];
 
-const EditShowDetails = ({ selectedShow, close }: { selectedShow: ShowData; close: () => void }) => {
+interface Props {
+  selectedShow: ShowData;
+  groups: Department[];
+
+  close: () => void;
+}
+
+const EditShowDetails = ({ selectedShow, close, groups }: Props) => {
+  const { data: genres, isLoading: loadingGenres, isError: errorGenres } = useGetGenres();
   const { user } = useAuthContext();
-  const { data: groups, isLoading: loadingDepartments, error: errorDepartment } = useGetDepartments();
-  const { data: genres, isLoading: loadingGenres, error: errorGenres } = useGetGenres();
   const [errors, setErrors] = useState<{
     title?: string;
     productionType?: string;
@@ -170,11 +177,11 @@ const EditShowDetails = ({ selectedShow, close }: { selectedShow: ShowData; clos
     );
   };
 
-  if (loadingDepartments || loadingGenres) {
+  if (loadingGenres) {
     return <h1>Loading...</h1>;
   }
 
-  if (errorDepartment || !groups || errorGenres || !genres) {
+  if (!groups || !genres || errorGenres) {
     return <h1>Server Error</h1>;
   }
 
@@ -183,7 +190,7 @@ const EditShowDetails = ({ selectedShow, close }: { selectedShow: ShowData; clos
     value: dept.departmentId,
   }));
 
-  const genreValues = (genres.genres ?? []).map((genre) => ({
+  const genreValues = (genres ?? []).map((genre) => ({
     label: genre.name,
     value: genre.name,
   }));
@@ -269,7 +276,7 @@ const EditShowDetails = ({ selectedShow, close }: { selectedShow: ShowData; clos
                 <Button
                   disabled={isUploading}
                   type="button"
-                  className={`flex items-center w-5 h-5 !p-3 justify-center ${genres.genres.length === showData.genre.length && "hidden"}`}
+                  className={`flex items-center w-5 h-5 !p-3 justify-center ${genres.length === showData.genre.length && "hidden"}`}
                   onClick={addGenre}
                 >
                   +

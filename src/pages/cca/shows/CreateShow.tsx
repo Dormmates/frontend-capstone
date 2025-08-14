@@ -179,7 +179,7 @@ const CreateShow = () => {
     value: dept.departmentId,
   }));
 
-  const genreValues = (genres.genres ?? []).map((genre) => ({
+  const genreValues = (genres ?? []).map((genre) => ({
     label: genre.name,
     value: genre.name,
   }));
@@ -268,7 +268,7 @@ const CreateShow = () => {
                 <Button
                   disabled={isUploading}
                   type="button"
-                  className={`flex items-center w-5 h-5 !p-3 justify-center ${genres.genres.length === showData.genre.length && "hidden"}`}
+                  className={`flex items-center w-5 h-5 !p-3 justify-center ${genres.length === showData.genre.length && "hidden"}`}
                   onClick={addGenre}
                 >
                   +

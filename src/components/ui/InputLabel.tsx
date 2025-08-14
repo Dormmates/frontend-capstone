@@ -7,7 +7,7 @@ interface Props {
 }
 
 const InputLabel = ({ className = "", label }: Props) => {
-  return <h1 className={merge(className, "text-black text-sm mb-1")}>{label}</h1>;
+  return <h1 className={merge("text-black text-sm mb-1", className)}>{label}</h1>;
 };
 
 export default InputLabel;
