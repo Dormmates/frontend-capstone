@@ -6,7 +6,7 @@ import Dropdown from "../../../components/ui/Dropdown";
 import InputLabel from "../../../components/ui/InputLabel";
 import Button from "../../../components/ui/Button";
 import { useAuthContext } from "../../../context/AuthContext";
-import { useGetDepartments } from "../../../_lib/@react-client-query/department";
+
 import { useGetGenres } from "../../../_lib/@react-client-query/genre";
 import { useUpdateShow } from "../../../_lib/@react-client-query/show";
 import { getFileId } from "../../../utils";
