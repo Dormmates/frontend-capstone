@@ -31,3 +31,29 @@ export interface Trainer {
   isLocked: boolean;
   role: "trainer";
 }
+
+export interface DistributorTypes {
+  name: string;
+  id: number;
+  haveCommision: boolean;
+}
+
+export interface Distributor {
+  distributor: {
+    department?: {
+      departmentId: string;
+      name: string;
+    };
+    distributortypes: DistributorTypes;
+    contactNumber: string;
+  };
+  email: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  createdAt: Date;
+  isArchived: boolean;
+  isLocked: boolean;
+  role: "distributor";
+}

@@ -1,30 +1,30 @@
 import { useState } from "react";
-import type { Trainer } from "../../../../types/user";
 import TextInput from "../../../../components/ui/TextInput";
 import Dropdown from "../../../../components/ui/Dropdown";
-import type { Department } from "../../../../types/department";
 import Button from "../../../../components/ui/Button";
 import { isValidEmail } from "../../../../utils";
-import ToastNotification from "../../../../utils/toastNotification";
-import { useEditTrainer } from "../../../../_lib/@react-client-query/accounts";
 import InputLabel from "../../../../components/ui/InputLabel";
-import { useQueryClient } from "@tanstack/react-query";
 
-const EditTrainer = ({ trainer, departments, closeModal }: { trainer: Trainer; departments: Department[]; closeModal: () => void }) => {
-  const editTrainer = useEditTrainer();
-  const queryClient = useQueryClient();
-  const [trainerData, setTrainerData] = useState({
-    firstName: trainer.firstName,
-    lastName: trainer.lastName,
-    email: trainer.email,
-    group: trainer.department?.departmentId,
-    assignDepartment: false,
-  });
-  const [errors, setErrors] = useState<{ firstName?: string; lastName?: string; email?: string; group?: string }>();
+type TrainerFormValues = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  group: string;
+  assignDepartment: boolean;
+};
 
-  const groupOptions = (departments ?? [])
-    .filter((department) => !department.trainerId || !department.trainerName)
-    .map((department) => ({ label: department.name, value: department.departmentId }));
+type TrainerFormProps = {
+  initalValues: TrainerFormValues;
+  groupOptions: { label: string; value: string }[];
+  isSubmitting: boolean;
+  onSubmit: (payload: TrainerFormValues) => void;
+  close: () => void;
+};
+
+const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting }: TrainerFormProps) => {
+  const [trainerData, setTrainerData] = useState(initalValues);
+
+  const [errors, setErrors] = useState<Partial<Record<keyof TrainerFormValues, string>>>();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -66,37 +66,7 @@ const EditTrainer = ({ trainer, departments, closeModal }: { trainer: Trainer; d
 
   const handleSubmit = () => {
     if (!validate()) return;
-
-    const hasChanges =
-      trainerData.firstName.trim() !== trainer.firstName.trim() ||
-      trainerData.lastName.trim() !== trainer.lastName.trim() ||
-      trainerData.email.trim() !== trainer.email.trim() ||
-      trainerData.group !== trainer.department?.departmentId;
-
-    if (!hasChanges) {
-      ToastNotification.info("No Changes Detected");
-      return;
-    }
-
-    const payload = {
-      userId: trainer.userId,
-      firstName: trainerData.firstName.trim(),
-      lastName: trainerData.lastName.trim(),
-      email: trainerData.email.trim(),
-      departmentId: trainerData.group as string,
-    };
-
-    editTrainer.mutate(payload, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
-        queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
-        ToastNotification.success("Updated Trainer Data");
-        closeModal();
-      },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
-    });
+    onSubmit(trainerData);
   };
 
   return (
@@ -107,7 +77,7 @@ const EditTrainer = ({ trainer, departments, closeModal }: { trainer: Trainer; d
         <div className="mt-5 flex flex-col gap-5">
           <div className="flex gap-5">
             <TextInput
-              disabled={editTrainer.isPending}
+              disabled={isSubmitting}
               isError={!!errors?.firstName}
               errorMessage={errors?.firstName}
               placeholder="eg. Juan"
@@ -117,7 +87,7 @@ const EditTrainer = ({ trainer, departments, closeModal }: { trainer: Trainer; d
               onChange={handleInputChange}
             />
             <TextInput
-              disabled={editTrainer.isPending}
+              disabled={isSubmitting}
               isError={!!errors?.lastName}
               errorMessage={errors?.lastName}
               placeholder="eg. Dela Cruz"
@@ -129,7 +99,7 @@ const EditTrainer = ({ trainer, departments, closeModal }: { trainer: Trainer; d
           </div>
           <div className="flex gap-5">
             <TextInput
-              disabled={editTrainer.isPending}
+              disabled={isSubmitting}
               isError={!!errors?.email}
               errorMessage={errors?.email}
               type="email"
@@ -143,7 +113,7 @@ const EditTrainer = ({ trainer, departments, closeModal }: { trainer: Trainer; d
           <div>
             <div className="flex gap-2 items-center">
               <input
-                disabled={editTrainer.isPending}
+                disabled={isSubmitting}
                 type="checkbox"
                 onChange={(e) =>
                   setTrainerData((prev) => {
@@ -151,20 +121,20 @@ const EditTrainer = ({ trainer, departments, closeModal }: { trainer: Trainer; d
                     return {
                       ...prev,
                       assignDepartment: checked,
-                      ...(checked ? {} : { group: trainer.department?.departmentId }),
+                      ...(checked ? {} : { group: initalValues.group }),
                     };
                   })
                 }
               />
 
-              <InputLabel className="!m-0" label={trainer.department ? "Change Performing Group?" : "Assign Performing Group?"} />
+              <InputLabel className="!m-0" label={initalValues.group ? "Change Performing Group?" : "Assign Performing Group?"} />
             </div>
             {trainerData.assignDepartment &&
               (groupOptions.length !== 0 ? (
                 <Dropdown
                   isError={!!errors?.group}
                   errorMessage={errors?.group}
-                  disabled={editTrainer.isPending}
+                  disabled={isSubmitting}
                   onChange={(value) => setTrainerData((prev) => ({ ...prev, group: value }))}
                   className="mt-5 w-full"
                   options={groupOptions}
@@ -178,12 +148,15 @@ const EditTrainer = ({ trainer, departments, closeModal }: { trainer: Trainer; d
         </div>
       </div>
       <div className="flex justify-end mt-5 gap-2">
-        <Button disabled={editTrainer.isPending} onClick={handleSubmit} className="!bg-green">
-          Save Changes
+        <Button disabled={isSubmitting} onClick={handleSubmit} className="!bg-green">
+          {initalValues.firstName ? "Save Changes" : "Add Trainer"}
+        </Button>
+        <Button disabled={isSubmitting} onClick={close} className="!bg-red">
+          Cancel
         </Button>
       </div>
     </div>
   );
 };
 
-export default EditTrainer;
+export default TrainerForm;

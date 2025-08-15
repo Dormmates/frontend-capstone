@@ -7,24 +7,24 @@ import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableR
 import archiveIcon from "../../../../assets/icons/archive.png";
 import unassign from "../../../../assets/icons/unassign.png";
 
-import { useGetTrainers, useNewTrainer } from "../../../../_lib/@react-client-query/accounts";
+import { useEditTrainer, useGetTrainers, useNewTrainer } from "../../../../_lib/@react-client-query/accounts";
 import TextInput from "../../../../components/ui/TextInput";
 import { useMemo, useState } from "react";
 import { useDebounce } from "../../../../hooks/useDeabounce";
 import Modal from "../../../../components/ui/Modal";
 import { useGetDepartments, useRemoveDepartmentTrainerByTrainerId } from "../../../../_lib/@react-client-query/department";
-import Dropdown from "../../../../components/ui/Dropdown";
-import { isValidEmail } from "../../../../utils";
+
 import ToastNotification from "../../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Trainer } from "../../../../types/user";
-import EditTrainer from "./EditTrainer";
-import InputLabel from "../../../../components/ui/InputLabel";
+
+import TrainerForm from "./TrainerForm";
 
 const ITEMS_PER_PAGE = 5;
 
 const Trainers = () => {
   const addTrainer = useNewTrainer();
+  const editTrainer = useEditTrainer();
   const removeTrainer = useRemoveDepartmentTrainerByTrainerId();
   const queryClient = useQueryClient();
 
@@ -35,9 +35,7 @@ const Trainers = () => {
   const { data: trainers, isLoading: loadingTrainers } = useGetTrainers();
   const { data: departments, isLoading: loadingDepartments } = useGetDepartments();
 
-  const [newTrainer, setNewTrainer] = useState({ firstName: "", lastName: "", email: "", group: "", assignDepartment: false });
   const [selectedTrainer, setSelectedTrainer] = useState<Trainer | null>(null);
-  const [errors, setErrors] = useState<{ firstName?: string; lastName?: string; email?: string; group?: string }>();
 
   const [unassignTrainer, setUnassignTrainer] = useState({ userId: "", openModal: false });
 
@@ -60,71 +58,9 @@ const Trainers = () => {
     return searchedTrainers.slice(start, end);
   }, [searchedTrainers, page]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewTrainer((prev) => ({ ...prev, [name]: value }));
-  };
-
   const groupOptions = (departments ?? [])
     .filter((department) => !department.trainerId || !department.trainerName)
     .map((department) => ({ label: department.name, value: department.departmentId }));
-
-  const validate = () => {
-    const newErrors: typeof errors = {};
-    let isValid = true;
-
-    if (newTrainer.firstName.trim().length < 1 || !newTrainer.firstName.trim()) {
-      newErrors.firstName = "First Name should have value";
-      isValid = false;
-    }
-
-    if (newTrainer.lastName.trim().length < 1 || !newTrainer.lastName.trim()) {
-      newErrors.lastName = "Last Name should have value";
-      isValid = false;
-    }
-
-    if (newTrainer.email.trim().length < 1 || !newTrainer.email.trim()) {
-      newErrors.email = "Email should have value";
-      isValid = false;
-    }
-
-    if (!isValidEmail(newTrainer.email.trim())) {
-      newErrors.email = "Invalid Email Format";
-      isValid = false;
-    }
-
-    if (newTrainer.assignDepartment && groupOptions.length !== 0 && !newTrainer.group) {
-      newErrors.group = "Please Select a Group to assign this trainer";
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  const handleSubmit = () => {
-    if (!validate()) return;
-
-    const payload = {
-      firstName: newTrainer.firstName,
-      lastName: newTrainer.lastName,
-      email: newTrainer.email,
-      departmentId: newTrainer.group,
-    };
-
-    addTrainer.mutate(payload, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
-        queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
-        setNewTrainer({ firstName: "", lastName: "", email: "", group: "", assignDepartment: false });
-        setIsAddTrainer(false);
-        ToastNotification.success("Created Trainer");
-      },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
-    });
-  };
 
   const handleRemoveTrainerDepartment = () => {
     removeTrainer.mutate(unassignTrainer.userId, {
@@ -232,93 +168,87 @@ const Trainers = () => {
 
       {isAddTrainer && (
         <Modal className="max-w-[800px] w-full" title="Add New Trainer Account" onClose={() => setIsAddTrainer(false)} isOpen={isAddTrainer}>
-          <div className="border border-lightGrey rounded-md p-5 mt-5">
-            <h1 className="text-lg">Basic Information</h1>
+          <TrainerForm
+            isSubmitting={editTrainer.isPending}
+            groupOptions={groupOptions}
+            close={() => setIsAddTrainer(false)}
+            initalValues={{
+              firstName: "",
+              lastName: "",
+              email: "",
+              group: "",
+              assignDepartment: false,
+            }}
+            onSubmit={(payload) => {
+              const data = {
+                firstName: payload.firstName.trim(),
+                lastName: payload.lastName.trim(),
+                email: payload.email.trim(),
+                departmentId: payload.group as string,
+              };
 
-            <div className="mt-5 flex flex-col gap-5">
-              <div className="flex gap-5">
-                <TextInput
-                  isError={!!errors?.firstName}
-                  errorMessage={errors?.firstName}
-                  disabled={addTrainer.isPending}
-                  placeholder="eg. Juan"
-                  name="firstName"
-                  label="First Name"
-                  value={newTrainer.firstName}
-                  onChange={handleInputChange}
-                />
-                <TextInput
-                  isError={!!errors?.lastName}
-                  errorMessage={errors?.lastName}
-                  disabled={addTrainer.isPending}
-                  placeholder="eg. Dela Cruz"
-                  name="lastName"
-                  label="Last Name"
-                  value={newTrainer.lastName}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="flex gap-5">
-                <TextInput
-                  isError={!!errors?.email}
-                  errorMessage={errors?.email}
-                  disabled={addTrainer.isPending}
-                  type="email"
-                  placeholder="eg. trainer@slu.edu.ph"
-                  name="email"
-                  label="SLU Email"
-                  value={newTrainer.email}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div>
-                <div className="flex gap-2 items-center">
-                  <input
-                    disabled={addTrainer.isPending}
-                    type="checkbox"
-                    onChange={(e) => setNewTrainer((prev) => ({ ...prev, assignDepartment: e.target.checked }))}
-                  />
-                  <InputLabel className="!m-0" label="Assign to a performing group?" />
-                </div>
-                {newTrainer.assignDepartment &&
-                  (groupOptions.length !== 0 ? (
-                    <Dropdown
-                      isError={!!errors?.group}
-                      errorMessage={errors?.group}
-                      disabled={addTrainer.isPending}
-                      onChange={(value) => setNewTrainer((prev) => ({ ...prev, group: value }))}
-                      className="mt-5 w-full"
-                      options={groupOptions}
-                      value={newTrainer.group}
-                      label="Performing Group"
-                    />
-                  ) : (
-                    <h1 className="text-center mt-2 font-medium">All performing groups have respective trainers already</h1>
-                  ))}
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-end mt-5 gap-2">
-            <Button onClick={handleSubmit} disabled={addTrainer.isPending} className="!bg-green">
-              Create Account
-            </Button>
-            <Button
-              disabled={addTrainer.isPending}
-              onClick={() => {
-                setIsAddTrainer(false);
-                setNewTrainer({ firstName: "", lastName: "", email: "", group: "", assignDepartment: false });
-              }}
-              className="!bg-red"
-            >
-              Cancel
-            </Button>
-          </div>
+              addTrainer.mutate(data, {
+                onSuccess: () => {
+                  queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
+                  queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
+                  ToastNotification.success("Added New Trainer");
+                  setIsAddTrainer(false);
+                },
+                onError: (err) => {
+                  ToastNotification.error(err.message);
+                },
+              });
+            }}
+          />
         </Modal>
       )}
 
       {selectedTrainer && (
         <Modal className="max-w-[800px] w-full" title="Trainer Details" onClose={() => setSelectedTrainer(null)} isOpen={!!selectedTrainer}>
-          <EditTrainer closeModal={() => setSelectedTrainer(null)} trainer={selectedTrainer} departments={departments} />
+          <TrainerForm
+            isSubmitting={editTrainer.isPending}
+            groupOptions={groupOptions}
+            close={() => setSelectedTrainer(null)}
+            initalValues={{
+              firstName: selectedTrainer.firstName,
+              lastName: selectedTrainer.lastName,
+              email: selectedTrainer.email,
+              group: selectedTrainer.department?.departmentId as string,
+              assignDepartment: false,
+            }}
+            onSubmit={(payload) => {
+              const hasChanges =
+                payload.firstName.trim() !== selectedTrainer.firstName.trim() ||
+                payload.lastName.trim() !== selectedTrainer.lastName.trim() ||
+                payload.email.trim() !== selectedTrainer.email.trim() ||
+                payload.group !== selectedTrainer.department?.departmentId;
+
+              if (!hasChanges) {
+                ToastNotification.info("No Changes Detected");
+                return;
+              }
+
+              const data = {
+                userId: selectedTrainer.userId,
+                firstName: payload.firstName.trim(),
+                lastName: payload.lastName.trim(),
+                email: payload.email.trim(),
+                departmentId: payload.group as string,
+              };
+
+              editTrainer.mutate(data, {
+                onSuccess: () => {
+                  queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
+                  queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
+                  ToastNotification.success("Updated Trainer Data");
+                  setSelectedTrainer(null);
+                },
+                onError: (err) => {
+                  ToastNotification.error(err.message);
+                },
+              });
+            }}
+          />
         </Modal>
       )}
 

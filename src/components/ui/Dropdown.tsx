@@ -63,7 +63,7 @@ const Dropdown = <T extends string>({ label, options, value, onChange, className
       {isError && errorMessage && <p className="text-sm text-red mt-1">{errorMessage}</p>}
 
       {isOpen && !disabled && (
-        <div className="absolute z-10 mt-1 w-full bg-white border rounded shadow-lg overflow-y-auto max-h-[150px]">
+        <div className="absolute z-50 mt-1 w-full bg-white border rounded shadow-lg overflow-y-auto max-h-[150px]">
           {options.map((option, idx) => {
             const isSelected = option.value === value;
 
