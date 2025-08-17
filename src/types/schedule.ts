@@ -39,3 +39,33 @@ export type ErrorKeys =
   | "balconyRight";
 
 export type ScheduleFormErrors = Partial<Record<ErrorKeys, string>>;
+
+export interface ScheduleInformation {
+  scheduleId: string;
+  showId: string;
+  seatingType: SeatingConfiguration;
+  ticketType: TicketType;
+  contactNumber: string | null;
+  facebookLink: string | null;
+  commissionFee: number;
+  datetime: Date;
+  isOpen: boolean | null;
+  isArchived: boolean | null;
+  isRescheduled: boolean | null;
+  femaleCount: number | null;
+  maleCount: number | null;
+}
+
+export interface ScheduleSummary {
+  expectedSales: number;
+  currentSales: number;
+  remainingSales: number;
+  totalTicket: number;
+  totalOrchestra: number;
+  totalBalcony: number;
+  totalComplimentary: number;
+  sold: number;
+  notAllocated: number;
+  unsold: number;
+  pendingRemittance: number;
+}

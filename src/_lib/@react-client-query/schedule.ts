@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { request } from "../api";
 
-import type { ScheduleFormData, SeatingConfiguration, TicketType } from "../../types/schedule";
+import type { ScheduleFormData, ScheduleInformation, ScheduleSummary, SeatingConfiguration, TicketType } from "../../types/schedule";
 import type { FlattenedSeatMap } from "../../types/seat";
 
 export interface AddSchedulePayload extends ScheduleFormData {
@@ -49,6 +49,26 @@ export const useGetShowSchedules = (showId: string) => {
     queryKey: ["schedules", showId],
     queryFn: async () => {
       const res = await request<{ schedules: ShowSchedule[] }>("/api/schedule", { showId }, "get");
+      return res.data;
+    },
+  });
+};
+
+export const useGetScheduleInformation = (scheduleId: string) => {
+  return useQuery<ScheduleInformation, Error>({
+    queryKey: ["schedule", scheduleId],
+    queryFn: async () => {
+      const res = await request<ScheduleInformation>(`/api/schedule/${scheduleId}`, {}, "get");
+      return res.data;
+    },
+  });
+};
+
+export const useGetScheduleSummary = (scheduleId: string) => {
+  return useQuery<ScheduleSummary, Error>({
+    queryKey: ["schedule", "summary", scheduleId],
+    queryFn: async () => {
+      const res = await request<ScheduleSummary>(`/api/schedule/summary/${scheduleId}`, {}, "get");
       return res.data;
     },
   });

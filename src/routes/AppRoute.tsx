@@ -67,7 +67,7 @@ const AppRoute = () => {
             <Route path="shows" element={<Shows />} />
             <Route path="shows/add" element={<CreateShow />} />
             <Route path="shows/add/schedule/:id" element={<AddSchedule />} />
-            <Route path="schedule/:showId/:scheduleId" element={<ViewShowScheduleLayout />}>
+            <Route path="shows/schedule/:showId/:scheduleId" element={<ViewShowScheduleLayout />}>
               <Route index element={<ScheduleSummary />} />
               <Route path="d&r" element={<ScheduleDistributorAndRemittances />} />
               <Route path="seats" element={<ScheduleSeats />} />

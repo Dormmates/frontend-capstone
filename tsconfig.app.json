@@ -23,5 +23,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "src/pages/cca/CCADashboard.tsx", "src/hooks/useDeabounce.ts"]
+  "include": ["src", "src/pages/cca/CCADashboard.tsx", "src/hooks/useDeabounce.ts", "src/pages/cca/accounts/CCAHead.tsx"]
 }

@@ -9,11 +9,26 @@ import { formatToReadableDate, formatToReadableTime } from "../../../utils/date"
 import Button from "../../../components/ui/Button";
 import Dropdown from "../../../components/ui/Dropdown";
 import deleteIcon from "../../../assets/icons/delete.png";
+import { useShowScheduleContext } from "../../../context/ShowSchedulesContext";
+import { useEffect } from "react";
 
 const ViewShow = () => {
+  const { setSchedules } = useShowScheduleContext();
   const { id } = useParams();
   const { data: show, isLoading: isShowLoading, isError: isShowError, error: showError } = useGetShow(id as string);
   const { data: showSchedules, isLoading: isSchedulesLoading, isError: isSchedulesError, error: schedulesError } = useGetShowSchedules(id as string);
+
+  useEffect(() => {
+    if (!showSchedules) return;
+
+    const schedules = (showSchedules.schedules ?? []).map((schedule) => ({
+      scheduleId: schedule.scheduleId,
+      datetime: new Date(schedule.datetime),
+      isOpen: schedule.isOpen,
+    }));
+
+    setSchedules(schedules);
+  }, [showSchedules]);
 
   if (isShowLoading || isSchedulesLoading) {
     return <div>Loading...</div>;
@@ -76,6 +91,7 @@ const ViewShow = () => {
                   <TableHead>Date</TableHead>
                   <TableHead>Time</TableHead>
                   <TableHead>Seating Type</TableHead>
+                  <TableHead>Ticket Type</TableHead>
                   <TableHead>Schedule Status</TableHead>
 
                   <TableHead className="text-center pl-60">Actions</TableHead>
@@ -85,16 +101,17 @@ const ViewShow = () => {
               <TableBody>
                 {showSchedules.schedules.length == 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-10 text-gray-400">
+                    <TableCell colSpan={6} className="text-center py-10 text-gray-400">
                       No Schedules
                     </TableCell>
                   </TableRow>
                 ) : (
                   showSchedules.schedules.map((schedule) => (
-                    <TableRow>
+                    <TableRow key={schedule.scheduleId}>
                       <TableCell>{formatToReadableDate(schedule.datetime)}</TableCell>
                       <TableCell>{formatToReadableTime(schedule.datetime)}</TableCell>
                       <TableCell>{schedule.seatingType.toUpperCase()}</TableCell>
+                      <TableCell>{schedule.ticketType.toUpperCase()}</TableCell>
                       <TableCell>
                         {schedule.isOpen ? (
                           <div className="flex items-center gap-2">
@@ -111,7 +128,7 @@ const ViewShow = () => {
 
                       <TableCell>
                         <div className="flex gap-2 justify-end items-center ">
-                          <Link to={`/schedule/${id}/${schedule.scheduleId}/`}>
+                          <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
                             <Button className="!bg-gray !border-darkGrey !border-2 !text-black" disabled={!schedule.isOpen}>
                               Go To Schedule
                             </Button>
