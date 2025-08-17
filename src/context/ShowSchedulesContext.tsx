@@ -1,14 +1,9 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-
-type ShowScheduleData = {
-  scheduleId: string;
-  datetime: Date;
-  isOpen: boolean;
-};
+import type { Schedule } from "../types/schedule";
 
 type ShowScheduleContextType = {
-  schedules: ShowScheduleData[] | null;
-  setSchedules: React.Dispatch<React.SetStateAction<ShowScheduleData[] | null>>;
+  schedules: Schedule[] | null;
+  setSchedules: React.Dispatch<React.SetStateAction<Schedule[] | null>>;
 };
 
 const ShowScheduleContext = createContext<ShowScheduleContextType | undefined>(undefined);
@@ -26,7 +21,7 @@ interface Props {
 }
 
 const ShowSchedulesProvider = ({ children }: Props) => {
-  const [schedules, setSchedules] = useState<ShowScheduleData[] | null>(null);
+  const [schedules, setSchedules] = useState<Schedule[] | null>(null);
 
   return <ShowScheduleContext.Provider value={{ schedules, setSchedules }}>{children}</ShowScheduleContext.Provider>;
 };

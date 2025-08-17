@@ -21,13 +21,7 @@ const ViewShow = () => {
   useEffect(() => {
     if (!showSchedules) return;
 
-    const schedules = (showSchedules.schedules ?? []).map((schedule) => ({
-      scheduleId: schedule.scheduleId,
-      datetime: new Date(schedule.datetime),
-      isOpen: schedule.isOpen,
-    }));
-
-    setSchedules(schedules);
+    setSchedules(showSchedules);
   }, [showSchedules]);
 
   if (isShowLoading || isSchedulesLoading) {
@@ -77,7 +71,7 @@ const ViewShow = () => {
           <div className="flex justify-between">
             <div className="flex flex-col gap-5">
               <h1 className="font-semibold text-2xl ">Show Schedule</h1>
-              <SimpleCard value={showSchedules.schedules.length + ""} label="Total" />
+              <SimpleCard value={showSchedules.length + ""} label="Total" />
             </div>
             <Link className="self-end" to={`/shows/add/schedule/${id}`}>
               <Button>Add New Schedule</Button>
@@ -99,17 +93,17 @@ const ViewShow = () => {
               </TableHeader>
 
               <TableBody>
-                {showSchedules.schedules.length == 0 ? (
+                {showSchedules.length == 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-10 text-gray-400">
                       No Schedules
                     </TableCell>
                   </TableRow>
                 ) : (
-                  showSchedules.schedules.map((schedule) => (
+                  showSchedules.map((schedule) => (
                     <TableRow key={schedule.scheduleId}>
-                      <TableCell>{formatToReadableDate(schedule.datetime)}</TableCell>
-                      <TableCell>{formatToReadableTime(schedule.datetime)}</TableCell>
+                      <TableCell>{formatToReadableDate(schedule.datetime + "")}</TableCell>
+                      <TableCell>{formatToReadableTime(schedule.datetime + "")}</TableCell>
                       <TableCell>{schedule.seatingType.toUpperCase()}</TableCell>
                       <TableCell>{schedule.ticketType.toUpperCase()}</TableCell>
                       <TableCell>

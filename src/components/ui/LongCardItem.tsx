@@ -3,10 +3,10 @@ export interface LongCardItem {
   value: string | number;
 }
 
-const LongCardItem = ({ label = "Label", value = "100" }) => {
+const LongCardItem = ({ label, value }: LongCardItem) => {
   return (
-    <div className="flex flex-col gap-1">
-      <span className="text-gray-500">{label}</span>
+    <div className="flex flex-col gap-3">
+      <span className="text-sm text-slate-400">{label}</span>
       <span className="font-semibold">{value}</span>
     </div>
   );

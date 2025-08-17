@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { request } from "../api";
 
-import type { ScheduleFormData, ScheduleInformation, ScheduleSummary, SeatingConfiguration, TicketType } from "../../types/schedule";
+import type { ScheduleFormData, Schedule, ScheduleSummary } from "../../types/schedule";
 import type { FlattenedSeatMap } from "../../types/seat";
+import type { Ticket } from "../../types/ticket";
 
 export interface AddSchedulePayload extends ScheduleFormData {
   showId: string;
@@ -19,22 +20,6 @@ export interface AddSchedulePayload extends ScheduleFormData {
   seats?: FlattenedSeatMap;
 }
 
-interface ShowSchedule {
-  commissionFee: string;
-  contactNumber: number;
-  datetime: string;
-  facebookLink: number;
-  femaleCount: number;
-  isArchived: boolean;
-  isOpen: boolean;
-  isRescheduled: boolean;
-  maleCount: number;
-  scheduleId: string;
-  seatingType: SeatingConfiguration;
-  showId: string;
-  ticketType: TicketType;
-}
-
 export const useAddSchedule = () => {
   return useMutation<any, Error, AddSchedulePayload>({
     mutationFn: async (payLoad: AddSchedulePayload) => {
@@ -45,20 +30,20 @@ export const useAddSchedule = () => {
 };
 
 export const useGetShowSchedules = (showId: string) => {
-  return useQuery<{ schedules: ShowSchedule[] }, Error>({
+  return useQuery<Schedule[], Error>({
     queryKey: ["schedules", showId],
     queryFn: async () => {
-      const res = await request<{ schedules: ShowSchedule[] }>("/api/schedule", { showId }, "get");
+      const res = await request<Schedule[]>("/api/schedule", { showId }, "get");
       return res.data;
     },
   });
 };
 
 export const useGetScheduleInformation = (scheduleId: string) => {
-  return useQuery<ScheduleInformation, Error>({
+  return useQuery<Schedule, Error>({
     queryKey: ["schedule", scheduleId],
     queryFn: async () => {
-      const res = await request<ScheduleInformation>(`/api/schedule/${scheduleId}`, {}, "get");
+      const res = await request<Schedule>(`/api/schedule/${scheduleId}`, {}, "get");
       return res.data;
     },
   });
@@ -69,6 +54,15 @@ export const useGetScheduleSummary = (scheduleId: string) => {
     queryKey: ["schedule", "summary", scheduleId],
     queryFn: async () => {
       const res = await request<ScheduleSummary>(`/api/schedule/summary/${scheduleId}`, {}, "get");
+      return res.data;
+    },
+  });
+};
+export const useGetScheduleTickets = (scheduleId: string) => {
+  return useQuery<Ticket[], Error>({
+    queryKey: ["schedule", "tickets", scheduleId],
+    queryFn: async () => {
+      const res = await request<Ticket[]>(`/api/schedule/tickets/${scheduleId}`, {}, "get");
       return res.data;
     },
   });

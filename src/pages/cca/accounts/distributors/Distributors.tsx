@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ContentWrapper } from "../../../../components/layout/Wrapper";
 import Button from "../../../../components/ui/Button";
 import SimpleCard from "../../../../components/ui/SimpleCard";
@@ -59,6 +59,10 @@ const Distributors = () => {
     return searchedDistributors.slice(start, end);
   }, [searchedDistributors, page]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, type]);
+
   if (loadingDistributors || loadingTypes || loadingDepartments) {
     return <h1>Loaddingg..</h1>;
   }
@@ -66,8 +70,6 @@ const Distributors = () => {
   if (errorDistributor || !distributors || !distributorTypes || errorDeparments || errorTypes) {
     return <h1>Error </h1>;
   }
-
-  console.log(distributors);
 
   return (
     <ContentWrapper className="lg:!p-20">

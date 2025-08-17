@@ -40,7 +40,7 @@ export type ErrorKeys =
 
 export type ScheduleFormErrors = Partial<Record<ErrorKeys, string>>;
 
-export interface ScheduleInformation {
+export interface Schedule {
   scheduleId: string;
   showId: string;
   seatingType: SeatingConfiguration;
@@ -49,9 +49,9 @@ export interface ScheduleInformation {
   facebookLink: string | null;
   commissionFee: number;
   datetime: Date;
-  isOpen: boolean | null;
-  isArchived: boolean | null;
-  isRescheduled: boolean | null;
+  isOpen: boolean;
+  isArchived: boolean;
+  isRescheduled: boolean;
   femaleCount: number | null;
   maleCount: number | null;
 }

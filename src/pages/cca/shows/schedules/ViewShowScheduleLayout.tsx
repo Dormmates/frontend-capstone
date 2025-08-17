@@ -71,7 +71,7 @@ const ViewShowScheduleLayout = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col justify-center text-2xl gap-2 mt-5">
+        <div className="flex flex-col justify-center text-2xl gap-2 mt-5 mb-10">
           <h1 className="text-center">
             You are viewing "<span className="font-bold">{show.title}</span>"
           </h1>
