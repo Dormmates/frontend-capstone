@@ -38,11 +38,11 @@ export const useGetTrainers = () => {
   });
 };
 
-export const useGetDistributors = () => {
+export const useGetDistributors = (departmentId?: string) => {
   return useQuery<Distributor[], Error>({
     queryKey: ["distributors"],
     queryFn: async () => {
-      const res = await request<Distributor[]>("/api/accounts/distributors", {}, "get");
+      const res = await request<Distributor[]>("/api/accounts/distributors", { departmentId }, "get");
       return res.data;
     },
     retry: false,

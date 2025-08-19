@@ -67,3 +67,28 @@ export const useGetScheduleTickets = (scheduleId: string) => {
     },
   });
 };
+
+export const useGetScheduleDistributors = (scheduleId: string) => {
+  return useQuery<
+    {
+      userId: string;
+      name: string;
+      totalAllocated: number;
+      totalSold: number;
+    }[],
+    Error
+  >({
+    queryKey: ["schedule", "distributors", scheduleId],
+    queryFn: async () => {
+      const res = await request<
+        {
+          userId: string;
+          name: string;
+          totalAllocated: number;
+          totalSold: number;
+        }[]
+      >(`/api/schedule/distributors/${scheduleId}`, {}, "get");
+      return res.data;
+    },
+  });
+};

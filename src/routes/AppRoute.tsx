@@ -32,6 +32,7 @@ import {
   ScheduleSeats,
   ScheduleTallyData,
   ScheduleTickets,
+  TicketAllocation,
 } from "../pages/cca/index";
 
 const AppRoute = () => {
@@ -70,6 +71,7 @@ const AppRoute = () => {
             <Route path="shows/schedule/:showId/:scheduleId" element={<ViewShowScheduleLayout />}>
               <Route index element={<ScheduleSummary />} />
               <Route path="d&r" element={<ScheduleDistributorAndRemittances />} />
+
               <Route path="seats" element={<ScheduleSeats />} />
               <Route path="tickets" element={<ScheduleTickets />} />
               <Route path="tally" element={<ScheduleTallyData />} />
@@ -78,6 +80,8 @@ const AppRoute = () => {
             <Route path="shows/:id" element={<ViewShow />} />
             <Route path="manage/distributors" element={<Distributors />} />
             <Route path="manage/request" element={<AccountRequests />} />
+
+            <Route path="shows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
 
             {user?.role === "head" && (
               <>

@@ -6,20 +6,20 @@ import { useGetScheduleInformation } from "../../../../_lib/@react-client-query/
 import { formatToReadableDate, formatToReadableTime } from "../../../../utils/date";
 import { useShowScheduleContext } from "../../../../context/ShowSchedulesContext";
 
-const links = [
-  { name: "Summary", path: "" },
-  { name: "Distributor and Remittance", path: "d&r" },
-  { name: "Tickets", path: "tickets" },
-  { name: "Seats", path: "seats" },
-  { name: "Tally Data", path: "tally" },
-  { name: "Reservations", path: "reservations" },
-];
-
 const ViewShowScheduleLayout = () => {
   const { schedules } = useShowScheduleContext();
   const { showId, scheduleId } = useParams();
   const { data: show, isLoading: loadingShow, isError: errorShow } = useGetShow(showId as string);
   const { data: schedule, isLoading: scheduleLoading, isError: errorSchedule } = useGetScheduleInformation(scheduleId as string);
+
+  const links = [
+    { name: "Summary", path: "" },
+    { name: "Distributor and Remittance", path: "d&r" },
+    { name: "Tickets", path: "tickets" },
+    { name: "Seats", path: "seats", hidden: schedule?.seatingType === "freeSeating" },
+    { name: "Tally Data", path: "tally" },
+    { name: "Reservations", path: "reservations" },
+  ];
 
   if (!show || !schedule || errorShow || errorSchedule) {
     return <p>Error loading</p>;
@@ -42,16 +42,18 @@ const ViewShowScheduleLayout = () => {
           ]}
         />
         <div className="flex w-full gap-10">
-          {links.map((link) => (
-            <NavLink
-              key={link.path}
-              end={link.path == ""}
-              className={({ isActive }) => (isActive ? "font-semibold" : "font-normal text-lightGrey")}
-              to={`/shows/schedule/${showId}/${scheduleId}/${link.path}`}
-            >
-              {link.name}
-            </NavLink>
-          ))}
+          {links
+            .filter((link) => !link.hidden)
+            .map((link) => (
+              <NavLink
+                key={link.path}
+                end={link.path == ""}
+                className={({ isActive }) => (isActive ? "font-semibold" : "font-normal text-lightGrey")}
+                to={`/shows/schedule/${showId}/${scheduleId}/${link.path}`}
+              >
+                {link.name}
+              </NavLink>
+            ))}
         </div>
         <div className="border border-lightGrey p-10 flex gap-5 mt-5 rounded-md shadow-sm w-fit">
           <img className="w-[150px] h-[120px] object-contain bg-gray" src={show.showCover} alt="show image" />

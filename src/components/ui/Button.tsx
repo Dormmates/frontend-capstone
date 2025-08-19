@@ -16,7 +16,7 @@ const variants: Record<ButtonVariant, string> = {
   primary: "bg-primary hover:opacity-50",
   danger: "bg-red hover:opacity-50",
   outline: "bg-transparent !text-black  border border-black hover:opacity-50",
-  plain: "hover:opacity-50",
+  plain: "hover:opacity-50 p-0",
 };
 
 const disabledStyles = "opacity-50 cursor-not-allowed";

@@ -9,7 +9,8 @@ import Shows from "./shows/Shows";
 import ViewShow from "./shows/ViewShow";
 
 import ViewShowScheduleLayout from "./shows/schedules/ViewShowScheduleLayout";
-import ScheduleDistributorAndRemittances from "./shows/schedules/pages/ScheduleDistributorAndRemittances";
+import ScheduleDistributorAndRemittances from "./shows/schedules/distributorAndRemitances/ScheduleDistributorAndRemittances";
+import TicketAllocation from "./shows/schedules/distributorAndRemitances/TicketAllocation";
 import ScheduleReservations from "./shows/schedules/pages/ScheduleReservations";
 import ScheduleSeats from "./shows/schedules/pages/ScheduleSeats";
 import ScheduleTallyData from "./shows/schedules/pages/ScheduleTallyData";
@@ -38,6 +39,7 @@ export {
   ViewShowScheduleLayout,
   ScheduleSummary,
   ScheduleDistributorAndRemittances,
+  TicketAllocation,
   ScheduleReservations,
   ScheduleSeats,
   ScheduleTallyData,

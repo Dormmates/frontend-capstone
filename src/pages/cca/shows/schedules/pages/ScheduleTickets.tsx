@@ -1,4 +1,4 @@
-import { Link, useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { useGetScheduleTickets } from "../../../../../_lib/@react-client-query/schedule";
 import { useEffect, useMemo, useState } from "react";
 import SimpleCard from "../../../../../components/ui/SimpleCard";
