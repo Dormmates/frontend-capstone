@@ -38,7 +38,7 @@ const PricingSection = ({ scheduleData, ticketPrice, sectionedPrice, handleSeatP
         onChange={handleSeatPricingType}
       />
 
-      {scheduleData.seatPricing === "fixed" ? (
+      {scheduleData.seatPricing === "fixed" || scheduleData.seatingConfiguration === "freeSeating" ? (
         <div className="border border-lightGrey rounded-md w-fit p-5">
           <TextInput
             placeholder="PHP"

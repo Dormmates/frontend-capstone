@@ -59,7 +59,7 @@ const ScheduleTickets = () => {
     if (!tickets) return null;
 
     const allocated = tickets.filter((t) => t.distributorId !== null).length;
-    const notAllocated = tickets.length - allocated;
+    const notAllocated = tickets.filter((ticket) => !ticket.isComplimentary).length - allocated;
     const sold = tickets.filter((t) => t.status === "remitted").length;
     const unsold = allocated - sold;
 

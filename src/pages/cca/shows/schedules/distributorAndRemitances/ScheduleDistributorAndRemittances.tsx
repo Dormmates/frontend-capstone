@@ -36,12 +36,12 @@ const ScheduleDistributorAndRemittances = () => {
     setPage(1);
   }, [debouncedSearch]);
 
-  if (!distributors || isError) {
-    return <h1>Error</h1>;
-  }
-
   if (isLoading) {
     return <h1>Loading....</h1>;
+  }
+
+  if (!distributors || isError) {
+    return <h1>Error</h1>;
   }
 
   return (
@@ -67,9 +67,12 @@ const ScheduleDistributorAndRemittances = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Total Allocated Tickets</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Group</TableHead>
+              <TableHead>Allocated Tickets</TableHead>
               <TableHead>Sold Tickets </TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -80,7 +83,19 @@ const ScheduleDistributorAndRemittances = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              <TableRow></TableRow>
+              paginatedDistributors.map((dist, index) => (
+                <TableRow key={index}>
+                  <TableCell>{dist.name}</TableCell>
+                  <TableCell>{dist.email}</TableCell>
+                  <TableCell>{dist.distributorType}</TableCell>
+                  <TableCell>{dist?.department ?? "No Group"}</TableCell>
+                  <TableCell>{dist.totalAllocated}</TableCell>
+                  <TableCell>{dist.totalSold}</TableCell>
+                  <TableCell className="text-center">
+                    <Button className="!bg-gray !text-black !border-lightGrey border-2">View Distributor</Button>
+                  </TableCell>
+                </TableRow>
+              ))
             )}
           </TableBody>
         </Table>

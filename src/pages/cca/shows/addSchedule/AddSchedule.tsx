@@ -372,6 +372,42 @@ const AddSchedule = () => {
     });
   };
 
+  const removeControlNumberAssignment = () => {
+    if (!selectedSeats?.length) return;
+
+    // Build a copy of assignedControlNumbers to update in place
+    const updatedAssigned = { ...assignedControlNumbers };
+
+    // Clear ticket numbers in seatData
+    setSeatData((prev) =>
+      prev.map((seat) => {
+        const match = selectedSeats.find((sel) => sel.seatNumber === seat.seatNumber && sel.section === seat.section);
+        if (match) {
+          // Determine correct section key
+          const sectionKey = getSection(match.isComplimentary ? "complimentary" : match.section);
+
+          // Remove control number from the assigned list for that section
+          updatedAssigned[sectionKey] = (updatedAssigned[sectionKey] || []).filter((num) => num !== match.ticketControlNumber);
+
+          // Return cleared seat
+          return { ...seat, ticketControlNumber: 0, isComplimentary: false };
+        }
+        return seat;
+      })
+    );
+
+    // Update state with new assignedControlNumbers
+    setAssignedControlNumbers(updatedAssigned);
+
+    ToastNotification.success("Control number(s) removed");
+
+    // Close modal + reset
+    setSeatToggle(false);
+    setRowToggle(false);
+    setSectionToggle(false);
+    setTicketInput({ controlNumber: "", isComplimentary: false });
+  };
+
   const getRemainingControlNumbers = (section: string): number[] => {
     const controlKey = section.toLowerCase().includes("balcony")
       ? "balconyControlNumber"
@@ -433,7 +469,12 @@ const AddSchedule = () => {
 
     if (!selectedSeats?.length) return;
 
-    const seatMap = new Map(selectedSeats.slice(0, controlNums.length).map((s, i) => [s.seatNumber, controlNums[i]]));
+    const seatMap = new Map(
+      selectedSeats
+        .filter((seat) => seat.ticketControlNumber === 0)
+        .slice(0, controlNums.length)
+        .map((s, i) => [s.seatNumber, controlNums[i]])
+    );
 
     setSeatData((prev) =>
       prev.map((seat) =>
@@ -618,13 +659,13 @@ const AddSchedule = () => {
                 handleOpenTicketModal("seat");
               }}
               rowClick={(clickedSeats: FlattenedSeat[]) => {
-                setSelectedSeats(clickedSeats.filter((seat) => seat.ticketControlNumber === 0));
+                //clickedSeats.filter((seat) => seat.ticketControlNumber === 0)
+                setSelectedSeats(clickedSeats);
                 handleOpenTicketModal("row");
               }}
               sectionClick={(clickedSeats: FlattenedSeat[]) => {
-                setSelectedSeats(clickedSeats.filter((seat) => seat.ticketControlNumber === 0));
+                setSelectedSeats(clickedSeats);
                 handleOpenTicketModal("section");
-                console.log("Section Toggle: " + sectionToggle);
               }}
             />
 
@@ -642,10 +683,10 @@ const AddSchedule = () => {
               >
                 <div className="mt-5 bg-zinc-100 border border-darkGrey p-2">
                   <p>Section: {formatSectionName(selectedSeats?.[0]?.section || "")}</p>
-                  {rowToggle ? <p>{getRowLabel(selectedSeats)}</p> : <p>Seat Number: {selectedSeats?.[0]?.seatNumber}</p>}
+                  {!sectionToggle && (rowToggle ? <p>{getRowLabel(selectedSeats)}</p> : <p>Seat Number: {selectedSeats?.[0]?.seatNumber}</p>)}
                   <p>PHP {selectedSeats?.[0]?.ticketPrice?.toFixed(2) || "0.00"}</p>
 
-                  {selectedSeats?.[0]?.ticketControlNumber == 0 && (
+                  {selectedSeats?.some((seat) => seat.ticketControlNumber == 0) && (
                     <div className="mt-2 text-sm text-gray-700 !max-w-fit">
                       Unassigned Control Numbers (
                       <span className="font-medium">
@@ -661,7 +702,7 @@ const AddSchedule = () => {
                   )}
                 </div>
 
-                {selectedSeats?.[0]?.ticketControlNumber === 0 ? (
+                {selectedSeats?.some((seat) => seat.ticketControlNumber == 0) ? (
                   <>
                     {getRemainingControlNumbers("complimentary").length != 0 ||
                     getRemainingControlNumbers("orchestra").length != 0 ||
@@ -698,7 +739,9 @@ const AddSchedule = () => {
                               label={
                                 <p className="flex flex-col gap-2">
                                   Input Ticket Control Number to be assigned:
-                                  <span className="font-semibold">"{selectedSeats.length}" control number required</span>
+                                  <span className="font-semibold">
+                                    "{selectedSeats.filter((seat) => seat.ticketControlNumber === 0).length}" control number required
+                                  </span>
                                 </p>
                               }
                             />
@@ -721,20 +764,33 @@ const AddSchedule = () => {
                     )}
                   </>
                 ) : (
-                  <div className="mt-5 text-sm text-gray-700">
-                    {rowToggle ? (
-                      <p>
-                        Ticket Control Numbers:{" "}
-                        <span className="font-medium text-black">
-                          {selectedSeats?.map((seat) => `${seat.seatNumber}: ${seat.ticketControlNumber}`).join(", ")}
-                        </span>
-                      </p>
-                    ) : (
-                      <p>
-                        Ticket Control Number: <span className="font-medium text-black">{selectedSeats?.[0]?.ticketControlNumber}</span>
-                      </p>
+                  <>
+                    {seatToggle && (
+                      <div className="mt-5 text-sm text-gray-700">
+                        <p>
+                          Ticket Control Number: <span className="font-medium text-black">{selectedSeats?.[0]?.ticketControlNumber}</span>
+                        </p>
+                        <div className="flex mt-5">
+                          <Button className="!bg-red" onClick={removeControlNumberAssignment}>
+                            Clear Ticket Assignement
+                          </Button>
+                        </div>
+                      </div>
                     )}
-                  </div>
+                    {(rowToggle || sectionToggle) && (
+                      <div className="mt-5 text-sm text-gray-700">
+                        <p>
+                          Ticket Control Numbers:{" "}
+                          <span className="font-medium text-black">{selectedSeats?.map((seat) => seat.ticketControlNumber).join(", ")}</span>
+                        </p>
+                        <div className="flex mt-5">
+                          <Button className="!bg-red" onClick={removeControlNumberAssignment}>
+                            Clear Ticket Assignements
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </Modal>
             )}

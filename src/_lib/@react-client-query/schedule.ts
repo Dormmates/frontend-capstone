@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { request } from "../api";
 
 import type { ScheduleFormData, Schedule, ScheduleSummary } from "../../types/schedule";
-import type { FlattenedSeatMap } from "../../types/seat";
+import type { FlattenedSeat, FlattenedSeatMap } from "../../types/seat";
 import type { Ticket } from "../../types/ticket";
 
 export interface AddSchedulePayload extends ScheduleFormData {
@@ -75,6 +75,9 @@ export const useGetScheduleDistributors = (scheduleId: string) => {
       name: string;
       totalAllocated: number;
       totalSold: number;
+      email: string;
+      department: string;
+      distributorType: string;
     }[],
     Error
   >({
@@ -86,9 +89,33 @@ export const useGetScheduleDistributors = (scheduleId: string) => {
           name: string;
           totalAllocated: number;
           totalSold: number;
+          email: string;
+          department: string;
+          distributorType: string;
         }[]
       >(`/api/schedule/distributors/${scheduleId}`, {}, "get");
       return res.data;
     },
+  });
+};
+
+export const useGetScheduleSeatMap = (scheduleId: string) => {
+  return useQuery<FlattenedSeat[], Error>({
+    queryKey: ["schedule", "seatmap", scheduleId],
+    queryFn: async () => {
+      const res = await request<FlattenedSeat[]>(`/api/schedule/seatmap/${scheduleId}`, {}, "get");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useAllocateTicketByControlNumber = () => {
+  return useMutation<any, Error, { distributorId: string; scheduleId: string; controlNumbers: number[]; allocatedBy: string }>({
+    mutationFn: async (payload: { distributorId: string; scheduleId: string; controlNumbers: number[]; allocatedBy: string }) => {
+      const res = await request<any>(`/api/schedule/allocate/controlNumber/`, payload, "post");
+      return res.data;
+    },
+    retry: false,
   });
 };

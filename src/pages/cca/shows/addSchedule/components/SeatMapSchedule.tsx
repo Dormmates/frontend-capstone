@@ -42,6 +42,8 @@ const SeatMapSchedule = ({ seatClick, rowClick, sectionClick, seatMap, disabled 
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
 
+  console.log(seatMap);
+
   const handleMouseEnter = (e: React.MouseEvent<SVGRectElement>, seat: FlattenedSeat) => {
     const rect = e.currentTarget.getBoundingClientRect();
 

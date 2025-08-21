@@ -29,8 +29,6 @@ const ViewShowScheduleLayout = () => {
     return <p>Loading...</p>;
   }
 
-  console.log(schedules);
-
   return (
     <ContentWrapper className="lg:!p-16 flex flex-col">
       <div className="flex flex-col gap-5 ">
@@ -55,32 +53,34 @@ const ViewShowScheduleLayout = () => {
               </NavLink>
             ))}
         </div>
-        <div className="border border-lightGrey p-10 flex gap-5 mt-5 rounded-md shadow-sm w-fit">
-          <img className="w-[150px] h-[120px] object-contain bg-gray" src={show.showCover} alt="show image" />
+        <div className="flex gap-5">
+          <div className="border border-lightGrey p-10 flex gap-5 mt-5 rounded-md shadow-sm w-fit">
+            <img className="w-[150px] h-[120px] object-contain bg-gray" src={show.showCover} alt="show image" />
 
-          <div className="flex flex-col gap-3">
-            <h1 className="font-bold text-xl uppercase">{show?.title}</h1>
-            <p className="text-left break-words whitespace-pre-wrap  line-clamp-4 text-zinc-800 max-w-[500px]">{show.description}</p>
-            <div className="flex flex-col gap-2">
-              <p>Genres: </p>
-              <div className="flex gap-5">
-                {show?.genreNames.map((name, index) => (
-                  <div key={index} className="bg-gray border-2 border-lightGrey px-5 rounded-full">
-                    {name}
-                  </div>
-                ))}
+            <div className="flex flex-col gap-3">
+              <h1 className="font-bold text-xl uppercase">{show?.title}</h1>
+              <p className="text-left break-words whitespace-pre-wrap  line-clamp-4 text-zinc-800 max-w-[500px]">{show.description}</p>
+              <div className="flex flex-col gap-2">
+                <p>Genres: </p>
+                <div className="flex gap-5">
+                  {show?.genreNames.map((name, index) => (
+                    <div key={index} className="bg-gray border-2 border-lightGrey px-5 rounded-full">
+                      {name}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="flex flex-col justify-center text-2xl gap-2 mt-5 mb-10">
-          <h1 className="text-center">
-            You are viewing "<span className="font-bold">{show.title}</span>"
-          </h1>
-          <p className="text-center">
-            Scheduled on <span className="font-bold">{formatToReadableDate(schedule.datetime + "")}</span> at{" "}
-            <span className="font-bold">{formatToReadableTime(schedule.datetime + "")}</span>
-          </p>
+          <div className="flex flex-col justify-center text-2xl gap-2 mt-5 mb-10">
+            <h1 className="text-center">
+              You are viewing "<span className="font-bold">{show.title}</span>"
+            </h1>
+            <p className="text-center">
+              Scheduled on <span className="font-bold">{formatToReadableDate(schedule.datetime + "")}</span> at{" "}
+              <span className="font-bold">{formatToReadableTime(schedule.datetime + "")}</span>
+            </p>
+          </div>
         </div>
         <Outlet context={{ show, schedule }} />
       </div>

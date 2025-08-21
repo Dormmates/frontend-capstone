@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useGetShow } from "../../../../../_lib/@react-client-query/show";
 import { useParams } from "react-router-dom";
 import { ContentWrapper } from "../../../../../components/layout/Wrapper";
@@ -6,7 +6,7 @@ import BreadCrumb from "../../../../../components/ui/BreadCrumb";
 import LongCard from "../../../../../components/ui/LongCard";
 import LongCardItem from "../../../../../components/ui/LongCardItem";
 import { formatToReadableDate, formatToReadableTime } from "../../../../../utils/date";
-import { useGetScheduleInformation, useGetShowSchedules } from "../../../../../_lib/@react-client-query/schedule";
+import { useAllocateTicketByControlNumber, useGetScheduleInformation, useGetScheduleTickets } from "../../../../../_lib/@react-client-query/schedule";
 import type { Distributor } from "../../../../../types/user";
 import Button from "../../../../../components/ui/Button";
 import InputLabel from "../../../../../components/ui/InputLabel";
@@ -19,22 +19,104 @@ import { useDebounce } from "../../../../../hooks/useDeabounce";
 import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../components/ui/Table";
 import TextInput from "../../../../../components/ui/TextInput";
 import ToastNotification from "../../../../../utils/toastNotification";
+import { useAuthContext } from "../../../../../context/AuthContext";
+import { parseControlNumbers, validateControlInput } from "../../../../../utils/controlNumber";
+import { useQueryClient } from "@tanstack/react-query";
 
 const TicketAllocation = () => {
+  const { user } = useAuthContext();
   const { scheduleId, showId } = useParams();
   const { data: showData, isLoading: loadingShow, isError: showError } = useGetShow(showId as string);
   const { data: schedule, isLoading: loadingSchedule, isError: errorSchedule } = useGetScheduleInformation(scheduleId as string);
-  const [selectedDistributor, setSelectedDistributor] = useState<Distributor | null>(null);
+  const { data: tickets, isLoading: loadingTickets, isError: ticketsError } = useGetScheduleTickets(scheduleId as string);
 
+  const allocateTicketByControlNumber = useAllocateTicketByControlNumber();
+  const queryClient = useQueryClient();
+
+  const [selectedDistributor, setSelectedDistributor] = useState<Distributor | null>(null);
   const [isChooseDistributor, setIsChooseDistributor] = useState(false);
   const [allocationMethod, setAllocationMethod] = useState<"controlNumber" | "seat">("controlNumber");
+  const [controlNumberInput, setControlNumberInput] = useState("");
 
-  if (!showData || showError || errorSchedule || !schedule) {
-    return <h1>Error</h1>;
+  const [parsedControlNumbers, setParsedControlNumbers] = useState<number[]>();
+
+  const [error, setError] = useState<{ controlNumberError?: string; distributorError?: string }>({});
+  const [isAllocationSummary, setIsAllocationSummary] = useState(false);
+
+  const unAllocatedTickets = useMemo(() => {
+    if (!tickets) return { orchestra: [], balcony: [] };
+
+    const orchestra = tickets.filter((ticket) => ticket.status == "not_allocated" && !ticket.isComplimentary && ticket.ticketSection == "orchestra");
+    const balcony = tickets.filter((ticket) => ticket.status == "not_allocated" && !ticket.isComplimentary && ticket.ticketSection == "balcony");
+
+    return { orchestra, balcony };
+  }, [tickets]);
+
+  const validate = () => {
+    let isValid = true;
+    const newErrors: typeof error = {};
+
+    if (!validateControlInput(controlNumberInput.trim())) {
+      newErrors.controlNumberError = "Please enter valid format or a value";
+      isValid = false;
+    }
+
+    if (!selectedDistributor) {
+      newErrors.distributorError = "Please choose a distributor";
+      isValid = false;
+    }
+
+    setError(newErrors);
+    return isValid;
+  };
+
+  const handleSubmitByControlNumber = () => {
+    if (!validate()) return;
+
+    try {
+      const parsedControlNumbers = parseControlNumbers(controlNumberInput);
+      setParsedControlNumbers(parsedControlNumbers);
+      setIsAllocationSummary(true);
+    } catch (err) {
+      if (err instanceof Error) {
+        error.controlNumberError = err.message;
+        setError((prev) => ({ ...prev, controlNumberError: err.message }));
+      }
+    }
+  };
+
+  const submit = () => {
+    if (allocationMethod === "controlNumber") {
+      const payload = {
+        distributorId: selectedDistributor?.userId + "",
+        scheduleId: scheduleId as string,
+        controlNumbers: parsedControlNumbers as number[],
+        allocatedBy: user?.userId as string,
+      };
+      allocateTicketByControlNumber.mutate(payload, {
+        onSuccess: () => {
+          ToastNotification.success("Allocated Tickets to the distributor");
+          setIsAllocationSummary(false);
+          setSelectedDistributor(null);
+          setControlNumberInput("");
+          setParsedControlNumbers(undefined);
+          queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId], exact: true });
+          queryClient.invalidateQueries({ queryKey: ["schedule", "distributors", scheduleId], exact: true });
+        },
+        onError: (err) => {
+          console.log("Full error details:", err);
+          ToastNotification.error(err.message);
+        },
+      });
+    }
+  };
+
+  if (loadingShow || loadingSchedule || loadingTickets) {
+    return <h1>Loadingg....</h1>;
   }
 
-  if (loadingShow || loadingSchedule) {
-    return <h1>Loadingg....</h1>;
+  if (!showData || showError || errorSchedule || !schedule || ticketsError || !tickets) {
+    return <h1>Error</h1>;
   }
 
   return (
@@ -44,20 +126,30 @@ const TicketAllocation = () => {
       <div className="flex flex-col gap-8 mt-10">
         <h1 className="text-3xl">Allocate Ticket To a Distributor</h1>
 
-        <LongCard labelStyle="!text-xl" label="Show Details">
-          <LongCardItem label="Show Title" value={showData.title} />
-          <LongCardItem label="Date" value={formatToReadableDate(schedule.datetime + "")} />
-          <LongCardItem label="Time" value={formatToReadableTime(schedule.datetime + "")} />
-        </LongCard>
+        <div>
+          <LongCard labelStyle="!text-xl" label="Show Details">
+            <LongCardItem label="Show Title" value={showData.title} />
+            <LongCardItem label="Date" value={formatToReadableDate(schedule.datetime + "")} />
+            <LongCardItem label="Time" value={formatToReadableTime(schedule.datetime + "")} />
+          </LongCard>
+        </div>
 
         <div className="flex gap-2 flex-col">
           <InputLabel label="Choose Distributor" />
-          <Button onClick={() => setIsChooseDistributor(true)} variant="plain" className="!text-black border border-lightGrey border-md w-fit">
+          <Button
+            disabled={
+              (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
+            }
+            onClick={() => setIsChooseDistributor(true)}
+            variant="plain"
+            className={`!text-black border border-lightGrey border-md w-fit ${error.distributorError && "!border-red"}`}
+          >
             <div className="flex gap-12">
               {selectedDistributor ? <h1>{selectedDistributor.firstName + " " + selectedDistributor.lastName}</h1> : <h1>No Selected Distributor</h1>}
               <p className="text-lightGrey font-normal">click to choose distributor</p>
             </div>
           </Button>
+          {error.distributorError && <p className="text-red text-sm">{error.distributorError}</p>}
         </div>
 
         <div className="flex flex-col gap-2">
@@ -90,7 +182,28 @@ const TicketAllocation = () => {
           </div>
         </div>
 
-        {allocationMethod === "controlNumber" && <AllocateByControlNumber />}
+        {allocationMethod === "controlNumber" && (
+          <>
+            <div className="flex flex-col gap-3">
+              <AllocateByControlNumber
+                unAllocatedTickets={unAllocatedTickets}
+                controlNumber={controlNumberInput}
+                setControlNumbers={setControlNumberInput}
+                error={error.controlNumberError}
+              />
+
+              <Button
+                disabled={
+                  (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
+                }
+                onClick={handleSubmitByControlNumber}
+                className="!bg-green max-w-fit"
+              >
+                Reserve Tickets
+              </Button>
+            </div>
+          </>
+        )}
         {allocationMethod === "seat" && <AllocatedBySeat />}
 
         {isChooseDistributor && (
@@ -104,8 +217,31 @@ const TicketAllocation = () => {
               closeModal={() => setIsChooseDistributor(false)}
               selectedDistributor={selectedDistributor}
               show={showData}
-              onChoose={(dist) => setSelectedDistributor(dist)}
+              onChoose={(dist) => {
+                setSelectedDistributor(dist);
+                setError((prev) => ({ ...prev, distributorError: "" }));
+              }}
             />
+          </Modal>
+        )}
+
+        {isAllocationSummary && (
+          <Modal className="w-full max-w-[650px]" isOpen={isAllocationSummary} onClose={() => setIsAllocationSummary(false)} title="Summary">
+            <LongCard className="mt-10 w-full" label="Ticket">
+              <LongCardItem value={selectedDistributor?.firstName + " " + selectedDistributor?.lastName} label="Distributor Name" />
+              <LongCardItem value={selectedDistributor?.distributor.distributortypes.name + ""} label="Type" />
+              <LongCardItem value={parsedControlNumbers?.length + ""} label="Total Tickets" />
+              <LongCardItem value={controlNumberInput} label="Control Numbers" />
+            </LongCard>
+
+            <div className="flex justify-end gap-3 mt-5">
+              <Button disabled={allocateTicketByControlNumber.isPending} onClick={submit} className="!bg-green">
+                Confirm
+              </Button>
+              <Button disabled={allocateTicketByControlNumber.isPending} onClick={() => setIsAllocationSummary(false)} className="!bg-red">
+                Cancel
+              </Button>
+            </div>
           </Modal>
         )}
       </div>
@@ -146,13 +282,14 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
     return searchedDistributors.splice(start, end);
   }, [page, searchedDistributors]);
 
+  if (loadingDistributors) {
+    return <h1>Loading...</h1>;
+  }
+
   if (!distributors || distributorsError) {
     return <h1>Failed to load distributors</h1>;
   }
 
-  if (loadingDistributors) {
-    return <h1>Loading...</h1>;
-  }
   return (
     <div className="flex flex-col gap-6">
       <p className="mt-5 text-sm">List of Distributors</p>
