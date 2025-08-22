@@ -4,10 +4,8 @@ import { useGetShow } from "../../../../_lib/@react-client-query/show";
 import { ContentWrapper } from "../../../../components/layout/Wrapper";
 import { useGetScheduleInformation } from "../../../../_lib/@react-client-query/schedule";
 import { formatToReadableDate, formatToReadableTime } from "../../../../utils/date";
-import { useShowScheduleContext } from "../../../../context/ShowSchedulesContext";
 
 const ViewShowScheduleLayout = () => {
-  const { schedules } = useShowScheduleContext();
   const { showId, scheduleId } = useParams();
   const { data: show, isLoading: loadingShow, isError: errorShow } = useGetShow(showId as string);
   const { data: schedule, isLoading: scheduleLoading, isError: errorSchedule } = useGetScheduleInformation(scheduleId as string);

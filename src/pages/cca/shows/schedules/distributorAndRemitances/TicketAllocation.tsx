@@ -22,6 +22,7 @@ import ToastNotification from "../../../../../utils/toastNotification";
 import { useAuthContext } from "../../../../../context/AuthContext";
 import { parseControlNumbers, validateControlInput } from "../../../../../utils/controlNumber";
 import { useQueryClient } from "@tanstack/react-query";
+import type { FlattenedSeat } from "../../../../../types/seat";
 
 const TicketAllocation = () => {
   const { user } = useAuthContext();
@@ -39,6 +40,7 @@ const TicketAllocation = () => {
   const [controlNumberInput, setControlNumberInput] = useState("");
 
   const [parsedControlNumbers, setParsedControlNumbers] = useState<number[]>();
+  const [choosenSeats, setChoosenSeats] = useState<FlattenedSeat[]>([]);
 
   const [error, setError] = useState<{ controlNumberError?: string; distributorError?: string }>({});
   const [isAllocationSummary, setIsAllocationSummary] = useState(false);
@@ -204,7 +206,20 @@ const TicketAllocation = () => {
             </div>
           </>
         )}
-        {allocationMethod === "seat" && <AllocatedBySeat />}
+        {allocationMethod === "seat" && (
+          <>
+            <AllocatedBySeat choosenSeats={choosenSeats} setChoosenSeats={setChoosenSeats} />
+            <Button
+              disabled={
+                (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
+              }
+              onClick={handleSubmitByControlNumber}
+              className="!bg-green max-w-fit"
+            >
+              Reserve Seats
+            </Button>
+          </>
+        )}
 
         {isChooseDistributor && (
           <Modal

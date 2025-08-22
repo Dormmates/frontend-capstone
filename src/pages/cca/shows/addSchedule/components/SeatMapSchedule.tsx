@@ -11,22 +11,6 @@ interface Props {
   disabled?: boolean;
 }
 
-const getSeatColor = (seat: FlattenedSeat) => {
-  switch (seat.status) {
-    case "vip":
-      return "#facc15"; // yellow
-    case "reserved":
-      return "#f87171"; // red
-    case "sold":
-      return "#9ca3af"; // gray
-    case "complimentarySeat":
-      return "#38bdf8"; // blue
-    case "available":
-    default:
-      return "#ffffff"; // white
-  }
-};
-
 type ContextType = { contentRef: React.RefObject<HTMLDivElement> };
 
 const SeatMapSchedule = ({ seatClick, rowClick, sectionClick, seatMap, disabled = false }: Props) => {
@@ -41,8 +25,6 @@ const SeatMapSchedule = ({ seatClick, rowClick, sectionClick, seatMap, disabled 
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
-
-  console.log(seatMap);
 
   const handleMouseEnter = (e: React.MouseEvent<SVGRectElement>, seat: FlattenedSeat) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -158,7 +140,7 @@ const SeatMapSchedule = ({ seatClick, rowClick, sectionClick, seatMap, disabled 
                           y={seat.y}
                           width="14"
                           height="14"
-                          fill={getSeatColor(seat)}
+                          fill="#ffffff"
                           stroke="black"
                           className={`transition-colors 
                             ${disabled ? "cursor-not-allowed" : "cursor-pointer"} 
