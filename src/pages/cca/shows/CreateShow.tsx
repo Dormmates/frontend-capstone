@@ -13,6 +13,8 @@ import ToastNotification from "../../../utils/toastNotification";
 import { useGetDepartments } from "../../../_lib/@react-client-query/department";
 import { useNavigate } from "react-router-dom";
 import { useGetGenres } from "../../../_lib/@react-client-query/genre";
+import { useQueryClient } from "@tanstack/react-query";
+import type { ShowData } from "../../../types/show";
 
 const productionType = [
   { label: "Showcase", value: "showCase" },
@@ -20,6 +22,7 @@ const productionType = [
 ];
 
 const CreateShow = () => {
+  const queryClient = useQueryClient();
   const { user } = useAuthContext();
   const { data: groups, isLoading: loadingDepartments, error: errorDepartment } = useGetDepartments();
   const navigate = useNavigate();
@@ -154,8 +157,13 @@ const CreateShow = () => {
             image: null as File | null,
           });
 
-          navigate(`/shows/add/schedule/${data.newShow.showId}`);
-          ToastNotification.success(data.message);
+          queryClient.setQueryData<ShowData>(["show", data.showId], data);
+          queryClient.setQueryData(["shows"], (oldData: ShowData[] | undefined) => {
+            if (!oldData) return oldData;
+            return oldData.map((show) => (show.showId === data.showId ? data : show));
+          });
+          navigate(`/shows/add/schedule/${data.showId}`);
+          ToastNotification.success("Show created");
           ToastNotification.info("Please add a schedule for the created show", 5000);
         },
         onError: (err) => {

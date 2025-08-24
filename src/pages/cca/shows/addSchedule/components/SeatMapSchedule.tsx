@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+
 import type { FlattenedSeatMap, FlattenedSeat } from "../../../../../types/seat.ts";
 import { formatSectionName } from "../../../../../utils/seatmap.ts";
 
@@ -11,10 +11,7 @@ interface Props {
   disabled?: boolean;
 }
 
-type ContextType = { contentRef: React.RefObject<HTMLDivElement> };
-
 const SeatMapSchedule = ({ seatClick, rowClick, sectionClick, seatMap, disabled = false }: Props) => {
-  const { contentRef } = useOutletContext<ContextType>();
   const tooltipRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [scale, setScale] = useState(1);
@@ -27,17 +24,17 @@ const SeatMapSchedule = ({ seatClick, rowClick, sectionClick, seatMap, disabled 
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
 
   const handleMouseEnter = (e: React.MouseEvent<SVGRectElement>, seat: FlattenedSeat) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    const mouseX = e.clientX + 10;
+    const mouseY = e.clientY + 10;
 
-    const scrollY = contentRef?.current?.scrollTop ?? 0;
-    const height = tooltipRef?.current?.offsetHeight ?? 0;
-
-    setTooltipPos({
-      x: rect.x,
-      y: rect.y - scrollY / 10 + height,
-    });
-
+    setTooltipPos({ x: mouseX, y: mouseY });
     setHoveredSeat(seat);
+
+    console.log(hoveredSeat);
+  };
+
+  const handleMouseMoveOverSeat = (e: React.MouseEvent<SVGRectElement>) => {
+    setTooltipPos({ x: e.clientX + 10, y: e.clientY + 10 });
   };
 
   const handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
@@ -151,6 +148,7 @@ const SeatMapSchedule = ({ seatClick, rowClick, sectionClick, seatMap, disabled 
                           `}
                           onClick={() => seatClick(seat)}
                           onMouseEnter={(e) => handleMouseEnter(e, seat)}
+                          onMouseMove={handleMouseMoveOverSeat}
                           onMouseLeave={() => setHoveredSeat(null)}
                         />
                       ))}

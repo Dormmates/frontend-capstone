@@ -40,7 +40,7 @@ const Shows = () => {
 
   const debouncedSearch = useDebounce(search, 500);
   const { user } = useAuthContext();
-  const { data: showsData, isLoading: showsLoading } = useGetShows(user?.role === "trainer" && user?.department ? user.department.departmentId : "");
+  const { data: shows, isLoading: showsLoading } = useGetShows(user?.role === "trainer" && user?.department ? user.department.departmentId : "");
   const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments();
 
   const [selectedShow, setSelectedShow] = useState<ShowData | null>();
@@ -50,14 +50,14 @@ const Shows = () => {
   }, [departmentsData]);
 
   const filteredShows = useMemo(() => {
-    if (!showsData?.shows) return [];
-    return showsData.shows.filter((show) => {
+    if (!shows) return [];
+    return shows.filter((show) => {
       const matchTitle = show.title.toLowerCase().includes(debouncedSearch.toLowerCase());
       const matchType = !showType || show.showType === showType;
       const matchDepartment = !selectedDepartment || show.department?.departmentId === selectedDepartment || !show.department;
       return matchTitle && matchType && matchDepartment;
     });
-  }, [showsData?.shows, debouncedSearch, showType, selectedDepartment]);
+  }, [shows, debouncedSearch, showType, selectedDepartment]);
 
   useEffect(() => {
     setPage(1);
@@ -70,7 +70,7 @@ const Shows = () => {
   }, [filteredShows, page]);
 
   if (showsLoading || departmentsLoading) return <h1>Loading...</h1>;
-  if (!showsData || !departmentsData || !user) return <h1>Error: No shows fetched.</h1>;
+  if (!shows || !departmentsData || !user) return <h1>Error: No shows fetched.</h1>;
 
   return (
     <ContentWrapper className="lg:!p-20">

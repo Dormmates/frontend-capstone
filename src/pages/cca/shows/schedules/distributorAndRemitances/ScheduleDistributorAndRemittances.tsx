@@ -29,7 +29,7 @@ const ScheduleDistributorAndRemittances = () => {
   const paginatedDistributors = useMemo(() => {
     const start = (page - 1) * ITEMS_PER_PAGE;
     const end = start + ITEMS_PER_PAGE;
-    return searchedDistributors.splice(start, end);
+    return searchedDistributors.slice(start, end);
   }, [searchedDistributors, page]);
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const ScheduleDistributorAndRemittances = () => {
           <TableBody>
             {paginatedDistributors.length === 0 ? (
               <TableRow>
-                <TableCell className="text-center py-10 text-gray-400" colSpan={4}>
+                <TableCell className="text-center py-10 text-gray-400" colSpan={7}>
                   No Distributors Found
                 </TableCell>
               </TableRow>
@@ -92,7 +92,9 @@ const ScheduleDistributorAndRemittances = () => {
                   <TableCell>{dist.totalAllocated}</TableCell>
                   <TableCell>{dist.totalSold}</TableCell>
                   <TableCell className="text-center">
-                    <Button className="!bg-gray !text-black !border-lightGrey border-2">View Distributor</Button>
+                    <Link to={`/shows/schedule/${showId}/${scheduleId}/d&r/${dist.userId}`}>
+                      <Button className="!bg-gray !text-black !border-lightGrey border-2">View Distributor</Button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))

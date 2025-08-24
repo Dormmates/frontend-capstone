@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
-import { useGetScheduleSeatMap } from "../../../../../_lib/@react-client-query/schedule";
-import type { FlattenedSeat } from "../../../../../types/seat";
+import { useGetScheduleSeatMap } from "../../../../../../_lib/@react-client-query/schedule";
+import type { FlattenedSeat } from "../../../../../../types/seat";
 import { useMemo, useRef, useState } from "react";
+import { formatSectionName } from "../../../../../../utils/seatmap";
 
 type Props = {
   choosenSeats: FlattenedSeat[];
@@ -12,6 +13,8 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
   const { scheduleId } = useParams();
   const { data, isLoading, isError } = useGetScheduleSeatMap(scheduleId as string);
 
+  const tooltipRef = useRef<HTMLDivElement | null>(null);
+  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
   const [scale, setScale] = useState(1);
   const [hoveredSeat, setHoveredSeat] = useState<null | FlattenedSeat>(null);
@@ -20,19 +23,27 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
 
-  console.log(hoveredSeat);
-
   const seatAvailabilityCount = useMemo(() => {
-    if (!data) return { available: 0, unavailable: 0 };
+    if (!data) return { available: 0, unavailable: 0, reserved: 0 };
     const available = data.filter((seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status === "available").length;
-    const unavailable = data.length - available;
+    const reserved = data.filter((seat) => seat.status === "reserved").length;
+    const unavailable = data.length - available - reserved;
 
-    return { available, unavailable };
+    return { available, unavailable, reserved };
   }, [data]);
 
   const handleMouseEnter = (e: React.MouseEvent<SVGRectElement>, seat: FlattenedSeat) => {
-    console.log(e);
+    const mouseX = e.clientX + 10;
+    const mouseY = e.clientY + 10;
+
+    setTooltipPos({ x: mouseX, y: mouseY });
     setHoveredSeat(seat);
+
+    console.log(hoveredSeat);
+  };
+
+  const handleMouseMoveOverSeat = (e: React.MouseEvent<SVGRectElement>) => {
+    setTooltipPos({ x: e.clientX + 10, y: e.clientY + 10 });
   };
 
   const handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
@@ -106,6 +117,10 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
               <div className="w-5 h-5 bg-white border"></div>
               <p>Available Seats: {seatAvailabilityCount.available}</p>
             </div>
+            <div className="flex gap-2 items-center">
+              <div className="w-5 h-5 bg-red border"></div>
+              <p>Reserved Seats : {seatAvailabilityCount.reserved}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -162,13 +177,15 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
                           fill="#ffffff"
                           className={`transition-colors
                         ${
-                          seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status === "reserved"
+                          seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status == "reserved"
                             ? "fill-darkGrey !cursor-not-allowed"
                             : "hover:fill-blue-200 cursor-pointer"
                         }
+                        ${seat.status === "reserved" && "fill-red !cursor-not-allowed"}
                         ${choosenSeats.includes(seat) ? "fill-blue-600" : ""}
                         `}
                           onMouseEnter={(e) => handleMouseEnter(e, seat)}
+                          onMouseMove={handleMouseMoveOverSeat}
                           onMouseLeave={() => setHoveredSeat(null)}
                           onClick={() => {
                             if (seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status === "reserved") return;
@@ -196,6 +213,28 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
           </svg>
         </div>
       </div>
+
+      {hoveredSeat && (
+        <div
+          ref={tooltipRef}
+          className="fixed z-20 bg-white shadow-lg rounded px-2 py-1 text-xs border border-gray-300"
+          style={{
+            top: tooltipPos.y,
+            left: tooltipPos.x,
+            pointerEvents: "none",
+          }}
+        >
+          <>
+            <div>
+              <strong>{hoveredSeat.seatNumber}</strong>
+            </div>
+            <div>Section: {formatSectionName(hoveredSeat.section)}</div>
+            <div>Row: {hoveredSeat.row}</div>
+            <div>Price: ₱{hoveredSeat.ticketPrice}</div>
+            <div>Ticket Control Number: {hoveredSeat.ticketControlNumber == 0 ? "Not Assigned" : hoveredSeat.ticketControlNumber}</div>
+          </>
+        </div>
+      )}
     </>
   );
 };

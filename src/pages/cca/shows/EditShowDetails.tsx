@@ -22,7 +22,6 @@ const productionType = [
 interface Props {
   selectedShow: ShowData;
   groups: Department[];
-
   close: () => void;
 }
 
@@ -90,7 +89,7 @@ const EditShowDetails = ({ selectedShow, close, groups }: Props) => {
       newErrors.genre = "Please choose a genre for each field";
     }
 
-    if (!showData.group && user?.role === "head" && !!user?.department) {
+    if (!showData.group || (user?.role === "head" && !!user?.department)) {
       newErrors.group = "Please choose Performing Group";
     }
 
@@ -145,7 +144,7 @@ const EditShowDetails = ({ selectedShow, close, groups }: Props) => {
         showId: selectedShow.showId,
         showTitle: showData.title,
         description: showData.description,
-        department: showData.group,
+        department: showData.productionType == "majorProduction" ? null : showData.group,
         genre: stringedGenre,
         createdBy: user?.userId,
         showType: showData.productionType,
@@ -165,8 +164,13 @@ const EditShowDetails = ({ selectedShow, close, groups }: Props) => {
             image: null as File | null,
           });
 
-          queryClient.invalidateQueries({ queryKey: ["shows"], exact: true });
-          ToastNotification.success(data.message);
+          queryClient.setQueryData<ShowData>(["show", data.showId], data);
+          queryClient.setQueryData(["shows"], (oldData: ShowData[] | undefined) => {
+            if (!oldData) return oldData;
+            return oldData.map((show) => (show.showId === data.showId ? data : show));
+          });
+
+          ToastNotification.success("Updated Show");
           close();
         },
         onError: (err) => {

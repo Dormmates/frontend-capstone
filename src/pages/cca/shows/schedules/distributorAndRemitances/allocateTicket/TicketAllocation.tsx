@@ -1,28 +1,32 @@
 import { useMemo, useState } from "react";
-import { useGetShow } from "../../../../../_lib/@react-client-query/show";
+import { useGetShow } from "../../../../../../_lib/@react-client-query/show";
 import { useParams } from "react-router-dom";
-import { ContentWrapper } from "../../../../../components/layout/Wrapper";
-import BreadCrumb from "../../../../../components/ui/BreadCrumb";
-import LongCard from "../../../../../components/ui/LongCard";
-import LongCardItem from "../../../../../components/ui/LongCardItem";
-import { formatToReadableDate, formatToReadableTime } from "../../../../../utils/date";
-import { useAllocateTicketByControlNumber, useGetScheduleInformation, useGetScheduleTickets } from "../../../../../_lib/@react-client-query/schedule";
-import type { Distributor } from "../../../../../types/user";
-import Button from "../../../../../components/ui/Button";
-import InputLabel from "../../../../../components/ui/InputLabel";
+import { ContentWrapper } from "../../../../../../components/layout/Wrapper";
+import BreadCrumb from "../../../../../../components/ui/BreadCrumb";
+import LongCard from "../../../../../../components/ui/LongCard";
+import LongCardItem from "../../../../../../components/ui/LongCardItem";
+import { formatToReadableDate, formatToReadableTime } from "../../../../../../utils/date";
+import {
+  useAllocateTicketByControlNumber,
+  useGetScheduleInformation,
+  useGetScheduleTickets,
+} from "../../../../../../_lib/@react-client-query/schedule";
+import type { Distributor } from "../../../../../../types/user";
+import Button from "../../../../../../components/ui/Button";
+import InputLabel from "../../../../../../components/ui/InputLabel";
 import AllocateByControlNumber from "./AllocateByControlNumber";
 import AllocatedBySeat from "./AllocatedBySeat";
-import Modal from "../../../../../components/ui/Modal";
-import type { ShowData } from "../../../../../types/show";
-import { useGetDistributors } from "../../../../../_lib/@react-client-query/accounts";
-import { useDebounce } from "../../../../../hooks/useDeabounce";
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../components/ui/Table";
-import TextInput from "../../../../../components/ui/TextInput";
-import ToastNotification from "../../../../../utils/toastNotification";
-import { useAuthContext } from "../../../../../context/AuthContext";
-import { parseControlNumbers, validateControlInput } from "../../../../../utils/controlNumber";
+import Modal from "../../../../../../components/ui/Modal";
+import type { ShowData } from "../../../../../../types/show";
+import { useGetDistributors } from "../../../../../../_lib/@react-client-query/accounts";
+import { useDebounce } from "../../../../../../hooks/useDeabounce";
+import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../components/ui/Table";
+import TextInput from "../../../../../../components/ui/TextInput";
+import ToastNotification from "../../../../../../utils/toastNotification";
+import { useAuthContext } from "../../../../../../context/AuthContext";
+import { parseControlNumbers, validateControlInput } from "../../../../../../utils/controlNumber";
 import { useQueryClient } from "@tanstack/react-query";
-import type { FlattenedSeat } from "../../../../../types/seat";
+import type { FlattenedSeat } from "../../../../../../types/seat";
 
 const TicketAllocation = () => {
   const { user } = useAuthContext();
@@ -42,7 +46,7 @@ const TicketAllocation = () => {
   const [parsedControlNumbers, setParsedControlNumbers] = useState<number[]>();
   const [choosenSeats, setChoosenSeats] = useState<FlattenedSeat[]>([]);
 
-  const [error, setError] = useState<{ controlNumberError?: string; distributorError?: string }>({});
+  const [error, setError] = useState<{ controlNumberError?: string; distributorError?: string; seatError?: string }>({});
   const [isAllocationSummary, setIsAllocationSummary] = useState(false);
 
   const unAllocatedTickets = useMemo(() => {
@@ -58,59 +62,69 @@ const TicketAllocation = () => {
     let isValid = true;
     const newErrors: typeof error = {};
 
-    if (!validateControlInput(controlNumberInput.trim())) {
-      newErrors.controlNumberError = "Please enter valid format or a value";
+    if (!selectedDistributor) {
+      ToastNotification.error("Please choose a distributor");
+      newErrors.distributorError = "Please choose a distributor";
       isValid = false;
     }
 
-    if (!selectedDistributor) {
-      newErrors.distributorError = "Please choose a distributor";
-      isValid = false;
+    if (allocationMethod === "controlNumber") {
+      if (!validateControlInput(controlNumberInput.trim())) {
+        ToastNotification.error("Please enter valid format or a value");
+        newErrors.controlNumberError = "Please enter valid format or a value";
+        isValid = false;
+      }
+
+      try {
+        const parsedControlNumbers = parseControlNumbers(controlNumberInput);
+        setParsedControlNumbers(parsedControlNumbers);
+      } catch (err) {
+        if (err instanceof Error) {
+          newErrors.controlNumberError = err.message;
+          isValid = false;
+        }
+      }
+    } else if (allocationMethod == "seat") {
+      if (!choosenSeats || choosenSeats.length == 0) {
+        ToastNotification.error("Please choose atleast one seat");
+        newErrors.seatError == "Please choose atleast one seat";
+        isValid = false;
+      }
+    }
+
+    if (isValid) {
+      setIsAllocationSummary(true);
     }
 
     setError(newErrors);
     return isValid;
   };
 
-  const handleSubmitByControlNumber = () => {
-    if (!validate()) return;
-
-    try {
-      const parsedControlNumbers = parseControlNumbers(controlNumberInput);
-      setParsedControlNumbers(parsedControlNumbers);
-      setIsAllocationSummary(true);
-    } catch (err) {
-      if (err instanceof Error) {
-        error.controlNumberError = err.message;
-        setError((prev) => ({ ...prev, controlNumberError: err.message }));
-      }
-    }
-  };
-
   const submit = () => {
-    if (allocationMethod === "controlNumber") {
-      const payload = {
-        distributorId: selectedDistributor?.userId + "",
-        scheduleId: scheduleId as string,
-        controlNumbers: parsedControlNumbers as number[],
-        allocatedBy: user?.userId as string,
-      };
-      allocateTicketByControlNumber.mutate(payload, {
-        onSuccess: () => {
-          ToastNotification.success("Allocated Tickets to the distributor");
-          setIsAllocationSummary(false);
-          setSelectedDistributor(null);
-          setControlNumberInput("");
-          setParsedControlNumbers(undefined);
-          queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId], exact: true });
-          queryClient.invalidateQueries({ queryKey: ["schedule", "distributors", scheduleId], exact: true });
-        },
-        onError: (err) => {
-          console.log("Full error details:", err);
-          ToastNotification.error(err.message);
-        },
-      });
-    }
+    const payload = {
+      distributorId: selectedDistributor?.userId + "",
+      scheduleId: scheduleId as string,
+      controlNumbers:
+        allocationMethod === "controlNumber" ? (parsedControlNumbers as number[]) : choosenSeats.map((seat) => seat.ticketControlNumber),
+      allocatedBy: user?.userId as string,
+    };
+    allocateTicketByControlNumber.mutate(payload, {
+      onSuccess: () => {
+        ToastNotification.success("Allocated Tickets to the distributor");
+        setIsAllocationSummary(false);
+        setSelectedDistributor(null);
+        setControlNumberInput("");
+        setChoosenSeats([]);
+        setParsedControlNumbers(undefined);
+        queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId], exact: true });
+        queryClient.invalidateQueries({ queryKey: ["schedule", "distributors", scheduleId], exact: true });
+        queryClient.invalidateQueries({ queryKey: ["schedule", "seatmap", scheduleId], exact: true });
+      },
+      onError: (err) => {
+        console.log("Full error details:", err);
+        ToastNotification.error(err.message);
+      },
+    });
   };
 
   if (loadingShow || loadingSchedule || loadingTickets) {
@@ -198,7 +212,7 @@ const TicketAllocation = () => {
                 disabled={
                   (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
                 }
-                onClick={handleSubmitByControlNumber}
+                onClick={validate}
                 className="!bg-green max-w-fit"
               >
                 Reserve Tickets
@@ -213,7 +227,7 @@ const TicketAllocation = () => {
               disabled={
                 (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
               }
-              onClick={handleSubmitByControlNumber}
+              onClick={validate}
               className="!bg-green max-w-fit"
             >
               Reserve Seats
@@ -245,9 +259,28 @@ const TicketAllocation = () => {
             <LongCard className="mt-10 w-full" label="Ticket">
               <LongCardItem value={selectedDistributor?.firstName + " " + selectedDistributor?.lastName} label="Distributor Name" />
               <LongCardItem value={selectedDistributor?.distributor.distributortypes.name + ""} label="Type" />
-              <LongCardItem value={parsedControlNumbers?.length + ""} label="Total Tickets" />
-              <LongCardItem value={controlNumberInput} label="Control Numbers" />
+              <LongCardItem
+                value={allocationMethod === "controlNumber" ? parsedControlNumbers?.length + "" : choosenSeats.length}
+                label={allocationMethod === "controlNumber" ? "Total Tickets" : "Total Seats"}
+              />
+              <LongCardItem
+                className="!whitespace-normal"
+                value={allocationMethod === "controlNumber" ? controlNumberInput : choosenSeats.map((seat) => seat.seatNumber).join(", ")}
+                label={allocationMethod === "controlNumber" ? "Control Numbers" : "Seat Numbers"}
+              />
             </LongCard>
+
+            {allocationMethod == "seat" && (
+              <div className="mt-3">
+                <p>
+                  Please provide <span className="font-bold">{choosenSeats.length} tickets </span> to the distributor
+                </p>
+                <p>
+                  Ticket Control Numbers to be given:{" "}
+                  <span className="font-bold">{choosenSeats.map((seat) => seat.ticketControlNumber).join(", ")} control numbers</span>
+                </p>
+              </div>
+            )}
 
             <div className="flex justify-end gap-3 mt-5">
               <Button disabled={allocateTicketByControlNumber.isPending} onClick={submit} className="!bg-green">

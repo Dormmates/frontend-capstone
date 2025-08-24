@@ -1,15 +1,13 @@
 import { Outlet } from "react-router-dom";
-import SideBar, { type SideBarItems } from "../components/navigation/SideBar";
+import SideBar, { type SideBarItems } from "../../components/navigation/SideBar";
 
-import accounts from "../assets/icons/accounts.png";
-import dashboard from "../assets/icons/dashboard.png";
-import groups from "../assets/icons/performing-groups.png";
-import seat from "../assets/icons/seat.png";
-import shows from "../assets/icons/shows.png";
-import Header from "../components/Header";
+import accounts from "../../assets/icons/accounts.png";
+import dashboard from "../../assets/icons/dashboard.png";
+import groups from "../../assets/icons/performing-groups.png";
+import shows from "../../assets/icons/shows.png";
+import Header from "../../components/Header";
 
-import { useRef } from "react";
-import { useAuthContext } from "../context/AuthContext";
+import { useAuthContext } from "../../context/AuthContext";
 
 const CCALayout = () => {
   const { user } = useAuthContext();
@@ -41,23 +39,16 @@ const CCALayout = () => {
       ],
       path: user?.role === "trainer" ? "/manage/distributors" : "/manage/trainers",
     },
-    {
-      icon: seat,
-      name: "Seat Map",
-      path: "/seat",
-      hidden: user?.role === "trainer",
-    },
   ];
 
-  const contentRef = useRef<HTMLDivElement>(null);
   return (
     <div className="min-w-[1200px] ">
       <Header />
       <div className="flex h-[calc(100vh-120px)] pt-[120px]">
         <SideBar items={sideBarItems} />
 
-        <div ref={contentRef} className="flex-grow overflow-x-auto" style={{ height: "calc(100vh - 120px)" }}>
-          <Outlet context={{ contentRef }} />
+        <div className="flex-grow overflow-x-auto" style={{ height: "calc(100vh - 120px)" }}>
+          <Outlet />
         </div>
       </div>
     </div>

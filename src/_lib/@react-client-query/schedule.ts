@@ -3,7 +3,7 @@ import { request } from "../api";
 
 import type { ScheduleFormData, Schedule, ScheduleSummary } from "../../types/schedule";
 import type { FlattenedSeat, FlattenedSeatMap } from "../../types/seat";
-import type { Ticket } from "../../types/ticket";
+import type { AllocatedTicketToDistributor, Ticket } from "../../types/ticket";
 
 export interface AddSchedulePayload extends ScheduleFormData {
   showId: string;
@@ -21,9 +21,9 @@ export interface AddSchedulePayload extends ScheduleFormData {
 }
 
 export const useAddSchedule = () => {
-  return useMutation<any, Error, AddSchedulePayload>({
+  return useMutation<Schedule[], Error, AddSchedulePayload>({
     mutationFn: async (payLoad: AddSchedulePayload) => {
-      const res = await request("/api/schedule", payLoad, "post");
+      const res = await request<Schedule[]>("/api/schedule", payLoad, "post");
       return res.data;
     },
   });
@@ -117,5 +117,15 @@ export const useAllocateTicketByControlNumber = () => {
       return res.data;
     },
     retry: false,
+  });
+};
+
+export const useGetAllocatedTicketsOfDistributor = (distributorId: string, scheduleId: string) => {
+  return useQuery<AllocatedTicketToDistributor[], Error>({
+    queryKey: ["schedule", "allocated", scheduleId, distributorId],
+    queryFn: async () => {
+      const res = await request<AllocatedTicketToDistributor[]>(`/api/schedule/${scheduleId}/ticketAllocated/${distributorId}`, {}, "get");
+      return res.data;
+    },
   });
 };

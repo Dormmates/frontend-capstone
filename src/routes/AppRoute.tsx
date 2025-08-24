@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 
-import CCALayout from "../layouts/CCALayout";
-import DistributorLayout from "../layouts/DistributorLayout";
+import CCALayout from "../pages/cca/CCALayout";
+import DistributorLayout from "../pages/distributor/DistributorLayout";
 
 import ProtectedRoute from "./ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
@@ -22,7 +22,6 @@ import {
   Shows,
   ViewShow,
   PerformingGroups,
-  SeatMap,
   CCADashboard,
   CCALogin,
   ViewShowScheduleLayout,
@@ -33,6 +32,10 @@ import {
   ScheduleTallyData,
   ScheduleTickets,
   TicketAllocation,
+  ViewDistributorLayout,
+  DistributorTicketsAllocated,
+  DistributorAllocationHistory,
+  DistributorRemittanceHistory,
 } from "../pages/cca/index";
 
 const AppRoute = () => {
@@ -71,11 +74,15 @@ const AppRoute = () => {
             <Route path="shows/schedule/:showId/:scheduleId" element={<ViewShowScheduleLayout />}>
               <Route index element={<ScheduleSummary />} />
               <Route path="d&r" element={<ScheduleDistributorAndRemittances />} />
-
               <Route path="seats" element={<ScheduleSeats />} />
               <Route path="tickets" element={<ScheduleTickets />} />
               <Route path="tally" element={<ScheduleTallyData />} />
               <Route path="reservations" element={<ScheduleReservations />} />
+              <Route path="d&r/:distributorId" element={<ViewDistributorLayout />}>
+                <Route index element={<DistributorTicketsAllocated />} />
+                <Route path="allocation/history" element={<DistributorAllocationHistory />} />
+                <Route path="remittance/history" element={<DistributorRemittanceHistory />} />
+              </Route>
             </Route>
             <Route path="shows/:id" element={<ViewShow />} />
             <Route path="manage/distributors" element={<Distributors />} />
@@ -88,7 +95,6 @@ const AppRoute = () => {
                 <Route path="performing-groups" element={<PerformingGroups />} />
                 <Route path="manage/trainers" element={<Trainers />} />
                 <Route path="manage/cca-head" element={<CCAHead />} />
-                <Route path="seat" element={<SeatMap />} />
               </>
             )}
           </>

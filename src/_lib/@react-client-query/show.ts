@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { request } from "../api";
-import type { NewShowPayload, ShowData, ShowList, UpdateShowPayload } from "../../types/show";
+import type { NewShowPayload, ShowData, UpdateShowPayload } from "../../types/show";
 
 export const useCreateShow = () => {
-  return useMutation<any, Error, NewShowPayload>({
+  return useMutation<ShowData, Error, NewShowPayload>({
     mutationFn: async (data: NewShowPayload) => {
       const formData = new FormData();
       formData.append("showTitle", data.showTitle);
@@ -23,7 +23,7 @@ export const useCreateShow = () => {
 };
 
 export const useUpdateShow = () => {
-  return useMutation<any, Error, UpdateShowPayload>({
+  return useMutation<ShowData, Error, UpdateShowPayload>({
     mutationFn: async (data: UpdateShowPayload) => {
       const formData = new FormData();
       formData.append("showTitle", data.showTitle);
@@ -46,10 +46,10 @@ export const useUpdateShow = () => {
 };
 
 export const useGetShows = (departmentId?: string) => {
-  return useQuery<ShowList, Error>({
+  return useQuery<ShowData[], Error>({
     queryKey: ["shows"],
     queryFn: async () => {
-      const res = await request<ShowList>(`/api/show`, { departmentId }, "get");
+      const res = await request<ShowData[]>(`/api/show`, { departmentId }, "get");
       return res.data;
     },
     retry: false,

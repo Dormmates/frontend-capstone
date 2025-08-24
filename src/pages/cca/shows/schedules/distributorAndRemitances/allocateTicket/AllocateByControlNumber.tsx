@@ -1,7 +1,7 @@
-import TextInput from "../../../../../components/ui/TextInput";
-import ControlNumberInputTutorial from "../../../../../components/ui/ControlNumberInputTutorial";
+import TextInput from "../../../../../../components/ui/TextInput";
+import ControlNumberInputTutorial from "../../../../../../components/ui/ControlNumberInputTutorial";
 
-import type { Ticket } from "../../../../../types/ticket";
+import type { Ticket } from "../../../../../../types/ticket";
 
 type Props = {
   controlNumber: string;

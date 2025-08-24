@@ -1,4 +1,5 @@
 import type { Department } from "./department";
+import type { Schedule } from "./schedule";
 
 export type ShowType = "majorConcert" | "showCase" | "majorProduction" | "";
 
@@ -28,9 +29,5 @@ export interface ShowData {
   isArchived: boolean;
   showCover: string;
   genreNames: string[];
-  showschedules: any[];
-}
-
-export interface ShowList {
-  shows: ShowData[];
+  showschedules: Schedule[];
 }

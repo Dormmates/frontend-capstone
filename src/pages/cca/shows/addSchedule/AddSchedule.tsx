@@ -499,8 +499,10 @@ const AddSchedule = () => {
   };
 
   const handleSubmit = () => {
+    if (!validate()) return;
+
     if (scheduleData.ticketType === "ticketed") {
-      if (!validate() || !validateControlNumbers()) {
+      if (!validateControlNumbers()) {
         ToastNotification.error("Please fix all errors first");
         return;
       }

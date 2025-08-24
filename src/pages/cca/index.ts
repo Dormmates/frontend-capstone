@@ -10,16 +10,21 @@ import ViewShow from "./shows/ViewShow";
 
 import ViewShowScheduleLayout from "./shows/schedules/ViewShowScheduleLayout";
 import ScheduleDistributorAndRemittances from "./shows/schedules/distributorAndRemitances/ScheduleDistributorAndRemittances";
-import TicketAllocation from "./shows/schedules/distributorAndRemitances/TicketAllocation";
-import ScheduleReservations from "./shows/schedules/pages/ScheduleReservations";
-import ScheduleSeats from "./shows/schedules/pages/ScheduleSeats";
-import ScheduleTallyData from "./shows/schedules/pages/ScheduleTallyData";
-import ScheduleTickets from "./shows/schedules/pages/ScheduleTickets";
-import ScheduleSummary from "./shows/schedules/pages/ScheduleSummary";
+import TicketAllocation from "./shows/schedules/distributorAndRemitances/allocateTicket/TicketAllocation";
+
+import ViewDistributorLayout from "./shows/schedules/distributorAndRemitances/viewDistributor/ViewDistributorLayout";
+import DistributorRemittanceHistory from "./shows/schedules/distributorAndRemitances/viewDistributor/remittanceHistory/DistributorRemittanceHistory";
+import DistributorAllocationHistory from "./shows/schedules/distributorAndRemitances/viewDistributor/allocationHistory/DistributorAllocationHistory";
+import DistributorTicketsAllocated from "./shows/schedules/distributorAndRemitances/viewDistributor/allocatedTickets/DistributorTicketsAllocated";
+
+import ScheduleReservations from "./shows/schedules/scheduleReservations/ScheduleReservations";
+import ScheduleSeats from "./shows/schedules/scheduleSeats/ScheduleSeats";
+import ScheduleTallyData from "./shows/schedules/scheduleTallyData/ScheduleTallyData";
+import ScheduleTickets from "./shows/schedules/scheduleTickets/ScheduleTickets";
+import ScheduleSummary from "./shows/schedules/scheduleSummary/ScheduleSummary";
 
 import PerformingGroups from "./groups/PerformingGroups";
-import SeatMap from "./SeatMap";
-import CCADashboard from "./CCADashboard";
+import CCADashboard from "./dashboard/CCADashboard";
 
 import CCALogin from "./CCALogin";
 
@@ -34,7 +39,6 @@ export {
   Shows,
   ViewShow,
   PerformingGroups,
-  SeatMap,
   CCADashboard,
   ViewShowScheduleLayout,
   ScheduleSummary,
@@ -44,4 +48,8 @@ export {
   ScheduleSeats,
   ScheduleTallyData,
   ScheduleTickets,
+  ViewDistributorLayout,
+  DistributorAllocationHistory,
+  DistributorRemittanceHistory,
+  DistributorTicketsAllocated,
 };
