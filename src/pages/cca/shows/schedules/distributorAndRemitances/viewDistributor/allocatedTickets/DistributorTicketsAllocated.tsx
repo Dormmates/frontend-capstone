@@ -6,6 +6,13 @@ import TextInput from "../../../../../../../components/ui/TextInput";
 import Dropdown from "../../../../../../../components/ui/Dropdown";
 import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../../components/ui/Table";
 import Button from "../../../../../../../components/ui/Button";
+import Modal from "../../../../../../../components/ui/Modal";
+import LongCard from "../../../../../../../components/ui/LongCard";
+import LongCardItem from "../../../../../../../components/ui/LongCardItem";
+import type { Schedule } from "../../../../../../../types/schedule";
+import type { ShowData } from "../../../../../../../types/show";
+import { formatToReadableDate, formatToReadableTime } from "../../../../../../../utils/date";
+import { formatTicket } from "../../../../../../../utils/controlNumber";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -23,6 +30,9 @@ const saleOptions = [
 
 const DistributorTicketsAllocated = () => {
   const { allocatedTickets } = useOutletContext<{ allocatedTickets: AllocatedTicketToDistributor[] }>();
+  const { schedule, show } = useOutletContext<{ schedule: Schedule; show: ShowData }>();
+
+  const [selectedTicket, setSelectedTicket] = useState<AllocatedTicketToDistributor | null>(null);
 
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState({ search: "", saleStatus: "", verificationStatus: "" });
@@ -64,10 +74,12 @@ const DistributorTicketsAllocated = () => {
 
         <Table>
           <TableHeader>
-            <TableHead>Ticket Control Number</TableHead>
-            <TableHead>Sale Status from Distributor</TableHead>
-            <TableHead>Verification Status</TableHead>
-            <TableHead>Action</TableHead>
+            <TableRow>
+              <TableHead>Ticket Control Number</TableHead>
+              <TableHead>Sale Status from Distributor</TableHead>
+              <TableHead>Verification Status</TableHead>
+              <TableHead>Action</TableHead>
+            </TableRow>
           </TableHeader>
           <TableBody>
             {paginatedTickets.length == 0 ? (
@@ -78,8 +90,8 @@ const DistributorTicketsAllocated = () => {
               </TableRow>
             ) : (
               paginatedTickets.map((ticket) => (
-                <TableRow>
-                  <TableCell>{ticket.controlNumber}</TableCell>
+                <TableRow key={ticket.ticketId}>
+                  <TableCell>{formatTicket(ticket.controlNumber)}</TableCell>
                   <TableCell>
                     {ticket.status === "sold" ? (
                       <div className="flex items-center gap-2">
@@ -103,7 +115,9 @@ const DistributorTicketsAllocated = () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Button className="!bg-gray !text-black !border-lightGrey border-2">View Ticket</Button>
+                    <Button onClick={() => setSelectedTicket(ticket)} className="!bg-gray !text-black !border-lightGrey border-2">
+                      View Ticket
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))
@@ -119,6 +133,32 @@ const DistributorTicketsAllocated = () => {
           />
         </div>
       </div>
+
+      {selectedTicket && (
+        <Modal
+          onClose={() => setSelectedTicket(null)}
+          isOpen={!!selectedTicket}
+          title={`Ticket ${formatTicket(selectedTicket.controlNumber)} (${show.title} - ${formatToReadableDate(
+            schedule.datetime + ""
+          )} - ${formatToReadableTime(schedule.datetime + "")})`}
+        >
+          <LongCard className="mt-8 w-full" label="Ticket">
+            {schedule.seatingType === "controlledSeating" && (
+              <>
+                <LongCardItem label="Section" value={(selectedTicket.ticketSection + "").toUpperCase()} />
+                <LongCardItem label="Seat Number" value={selectedTicket.seatNumber + ""} />
+              </>
+            )}
+            <LongCardItem label="Ticket Status" value={selectedTicket.status !== "sold" ? "Unsold" : "Sold"} />
+            <LongCardItem label="Verification Status" value={selectedTicket.isRemitted ? "Verified" : "Pending"} />
+            <LongCardItem label="Ticket Price" value={selectedTicket.ticketPrice} />
+          </LongCard>
+          <div className="flex mt-5 gap-3 flex-col">
+            <p className="text-lightGrey text-sm">Distributor Name</p>
+            <p className="text-lg">{selectedTicket.distributor.firstName + " " + selectedTicket.distributor.lastName}</p>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };

@@ -38,3 +38,7 @@ export const validateControlInput = (control: string) => {
   const validCharsOnly = /^[0-9,\-\s]+$/;
   return validCharsOnly.test(control);
 };
+
+export const formatTicket = (ticketNumber: number) => {
+  return String(ticketNumber).length == 2 ? "0" + ticketNumber : String(ticketNumber).length == 1 ? "00" + ticketNumber : ticketNumber;
+};

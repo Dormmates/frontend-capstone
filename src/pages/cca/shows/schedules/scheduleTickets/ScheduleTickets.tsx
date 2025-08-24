@@ -10,6 +10,7 @@ import type { Schedule } from "../../../../../types/schedule";
 import TextInput from "../../../../../components/ui/TextInput";
 import Dropdown from "../../../../../components/ui/Dropdown";
 import Button from "../../../../../components/ui/Button";
+import { formatTicket } from "../../../../../utils/controlNumber";
 
 const statusOptions = [
   { label: "All Status", value: "" },
@@ -160,7 +161,7 @@ const ScheduleTickets = () => {
             ) : (
               paginatedTicket.map((ticket) => (
                 <TableRow key={ticket.ticketId}>
-                  <TableCell>{ticket.controlNumber}</TableCell>
+                  <TableCell>{formatTicket(ticket.controlNumber)}</TableCell>
                   <TableCell>{ticket.ticketSection?.toUpperCase() ?? "Complimentary Seat"}</TableCell>
                   {schedule.seatingType === "controlledSeating" && <TableCell>{ticket.seatNumber}</TableCell>}
                   <TableCell>{ticket.isComplimentary ? "Yes" : "No"}</TableCell>

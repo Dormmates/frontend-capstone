@@ -3,7 +3,7 @@ import { request } from "../api";
 
 import type { ScheduleFormData, Schedule, ScheduleSummary } from "../../types/schedule";
 import type { FlattenedSeat, FlattenedSeatMap } from "../../types/seat";
-import type { AllocatedTicketToDistributor, Ticket } from "../../types/ticket";
+import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket } from "../../types/ticket";
 
 export interface AddSchedulePayload extends ScheduleFormData {
   showId: string;
@@ -117,6 +117,26 @@ export const useAllocateTicketByControlNumber = () => {
       return res.data;
     },
     retry: false,
+  });
+};
+
+export const useGetDistributorAllocationHistory = (distributorId: string, scheduleId: string) => {
+  return useQuery<AllocationHistory[], Error>({
+    queryKey: ["schedule", "allocationHistory", scheduleId, distributorId],
+    queryFn: async () => {
+      const res = await request<AllocationHistory[]>(`/api/schedule/${scheduleId}/allocationHistory/${distributorId}`, {}, "get");
+      return res.data;
+    },
+  });
+};
+
+export const useGetDistributorRemittanceHistory = (distributorId: string, scheduleId: string) => {
+  return useQuery<RemittanceHistory[], Error>({
+    queryKey: ["schedule", "remittanceHistory", scheduleId, distributorId],
+    queryFn: async () => {
+      const res = await request<RemittanceHistory[]>(`/api/schedule/${scheduleId}/remittanceHistory/${distributorId}`, {}, "get");
+      return res.data;
+    },
   });
 };
 

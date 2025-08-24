@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { NavLink, Outlet, useParams } from "react-router-dom";
+import { NavLink, Outlet, useOutletContext, useParams } from "react-router-dom";
 import { useGetAllocatedTicketsOfDistributor } from "../../../../../../_lib/@react-client-query/schedule";
 import BreadCrumb from "../../../../../../components/ui/BreadCrumb";
 import Button from "../../../../../../components/ui/Button";
@@ -12,6 +12,8 @@ import pending_icon from "../../../../../../assets/icons/pending_remittance.png"
 import expected_icon from "../../../../../../assets/icons/expected_sales.png";
 import remitted_icon from "../../../../../../assets/icons/remitted.png";
 import balance_due_icon from "../../../../../../assets/icons/balance_due.png";
+import type { ShowData } from "../../../../../../types/show";
+import type { Schedule } from "../../../../../../types/schedule";
 
 const links = [
   {
@@ -29,6 +31,7 @@ const links = [
 ];
 
 const ViewDistributorLayout = () => {
+  const { schedule, show } = useOutletContext<{ show: ShowData; schedule: Schedule }>();
   const { distributorId, showId, scheduleId } = useParams();
   const { data, isLoading, isError } = useGetAllocatedTicketsOfDistributor(distributorId as string, scheduleId as string);
 
@@ -139,7 +142,7 @@ const ViewDistributorLayout = () => {
       </div>
 
       <div>
-        <Outlet context={{ allocatedTickets: data }} />
+        <Outlet context={{ allocatedTickets: data, schedule, show }} />
       </div>
     </div>
   );
