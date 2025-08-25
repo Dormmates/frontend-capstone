@@ -29,6 +29,9 @@ export interface FlattenedSeat {
   ticketControlNumber: number;
   ticketPrice: number;
   isComplimentary: boolean;
+  distributor?: {
+    name: string;
+    type: string;
+    department: string;
+  };
 }
-
-export type FlattenedSeatMap = FlattenedSeat[];

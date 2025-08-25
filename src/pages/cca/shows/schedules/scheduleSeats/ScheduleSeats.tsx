@@ -3,6 +3,7 @@ import type { Schedule } from "../../../../../types/schedule";
 import NotFound from "../../../../NotFound";
 import SeatMap from "../../../../../components/ui/SeatMap";
 import { useGetScheduleSeatMap } from "../../../../../_lib/@react-client-query/schedule";
+import { useMemo } from "react";
 
 const ScheduleSeats = () => {
   const { schedule } = useOutletContext<{ schedule: Schedule }>();
@@ -10,6 +11,31 @@ const ScheduleSeats = () => {
   const { data, isLoading, isError } = useGetScheduleSeatMap(scheduleId as string);
 
   if (schedule.seatingType === "freeSeating") return <NotFound />;
+
+  const seatSummary = useMemo(() => {
+    if (!data)
+      return {
+        vip: 0,
+        complimentary: 0,
+        sold: 0,
+        reserved: 0,
+        available: 0,
+        notAvailable: 0,
+      };
+
+    return data.reduce(
+      (summary, seat) => {
+        if (seat.status == "vip") summary.vip++;
+        if (seat.isComplimentary) summary.complimentary++;
+        if (seat.status === "sold") summary.sold++;
+        if (seat.status === "reserved") summary.reserved++;
+        if (seat.status === "available") summary.available++;
+        if (seat.ticketControlNumber == 0) summary.notAvailable++;
+        return summary;
+      },
+      { vip: 0, complimentary: 0, sold: 0, reserved: 0, available: 0, notAvailable: 0 }
+    );
+  }, [data]);
 
   if (isLoading) {
     return <h1>Loading...</h1>;
@@ -20,13 +46,50 @@ const ScheduleSeats = () => {
   }
 
   return (
-    <SeatMap
-      recStyle={(seat) => "asc"}
-      seatMap={data}
-      seatClick={(seat) => console.log(seat)}
-      rowClick={(seats) => console.log(seats)}
-      sectionClick={(seats) => console.log(seats)}
-    />
+    <div className="flex flex-col gap-5 mt-10">
+      <div className="flex gap-3 justify-end">
+        <div className="flex gap-2 items-center">
+          <div className="w-5 h-5 bg-primary border"></div>
+          <p>VIP Seats: {seatSummary.vip}</p>
+        </div>
+        <div className="flex gap-2 items-center">
+          <div className="w-5 h-5 bg-violet-500 border"></div>
+          <p>Complimentary Seats: {seatSummary.complimentary}</p>
+        </div>
+        <div className="flex gap-2 items-center">
+          <div className="w-5 h-5 bg-green border"></div>
+          <p>Sold Seats: {seatSummary.sold}</p>
+        </div>
+        <div className="flex gap-2 items-center">
+          <div className="w-5 h-5 bg-red border"></div>
+          <p>Reserved Seats: {seatSummary.reserved}</p>
+        </div>
+        <div className="flex gap-2 items-center">
+          <div className="w-5 h-5 bg-white border"></div>
+          <p>Available Seats: {seatSummary.available}</p>
+        </div>
+        <div className="flex gap-2 items-center">
+          <div className="w-5 h-5 bg-darkGrey border"></div>
+          <p>Not Available Seats: {seatSummary.notAvailable}</p>
+        </div>
+      </div>
+
+      <SeatMap
+        recStyle={(seat) => {
+          if (seat.ticketControlNumber === 0) return "fill-darkGrey";
+          if (seat.status === "vip") return "fill-primary";
+          if (seat.isComplimentary) return "fill-violet-500";
+          if (seat.status === "sold") return "fill-green";
+          if (seat.status === "reserved") return "fill-red";
+          if (seat.status === "available") return "fill-white";
+          return "";
+        }}
+        seatMap={data}
+        seatClick={(seat) => console.log(seat)}
+        rowClick={(seats) => console.log(seats)}
+        sectionClick={(seats) => console.log(seats)}
+      />
+    </div>
   );
 };
 

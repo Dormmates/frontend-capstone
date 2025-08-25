@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { request } from "../api";
 
 import type { ScheduleFormData, Schedule, ScheduleSummary } from "../../types/schedule";
-import type { FlattenedSeat, FlattenedSeatMap } from "../../types/seat";
+import type { FlattenedSeat } from "../../types/seat";
 import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket } from "../../types/ticket";
 
 export interface AddSchedulePayload extends ScheduleFormData {
@@ -17,7 +17,7 @@ export interface AddSchedulePayload extends ScheduleFormData {
     balconyMiddle: number;
     balconyRight: number;
   };
-  seats?: FlattenedSeatMap;
+  seats?: FlattenedSeat[];
 }
 
 export const useAddSchedule = () => {
@@ -26,6 +26,7 @@ export const useAddSchedule = () => {
       const res = await request<Schedule[]>("/api/schedule", payLoad, "post");
       return res.data;
     },
+    retry: false,
   });
 };
 
@@ -36,6 +37,7 @@ export const useGetShowSchedules = (showId: string) => {
       const res = await request<Schedule[]>("/api/schedule", { showId }, "get");
       return res.data;
     },
+    retry: false,
   });
 };
 
@@ -46,6 +48,7 @@ export const useGetScheduleInformation = (scheduleId: string) => {
       const res = await request<Schedule>(`/api/schedule/${scheduleId}`, {}, "get");
       return res.data;
     },
+    retry: false,
   });
 };
 
@@ -56,6 +59,7 @@ export const useGetScheduleSummary = (scheduleId: string) => {
       const res = await request<ScheduleSummary>(`/api/schedule/summary/${scheduleId}`, {}, "get");
       return res.data;
     },
+    retry: false,
   });
 };
 export const useGetScheduleTickets = (scheduleId: string) => {
@@ -65,6 +69,7 @@ export const useGetScheduleTickets = (scheduleId: string) => {
       const res = await request<Ticket[]>(`/api/schedule/tickets/${scheduleId}`, {}, "get");
       return res.data;
     },
+    retry: false,
   });
 };
 
@@ -96,6 +101,7 @@ export const useGetScheduleDistributors = (scheduleId: string) => {
       >(`/api/schedule/distributors/${scheduleId}`, {}, "get");
       return res.data;
     },
+    retry: false,
   });
 };
 
@@ -127,6 +133,7 @@ export const useGetDistributorAllocationHistory = (distributorId: string, schedu
       const res = await request<AllocationHistory[]>(`/api/schedule/${scheduleId}/allocationHistory/${distributorId}`, {}, "get");
       return res.data;
     },
+    retry: false,
   });
 };
 
@@ -137,6 +144,7 @@ export const useGetDistributorRemittanceHistory = (distributorId: string, schedu
       const res = await request<RemittanceHistory[]>(`/api/schedule/${scheduleId}/remittanceHistory/${distributorId}`, {}, "get");
       return res.data;
     },
+    retry: false,
   });
 };
 
@@ -147,5 +155,6 @@ export const useGetAllocatedTicketsOfDistributor = (distributorId: string, sched
       const res = await request<AllocatedTicketToDistributor[]>(`/api/schedule/${scheduleId}/ticketAllocated/${distributorId}`, {}, "get");
       return res.data;
     },
+    retry: false,
   });
 };

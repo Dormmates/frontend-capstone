@@ -1,11 +1,11 @@
-import type { FlattenedSeatMap, FlattenedSeat } from "../../../../../types/seat.ts";
+import type { FlattenedSeat } from "../../../../../types/seat.ts";
 import SeatMap from "../../../../../components/ui/SeatMap.tsx";
 
 interface Props {
   seatClick: (seat: FlattenedSeat) => void;
   rowClick: (seats: FlattenedSeat[]) => void;
   sectionClick: (seats: FlattenedSeat[]) => void;
-  seatMap: FlattenedSeatMap;
+  seatMap: FlattenedSeat[];
   disabled?: boolean;
 }
 
