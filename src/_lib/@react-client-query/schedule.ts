@@ -126,6 +126,16 @@ export const useAllocateTicketByControlNumber = () => {
   });
 };
 
+export const useUnAllocateTicket = () => {
+  return useMutation<any, Error, { distributorId: string; scheduleId: string; controlNumbers: number[]; unallocatedBy: string }>({
+    mutationFn: async (payload: { distributorId: string; scheduleId: string; controlNumbers: number[]; unallocatedBy: string }) => {
+      const res = await request<any>(`/api/schedule/unallocate/controlNumber/`, payload, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
 export const useGetDistributorAllocationHistory = (distributorId: string, scheduleId: string) => {
   return useQuery<AllocationHistory[], Error>({
     queryKey: ["schedule", "allocationHistory", scheduleId, distributorId],

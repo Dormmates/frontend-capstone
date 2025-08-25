@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { NavLink, Outlet, useOutletContext, useParams } from "react-router-dom";
-import { useGetAllocatedTicketsOfDistributor } from "../../../../../../_lib/@react-client-query/schedule";
+import { useGetAllocatedTicketsOfDistributor, useUnAllocateTicket } from "../../../../../../_lib/@react-client-query/schedule";
 import BreadCrumb from "../../../../../../components/ui/BreadCrumb";
 import Button from "../../../../../../components/ui/Button";
 
@@ -14,6 +14,11 @@ import remitted_icon from "../../../../../../assets/icons/remitted.png";
 import balance_due_icon from "../../../../../../assets/icons/balance_due.png";
 import type { ShowData } from "../../../../../../types/show";
 import type { Schedule } from "../../../../../../types/schedule";
+import Modal from "../../../../../../components/ui/Modal";
+import UnallocateTicket from "../unallocateTicket/UnallocateTicket";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthContext } from "../../../../../../context/AuthContext";
+import ToastNotification from "../../../../../../utils/toastNotification";
 
 const links = [
   {
@@ -31,9 +36,15 @@ const links = [
 ];
 
 const ViewDistributorLayout = () => {
+  const queryClient = useQueryClient();
+  const unAllocateTicket = useUnAllocateTicket();
+
+  const { user } = useAuthContext();
   const { schedule, show } = useOutletContext<{ show: ShowData; schedule: Schedule }>();
   const { distributorId, showId, scheduleId } = useParams();
   const { data, isLoading, isError } = useGetAllocatedTicketsOfDistributor(distributorId as string, scheduleId as string);
+
+  const [isUnallocateTicket, setIsUnallocateTicket] = useState(false);
 
   const summary = useMemo(() => {
     if (!data)
@@ -69,7 +80,7 @@ const ViewDistributorLayout = () => {
     return <h1>Error</h1>;
   }
 
-  const distributorName = data[0].distributor.firstName + data[0].distributor.lastName;
+  const distributorName = data[0].distributor;
 
   return (
     <div className="flex flex-col gap-5 mt-5">
@@ -84,7 +95,9 @@ const ViewDistributorLayout = () => {
         <h1 className="text-2xl">{distributorName}</h1>
         <div className="flex gap-3 items-center">
           <Button className="!bg-green">Allocate Ticket</Button>
-          <Button className="!bg-red">Unallocate Ticket</Button>
+          <Button onClick={() => setIsUnallocateTicket(true)} className="!bg-red">
+            Unallocate Ticket
+          </Button>
           <Button className="!bg-primary">Remit Tickets</Button>
           <Button className="!bg-rose-500">Unremit Tickets</Button>
         </div>
@@ -144,6 +157,42 @@ const ViewDistributorLayout = () => {
       <div>
         <Outlet context={{ allocatedTickets: data, schedule, show }} />
       </div>
+
+      {isUnallocateTicket && (
+        <Modal isOpen={isUnallocateTicket} onClose={() => setIsUnallocateTicket(false)} title="Ticket Unallocation">
+          <UnallocateTicket
+            controlNumbersAllocated={data
+              .filter((ticket) => !ticket.isRemitted && ticket.status == "allocated")
+              .map((ticket) => ticket.controlNumber)}
+            close={() => setIsUnallocateTicket(false)}
+            disabled={unAllocateTicket.isPending}
+            onSubmit={(controlNumbers) => {
+              const payload = {
+                distributorId: distributorId as string,
+                scheduleId: scheduleId as string,
+                unallocatedBy: user?.userId as string,
+                controlNumbers,
+              };
+
+              unAllocateTicket.mutate(payload, {
+                onSuccess: () => {
+                  queryClient.invalidateQueries({ queryKey: ["schedule", "allocated", scheduleId, distributorId], exact: true });
+                  queryClient.invalidateQueries({ queryKey: ["schedule", "seatmap", scheduleId], exact: true });
+                  queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId] });
+                  setIsUnallocateTicket(false);
+                  ToastNotification.success("Ticket Unallocated");
+                },
+                onError: (err) => {
+                  ToastNotification.error(err.message);
+                },
+              });
+            }}
+            schedule={schedule}
+            show={show}
+            distributorName={distributorName}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

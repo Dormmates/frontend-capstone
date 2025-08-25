@@ -28,11 +28,7 @@ export interface AllocatedTicketToDistributor {
     firstName: string;
     lastName: string;
   };
-  distributor: {
-    userId: string;
-    firstName: string;
-    lastName: string;
-  };
+  distributor: string;
 }
 
 export interface AllocationHistory {

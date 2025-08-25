@@ -143,9 +143,9 @@ const DistributorTicketsAllocated = () => {
           )} - ${formatToReadableTime(schedule.datetime + "")})`}
         >
           <LongCard className="mt-8 w-full" label="Ticket">
+            <LongCardItem label="Section" value={(selectedTicket.ticketSection + "").toUpperCase()} />
             {schedule.seatingType === "controlledSeating" && (
               <>
-                <LongCardItem label="Section" value={(selectedTicket.ticketSection + "").toUpperCase()} />
                 <LongCardItem label="Seat Number" value={selectedTicket.seatNumber + ""} />
               </>
             )}
@@ -155,7 +155,7 @@ const DistributorTicketsAllocated = () => {
           </LongCard>
           <div className="flex mt-5 gap-3 flex-col">
             <p className="text-lightGrey text-sm">Distributor Name</p>
-            <p className="text-lg">{selectedTicket.distributor.firstName + " " + selectedTicket.distributor.lastName}</p>
+            <p className="text-lg">{selectedTicket.distributor}</p>
           </div>
         </Modal>
       )}
