@@ -1,6 +1,6 @@
-import type { FlattenedSeatMap, SeatMap } from "../types/seat";
+import type { FlattenedSeat, SeatMap } from "../types/seat";
 
-export const flattenSeatMap = (seatMap: SeatMap): FlattenedSeatMap => {
+export const flattenSeatMap = (seatMap: SeatMap): FlattenedSeat[] => {
   return Object.entries(seatMap).flatMap(([section, rows]) =>
     Object.entries(rows).flatMap(([row, seats]) =>
       seats.map((seat) => ({

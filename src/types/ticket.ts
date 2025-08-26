@@ -32,6 +32,7 @@ export interface AllocatedTicketToDistributor {
 }
 
 export interface AllocationHistory {
+  actionType: "allocate" | "unallocate";
   allocationLogId: string;
   allocatedBy: {
     firstName: string;

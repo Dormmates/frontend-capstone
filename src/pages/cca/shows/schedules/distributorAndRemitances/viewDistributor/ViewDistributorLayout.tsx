@@ -26,11 +26,11 @@ const links = [
     path: "",
   },
   {
-    name: "Allocation History",
+    name: "Allocation Logs",
     path: "/allocation/history",
   },
   {
-    name: "Remittance History",
+    name: "Remittance Logs",
     path: "/remittance/history",
   },
 ];

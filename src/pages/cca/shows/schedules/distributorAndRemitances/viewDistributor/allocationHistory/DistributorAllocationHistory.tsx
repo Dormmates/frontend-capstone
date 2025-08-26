@@ -40,10 +40,11 @@ const DistributorAllocationHistory = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Total Tickets Allocated</TableHead>
-            <TableHead>Date Allocated</TableHead>
-            <TableHead>Time Allocated</TableHead>
-            <TableHead>Allocated By</TableHead>
+            <TableHead>Total Tickets</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Time</TableHead>
+            <TableHead>Action By</TableHead>
+            <TableHead>Type</TableHead>
             <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -62,6 +63,17 @@ const DistributorAllocationHistory = () => {
                 <TableCell>{formatToReadableTime(log.dateAllocated + "")}</TableCell>
                 <TableCell>{log.allocatedBy.firstName + " " + log.allocatedBy.lastName}</TableCell>
                 <TableCell>
+                  {log.actionType == "allocate" ? (
+                    <div className="flex gap-2 items-center">
+                      <span className="w-3 h-3 rounded-full !bg-green"></span>Allocate
+                    </div>
+                  ) : (
+                    <div className="flex gap-2 items-center">
+                      <span className="w-3 h-3 rounded-full !bg-red"></span>Unallocate
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell>
                   <Button onClick={() => setSelectedHistory(log)} className="!bg-gray !text-black !border-lightGrey border-2">
                     View Tickets
                   </Button>
@@ -76,19 +88,35 @@ const DistributorAllocationHistory = () => {
       </div>
 
       {selectedHistory && (
-        <Modal title="Tickets Allocated" isOpen={!!selectedHistory} onClose={() => setSelectedHistory(null)}>
+        <Modal
+          title={selectedHistory.actionType === "allocate" ? "Tickets Allocated" : "Tickets Unallocated"}
+          isOpen={!!selectedHistory}
+          onClose={() => setSelectedHistory(null)}
+        >
           <div className="my-5">
             <LongCard label="Tickets">
-              <LongCardItem label="Total Tickets Allocated" value={selectedHistory.tickets.length} />
-              <LongCardItem label="Date Allocated" value={formatToReadableDate(selectedHistory.dateAllocated + "")} />
-              <LongCardItem label="Time Allocated" value={formatToReadableTime(selectedHistory.dateAllocated + "")} />
-              <LongCardItem label="Allocated By" value={selectedHistory.allocatedBy.firstName + " " + selectedHistory.allocatedBy.lastName} />
+              <LongCardItem
+                label={selectedHistory.actionType === "allocate" ? "Total Tickets Allocated" : "Total Tickets Unallocated"}
+                value={selectedHistory.tickets.length}
+              />
+              <LongCardItem
+                label={selectedHistory.actionType === "allocate" ? "Date Allocated" : "Date Unallocated"}
+                value={formatToReadableDate(selectedHistory.dateAllocated + "")}
+              />
+              <LongCardItem
+                label={selectedHistory.actionType === "allocate" ? "Time Allocated" : "Time Unallocated"}
+                value={formatToReadableTime(selectedHistory.dateAllocated + "")}
+              />
+              <LongCardItem
+                label={selectedHistory.actionType === "allocate" ? "Allocated by" : "Unallocated by"}
+                value={selectedHistory.allocatedBy.firstName + " " + selectedHistory.allocatedBy.lastName}
+              />
             </LongCard>
           </div>
           <TextInput
             onChange={(e) => e}
             disabled={true}
-            label="Ticket Control Numbers Allocated"
+            label={selectedHistory.actionType === "allocate" ? "Ticket Control Numbers Allocated" : "Ticket Control Numbers Unallocated"}
             value={selectedHistory.tickets.map((ticket) => ticket.controlNumber).join(", ")}
           />
         </Modal>
