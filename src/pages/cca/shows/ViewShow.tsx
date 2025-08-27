@@ -128,6 +128,7 @@ const ViewShow = () => {
                             </Button>
                           </Link>
                           <Dropdown
+                            isFixed={true}
                             value="Options"
                             options={[
                               { label: "Reschedule", onClick: () => alert("Reschedule Show") },

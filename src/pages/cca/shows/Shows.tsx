@@ -2,7 +2,7 @@ import { ContentWrapper } from "../../../components/layout/Wrapper";
 import SimpleCard from "../../../components/ui/SimpleCard";
 import Button from "../../../components/ui/Button";
 import { Link } from "react-router-dom";
-import { useGetShows } from "../../../_lib/@react-client-query/show";
+import { useArchiveShow, useDeleteShow, useGetShows, useUnArchiveShow } from "../../../_lib/@react-client-query/show";
 import { useMemo, useState, useEffect } from "react";
 import TextInput from "../../../components/ui/TextInput";
 import Dropdown from "../../../components/ui/Dropdown";
@@ -15,6 +15,9 @@ import archiveIcon from "../../../assets/icons/archive.png";
 import Modal from "../../../components/ui/Modal";
 import type { ShowData } from "../../../types/show";
 import EditShowDetails from "./EditShowDetails";
+import { useQueryClient } from "@tanstack/react-query";
+import ToastNotification from "../../../utils/toastNotification";
+import ViewArchivedShows from "./ViewArchivedShows";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -32,32 +35,44 @@ const parseDepartments = (departments: Department[]) => {
 };
 
 const Shows = () => {
-  const [page, setPage] = useState(1);
-  const [showType, setShowType] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [search, setSearch] = useState("");
-  const [isEditDetails, setIsEditDetails] = useState(false);
+  const queryClient = useQueryClient();
+  const archiveShow = useArchiveShow();
+  const unarchiveShow = useUnArchiveShow();
+  const deleteShow = useDeleteShow();
 
-  const debouncedSearch = useDebounce(search, 500);
   const { user } = useAuthContext();
   const { data: shows, isLoading: showsLoading } = useGetShows(user?.role === "trainer" && user?.department ? user.department.departmentId : "");
   const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments();
 
+  const [page, setPage] = useState(1);
+  const [showType, setShowType] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
+
   const [selectedShow, setSelectedShow] = useState<ShowData | null>();
+  const [isArchiveShow, setIsArchiveShow] = useState(false);
+  const [isEditDetails, setIsEditDetails] = useState(false);
+  const [isViewArchivedShows, setIsViewArchivedShows] = useState(false);
 
   const departments = useMemo(() => {
     return parseDepartments(departmentsData ?? []);
   }, [departmentsData]);
 
+  const activeShows = useMemo(() => {
+    if (!shows) return [];
+    return shows.filter((show) => !show.isArchived);
+  }, [shows]);
+
   const filteredShows = useMemo(() => {
     if (!shows) return [];
-    return shows.filter((show) => {
+    return activeShows.filter((show) => {
       const matchTitle = show.title.toLowerCase().includes(debouncedSearch.toLowerCase());
       const matchType = !showType || show.showType === showType;
       const matchDepartment = !selectedDepartment || show.department?.departmentId === selectedDepartment || !show.department;
       return matchTitle && matchType && matchDepartment;
     });
-  }, [shows, debouncedSearch, showType, selectedDepartment]);
+  }, [activeShows, debouncedSearch, showType, selectedDepartment]);
 
   useEffect(() => {
     setPage(1);
@@ -154,7 +169,13 @@ const Shows = () => {
                         Edit Details
                       </Button>
                       <div className="relative group">
-                        <Button variant="plain">
+                        <Button
+                          onClick={() => {
+                            setIsArchiveShow(true);
+                            setSelectedShow(show);
+                          }}
+                          variant="plain"
+                        >
                           <img src={archiveIcon} alt="archive" />
                         </Button>
 
@@ -170,16 +191,130 @@ const Shows = () => {
           </TableBody>
         </Table>
 
-        <div className="mt-5">
-          <Pagination currentPage={page} totalPage={Math.ceil(filteredShows.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
-        </div>
+        {filteredShows.length !== 0 && (
+          <div className="mt-5">
+            <Pagination
+              currentPage={page}
+              totalPage={Math.ceil(filteredShows.length / ITEMS_PER_PAGE)}
+              onPageChange={(newPage) => setPage(newPage)}
+            />
+          </div>
+        )}
       </div>
 
-      <Button className="fixed bottom-10 right-10 shadow-lg rounded-full !text-black">View Archived Show</Button>
+      <Button onClick={() => setIsViewArchivedShows(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full !text-black">
+        View Archived Show
+      </Button>
 
       {isEditDetails && (
         <Modal isOpen={isEditDetails} title="Edit Show Details" onClose={() => setIsEditDetails(false)}>
           <EditShowDetails groups={departmentsData} close={() => setIsEditDetails(false)} selectedShow={selectedShow as ShowData} />
+        </Modal>
+      )}
+
+      {isArchiveShow && (
+        <Modal isOpen={isArchiveShow} onClose={() => setIsArchiveShow(false)} title={`Archive "${selectedShow?.title}"`}>
+          <div className="mt-5">
+            <h1 className="font-semibold mb-2">Archiving this show will permanently:</h1>
+            <ul className="list-disc ml-6 space-y-1">
+              <li>Remove the show from the active and archived shows list.</li>
+              <li>
+                Delete <strong>all schedules</strong> associated with this show.
+              </li>
+              <li>
+                Delete <strong>all allocated tickets</strong> linked to these schedules.
+              </li>
+              <li>
+                Delete <strong>all seat reservations</strong> for the schedules.
+              </li>
+              <li>
+                Delete <strong>all remittance and sales records</strong> for the show.
+              </li>
+              <li>
+                Delete <strong>all logs and history</strong> related to this show.
+              </li>
+            </ul>
+            <div className="border-red border  bg-gray p-2 rounded-sm mt-5">
+              <p className=" font-medium">This action will erase all data related to this show and cannot be undone.</p>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-5">
+              <Button
+                disabled={archiveShow.isPending}
+                onClick={() =>
+                  archiveShow.mutate(
+                    { showId: selectedShow?.showId as string },
+                    {
+                      onSuccess: () => {
+                        queryClient.setQueryData<ShowData[]>(["shows"], (oldData) => {
+                          if (!oldData) return oldData;
+                          return oldData.map((show) => (show.showId === selectedShow?.showId ? { ...show, isArchived: true } : show));
+                        });
+                        ToastNotification.success("Show Archived");
+                        setIsArchiveShow(false);
+                      },
+                      onError: (err) => {
+                        ToastNotification.error(err.message);
+                      },
+                    }
+                  )
+                }
+                className="!bg-green"
+              >
+                Archive Show
+              </Button>
+              <Button disabled={archiveShow.isPending} onClick={() => setIsArchiveShow(false)} className="!bg-red">
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {isViewArchivedShows && (
+        <Modal className="w-full max-w-[1000px]" onClose={() => setIsViewArchivedShows(false)} isOpen={isViewArchivedShows} title="Archived Shows">
+          <ViewArchivedShows
+            isPending={unarchiveShow.isPending || deleteShow.isPending}
+            deletShow={(show) => {
+              return new Promise((resolve) => {
+                deleteShow.mutate(
+                  { showId: show.showId },
+                  {
+                    onSuccess: () => {
+                      queryClient.setQueryData<ShowData[]>(["shows"], (oldData) => {
+                        if (!oldData) return oldData;
+                        return oldData.filter((s) => show.showId != s.showId);
+                      });
+                      ToastNotification.success("Show Deleted Permanently");
+                      resolve(true);
+                    },
+                    onError: (err) => {
+                      ToastNotification.error(err.message);
+                      resolve(false);
+                    },
+                  }
+                );
+              });
+            }}
+            unArchiveShow={(show) => {
+              unarchiveShow.mutate(
+                { showId: show.showId },
+                {
+                  onSuccess: () => {
+                    queryClient.setQueryData<ShowData[]>(["shows"], (oldData) => {
+                      if (!oldData) return oldData;
+                      return oldData.map((s) => (show.showId === s?.showId ? { ...show, isArchived: false } : s));
+                    });
+                    ToastNotification.success("Unarchived Show");
+                  },
+                  onError: (err) => {
+                    ToastNotification.error(err.message);
+                  },
+                }
+              );
+            }}
+            archivedShow={shows.filter((show) => show.isArchived)}
+          />
         </Modal>
       )}
     </ContentWrapper>

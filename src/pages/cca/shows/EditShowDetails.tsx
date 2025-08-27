@@ -266,6 +266,7 @@ const EditShowDetails = ({ selectedShow, close, groups }: Props) => {
                           X
                         </button>
                         <Dropdown
+                          isFixed={true}
                           disabled={isUploading}
                           isError={!showData.genre[index]}
                           className="w-full"

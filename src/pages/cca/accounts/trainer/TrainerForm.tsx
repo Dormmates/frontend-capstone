@@ -132,6 +132,7 @@ const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting
             {trainerData.assignDepartment &&
               (groupOptions.length !== 0 ? (
                 <Dropdown
+                  isFixed={true}
                   isError={!!errors?.group}
                   errorMessage={errors?.group}
                   disabled={isSubmitting}

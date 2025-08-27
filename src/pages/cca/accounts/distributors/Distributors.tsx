@@ -211,7 +211,8 @@ const Distributors = () => {
                 payload.lastName.trim() !== selectedDistributor.lastName.trim() ||
                 payload.email.trim() !== selectedDistributor.email.trim() ||
                 payload.contactNumber.trim() !== selectedDistributor.distributor.contactNumber.trim() ||
-                payload.type !== String(selectedDistributor.distributor.distributortypes.id);
+                payload.type !== String(selectedDistributor.distributor.distributortypes.id) ||
+                (payload.department || null) !== (selectedDistributor.distributor.department?.departmentId || null);
 
               if (!hasChanges) {
                 ToastNotification.info("No Changes Detected");

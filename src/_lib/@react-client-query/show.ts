@@ -66,3 +66,33 @@ export const useGetShow = (id: string) => {
     retry: false,
   });
 };
+
+export const useArchiveShow = () => {
+  return useMutation<any, Error, { showId: string }>({
+    mutationFn: async (showId: { showId: string }) => {
+      const res = await request<any>("/api/show/archive", showId, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useUnArchiveShow = () => {
+  return useMutation<any, Error, { showId: string }>({
+    mutationFn: async (showId: { showId: string }) => {
+      const res = await request<any>("/api/show/unarchive", showId, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useDeleteShow = () => {
+  return useMutation<any, Error, { showId: string }>({
+    mutationFn: async (showId: { showId: string }) => {
+      const res = await request<any>("/api/show/delete", showId, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};

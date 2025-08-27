@@ -349,8 +349,9 @@ const CreateShow = () => {
                 </div>
                 <div className="grid grid-cols-[150px_auto] gap-2">
                   <p className="text-lightGrey">Description</p>
-                  <p className="font-medium">{showData.description}</p>
+                  <p className="font-medium line-clamp-3 max-w-[300px]">{showData.description}</p>
                 </div>
+
                 <div className="grid grid-cols-[150px_auto] gap-2">
                   <p className="text-lightGrey">Genre</p>
                   <p className="font-medium">{showData.genre.join(", ")}</p>

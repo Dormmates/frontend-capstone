@@ -19,11 +19,38 @@ interface DropdownProps<T extends string = string> {
   disabled?: boolean;
   isError?: boolean;
   errorMessage?: string;
+  isFixed?: boolean;
 }
 
-const Dropdown = <T extends string>({ label, options, value, onChange, className, disabled = false, isError, errorMessage }: DropdownProps<T>) => {
+const Dropdown = <T extends string>({
+  isFixed = true,
+  label,
+  options,
+  value,
+  onChange,
+  className,
+  disabled = false,
+  isError,
+  errorMessage,
+}: DropdownProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [dropdownPos, setDropdownPos] = useState<{ top: number; left: number; width: number }>({
+    top: 0,
+    left: 0,
+    width: 0,
+  });
+
+  useEffect(() => {
+    if (isFixed && isOpen && dropdownRef.current) {
+      const rect = dropdownRef.current.getBoundingClientRect();
+      setDropdownPos({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+      });
+    }
+  }, [isFixed, isOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -63,7 +90,14 @@ const Dropdown = <T extends string>({ label, options, value, onChange, className
       {isError && errorMessage && <p className="text-sm text-red mt-1">{errorMessage}</p>}
 
       {isOpen && !disabled && (
-        <div className="absolute z-50 mt-1 w-full bg-white border rounded shadow-lg overflow-y-auto max-h-[150px]">
+        <div
+          className={merge(
+            "z-50 mt-1 bg-white border rounded shadow-lg overflow-y-auto max-h-[150px]",
+            isFixed ? "fixed" : "absolute",
+            !isFixed && "w-full"
+          )}
+          style={isFixed ? { top: dropdownPos.top, left: dropdownPos.left, width: dropdownPos.width } : {}}
+        >
           {options.map((option, idx) => {
             const isSelected = option.value === value;
 
