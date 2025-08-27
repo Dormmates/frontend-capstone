@@ -30,6 +30,46 @@ export const useAddSchedule = () => {
   });
 };
 
+export const useCloseSchedule = () => {
+  return useMutation<any, Error, string>({
+    mutationFn: async (scheduleId: string) => {
+      const res = await request<any>("/api/schedule/closeSchedule", { scheduleId }, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useOpenSchedule = () => {
+  return useMutation<any, Error, string>({
+    mutationFn: async (scheduleId: string) => {
+      const res = await request<any>("/api/schedule/openSchedule", { scheduleId }, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useDeleteSchedule = () => {
+  return useMutation<any, Error, string>({
+    mutationFn: async (scheduleId: string) => {
+      const res = await request<any>("/api/schedule/deleteSchedule", { scheduleId }, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useReschedule = () => {
+  return useMutation<any, Error, { scheduleId: string; newDateTime: Date }>({
+    mutationFn: async (data: { scheduleId: string; newDateTime: Date }) => {
+      const res = await request<any>("/api/schedule/reschedule", data, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
 export const useGetShowSchedules = (showId: string) => {
   return useQuery<Schedule[], Error>({
     queryKey: ["schedules", showId],

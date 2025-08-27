@@ -23,7 +23,7 @@ interface DropdownProps<T extends string = string> {
 }
 
 const Dropdown = <T extends string>({
-  isFixed = true,
+  isFixed = false,
   label,
   options,
   value,
@@ -74,7 +74,7 @@ const Dropdown = <T extends string>({
   const selectedLabel = options.find((o) => o.value === value)?.label || "Select Value";
 
   return (
-    <div className={merge("relative inline-block text-left", className)} ref={dropdownRef}>
+    <div className={merge("relative inline-block text-left text-black", className)} ref={dropdownRef}>
       {label && <InputLabel label={label} />}
       <div
         className={merge(
