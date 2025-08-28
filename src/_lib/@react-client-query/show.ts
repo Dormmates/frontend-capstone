@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { request } from "../api";
 import type { NewShowPayload, ShowData, UpdateShowPayload } from "../../types/show";
+import type { DistributorScheduleTickets } from "../../types/ticket";
 
 export const useCreateShow = () => {
   return useMutation<ShowData, Error, NewShowPayload>({
@@ -91,6 +92,17 @@ export const useDeleteShow = () => {
   return useMutation<any, Error, { showId: string }>({
     mutationFn: async (showId: { showId: string }) => {
       const res = await request<any>("/api/show/delete", showId, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useGetShowsAndDistributorTickets = (distributorId: string) => {
+  return useQuery<DistributorScheduleTickets[], Error>({
+    queryKey: ["show and schedules", "distributor", distributorId],
+    queryFn: async () => {
+      const res = await request<DistributorScheduleTickets[]>(`/api/show/distributors/${distributorId}/tickets`, {}, "get");
       return res.data;
     },
     retry: false,

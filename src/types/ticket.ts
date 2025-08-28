@@ -65,3 +65,26 @@ export interface RemittanceHistory {
     status: TicketStatuses;
   }[];
 }
+
+export interface DistributorScheduleTickets {
+  scheduleId: string;
+  datetime: Date;
+  commissionFee: number;
+  seatingType: string;
+  show: {
+    showCover: string;
+    showId: string;
+    title: string;
+  };
+  tickets: {
+    ticketId: string;
+    status: TicketStatuses;
+    ticketPrice: number;
+    controlNumber: number;
+    seatNumber: string | null;
+    ticketSection: TicketSection;
+    isRemitted: boolean;
+    dateAllocated: Date;
+    allocatedBy: string;
+  }[];
+}

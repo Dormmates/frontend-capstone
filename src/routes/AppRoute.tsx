@@ -8,8 +8,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
 import NotFound from "../pages/NotFound";
 
-import DistributorDashboard from "../pages/distributor/DistributorDashboard";
-import DistributorHistory from "../pages/distributor/DistributorHistory";
+import DistributorDashboard from "../pages/distributor/dashboard/DistributorDashboard";
+import DistributorHistory from "../pages/distributor/history/DistributorHistory";
 import DistributorLogin from "../pages/distributor/DistributorLogin";
 
 import {
