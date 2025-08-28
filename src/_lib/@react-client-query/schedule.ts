@@ -208,3 +208,34 @@ export const useGetAllocatedTicketsOfDistributor = (distributorId: string, sched
     retry: false,
   });
 };
+
+export const useMarkTicketAsSold = () => {
+  return useMutation<
+    any,
+    Error,
+    { distributorId: string; scheduleId: string; controlNumbers: number[]; customerName?: string; email?: string; isIncluded: boolean }
+  >({
+    mutationFn: async (data: {
+      distributorId: string;
+      scheduleId: string;
+      controlNumbers: number[];
+      customerName?: string;
+      email?: string;
+      isIncluded: boolean;
+    }) => {
+      const res = await request<any>("/api/schedule/markSold", data, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useMarkTicketAsUnSold = () => {
+  return useMutation<any, Error, { distributorId: string; scheduleId: string; controlNumbers: number[] }>({
+    mutationFn: async (data: { distributorId: string; scheduleId: string; controlNumbers: number[] }) => {
+      const res = await request<any>("/api/schedule/markUnsold", data, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};

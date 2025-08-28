@@ -9,11 +9,12 @@ import type { DistributorScheduleTickets } from "../../../types/ticket";
 import Button from "../../../components/ui/Button";
 import Modal from "../../../components/ui/Modal";
 import ViewAllocatedTickets from "./ViewAllocatedTickets";
+import { formatCurrency } from "../../../utils";
 
 const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
   const soldTickets = schedule.tickets.filter((ticket) => ticket.status === "sold");
-  const totalSales = soldTickets.reduce((acc, ticket) => acc + ticket.ticketPrice, 0);
-  const commission = totalSales * (schedule.commissionFee || 0);
+  const totalSales = soldTickets.reduce((acc, ticket) => acc + Number(ticket.ticketPrice), 0);
+  const commission = soldTickets.length * (Number(schedule.commissionFee) || 0);
   const amountToRemit = totalSales - commission;
 
   return { totalSales, commission, amountToRemit };
@@ -90,7 +91,7 @@ const DistributorDashboard = () => {
                     <TableCell>{formatToReadableTime(schedule.datetime + "")}</TableCell>
                     <TableCell>{schedule.tickets.length}</TableCell>
                     <TableCell>{schedule.tickets.filter((ticket) => ticket.status === "sold").length}</TableCell>
-                    <TableCell>₱{amountToRemit.toFixed(2)}</TableCell>
+                    <TableCell>{formatCurrency(amountToRemit)}</TableCell>
                     <TableCell>
                       <Button onClick={() => setSelectedSchedule(schedule)} className="!bg-gray !text-black !border-lightGrey border-2">
                         View Tickets
@@ -106,7 +107,7 @@ const DistributorDashboard = () => {
 
       {selectedSchedule && (
         <Modal className="w-full max-w-[1000px]" isOpen={!!selectedSchedule} onClose={() => setSelectedSchedule(null)} title="Tickets Allocated">
-          <ViewAllocatedTickets schedule={selectedSchedule} />
+          <ViewAllocatedTickets closeModal={() => setSelectedSchedule(null)} schedule={selectedSchedule} />
         </Modal>
       )}
     </ContentWrapper>

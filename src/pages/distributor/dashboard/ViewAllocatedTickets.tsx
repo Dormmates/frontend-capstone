@@ -7,9 +7,19 @@ import Dropdown from "../../../components/ui/Dropdown";
 import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
 import Button from "../../../components/ui/Button";
 import { formatTicket } from "../../../utils/controlNumber";
+import { useMarkTicketAsSold, useMarkTicketAsUnSold } from "../../../_lib/@react-client-query/schedule";
+import { useQueryClient } from "@tanstack/react-query";
+import Modal from "../../../components/ui/Modal";
+import LongCard from "../../../components/ui/LongCard";
+import LongCardItem from "../../../components/ui/LongCardItem";
+import InputLabel from "../../../components/ui/InputLabel";
+import { useAuthContext } from "../../../context/AuthContext";
+import ToastNotification from "../../../utils/toastNotification";
+import { formatCurrency, isValidEmail } from "../../../utils";
 
 type Props = {
   schedule: DistributorScheduleTickets;
+  closeModal: () => void;
 };
 
 const statusOptions = [
@@ -24,13 +34,22 @@ const remittanceStatusOptions = [
   { label: "Pending Remittance", value: "pending" },
 ];
 
-const ViewAllocatedTickets = ({ schedule }: Props) => {
+const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
+  const queryClient = useQueryClient();
+  const markSold = useMarkTicketAsSold();
+  const markUnsold = useMarkTicketAsUnSold();
+
+  const { user } = useAuthContext();
   const [filterOptions, setFilterOptions] = useState({ search: "", status: "", remittanceStatus: "" });
   const debouncedSearch = useDebounce(filterOptions.search);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
 
-  const [selectedTickets, setSelectedTickets] = useState<DistributorScheduleTickets["tickets"] | null>(null);
+  const [selectedTickets, setSelectedTickets] = useState<DistributorScheduleTickets["tickets"] | []>([]);
+  const [isSummary, setIsSumamry] = useState(false);
+
+  const [customerInfo, setCustomerInfo] = useState({ email: "", customerName: "", isIncluded: false });
+  const [errors, setErrors] = useState<{ email?: string; customerName?: string }>({});
 
   const filteredTickets = useMemo(() => {
     if (!schedule?.tickets) return [];
@@ -54,6 +73,77 @@ const ViewAllocatedTickets = ({ schedule }: Props) => {
     const start = (currentPage - 1) * pageSize;
     return filteredTickets.slice(start, start + pageSize);
   }, [filteredTickets, currentPage, pageSize]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCustomerInfo((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const validate = () => {
+    let isValid = true;
+    const newErrors: typeof errors = {};
+
+    if (customerInfo.isIncluded) {
+      if (!customerInfo.customerName || customerInfo.customerName.length < 5) {
+        newErrors.customerName = "Please provide atleast 5 characters";
+        isValid = false;
+      }
+
+      if (!customerInfo.email || !isValidEmail(customerInfo.email)) {
+        newErrors.email = "Please provide a valid email";
+        isValid = false;
+      }
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = (action: "sold" | "unsold") => {
+    if (!validate()) return;
+
+    const payload: any = {
+      distributorId: user?.userId,
+      scheduleId: schedule.scheduleId,
+      controlNumbers: selectedTickets.map((ticket) => ticket.controlNumber),
+      isIncluded: customerInfo.isIncluded,
+      ...(action === "sold" && {
+        customerName: customerInfo.customerName,
+        email: customerInfo.email,
+      }),
+    };
+
+    const mutation = action === "sold" ? markSold : markUnsold;
+
+    mutation.mutate(payload, {
+      onSuccess: () => {
+        queryClient.setQueryData<DistributorScheduleTickets[]>(["show and schedules", "distributor", user?.userId as string], (oldData) => {
+          if (!oldData) return oldData;
+
+          return oldData.map((sched) => {
+            if (sched.scheduleId !== schedule.scheduleId) return sched;
+
+            return {
+              ...sched,
+              tickets: sched.tickets.map((ticket) =>
+                payload.controlNumbers.includes(ticket.controlNumber) ? { ...ticket, status: action === "sold" ? "sold" : "allocated" } : ticket
+              ),
+            };
+          });
+        });
+
+        closeModal();
+        if (action === "sold") {
+          setCustomerInfo({ email: "", customerName: "", isIncluded: false });
+        }
+        setIsSumamry(false);
+        ToastNotification.success(`Marked as ${action}`);
+      },
+      onError: (err) => {
+        ToastNotification.error(err.message);
+      },
+    });
+  };
 
   return (
     <div className="mt-10">
@@ -81,10 +171,18 @@ const ViewAllocatedTickets = ({ schedule }: Props) => {
       </div>
 
       <div className="flex gap-3 mb-5">
-        <Button className="!bg-green" disabled={selectedTickets?.length === 0 || selectedTickets?.some((ticket) => ticket.status === "sold")}>
+        <Button
+          onClick={() => setIsSumamry(true)}
+          className="!bg-green"
+          disabled={selectedTickets?.length === 0 || selectedTickets?.some((ticket) => ticket.status === "sold")}
+        >
           Mark Selected as Sold
         </Button>
-        <Button disabled={selectedTickets?.length === 0 || selectedTickets?.some((ticket) => ticket.status === "allocated")} className="!bg-red">
+        <Button
+          onClick={() => handleSubmit("unsold")}
+          disabled={selectedTickets?.length === 0 || selectedTickets?.some((ticket) => ticket.status === "allocated")}
+          className="!bg-red"
+        >
           Mark Selected as Unsold
         </Button>
       </div>
@@ -123,8 +221,7 @@ const ViewAllocatedTickets = ({ schedule }: Props) => {
                           checked={selectedTickets?.some((t) => t.ticketId === ticket.ticketId) ?? false}
                           onChange={(e) => {
                             setSelectedTickets((prev) => {
-                              if (!prev) return e.target.checked ? [ticket] : null;
-
+                              if (!prev) return e.target.checked ? [ticket] : [];
                               return e.target.checked ? [...prev, ticket] : prev.filter((t) => t.ticketId !== ticket.ticketId);
                             });
                           }}
@@ -136,7 +233,7 @@ const ViewAllocatedTickets = ({ schedule }: Props) => {
                     </div>
                   </TableCell>
                   <TableCell>{ticket.seatNumber ?? "Free Seating"}</TableCell>
-                  <TableCell>₱{ticket.ticketPrice}</TableCell>
+                  <TableCell>{formatCurrency(ticket.ticketPrice)}</TableCell>
                   <TableCell>
                     {ticket.status === "sold" ? (
                       <div className="flex items-center gap-2">
@@ -174,6 +271,89 @@ const ViewAllocatedTickets = ({ schedule }: Props) => {
             onPageChange={(newPage) => setCurrentPage(newPage)}
           />
         </div>
+      )}
+
+      {isSummary && (
+        <Modal
+          className="w-full max-w-[650px]"
+          title="Summary"
+          isOpen={isSummary}
+          onClose={() => {
+            setCustomerInfo({ email: "", customerName: "", isIncluded: false });
+            setIsSumamry(false);
+          }}
+        >
+          <p className="mb-5 mt-10">
+            {schedule.show.title} ({formatToReadableDate(schedule.datetime + "") + " at " + formatToReadableTime(schedule.datetime + "")})
+          </p>
+
+          <LongCard className="w-full" label="Ticket Details">
+            <LongCardItem label="Total Tickets" value={selectedTickets.length} />
+            <LongCardItem
+              className="!whitespace-normal"
+              label="Control Numbers"
+              value={selectedTickets.map((ticket) => ticket.controlNumber).join(", ")}
+            />
+          </LongCard>
+
+          <div className="flex gap-2 items-center my-5">
+            <input
+              id="cust-info"
+              className="cursor-pointer"
+              type="checkbox"
+              checked={customerInfo.isIncluded}
+              onChange={(e) => setCustomerInfo((prev) => ({ ...prev, isIncluded: e.target.checked }))}
+            />
+            <InputLabel
+              className="mb-0"
+              label={
+                <label className="cursor-pointer" htmlFor="cust-info">
+                  Input Customer Info
+                </label>
+              }
+            />
+          </div>
+
+          {customerInfo.isIncluded && (
+            <div className="flex flex-col gap-2">
+              <TextInput
+                disabled={markSold.isPending}
+                isError={!!errors.email}
+                errorMessage={errors.email}
+                label="Customer Email"
+                onChange={handleInputChange}
+                value={customerInfo.email}
+                type="email"
+                name="email"
+              />
+              <TextInput
+                disabled={markSold.isPending}
+                isError={!!errors.customerName}
+                errorMessage={errors.customerName}
+                label="Customer Name"
+                onChange={handleInputChange}
+                value={customerInfo.customerName}
+                name="customerName"
+              />
+            </div>
+          )}
+
+          <div className="flex gap-3 items-center justify-end mt-5">
+            <Button disabled={markSold.isPending} onClick={() => handleSubmit("sold")} className="!bg-green">
+              Confirm
+            </Button>
+            <Button
+              disabled={markSold.isPending}
+              onClick={() => {
+                setCustomerInfo({ email: "", customerName: "", isIncluded: false });
+                setIsSumamry(false);
+              }}
+              className="!bg-red"
+            >
+              Cancel
+            </Button>
+          </div>
+        </Modal>
       )}
     </div>
   );
