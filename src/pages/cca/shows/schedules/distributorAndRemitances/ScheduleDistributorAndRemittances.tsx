@@ -44,6 +44,8 @@ const ScheduleDistributorAndRemittances = () => {
     return <h1>Error</h1>;
   }
 
+  console.log(distributors);
+
   return (
     <>
       <h1 className="text-2xl">Manage Distributors</h1>

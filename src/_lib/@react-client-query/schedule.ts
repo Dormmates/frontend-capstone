@@ -239,3 +239,35 @@ export const useMarkTicketAsUnSold = () => {
     retry: false,
   });
 };
+
+export const useRemitTicketSale = () => {
+  return useMutation<
+    any,
+    Error,
+    {
+      sold: number[];
+      lost: number[];
+      discounted?: number[];
+      discountPercentage?: number;
+      scheduleId: string;
+      distributorId: string;
+      remarks?: string;
+      actionBy: string;
+    }
+  >({
+    mutationFn: async (data: {
+      sold: number[];
+      lost: number[];
+      discounted?: number[];
+      discountPercentage?: number;
+      scheduleId: string;
+      distributorId: string;
+      remarks?: string;
+      actionBy: string;
+    }) => {
+      const res = await request<any>("/api/schedule/remit", data, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};

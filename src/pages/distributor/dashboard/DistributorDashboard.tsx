@@ -90,7 +90,7 @@ const DistributorDashboard = () => {
                     <TableCell>{formatToReadableDate(schedule.datetime + "")}</TableCell>
                     <TableCell>{formatToReadableTime(schedule.datetime + "")}</TableCell>
                     <TableCell>{schedule.tickets.length}</TableCell>
-                    <TableCell>{schedule.tickets.filter((ticket) => ticket.status === "sold").length}</TableCell>
+                    <TableCell>{schedule.tickets.filter((ticket) => ticket.status === "sold" || ticket.isRemitted).length}</TableCell>
                     <TableCell>{formatCurrency(amountToRemit)}</TableCell>
                     <TableCell>
                       <Button onClick={() => setSelectedSchedule(schedule)} className="!bg-gray !text-black !border-lightGrey border-2">

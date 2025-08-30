@@ -41,7 +41,7 @@ const DistributorTicketsAllocated = () => {
   const filteredTickets = useMemo(() => {
     return allocatedTickets.filter((ticket) => {
       const matchesSearch = !debouncedSearch || ticket.controlNumber?.toString().includes(debouncedSearch);
-      const matchesSale = !filter.saleStatus || (filter.saleStatus === "sold" ? ticket.status === "sold" : ticket.status !== "sold");
+      const matchesSale = !filter.saleStatus || (filter.saleStatus === "sold" ? ticket.isRemitted || ticket.status === "sold" : !ticket.isRemitted);
       const matchesVerification = !filter.verificationStatus || (filter.verificationStatus === "verified" ? ticket.isRemitted : !ticket.isRemitted);
 
       return matchesSearch && matchesSale && matchesVerification;
@@ -93,7 +93,7 @@ const DistributorTicketsAllocated = () => {
                 <TableRow key={ticket.ticketId}>
                   <TableCell>{formatTicket(ticket.controlNumber)}</TableCell>
                   <TableCell>
-                    {ticket.status === "sold" ? (
+                    {ticket.status == "sold" || ticket.isRemitted ? (
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-green"></span>Sold
                       </div>
@@ -104,7 +104,7 @@ const DistributorTicketsAllocated = () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    {ticket.isRemitted ? (
+                    {ticket.isRemitted && ticket.status !== "sold" ? (
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-green"></span>Remitted
                       </div>

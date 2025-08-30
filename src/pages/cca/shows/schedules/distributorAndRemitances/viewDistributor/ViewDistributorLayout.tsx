@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { NavLink, Outlet, useOutletContext, useParams } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useGetAllocatedTicketsOfDistributor, useUnAllocateTicket } from "../../../../../../_lib/@react-client-query/schedule";
 import BreadCrumb from "../../../../../../components/ui/BreadCrumb";
 import Button from "../../../../../../components/ui/Button";
@@ -19,6 +19,8 @@ import UnallocateTicket from "../unallocateTicket/UnallocateTicket";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "../../../../../../context/AuthContext";
 import ToastNotification from "../../../../../../utils/toastNotification";
+import RemitTickets from "../remitTicket/RemitTickets";
+import { formatCurrency } from "../../../../../../utils";
 
 const links = [
   {
@@ -38,6 +40,7 @@ const links = [
 const ViewDistributorLayout = () => {
   const queryClient = useQueryClient();
   const unAllocateTicket = useUnAllocateTicket();
+  const navigate = useNavigate();
 
   const { user } = useAuthContext();
   const { schedule, show } = useOutletContext<{ show: ShowData; schedule: Schedule }>();
@@ -45,6 +48,7 @@ const ViewDistributorLayout = () => {
   const { data, isLoading, isError } = useGetAllocatedTicketsOfDistributor(distributorId as string, scheduleId as string);
 
   const [isUnallocateTicket, setIsUnallocateTicket] = useState(false);
+  const [isRemitTicket, setIsRemitTicket] = useState(false);
 
   const summary = useMemo(() => {
     if (!data)
@@ -55,12 +59,12 @@ const ViewDistributorLayout = () => {
         remittedTickets: 0,
         pendingRemittance: 0,
         expected: 0,
-        remmited: 0,
+        remitted: 0,
         balanceDue: 0,
       };
 
     const totalAllocatedTickets = data.length;
-    const soldTickets = data.filter((ticket) => ticket.status == "sold").length;
+    const soldTickets = data.filter((ticket) => ticket.status == "sold" || ticket.isRemitted).length;
     const unsoldTickets = totalAllocatedTickets - soldTickets;
     const remittedTickets = data.filter((ticket) => ticket.isRemitted).length;
 
@@ -72,6 +76,8 @@ const ViewDistributorLayout = () => {
     return { totalAllocatedTickets, soldTickets, unsoldTickets, remittedTickets, pendingRemittance, expected, remitted, balanceDue };
   }, [data]);
 
+  console.log(data);
+
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
@@ -80,7 +86,11 @@ const ViewDistributorLayout = () => {
     return <h1>Error</h1>;
   }
 
-  const distributorName = data[0].distributor;
+  if (!data[0]) {
+    navigate(`/shows/schedule/${showId}/${scheduleId}/d&r/`);
+  }
+
+  const distributorName = data[0]?.distributor;
 
   return (
     <div className="flex flex-col gap-5 mt-5">
@@ -98,7 +108,9 @@ const ViewDistributorLayout = () => {
           <Button onClick={() => setIsUnallocateTicket(true)} className="!bg-red">
             Unallocate Ticket
           </Button>
-          <Button className="!bg-primary">Remit Tickets</Button>
+          <Button onClick={() => setIsRemitTicket(true)} className="!bg-primary">
+            Remit Tickets
+          </Button>
           <Button className="!bg-rose-500">Unremit Tickets</Button>
         </div>
         <div className="flex gap-16">
@@ -127,15 +139,15 @@ const ViewDistributorLayout = () => {
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <img src={expected_icon} alt="expected" />
-              <p>Expected: PHP {summary.expected}</p>
+              <p>Expected: {formatCurrency(summary.expected)}</p>
             </div>
             <div className="flex items-center gap-2">
               <img src={remitted_icon} alt="remitted" />
-              <p>Remitted: PHP {summary.remitted} </p>
+              <p>Remitted: {formatCurrency(summary.remitted)} </p>
             </div>
             <div className="flex items-center gap-2">
               <img src={balance_due_icon} alt="balance due" />
-              <p>Balance Due: PHP {summary.balanceDue} </p>
+              <p>Balance Due: {formatCurrency(summary.balanceDue)} </p>
             </div>
           </div>
         </div>
@@ -191,6 +203,12 @@ const ViewDistributorLayout = () => {
             show={show}
             distributorName={distributorName}
           />
+        </Modal>
+      )}
+
+      {isRemitTicket && (
+        <Modal className="w-full max-w-[700px]" isOpen={isRemitTicket} title="Remit Ticket Sales" onClose={() => setIsRemitTicket(false)}>
+          <RemitTickets distributorData={data} />
         </Modal>
       )}
     </div>

@@ -56,7 +56,12 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
 
     return schedule.tickets.filter((ticket) => {
       const matchesStatus =
-        !filterOptions.status || (filterOptions.status === "unsold" ? ticket.status !== "sold" : ticket.status === filterOptions.status);
+        !filterOptions.status ||
+        (filterOptions.status === "unsold"
+          ? ticket.status === "allocated"
+          : filterOptions.status === "sold"
+          ? ticket.status === "sold" || ticket.isRemitted
+          : ticket.status === filterOptions.status);
 
       const matchesRemittance =
         !filterOptions.remittanceStatus ||
@@ -235,7 +240,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
                   <TableCell>{ticket.seatNumber ?? "Free Seating"}</TableCell>
                   <TableCell>{formatCurrency(ticket.ticketPrice)}</TableCell>
                   <TableCell>
-                    {ticket.status === "sold" ? (
+                    {ticket.status === "sold" || ticket.isRemitted ? (
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-green"></span>Sold
                       </div>
@@ -246,7 +251,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
                     )}
                   </TableCell>
                   <TableCell>
-                    {ticket.isRemitted ? (
+                    {ticket.isRemitted && ticket.status !== "sold" ? (
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-green"></span>Remitted
                       </div>

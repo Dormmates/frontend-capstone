@@ -68,36 +68,50 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
       </LongCard>
 
       <div className="border border-lightGrey rounded-md ">
-        <h1 className="p-5 text-xl">Unallocate Ticket</h1>
-        <ControlNumberInputTutorial />
-        <div className="p-5">
-          <p className="text-sm font-bold mb-5 max-w-[450px]">
-            Control Numbers available for unallocation: <span className="font-normal">{controlNumbersAllocated.join(", ")}</span>
-          </p>
-
-          <TextInput
-            disabled={disabled}
-            isError={!!error}
-            errorMessage={error}
-            label={
-              <p>
-                Enter Ticket Control Number to be <span className="font-bold">Unallocated</span>
+        {controlNumbersAllocated.length != 0 ? (
+          <>
+            <h1 className="p-5 text-xl">Unallocate Ticket</h1>
+            <ControlNumberInputTutorial />
+            <div className="p-5">
+              <p className="text-sm font-bold mb-5 max-w-[450px]">
+                Control Numbers available for unallocation: <span className="font-normal">{controlNumbersAllocated.join(", ")}</span>
               </p>
-            }
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-        </div>
+              <TextInput
+                disabled={disabled}
+                isError={!!error}
+                errorMessage={error}
+                label={
+                  <p>
+                    Enter Ticket Control Number to be <span className="font-bold">Unallocated</span>
+                  </p>
+                }
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              />
+            </div>
+          </>
+        ) : (
+          <p className="text-center font-bold my-5">
+            There are no tickets avaialble for unallocation,
+            <br /> all tickets are marked as sold
+          </p>
+        )}
       </div>
 
-      <div className="flex justify-end gap-3">
-        <Button className="!bg-green" disabled={input.length == 0 || !input || disabled} onClick={handleSubmit}>
-          Unallocate Tickets
-        </Button>
-        <Button disabled={disabled} onClick={close} className="!bg-red">
-          Cancel
-        </Button>
-      </div>
+      {controlNumbersAllocated.length != 0 && (
+        <div className="flex justify-end gap-3">
+          <Button
+            className="!bg-green"
+            disabled={input.length == 0 || !input || disabled || controlNumbersAllocated.length === 0}
+            onClick={handleSubmit}
+          >
+            Unallocate Tickets
+          </Button>
+          <Button disabled={disabled} onClick={close} className="!bg-red">
+            Cancel
+          </Button>
+        </div>
+      )}
 
       {openSummary && (
         <Modal className="w-full max-w-[800px]" isOpen={openSummary} onClose={() => setOpenSummary(false)} title="Ticket Unallocation Summary">

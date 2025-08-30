@@ -9,6 +9,7 @@ import Modal from "../../../../../../../components/ui/Modal";
 import LongCard from "../../../../../../../components/ui/LongCard";
 import LongCardItem from "../../../../../../../components/ui/LongCardItem";
 import TextInput from "../../../../../../../components/ui/TextInput";
+import { compressControlNumbers } from "../../../../../../../utils/controlNumber";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -117,7 +118,7 @@ const DistributorAllocationHistory = () => {
             onChange={(e) => e}
             disabled={true}
             label={selectedHistory.actionType === "allocate" ? "Ticket Control Numbers Allocated" : "Ticket Control Numbers Unallocated"}
-            value={selectedHistory.tickets.map((ticket) => ticket.controlNumber).join(", ")}
+            value={compressControlNumbers(selectedHistory.tickets.map((ticket) => ticket.controlNumber))}
           />
         </Modal>
       )}

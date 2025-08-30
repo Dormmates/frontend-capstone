@@ -39,7 +39,14 @@ const ScheduleTickets = () => {
     if (!tickets) return [];
 
     return tickets.filter((ticket) => {
-      const matchStatus = !filterValues.status || filterValues.status === ticket.status;
+      const matchStatus =
+        !filterValues.status ||
+        (filterValues.status === "sold"
+          ? ticket.isRemitted
+          : filterValues.status === "unsold"
+          ? ticket.status === "allocated"
+          : ticket.status === filterValues.status);
+
       const matchSection = !filterValues.section || ticket.ticketSection === filterValues.section;
       const matchControlNumber = !filterValues.controlNumber || String(ticket.controlNumber) === filterValues.controlNumber.trim();
       return matchStatus && matchSection && matchControlNumber;
@@ -61,7 +68,7 @@ const ScheduleTickets = () => {
 
     const allocated = tickets.filter((t) => t.distributorId !== null).length;
     const notAllocated = tickets.filter((ticket) => !ticket.isComplimentary).length - allocated;
-    const sold = tickets.filter((t) => t.status === "sold").length;
+    const sold = tickets.filter((t) => t.isRemitted).length;
     const unsold = allocated - sold;
 
     const orchestra = tickets.filter((t) => t.ticketSection === "orchestra").length;

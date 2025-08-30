@@ -1,4 +1,6 @@
 export const parseControlNumbers = (input: string): number[] => {
+  if (!input) return [];
+
   const parts = input.split(",").map((part) => part.trim());
   const numbers: number[] = [];
 
@@ -41,4 +43,30 @@ export const validateControlInput = (control: string) => {
 
 export const formatTicket = (ticketNumber: number) => {
   return String(ticketNumber).length == 2 ? "0" + ticketNumber : String(ticketNumber).length == 1 ? "00" + ticketNumber : ticketNumber;
+};
+
+export const compressControlNumbers = (controlNumbers: number[]) => {
+  if (!controlNumbers || controlNumbers.length === 0) return "";
+
+  controlNumbers = [...controlNumbers].sort((a, b) => a - b);
+
+  let ranges = [];
+  let start = controlNumbers[0];
+  let end = controlNumbers[0];
+
+  for (let i = 1; i <= controlNumbers.length; i++) {
+    if (controlNumbers[i] === end + 1) {
+      end = controlNumbers[i];
+    } else {
+      if (start === end) {
+        ranges.push(`${start}`);
+      } else {
+        ranges.push(`${start}-${end}`);
+      }
+      start = controlNumbers[i];
+      end = controlNumbers[i];
+    }
+  }
+
+  return ranges.join(", ");
 };

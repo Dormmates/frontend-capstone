@@ -12,6 +12,7 @@ export interface Ticket {
   ticketId: string;
   seatNumber: string | null;
   distributorId: string | null;
+  isRemitted: boolean;
 }
 
 export interface AllocatedTicketToDistributor {
