@@ -1,9 +1,11 @@
 import { NavLink, Outlet, useParams } from "react-router-dom";
-import BreadCrumb from "../../../../components/ui/BreadCrumb";
+
 import { useGetShow } from "../../../../_lib/@react-client-query/show";
 import { ContentWrapper } from "../../../../components/layout/Wrapper";
 import { useGetScheduleInformation } from "../../../../_lib/@react-client-query/schedule";
 import { formatToReadableDate, formatToReadableTime } from "../../../../utils/date";
+import Breadcrumbs from "@/components/BreadCrumbs";
+import ShowCard from "@/components/ShowCard";
 
 const ViewShowScheduleLayout = () => {
   const { showId, scheduleId } = useParams();
@@ -30,14 +32,8 @@ const ViewShowScheduleLayout = () => {
   return (
     <ContentWrapper className="lg:!p-16 flex flex-col">
       <div className="flex flex-col gap-5 ">
-        <BreadCrumb
-          backLink={`/shows/${showId}`}
-          items={[
-            { name: "Shows", path: `/shows/${showId}` },
-            { name: show.title, path: "" },
-          ]}
-        />
-        <div className="flex w-full gap-10">
+        <Breadcrumbs backHref={`/shows/${showId}`} items={[{ name: "Schedules", href: `/shows/${showId}` }, { name: show.title }]} />
+        <div className="flex w-full gap-10 my-5">
           {links
             .filter((link) => !link.hidden)
             .map((link) => (
@@ -52,24 +48,7 @@ const ViewShowScheduleLayout = () => {
             ))}
         </div>
         <div className="flex gap-5">
-          <div className="border border-lightGrey p-10 flex gap-5 mt-5 rounded-md shadow-sm w-fit">
-            <img className="w-[150px] h-[120px] object-contain bg-gray" src={show.showCover} alt="show image" />
-
-            <div className="flex flex-col gap-3">
-              <h1 className="font-bold text-xl uppercase">{show?.title}</h1>
-              <p className="text-left break-words whitespace-pre-wrap  line-clamp-4 text-zinc-800 max-w-[500px]">{show.description}</p>
-              <div className="flex flex-col gap-2">
-                <p>Genres: </p>
-                <div className="flex gap-5">
-                  {show?.genreNames.map((name, index) => (
-                    <div key={index} className="bg-gray border-2 border-lightGrey px-5 rounded-full">
-                      {name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <ShowCard title={show.title} description={show.description} showImage={show.showCover} genres={show.genreNames} />
           <div className="flex flex-col justify-center text-2xl gap-2 mt-5 mb-10">
             <h1 className="text-center">
               You are viewing "<span className="font-bold">{show.title}</span>"

@@ -2,20 +2,21 @@ import { useMemo, useState } from "react";
 import type { DistributorScheduleTickets } from "../../../types/ticket";
 import { formatToReadableDate, formatToReadableTime } from "../../../utils/date";
 import { useDebounce } from "../../../hooks/useDeabounce";
-import TextInput from "../../../components/ui/TextInput";
-import Dropdown from "../../../components/ui/Dropdown";
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
-import Button from "../../../components/ui/Button";
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
 import { formatTicket } from "../../../utils/controlNumber";
 import { useMarkTicketAsSold, useMarkTicketAsUnSold } from "../../../_lib/@react-client-query/schedule";
 import { useQueryClient } from "@tanstack/react-query";
-import Modal from "../../../components/ui/Modal";
-import LongCard from "../../../components/ui/LongCard";
-import LongCardItem from "../../../components/ui/LongCardItem";
-import InputLabel from "../../../components/ui/InputLabel";
+
+import LongCard from "../../../components/LongCard";
+import LongCardItem from "../../../components/LongCardItem";
 import { useAuthContext } from "../../../context/AuthContext";
 import ToastNotification from "../../../utils/toastNotification";
 import { formatCurrency, isValidEmail } from "../../../utils";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/Button";
+import { Dialog } from "@radix-ui/react-dialog";
 
 type Props = {
   schedule: DistributorScheduleTickets;
@@ -157,13 +158,13 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
       </p>
 
       <div className="flex gap-3 mb-10">
-        <TextInput
+        <Input
           className="max-w-[300px]"
           value={filterOptions.search}
           onChange={(e) => setFilterOptions((prev) => ({ ...prev, search: e.target.value }))}
           placeholder="Search Ticket by Control Number"
         />
-        <Dropdown
+        {/* <Dropdown
           onChange={(value) => setFilterOptions((prev) => ({ ...prev, status: value }))}
           options={statusOptions}
           value={filterOptions.status}
@@ -172,7 +173,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
           onChange={(value) => setFilterOptions((prev) => ({ ...prev, remittanceStatus: value }))}
           options={remittanceStatusOptions}
           value={filterOptions.remittanceStatus}
-        />
+        /> */}
       </div>
 
       <div className="flex gap-3 mb-5">
@@ -268,7 +269,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
         </TableBody>
       </Table>
 
-      {filteredTickets.length !== 0 && (
+      {/* {filteredTickets.length !== 0 && (
         <div className="mt-5">
           <Pagination
             currentPage={currentPage}
@@ -276,14 +277,12 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
             onPageChange={(newPage) => setCurrentPage(newPage)}
           />
         </div>
-      )}
+      )} */}
 
       {isSummary && (
-        <Modal
-          className="w-full max-w-[650px]"
-          title="Summary"
-          isOpen={isSummary}
-          onClose={() => {
+        <Dialog
+          open={isSummary}
+          onOpenChange={() => {
             setCustomerInfo({ email: "", customerName: "", isIncluded: false });
             setIsSumamry(false);
           }}
@@ -309,33 +308,33 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
               checked={customerInfo.isIncluded}
               onChange={(e) => setCustomerInfo((prev) => ({ ...prev, isIncluded: e.target.checked }))}
             />
-            <InputLabel
+            {/* <InputLabel
               className="mb-0"
               label={
                 <label className="cursor-pointer" htmlFor="cust-info">
                   Input Customer Info
                 </label>
               }
-            />
+            /> */}
           </div>
 
           {customerInfo.isIncluded && (
             <div className="flex flex-col gap-2">
-              <TextInput
+              <Input
                 disabled={markSold.isPending}
-                isError={!!errors.email}
-                errorMessage={errors.email}
-                label="Customer Email"
+                // isError={!!errors.email}
+                // errorMessage={errors.email}
+                // label="Customer Email"
                 onChange={handleInputChange}
                 value={customerInfo.email}
                 type="email"
                 name="email"
               />
-              <TextInput
+              <Input
                 disabled={markSold.isPending}
-                isError={!!errors.customerName}
-                errorMessage={errors.customerName}
-                label="Customer Name"
+                // isError={!!errors.customerName}
+                // errorMessage={errors.customerName}
+                // label="Customer Name"
                 onChange={handleInputChange}
                 value={customerInfo.customerName}
                 name="customerName"
@@ -358,7 +357,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
               Cancel
             </Button>
           </div>
-        </Modal>
+        </Dialog>
       )}
     </div>
   );

@@ -1,21 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
 import { ContentWrapper } from "../../../../components/layout/Wrapper";
-import Button from "../../../../components/ui/Button";
-import SimpleCard from "../../../../components/ui/SimpleCard";
-import TextInput from "../../../../components/ui/TextInput";
+
 import { useDebounce } from "../../../../hooks/useDeabounce";
 import { useEditDistributor, useGetDistributors, useGetDistributorTypes, useNewDistributor } from "../../../../_lib/@react-client-query/accounts";
-import Modal from "../../../../components/ui/Modal";
 
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../components/ui/Table";
 import archiveIcon from "../../../../assets/icons/archive.png";
-import Dropdown from "../../../../components/ui/Dropdown";
+
 import type { Distributor } from "../../../../types/user";
 
 import DistributorForm from "./DistributorForm";
 import { useGetDepartments } from "../../../../_lib/@react-client-query/department";
 import ToastNotification from "../../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
+import SimpleCard from "@/components/SimpleCard";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/input";
+import { Dialog } from "@radix-ui/react-dialog";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -87,17 +88,17 @@ const Distributors = () => {
 
       <div className="mt-10 flex flex-col gap-10">
         <div className="flex gap-3">
-          <TextInput
+          <Input
             className="min-w-[450px] max-w-[450px]"
             onChange={(e) => setSearchValue(e.target.value)}
             value={searchValue}
             placeholder="Search by Distributor Name"
           />
-          <Dropdown
+          {/* <Dropdown
             value={type}
             onChange={(value) => setType(value)}
             options={[{ label: "All Distributor Type", value: "" }, ...distributorTypeOptions]}
-          />
+          /> */}
         </div>
 
         <Table>
@@ -133,7 +134,7 @@ const Distributors = () => {
                         Edit Details
                       </Button>
                       <div className="relative group">
-                        <Button className="!p-0" variant="plain">
+                        <Button className="!p-0">
                           <img src={archiveIcon} alt="archive" />
                         </Button>
 
@@ -148,13 +149,13 @@ const Distributors = () => {
             )}
           </TableBody>
         </Table>
-        <div className="mt-5">
+        {/* <div className="mt-5">
           <Pagination currentPage={page} totalPage={Math.ceil(distributors.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
-        </div>
+        </div> */}
       </div>
 
       {isAddDistributor && (
-        <Modal className="max-w-[800px] w-full" isOpen={isAddDistributor} title="Add New Distributor" onClose={() => setIsAddDistributor(false)}>
+        <Dialog open={isAddDistributor} onOpenChange={() => setIsAddDistributor(false)}>
           <DistributorForm
             initialValues={{
               firstName: "",
@@ -188,11 +189,11 @@ const Distributors = () => {
             }}
             onCancel={() => setIsAddDistributor(false)}
           />
-        </Modal>
+        </Dialog>
       )}
 
       {selectedDistributor && (
-        <Modal className="max-w-[800px] w-full" isOpen={!!selectedDistributor} title="Edit Distributor" onClose={() => setSelectedDistributor(null)}>
+        <Dialog open={!!selectedDistributor} onOpenChange={() => setSelectedDistributor(null)}>
           <DistributorForm
             isSubmitting={editDistributor.isPending}
             initialValues={{
@@ -242,7 +243,7 @@ const Distributors = () => {
             }}
             onCancel={() => setSelectedDistributor(null)}
           />
-        </Modal>
+        </Dialog>
       )}
 
       <Button className="fixed bottom-10 right-10 shadow-lg rounded-full !text-black">View Archived Distributors</Button>

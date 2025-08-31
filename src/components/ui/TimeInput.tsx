@@ -1,5 +1,3 @@
-import InputLabel from "./InputLabel";
-
 interface TimeInputProps {
   label?: string;
   name?: string;
@@ -14,7 +12,6 @@ interface TimeInputProps {
 const TimeInput = ({ label, name, value, onChange, disabled = false, required = false, isError = false, errorMessage = "" }: TimeInputProps) => {
   return (
     <div className={`w-full`}>
-      {label && <InputLabel label={label} />}
       <input
         type="time"
         name={name}

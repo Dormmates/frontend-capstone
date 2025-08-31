@@ -1,5 +1,5 @@
-import TextInput from "../../../../../components/ui/TextInput";
-import ControlNumberInputTutorial from "../../../../../components/ui/ControlNumberInputTutorial";
+import { Input } from "@/components/ui/input";
+import ControlNumberInputTutorial from "../../../../../components/ControlNumberInputTutorial";
 import type { ErrorKeys, ScheduleFormData } from "../../../../../types/schedule";
 
 interface Props {
@@ -16,98 +16,98 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
         <h1 className="text-xl mb-5">Ticket Details</h1>
         <ControlNumberInputTutorial className="-mt-5" />
         <div className="flex gap-5 ">
-          <TextInput
+          <Input
             onChange={handleInputChange}
-            label={
-              <p>
-                Total Number of <span className="font-bold">Orchestra Tickets</span>
-              </p>
-            }
+            // label={
+            //   <p>
+            //     Total Number of <span className="font-bold">Orchestra Tickets</span>
+            //   </p>
+            // }
             className="w-full min-w-[300px]"
             name="totalOrchestra"
             type="number"
             value={scheduleData.totalOrchestra + ""}
-            isError={!!errors?.totalOrchestra}
-            errorMessage={errors?.totalOrchestra}
+            // isError={!!errors?.totalOrchestra}
+            // errorMessage={errors?.totalOrchestra}
           />
 
-          <TextInput
+          <Input
             onChange={handleInputChange}
-            label={
-              <p>
-                Total Number of <span className="font-bold">Balcony Tickets</span>
-              </p>
-            }
+            // label={
+            //   <p>
+            //     Total Number of <span className="font-bold">Balcony Tickets</span>
+            //   </p>
+            // }
             className="w-full min-w-[300px]"
             name="totalBalcony"
             type="number"
             value={scheduleData.totalBalcony + ""}
-            isError={!!errors?.totalBalcony}
-            errorMessage={errors?.totalBalcony}
+            // isError={!!errors?.totalBalcony}
+            // errorMessage={errors?.totalBalcony}
           />
 
-          <TextInput
+          <Input
             onChange={handleInputChange}
-            label={
-              <p>
-                Total Number of <span className="font-bold">Complimentary Tickets</span>
-              </p>
-            }
+            // label={
+            //   <p>
+            //     Total Number of <span className="font-bold">Complimentary Tickets</span>
+            //   </p>
+            // }
             className="w-full min-w-[300px]"
             name="totalComplimentary"
             type="number"
             value={scheduleData.totalComplimentary + ""}
-            isError={!!errors?.totalComplimentary}
-            errorMessage={errors?.totalComplimentary}
+            // isError={!!errors?.totalComplimentary}
+            // errorMessage={errors?.totalComplimentary}
           />
         </div>
         <h2>Ticket Control Numbers</h2>
         <div className="flex gap-5 w-full">
-          <TextInput
+          <Input
             onChange={handleInputChange}
-            label={
-              <p>
-                Control Number of <span className="font-bold">Orchestra Tickets</span>
-              </p>
-            }
+            // label={
+            //   <p>
+            //     Control Number of <span className="font-bold">Orchestra Tickets</span>
+            //   </p>
+            // }
             placeholder="eg. 1-250"
             className="w-full min-w-[300px]"
             name="orchestraControlNumber"
             value={!scheduleData.totalOrchestra ? "" : scheduleData.orchestraControlNumber}
-            isError={!!errors?.orchestraControlNumber}
-            errorMessage={errors?.orchestraControlNumber}
+            // isError={!!errors?.orchestraControlNumber}
+            // errorMessage={errors?.orchestraControlNumber}
             disabled={!scheduleData.totalOrchestra}
           />
 
-          <TextInput
+          <Input
             onChange={handleInputChange}
-            label={
-              <p>
-                Control Number of <span className="font-bold">Balcony Tickets</span>
-              </p>
-            }
+            // label={
+            //   <p>
+            //     Control Number of <span className="font-bold">Balcony Tickets</span>
+            //   </p>
+            // }
             placeholder="eg. 251-500"
             className="w-full min-w-[300px]"
             name="balconyControlNumber"
             value={!scheduleData.totalBalcony ? "" : scheduleData.balconyControlNumber}
-            isError={!!errors?.balconyControlNumber}
-            errorMessage={errors?.balconyControlNumber}
+            // isError={!!errors?.balconyControlNumber}
+            // errorMessage={errors?.balconyControlNumber}
             disabled={!scheduleData.totalBalcony}
           />
 
-          <TextInput
+          <Input
             onChange={handleInputChange}
-            label={
-              <p>
-                Control Number of <span className="font-bold">Complimentary Tickets</span>
-              </p>
-            }
+            // label={
+            //   <p>
+            //     Control Number of <span className="font-bold">Complimentary Tickets</span>
+            //   </p>
+            // }
             placeholder="eg. 501-750"
             className="w-full min-w-[300px]"
             name="complimentaryControlNumber"
             value={!scheduleData.totalComplimentary ? "" : scheduleData.complimentaryControlNumber}
-            isError={!!errors?.complimentaryControlNumber}
-            errorMessage={errors?.complimentaryControlNumber}
+            // isError={!!errors?.complimentaryControlNumber}
+            // errorMessage={errors?.complimentaryControlNumber}
             disabled={!scheduleData.totalComplimentary}
           />
         </div>

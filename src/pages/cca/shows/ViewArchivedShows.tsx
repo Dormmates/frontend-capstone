@@ -1,12 +1,13 @@
 import type { ShowData } from "../../../types/show";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
-import Button from "../../../components/ui/Button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import archiveIcon from "../../../assets/icons/archive.png";
 import deleteIcon from "../../../assets/icons/delete.png";
-import SimpleCard from "../../../components/ui/SimpleCard";
+
 import { useState } from "react";
-import Modal from "../../../components/ui/Modal";
+import SimpleCard from "@/components/SimpleCard";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
 
 type Props = {
   archivedShow: ShowData[];
@@ -59,7 +60,6 @@ const ViewArchivedShows = ({ archivedShow, unArchiveShow, deletShow, isPending }
                         onClick={() => {
                           unArchiveShow(show);
                         }}
-                        variant="plain"
                       >
                         <img src={archiveIcon} alt="archive" />
                       </Button>
@@ -76,7 +76,6 @@ const ViewArchivedShows = ({ archivedShow, unArchiveShow, deletShow, isPending }
                           setIsDelete(true);
                           setSelectedShow(show);
                         }}
-                        variant="plain"
                       >
                         <img src={deleteIcon} alt="delete" />
                       </Button>
@@ -94,7 +93,7 @@ const ViewArchivedShows = ({ archivedShow, unArchiveShow, deletShow, isPending }
       </Table>
 
       {isDelete && (
-        <Modal isOpen={isDelete} onClose={() => setIsDelete(false)} title={`Permanently Delete Show`}>
+        <Dialog open={isDelete} onOpenChange={() => setIsDelete(false)}>
           <div className="flex gap-5 mt-10">
             <div className="w-[200px] flex items-center justify-center">
               <img className="object-cover min-w-[200px] h-full" src={selectedShow?.showCover} alt="Show Image" />
@@ -153,7 +152,7 @@ const ViewArchivedShows = ({ archivedShow, unArchiveShow, deletShow, isPending }
               Cancel
             </Button>
           </div>
-        </Modal>
+        </Dialog>
       )}
     </div>
   );

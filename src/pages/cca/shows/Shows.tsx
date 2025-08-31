@@ -1,36 +1,41 @@
 import { ContentWrapper } from "../../../components/layout/Wrapper";
-import SimpleCard from "../../../components/ui/SimpleCard";
-import Button from "../../../components/ui/Button";
+
 import { Link } from "react-router-dom";
 import { useArchiveShow, useDeleteShow, useGetShows, useUnArchiveShow } from "../../../_lib/@react-client-query/show";
 import { useMemo, useState, useEffect } from "react";
-import TextInput from "../../../components/ui/TextInput";
-import Dropdown from "../../../components/ui/Dropdown";
+
 import { useGetDepartments } from "../../../_lib/@react-client-query/department";
 import type { Department } from "../../../types/department";
 import { useAuthContext } from "../../../context/AuthContext";
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useDebounce } from "../../../hooks/useDeabounce";
 import archiveIcon from "../../../assets/icons/archive.png";
-import Modal from "../../../components/ui/Modal";
+
 import type { ShowData } from "../../../types/show";
 import EditShowDetails from "./EditShowDetails";
 import { useQueryClient } from "@tanstack/react-query";
 import ToastNotification from "../../../utils/toastNotification";
 import ViewArchivedShows from "./ViewArchivedShows";
+import SimpleCard from "@/components/SimpleCard";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Dialog } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import Dropdown from "@/components/Dropdown";
+import Pagination from "@/components/Pagination";
 
 const ITEMS_PER_PAGE = 5;
 
 const showTypes = [
-  { label: "All Show Type", value: "" },
-  { label: "Major Concert", value: "majorConcert" },
-  { label: "Show Case", value: "showCase" },
-  { label: "Major Production", value: "majorProduction" },
+  { name: "All Show Type", value: "all" },
+  { name: "Major Concert", value: "majorConcert" },
+  { name: "Show Case", value: "showCase" },
+  { name: "Major Production", value: "majorProduction" },
 ];
 
 const parseDepartments = (departments: Department[]) => {
-  const data = departments.map((d) => ({ label: d.name, value: d.departmentId }));
-  data.unshift({ label: "All Departments", value: "" });
+  const data = departments.map((d) => ({ name: d.name, value: d.departmentId }));
+  data.unshift({ name: "All Departments", value: "all" });
   return data;
 };
 
@@ -68,8 +73,8 @@ const Shows = () => {
     if (!shows) return [];
     return activeShows.filter((show) => {
       const matchTitle = show.title.toLowerCase().includes(debouncedSearch.toLowerCase());
-      const matchType = !showType || show.showType === showType;
-      const matchDepartment = !selectedDepartment || show.department?.departmentId === selectedDepartment || !show.department;
+      const matchType = !showType || showType === "all" || show.showType === showType;
+      const matchDepartment = !selectedDepartment || selectedDepartment === "all" || show.department?.departmentId === selectedDepartment;
       return matchTitle && matchType && matchDepartment;
     });
   }, [activeShows, debouncedSearch, showType, selectedDepartment]);
@@ -88,7 +93,7 @@ const Shows = () => {
   if (!shows || !departmentsData || !user) return <h1>Error: No shows fetched.</h1>;
 
   return (
-    <ContentWrapper className="lg:!p-20">
+    <ContentWrapper>
       <h1 className="text-3xl">Shows</h1>
 
       <div className="flex justify-between">
@@ -103,25 +108,33 @@ const Shows = () => {
           />
         </div>
         <Link className="self-end" to={"/shows/add"}>
-          <Button className="text-black">Add New Show</Button>
+          <Button>Add New Show</Button>
         </Link>
       </div>
 
       <div className="mt-10 flex gap-5">
-        <TextInput
+        <Input
           className="min-w-[450px] max-w-[450px]"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search Show by Title"
         />
         <Dropdown
-          disabled={user?.role !== "head"}
-          className="min-w-[200px]"
+          label="Performing Groups"
+          placeholder="Select Performing Group"
+          className="max-w-[200px]"
           onChange={(value) => setSelectedDepartment(value)}
           value={user.role === "head" ? selectedDepartment : user?.department ? user.department.departmentId : ""}
-          options={departments}
+          items={departments}
         />
-        <Dropdown className="min-w-[200px]" onChange={(value) => setShowType(value)} value={showType} options={showTypes} />
+        <Dropdown
+          label="Show Types"
+          placeholder="Select Show Type"
+          className="max-w-[200px]"
+          onChange={(value) => setShowType(value)}
+          value={showType}
+          items={showTypes}
+        />
       </div>
 
       <div className="mt-10">
@@ -131,7 +144,7 @@ const Shows = () => {
               <TableHead>Title</TableHead>
               <TableHead>Show Type</TableHead>
               <TableHead>Department</TableHead>
-              <TableHead className="text-center">Actions</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -156,9 +169,7 @@ const Shows = () => {
                   <TableCell className="text-right">
                     <div className="flex justify-end items-center gap-2">
                       <Link to={`/shows/${show.showId}`}>
-                        <Button variant="primary" className="!bg-gray !text-black !border-lightGrey border-2">
-                          Go To Schedules
-                        </Button>
+                        <Button variant="outline">Go To Schedules</Button>
                       </Link>
                       <Button
                         onClick={() => {
@@ -168,21 +179,20 @@ const Shows = () => {
                       >
                         Edit Details
                       </Button>
-                      <div className="relative group">
-                        <Button
-                          onClick={() => {
-                            setIsArchiveShow(true);
-                            setSelectedShow(show);
-                          }}
-                          variant="plain"
-                        >
-                          <img src={archiveIcon} alt="archive" />
-                        </Button>
-
-                        <div className="absolute  -left-20 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
-                          Archive Show
-                        </div>
-                      </div>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            onClick={() => {
+                              setIsArchiveShow(true);
+                              setSelectedShow(show);
+                            }}
+                          >
+                            <img src={archiveIcon} alt="archive" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="left">Archive Show</TooltipContent>
+                      </Tooltip>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -191,29 +201,23 @@ const Shows = () => {
           </TableBody>
         </Table>
 
-        {filteredShows.length !== 0 && (
-          <div className="mt-5">
-            <Pagination
-              currentPage={page}
-              totalPage={Math.ceil(filteredShows.length / ITEMS_PER_PAGE)}
-              onPageChange={(newPage) => setPage(newPage)}
-            />
-          </div>
-        )}
+        <div className="mt-5">
+          <Pagination currentPage={page} totalPage={Math.ceil(filteredShows.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
+        </div>
       </div>
 
-      <Button onClick={() => setIsViewArchivedShows(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full !text-black">
+      <Button onClick={() => setIsViewArchivedShows(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full ">
         View Archived Show
       </Button>
 
       {isEditDetails && (
-        <Modal isOpen={isEditDetails} title="Edit Show Details" onClose={() => setIsEditDetails(false)}>
+        <Dialog open={isEditDetails} onOpenChange={() => setIsEditDetails(false)}>
           <EditShowDetails groups={departmentsData} close={() => setIsEditDetails(false)} selectedShow={selectedShow as ShowData} />
-        </Modal>
+        </Dialog>
       )}
 
       {isArchiveShow && (
-        <Modal isOpen={isArchiveShow} onClose={() => setIsArchiveShow(false)} title={`Archive "${selectedShow?.title}"`}>
+        <Dialog open={isArchiveShow} onOpenChange={() => setIsArchiveShow(false)}>
           <div className="mt-5">
             <h1 className="font-semibold mb-2">Archiving this show will permanently:</h1>
             <ul className="list-disc ml-6 space-y-1">
@@ -268,11 +272,11 @@ const Shows = () => {
               </Button>
             </div>
           </div>
-        </Modal>
+        </Dialog>
       )}
 
       {isViewArchivedShows && (
-        <Modal className="w-full max-w-[1000px]" onClose={() => setIsViewArchivedShows(false)} isOpen={isViewArchivedShows} title="Archived Shows">
+        <Dialog onOpenChange={() => setIsViewArchivedShows(false)} open={isViewArchivedShows}>
           <ViewArchivedShows
             isPending={unarchiveShow.isPending || deleteShow.isPending}
             deletShow={(show) => {
@@ -315,7 +319,7 @@ const Shows = () => {
             }}
             archivedShow={shows.filter((show) => show.isArchived)}
           />
-        </Modal>
+        </Dialog>
       )}
     </ContentWrapper>
   );

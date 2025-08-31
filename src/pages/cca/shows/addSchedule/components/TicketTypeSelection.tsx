@@ -1,5 +1,5 @@
 import React from "react";
-import Dropdown from "../../../../../components/ui/Dropdown";
+
 import type { ScheduleFormData, TicketType } from "../../../../../types/schedule";
 
 const ticketTypes = [
@@ -14,13 +14,14 @@ interface Props {
 
 const TicketTypeSelection = ({ scheduleData, setScheduleData }: Props) => {
   return (
-    <Dropdown<TicketType>
-      className="z-[999999]"
-      options={ticketTypes}
-      label="Ticket Type"
-      value={scheduleData.ticketType}
-      onChange={(value) => setScheduleData((prev) => ({ ...prev, ticketType: value }))}
-    />
+    // <Dropdown<TicketType>
+    //   className="z-[999999]"
+    //   options={ticketTypes}
+    //   label="Ticket Type"
+    //   value={scheduleData.ticketType}
+    //   onChange={(value) => setScheduleData((prev) => ({ ...prev, ticketType: value }))}
+    // />
+    <p>Ticket Type</p>
   );
 };
 

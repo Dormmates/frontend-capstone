@@ -2,9 +2,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetShow } from "../../../../_lib/@react-client-query/show";
 import React, { useState } from "react";
 import { ContentWrapper } from "../../../../components/layout/Wrapper";
-import BreadCrumb from "../../../../components/ui/BreadCrumb";
-import Button from "../../../../components/ui/Button";
-import TextInput from "../../../../components/ui/TextInput";
 
 import type { FlattenedSeat } from "../../../../types/seat";
 import type { ErrorKeys, ScheduleFormData, ScheduleFormErrors, SeatPricing } from "../../../../types/schedule";
@@ -17,11 +14,14 @@ import TicketDetailsSection from "./components/TicketDetailsSection";
 
 import { seatMap } from "../../../../../seatdata";
 import { flattenSeatMap, formatSectionName } from "../../../../utils/seatmap";
-import Modal from "../../../../components/ui/Modal";
+
 import SeatMapSchedule from "./components/SeatMapSchedule";
 import ToastNotification from "../../../../utils/toastNotification";
 import { useAddSchedule, type AddSchedulePayload } from "../../../../_lib/@react-client-query/schedule";
 import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/input";
+import { Dialog } from "@radix-ui/react-dialog";
 
 type ControlKey = "orchestraControlNumber" | "balconyControlNumber" | "complimentaryControlNumber";
 
@@ -579,13 +579,13 @@ const AddSchedule = () => {
 
   return (
     <ContentWrapper className="lg:!p-20 flex flex-col">
-      <BreadCrumb
+      {/* <BreadCrumb
         backLink={`/shows/${id}`}
         items={[
           { name: data.title, path: `/shows/${id}` },
           { name: "Add Schedule", path: "" },
         ]}
-      />
+      /> */}
       <h1 className="text-3xl mt-10">Add Schedule for {data.title}</h1>
 
       <div className="mt-5 flex flex-col gap-5">
@@ -599,7 +599,7 @@ const AddSchedule = () => {
               errors={errors}
             />
 
-            <Button onClick={addAnotherDate} variant="plain" className="!text-black font-normal underline !p-0 !w-fit !h-fit self-end">
+            <Button onClick={addAnotherDate} className="!text-black font-normal underline !p-0 !w-fit !h-fit self-end">
               Add Another Schedule
             </Button>
           </div>
@@ -626,16 +626,16 @@ const AddSchedule = () => {
 
         {scheduleData.ticketType == "ticketed" && (
           <div>
-            <TextInput
+            <Input
               placeholder="PHP"
               onChange={handleInputChange}
-              label="Commission Fee"
+              // label="Commission Fee"
               className="max-w-[250px]"
               type="number"
               name="commissionFee"
               value={scheduleData.commissionFee + ""}
-              isError={!!errors.commisionFee}
-              errorMessage={errors.commisionFee}
+              // isError={!!errors.commisionFee}
+              // errorMessage={errors.commisionFee}
             />
           </div>
         )}
@@ -672,16 +672,16 @@ const AddSchedule = () => {
             />
 
             {(seatToggle || rowToggle || sectionToggle) && (
-              <Modal
-                className="flex flex-col max-w-[500px]"
-                title="Assign Ticket Control Number"
-                onClose={() => {
+              <Dialog
+                // className="flex flex-col max-w-[500px]"
+                // title="Assign Ticket Control Number"
+                onOpenChange={() => {
                   setSeatToggle(false);
                   setRowToggle(false);
                   setSectionToggle(false);
                   setTicketInput({ controlNumber: "", isComplimentary: false });
                 }}
-                isOpen={seatToggle || rowToggle || sectionToggle}
+                open={seatToggle || rowToggle || sectionToggle}
               >
                 <div className="mt-5 bg-zinc-100 border border-darkGrey p-2">
                   <p>Section: {formatSectionName(selectedSeats?.[0]?.section || "")}</p>
@@ -729,7 +729,7 @@ const AddSchedule = () => {
                           ((getRemainingControlNumbers("orchestra").length !== 0 && selectedSeats[0]?.section.includes("orchestra")) ||
                             (getRemainingControlNumbers("balcony").length !== 0 && selectedSeats[0]?.section.includes("balcony")))) ? (
                           <>
-                            <TextInput
+                            <Input
                               className="mt-5"
                               value={ticketInput.controlNumber}
                               onChange={(e) =>
@@ -738,14 +738,14 @@ const AddSchedule = () => {
                                   controlNumber: e.target.value,
                                 }))
                               }
-                              label={
-                                <p className="flex flex-col gap-2">
-                                  Input Ticket Control Number to be assigned:
-                                  <span className="font-semibold">
-                                    "{selectedSeats.filter((seat) => seat.ticketControlNumber === 0).length}" control number required
-                                  </span>
-                                </p>
-                              }
+                              // label={
+                              //   <p className="flex flex-col gap-2">
+                              //     Input Ticket Control Number to be assigned:
+                              //     <span className="font-semibold">
+                              //       "{selectedSeats.filter((seat) => seat.ticketControlNumber === 0).length}" control number required
+                              //     </span>
+                              //   </p>
+                              // }
                             />
 
                             <Button onClick={validateTicketInput} className="self-end mt-4 !bg-green">
@@ -794,7 +794,7 @@ const AddSchedule = () => {
                     )}
                   </>
                 )}
-              </Modal>
+              </Dialog>
             )}
           </>
         )}

@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 import { NavLink, Outlet, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useGetAllocatedTicketsOfDistributor, useUnAllocateTicket } from "../../../../../../_lib/@react-client-query/schedule";
-import BreadCrumb from "../../../../../../components/ui/BreadCrumb";
-import Button from "../../../../../../components/ui/Button";
 
 import allocated_icon from "../../../../../../assets/icons/allocated_tickets.png";
 import unsold_icon from "../../../../../../assets/icons/unsold_ticket.png";
@@ -14,13 +12,18 @@ import remitted_icon from "../../../../../../assets/icons/remitted.png";
 import balance_due_icon from "../../../../../../assets/icons/balance_due.png";
 import type { ShowData } from "../../../../../../types/show";
 import type { Schedule } from "../../../../../../types/schedule";
-import Modal from "../../../../../../components/ui/Modal";
+
 import UnallocateTicket from "../unallocateTicket/UnallocateTicket";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "../../../../../../context/AuthContext";
 import ToastNotification from "../../../../../../utils/toastNotification";
 import RemitTickets from "../remitTicket/RemitTickets";
 import { formatCurrency } from "../../../../../../utils";
+import { Button } from "@/components/ui/button";
+import Breadcrumbs from "@/components/BreadCrumbs";
+import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const links = [
   {
@@ -94,14 +97,11 @@ const ViewDistributorLayout = () => {
 
   return (
     <div className="flex flex-col gap-5 mt-5">
-      <BreadCrumb
-        backLink={`/shows/schedule/${showId}/${scheduleId}/d&r/`}
-        items={[
-          { name: "Distributor", path: `/shows/schedule/${showId}/${scheduleId}/d&r/` },
-          { name: distributorName, path: "" },
-        ]}
+      <Breadcrumbs
+        backHref={`/shows/schedule/${showId}/${scheduleId}/d&r/`}
+        items={[{ name: "Distributor List", href: `/shows/schedule/${showId}/${scheduleId}/d&r/` }, { name: distributorName }]}
       />
-      <div className="flex flex-col gap-5 mt-5">
+      <div className="flex flex-col gap-5 ">
         <h1 className="text-2xl">{distributorName}</h1>
         <div className="flex gap-3 items-center">
           <Button className="!bg-green">Allocate Ticket</Button>
@@ -152,8 +152,8 @@ const ViewDistributorLayout = () => {
           </div>
         </div>
       </div>
-      <hr className="w-full border-lightGrey mt-5" />
-      <div className="my-5 flex gap-5">
+      <Separator />
+      <div className="mb-5 flex gap-5">
         {links.map((link, index) => (
           <NavLink
             key={index}
@@ -171,45 +171,59 @@ const ViewDistributorLayout = () => {
       </div>
 
       {isUnallocateTicket && (
-        <Modal isOpen={isUnallocateTicket} onClose={() => setIsUnallocateTicket(false)} title="Ticket Unallocation">
-          <UnallocateTicket
-            controlNumbersAllocated={data
-              .filter((ticket) => !ticket.isRemitted && ticket.status == "allocated")
-              .map((ticket) => ticket.controlNumber)}
-            close={() => setIsUnallocateTicket(false)}
-            disabled={unAllocateTicket.isPending}
-            onSubmit={(controlNumbers) => {
-              const payload = {
-                distributorId: distributorId as string,
-                scheduleId: scheduleId as string,
-                unallocatedBy: user?.userId as string,
-                controlNumbers,
-              };
+        <Dialog open={isUnallocateTicket} onOpenChange={() => setIsUnallocateTicket(false)}>
+          <DialogContent className="max-w-xl max-h-[85vh] p-0 ">
+            <ScrollArea className="max-h-[85vh] p-6">
+              <DialogHeader className="mb-10">
+                <DialogTitle>Unallocate Ticket</DialogTitle>
+                <DialogDescription>Distributor: {distributorName}</DialogDescription>
+              </DialogHeader>
 
-              unAllocateTicket.mutate(payload, {
-                onSuccess: () => {
-                  queryClient.invalidateQueries({ queryKey: ["schedule", "allocated", scheduleId, distributorId], exact: true });
-                  queryClient.invalidateQueries({ queryKey: ["schedule", "seatmap", scheduleId], exact: true });
-                  queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId] });
-                  setIsUnallocateTicket(false);
-                  ToastNotification.success("Ticket Unallocated");
-                },
-                onError: (err) => {
-                  ToastNotification.error(err.message);
-                },
-              });
-            }}
-            schedule={schedule}
-            show={show}
-            distributorName={distributorName}
-          />
-        </Modal>
+              <UnallocateTicket
+                controlNumbersAllocated={data
+                  .filter((ticket) => !ticket.isRemitted && ticket.status === "allocated")
+                  .map((ticket) => ticket.controlNumber)}
+                close={() => setIsUnallocateTicket(false)}
+                disabled={unAllocateTicket.isPending}
+                onSubmit={(controlNumbers) => {
+                  const payload = {
+                    distributorId: distributorId as string,
+                    scheduleId: scheduleId as string,
+                    unallocatedBy: user?.userId as string,
+                    controlNumbers,
+                  };
+
+                  unAllocateTicket.mutate(payload, {
+                    onSuccess: () => {
+                      queryClient.invalidateQueries({ queryKey: ["schedule", "allocated", scheduleId, distributorId], exact: true });
+                      queryClient.invalidateQueries({ queryKey: ["schedule", "seatmap", scheduleId], exact: true });
+                      queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId] });
+                      setIsUnallocateTicket(false);
+                      ToastNotification.success("Ticket Unallocated");
+                    },
+                    onError: (err: any) => {
+                      ToastNotification.error(err.message);
+                    },
+                  });
+                }}
+                schedule={schedule}
+                show={show}
+                distributorName={distributorName}
+              />
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
       )}
 
       {isRemitTicket && (
-        <Modal className="w-full max-w-[700px]" isOpen={isRemitTicket} title="Remit Ticket Sales" onClose={() => setIsRemitTicket(false)}>
-          <RemitTickets closeRemit={() => setIsRemitTicket(false)} distributorData={data} />
-        </Modal>
+        <Dialog open={isRemitTicket} onOpenChange={() => setIsRemitTicket(false)}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Remit Ticket Sales</DialogTitle>
+            </DialogHeader>
+            <RemitTickets closeRemit={() => setIsRemitTicket(false)} distributorData={data} />
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

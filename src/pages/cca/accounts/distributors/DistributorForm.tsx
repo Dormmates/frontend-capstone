@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import TextInput from "../../../../components/ui/TextInput";
-import Dropdown from "../../../../components/ui/Dropdown";
-import Button from "../../../../components/ui/Button";
 import { isValidEmail } from "../../../../utils";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/Button";
 
 type DistributorFormValues = {
   firstName: string;
@@ -88,54 +87,43 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
         <h1 className="text-lg">Basic Information</h1>
         <div className="mt-5 flex flex-col gap-5">
           <div className="flex gap-5">
-            <TextInput
+            <Input disabled={isSubmitting} placeholder="eg. Juan" name="firstName" value={formData.firstName} onChange={handleInputChange} />
+            <Input
               disabled={isSubmitting}
-              isError={!!errors.firstName}
-              errorMessage={errors.firstName}
-              placeholder="eg. Juan"
-              name="firstName"
-              label="First Name"
-              value={formData.firstName}
-              onChange={handleInputChange}
-            />
-            <TextInput
-              disabled={isSubmitting}
-              isError={!!errors.lastName}
-              errorMessage={errors.lastName}
               placeholder="eg. Dela Cruz"
               name="lastName"
-              label="Last Name"
+              // label="Last Name"
               value={formData.lastName}
               onChange={handleInputChange}
             />
           </div>
 
           <div className="flex gap-5">
-            <TextInput
+            <Input
               disabled={isSubmitting}
-              isError={!!errors.email}
-              errorMessage={errors.email}
+              // isError={!!errors.email}
+              // errorMessage={errors.email}
               type="email"
               placeholder={formData.type === "2" ? "eg. member@slu.edu.ph" : "eg. distributor@gmail.com"}
               name="email"
-              label="SLU Email"
+              // label="SLU Email"
               value={formData.email}
               onChange={handleInputChange}
             />
-            <TextInput
+            <Input
               disabled={isSubmitting}
-              isError={!!errors.contactNumber}
-              errorMessage={errors.contactNumber}
+              // isError={!!errors.contactNumber}
+              // errorMessage={errors.contactNumber}
               placeholder="eg. 0928293752"
               name="contactNumber"
-              label="Contact Number"
+              // label="Contact Number"
               value={formData.contactNumber}
               onChange={handleInputChange}
             />
           </div>
 
           <div className="flex gap-5">
-            <Dropdown
+            {/* <Dropdown
               disabled={isSubmitting}
               isError={!!errors.type}
               errorMessage={errors.type}
@@ -144,19 +132,20 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
               onChange={(value) => setFormData((prev) => ({ ...prev, type: value }))}
               value={formData.type}
               options={distributorTypeOptions}
-            />
+            /> */}
 
             {formData.type === "2" && (
-              <Dropdown
-                disabled={isSubmitting}
-                isError={!!errors.department}
-                errorMessage={errors.department}
-                className="w-full"
-                label="Performing Group"
-                onChange={(value) => setFormData((prev) => ({ ...prev, department: value }))}
-                value={formData.department || ""}
-                options={groupOptions}
-              />
+              // <Dropdown
+              //   disabled={isSubmitting}
+              //   isError={!!errors.department}
+              //   errorMessage={errors.department}
+              //   className="w-full"
+              //   label="Performing Group"
+              //   onChange={(value) => setFormData((prev) => ({ ...prev, department: value }))}
+              //   value={formData.department || ""}
+              //   options={groupOptions}
+              // />
+              <p>Show</p>
             )}
           </div>
         </div>

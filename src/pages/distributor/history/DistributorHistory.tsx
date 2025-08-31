@@ -2,9 +2,10 @@ import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useGetAllDistributorAllocationHistory, useGetAllDistributorRemittanceHistory } from "../../../_lib/@react-client-query/schedule";
 import { useAuthContext } from "../../../context/AuthContext";
 import { ContentWrapper } from "../../../components/layout/Wrapper";
-import SimpleCard from "../../../components/ui/SimpleCard";
+
 import { useMemo } from "react";
 import { formatCurrency } from "../../../utils";
+import SimpleCard from "@/components/SimpleCard";
 
 const links = [
   { path: "", name: "Allocation History" },

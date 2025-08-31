@@ -1,5 +1,3 @@
-import InputLabel from "./InputLabel";
-
 interface DateInputProps {
   label?: string;
   name?: string;
@@ -23,7 +21,6 @@ const DateInput = ({ label, name, value, onChange, disabled = false, required = 
 
   return (
     <div className={`w-full`}>
-      {label && <InputLabel label={label} />}
       <input
         min={currentDateStr}
         max={endOfYearStr}

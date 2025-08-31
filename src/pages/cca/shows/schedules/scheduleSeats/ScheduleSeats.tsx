@@ -1,9 +1,10 @@
 import { useOutletContext, useParams } from "react-router-dom";
 import type { Schedule } from "../../../../../types/schedule";
 import NotFound from "../../../../NotFound";
-import SeatMap from "../../../../../components/ui/SeatMap";
+
 import { useGetScheduleSeatMap } from "../../../../../_lib/@react-client-query/schedule";
 import { useMemo } from "react";
+import SeatMap from "@/components/SeatMap";
 
 const ScheduleSeats = () => {
   const { schedule } = useOutletContext<{ schedule: Schedule }>();

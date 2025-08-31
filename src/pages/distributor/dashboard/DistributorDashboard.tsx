@@ -1,15 +1,16 @@
 import { useMemo, useState } from "react";
 import { useGetShowsAndDistributorTickets } from "../../../_lib/@react-client-query/show";
 import { ContentWrapper } from "../../../components/layout/Wrapper";
-import SimpleCard from "../../../components/ui/SimpleCard";
+
 import { useAuthContext } from "../../../context/AuthContext";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatToReadableDate, formatToReadableTime } from "../../../utils/date";
 import type { DistributorScheduleTickets } from "../../../types/ticket";
-import Button from "../../../components/ui/Button";
-import Modal from "../../../components/ui/Modal";
+
 import ViewAllocatedTickets from "./ViewAllocatedTickets";
 import { formatCurrency } from "../../../utils";
+import SimpleCard from "@/components/SimpleCard";
+import { Button } from "@/components/ui/Button";
 
 const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
   const soldTickets = schedule.tickets.filter((ticket) => ticket.status === "sold");
@@ -105,11 +106,11 @@ const DistributorDashboard = () => {
         </Table>
       </div>
 
-      {selectedSchedule && (
+      {/* {selectedSchedule && (
         <Modal className="w-full max-w-[1000px]" isOpen={!!selectedSchedule} onClose={() => setSelectedSchedule(null)} title="Tickets Allocated">
           <ViewAllocatedTickets closeModal={() => setSelectedSchedule(null)} schedule={selectedSchedule} />
         </Modal>
-      )}
+      )} */}
     </ContentWrapper>
   );
 };

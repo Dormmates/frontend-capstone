@@ -1,8 +1,7 @@
 import React from "react";
-import Dropdown from "../../../../../components/ui/Dropdown";
-import TextInput from "../../../../../components/ui/TextInput";
 
 import type { ErrorKeys, ScheduleFormData, SeatPricing } from "../../../../../types/schedule";
+import { Input } from "@/components/ui/input";
 
 const pricingOptions = [
   { label: "Fixed", value: "fixed" },
@@ -29,25 +28,26 @@ interface Props {
 const PricingSection = ({ scheduleData, ticketPrice, sectionedPrice, handleSeatPricingType, setTicketPrice, errors, handlePriceChange }: Props) => {
   return (
     <div>
-      <Dropdown<SeatPricing>
+      {/* <Dropdown<SeatPricing>
         options={pricingOptions}
         label="Seat Pricing"
         disabled={scheduleData.seatingConfiguration === "freeSeating"}
         value={scheduleData.seatingConfiguration === "freeSeating" ? "fixed" : scheduleData.seatPricing}
         className="mb-5"
         onChange={handleSeatPricingType}
-      />
+      /> */}
+      <p>Seating Price</p>
 
       {scheduleData.seatPricing === "fixed" || scheduleData.seatingConfiguration === "freeSeating" ? (
         <div className="border border-lightGrey rounded-md w-fit p-5">
-          <TextInput
+          <Input
             placeholder="PHP"
             onChange={setTicketPrice}
-            label="Ticket Price"
+            // label="Ticket Price"
             className="max-w-[250px]"
             type="number"
-            isError={!!errors?.ticketPrice}
-            errorMessage={errors?.ticketPrice}
+            // isError={!!errors?.ticketPrice}
+            // errorMessage={errors?.ticketPrice}
             value={ticketPrice}
           />
         </div>
@@ -55,72 +55,72 @@ const PricingSection = ({ scheduleData, ticketPrice, sectionedPrice, handleSeatP
         <div className="border border-lightGrey rounded-md w-full p-5">
           <div className="w-full flex flex-col gap-5">
             <div className="flex gap-5 w-full">
-              <TextInput
+              <Input
                 onChange={handlePriceChange}
-                label="Orchestra Left"
+                // label="Orchestra Left"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="orchestraLeft"
                 type="number"
-                isError={!!errors?.orchestraLeft}
-                errorMessage={errors?.orchestraLeft}
+                // isError={!!errors?.orchestraLeft}
+                // errorMessage={errors?.orchestraLeft}
                 value={sectionedPrice.orchestraLeft}
               />
-              <TextInput
+              <Input
                 onChange={handlePriceChange}
-                label="Orchestra Middle"
+                // label="Orchestra Middle"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="orchestraMiddle"
                 type="number"
-                isError={!!errors?.orchestraMiddle}
-                errorMessage={errors?.orchestraMiddle}
+                // isError={!!errors?.orchestraMiddle}
+                // errorMessage={errors?.orchestraMiddle}
                 value={sectionedPrice.orchestraMiddle}
               />
-              <TextInput
+              <Input
                 onChange={handlePriceChange}
-                label="Orchestra Right"
+                // label="Orchestra Right"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="orchestraRight"
                 type="number"
-                isError={!!errors?.orchestraRight}
-                errorMessage={errors?.orchestraRight}
+                // isError={!!errors?.orchestraRight}
+                // errorMessage={errors?.orchestraRight}
                 value={sectionedPrice.orchestraRight}
               />
             </div>
             <div className="w-full flex  gap-5">
-              <TextInput
+              <Input
                 onChange={handlePriceChange}
-                label="Balcony Left"
+                // label="Balcony Left"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="balconyLeft"
                 type="number"
-                isError={!!errors?.balconyLeft}
-                errorMessage={errors?.balconyLeft}
+                // isError={!!errors?.balconyLeft}
+                // errorMessage={errors?.balconyLeft}
                 value={sectionedPrice.balconyLeft}
               />
-              <TextInput
+              <Input
                 onChange={handlePriceChange}
-                label="Balcony Middle"
+                // label="Balcony Middle"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="balconyMiddle"
                 type="number"
-                isError={!!errors?.balconyMiddle}
-                errorMessage={errors?.balconyMiddle}
+                // isError={!!errors?.balconyMiddle}
+                // errorMessage={errors?.balconyMiddle}
                 value={sectionedPrice.balconyMiddle}
               />
-              <TextInput
+              <Input
                 onChange={handlePriceChange}
-                label="Balcony Right"
+                // label="Balcony Right"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="balconyRight"
                 type="number"
-                isError={!!errors?.balconyRight}
-                errorMessage={errors?.balconyRight}
+                // isError={!!errors?.balconyRight}
+                // errorMessage={errors?.balconyRight}
                 value={sectionedPrice.balconyRight}
               />
             </div>

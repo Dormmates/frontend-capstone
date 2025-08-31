@@ -1,14 +1,15 @@
 import { PageWrapper, ContentWrapper } from "../../components/layout/Wrapper";
 import logo from "../../assets/images/cca-logo.png";
 import background from "../../assets/images/background-login.png";
-import TextInput, { PasswordInput } from "../../components/ui/TextInput";
+
 import { useState } from "react";
-import Button from "../../components/ui/Button";
+
 import { Link } from "react-router-dom";
-import Modal from "../../components/ui/Modal";
-import Dropdown from "../../components/ui/Dropdown";
+
 import { useLogin } from "../../_lib/@react-client-query/auth";
 import { useAuthContext } from "../../context/AuthContext";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/Button";
 
 const distributorOptions = [
   { label: "CCA Member", value: "1" },
@@ -81,15 +82,15 @@ const DistributorLogin = () => {
           <h1 className="font-bold text-4xl">Distributor Login</h1>
           <h2 className="text-3xl text-center">Welcome Distributor</h2>
           <form className="w-full flex flex-col gap-5" onSubmit={submitForm}>
-            <TextInput
-              label="Email"
+            <Input
+              // label="Email"
               name="email"
               value={formContent.email}
               type="email"
               onChange={handleInputChange}
               placeholder="(eg. cca@slu.edu.ph)"
             />
-            <PasswordInput label="Password" name="password" value={formContent.password} onChange={handleInputChange} placeholder="Password" />
+            <Input name="password" value={formContent.password} onChange={handleInputChange} placeholder="Password" />
             <Button className="w-full" type="submit">
               Login
             </Button>
@@ -103,7 +104,7 @@ const DistributorLogin = () => {
           </Link>
         </div>
 
-        <Modal className="w-[95%] lg:w-[65%]" isOpen={openModal} onClose={() => setOpenModal(false)} title="Request Distributor Account">
+        {/* <Modal className="w-[95%] lg:w-[65%]" isOpen={openModal} onClose={() => setOpenModal(false)} title="Request Distributor Account">
           <form onSubmit={submitForm}>
             <ContentWrapper className="border border-lightGrey  rounded-md mt-5">
               <h1 className="text-xl mb-5">Basic Information</h1>
@@ -211,7 +212,7 @@ const DistributorLogin = () => {
               </Button>
             </div>
           </form>
-        </Modal>
+        </Modal> */}
       </ContentWrapper>
     </PageWrapper>
   );

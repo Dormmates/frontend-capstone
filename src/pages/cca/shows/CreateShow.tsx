@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import { ContentWrapper } from "../../../components/layout/Wrapper";
-import BreadCrumb from "../../../components/ui/BreadCrumb";
-import TextInput, { TextArea } from "../../../components/ui/TextInput";
-import Dropdown from "../../../components/ui/Dropdown";
-import Button from "../../../components/ui/Button";
-import InputLabel from "../../../components/ui/InputLabel";
+
 import { useAuthContext } from "../../../context/AuthContext";
 import { useCreateShow } from "../../../_lib/@react-client-query/show";
-import Modal from "../../../components/ui/Modal";
 
 import ToastNotification from "../../../utils/toastNotification";
 import { useGetDepartments } from "../../../_lib/@react-client-query/department";
@@ -15,6 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { useGetGenres } from "../../../_lib/@react-client-query/genre";
 import { useQueryClient } from "@tanstack/react-query";
 import type { ShowData } from "../../../types/show";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@radix-ui/react-label";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@radix-ui/react-dialog";
 
 const productionType = [
   { label: "Showcase", value: "showCase" },
@@ -194,7 +194,7 @@ const CreateShow = () => {
 
   return (
     <ContentWrapper className="lg:!p-20 flex flex-col">
-      <BreadCrumb backLink="/shows" items={[{ name: "Return", path: "" }]} />
+      {/* <BreadCrumb backLink="/shows" items={[{ name: "Return", path: "" }]} /> */}
       <h1 className="text-3xl mt-10">Create New Show</h1>
 
       <ContentWrapper className="border border-lightGrey rounded-md mt-10">
@@ -202,18 +202,10 @@ const CreateShow = () => {
 
         <div className="flex mt-5 flex-col gap-5 lg:flex-row">
           <div className="flex gap-5 flex-col w-full">
-            <TextInput
-              disabled={isUploading}
-              isError={!!errors.title}
-              errorMessage={errors.title}
-              label="Show Title"
-              value={showData.title}
-              onChange={handleInputChange}
-              name="title"
-            />
+            <Input disabled={isUploading} value={showData.title} onChange={handleInputChange} name="title" />
 
             <div className="flex gap-10 lg:flex-col lg:gap-5 xl:flex-row xl:gap-10">
-              <Dropdown
+              {/* <Dropdown
                 isError={!!errors.group}
                 errorMessage={errors.group}
                 disabled={user?.role !== "head" || isUploading || showData.productionType == "majorProduction"}
@@ -232,21 +224,13 @@ const CreateShow = () => {
                 options={user?.role === "head" ? [...productionType, { label: "Major Production", value: "majorProduction" }] : productionType}
                 value={showData.productionType}
                 onChange={(value) => setShowData((prev) => ({ ...prev, productionType: value }))}
-              />
+              /> */}
             </div>
 
-            <TextArea
-              disabled={isUploading}
-              label="Description"
-              name="description"
-              value={showData.description}
-              onChange={handleTextAreaChange}
-              isError={!!errors.description}
-              errorMessage={errors.description}
-            />
+            <Textarea disabled={isUploading} name="description" value={showData.description} onChange={handleTextAreaChange} />
 
             <div className="flex flex-col">
-              <InputLabel label="Genres" />
+              <Label> Genres</Label>
               <div className="flex items-center gap-5 flex-wrap">
                 <div className="flex gap-3 flex-wrap">
                   {showData.genre.map((genre, index) => {
@@ -261,14 +245,14 @@ const CreateShow = () => {
                         >
                           X
                         </button>
-                        <Dropdown
+                        {/* <Dropdown
                           disabled={isUploading}
                           isError={!showData.genre[index]}
                           className="w-full"
                           options={availableGenres}
                           value={genre}
                           onChange={(value) => handleGenreChange(index, value)}
-                        />
+                        /> */}
                       </div>
                     );
                   })}
@@ -287,7 +271,7 @@ const CreateShow = () => {
           </div>
 
           <div className="w-full max-w-[500px]">
-            <InputLabel label="Show Image Cover" />
+            {/* <Label label="Show Image Cover" /> */}
             <div className="flex flex-col gap-2">
               {showData.showImagePreview && (
                 <div className="h-full w-full border rounded border-lightGrey p-2">
@@ -322,12 +306,12 @@ const CreateShow = () => {
         </div>
       </ContentWrapper>
 
-      <Button disabled={isUploading} loading={isUploading} loadingMessage="Creating Show" onClick={handleSumbit} className="mt-10 self-end">
+      <Button disabled={isUploading} onClick={handleSumbit} className="mt-10 self-end">
         Create Show
       </Button>
 
       {showCreationSummary && (
-        <Modal title="Show Creation Summary" isOpen={showCreationSummary} onClose={() => setShowCreationSummary(false)}>
+        <Dialog open={showCreationSummary} onOpenChange={() => setShowCreationSummary(false)}>
           <ContentWrapper className="flex flex-col gap-10">
             <div className="flex gap-10">
               <div className="w-[200px] flex items-center justify-center">
@@ -370,7 +354,7 @@ const CreateShow = () => {
                 Confirm
               </Button>
               <Button
-                variant="danger"
+                variant="destructive"
                 onClick={() => {
                   setShowData({
                     title: "",
@@ -389,7 +373,7 @@ const CreateShow = () => {
               </Button>
             </div>
           </ContentWrapper>
-        </Modal>
+        </Dialog>
       )}
     </ContentWrapper>
   );

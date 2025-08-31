@@ -1,17 +1,15 @@
 import { ContentWrapper } from "../../../../components/layout/Wrapper";
-import SimpleCard from "../../../../components/ui/SimpleCard";
 
-import Button from "../../../../components/ui/Button";
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../components/ui/Table";
 
 import archiveIcon from "../../../../assets/icons/archive.png";
 import unassign from "../../../../assets/icons/unassign.png";
 
 import { useEditTrainer, useGetTrainers, useNewTrainer } from "../../../../_lib/@react-client-query/accounts";
-import TextInput from "../../../../components/ui/TextInput";
+
 import { useMemo, useState } from "react";
 import { useDebounce } from "../../../../hooks/useDeabounce";
-import Modal from "../../../../components/ui/Modal";
+
 import { useGetDepartments, useRemoveDepartmentTrainerByTrainerId } from "../../../../_lib/@react-client-query/department";
 
 import ToastNotification from "../../../../utils/toastNotification";
@@ -19,6 +17,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { Trainer } from "../../../../types/user";
 
 import TrainerForm from "./TrainerForm";
+import SimpleCard from "@/components/SimpleCard";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/input";
+import { Dialog } from "@radix-ui/react-dialog";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -96,7 +98,7 @@ const Trainers = () => {
       </div>
 
       <div className="mt-10 flex flex-col gap-10">
-        <TextInput
+        <Input
           className="min-w-[450px] max-w-[450px]"
           onChange={(e) => setSearchValue(e.target.value)}
           value={searchValue}
@@ -135,7 +137,6 @@ const Trainers = () => {
                             onClick={() => setUnassignTrainer({ userId: trainer.userId, openModal: true })}
                             disabled={!trainer.department}
                             className="!p-0"
-                            variant="plain"
                           >
                             <img src={unassign} alt="archive" />
                           </Button>
@@ -145,7 +146,7 @@ const Trainers = () => {
                           </div>
                         </div>
                         <div className="relative group">
-                          <Button className="!p-0" variant="plain">
+                          <Button className="!p-0">
                             <img src={archiveIcon} alt="archive" />
                           </Button>
 
@@ -161,13 +162,13 @@ const Trainers = () => {
             )}
           </TableBody>
         </Table>
-        <div className="mt-5">
+        {/* <div className="mt-5">
           <Pagination currentPage={page} totalPage={Math.ceil(trainers.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
-        </div>
+        </div> */}
       </div>
 
       {isAddTrainer && (
-        <Modal className="max-w-[800px] w-full" title="Add New Trainer Account" onClose={() => setIsAddTrainer(false)} isOpen={isAddTrainer}>
+        <Dialog onOpenChange={() => setIsAddTrainer(false)} open={isAddTrainer}>
           <TrainerForm
             isSubmitting={editTrainer.isPending}
             groupOptions={groupOptions}
@@ -200,11 +201,11 @@ const Trainers = () => {
               });
             }}
           />
-        </Modal>
+        </Dialog>
       )}
 
       {selectedTrainer && (
-        <Modal className="max-w-[800px] w-full" title="Trainer Details" onClose={() => setSelectedTrainer(null)} isOpen={!!selectedTrainer}>
+        <Dialog onOpenChange={() => setSelectedTrainer(null)} open={!!selectedTrainer}>
           <TrainerForm
             isSubmitting={editTrainer.isPending}
             groupOptions={groupOptions}
@@ -249,16 +250,11 @@ const Trainers = () => {
               });
             }}
           />
-        </Modal>
+        </Dialog>
       )}
 
       {unassignTrainer.openModal && (
-        <Modal
-          title="Unassign Trainer"
-          className="max-w-[500px] w-full"
-          isOpen={unassignTrainer.openModal}
-          onClose={() => setUnassignTrainer({ userId: "", openModal: false })}
-        >
+        <Dialog open={unassignTrainer.openModal} onOpenChange={() => setUnassignTrainer({ userId: "", openModal: false })}>
           <h1 className="text-center text-xl mt-5">Are you sure you want to unassign this trainer?</h1>
 
           <div className="flex items-center justify-end mt-5 gap-5 ">
@@ -269,7 +265,7 @@ const Trainers = () => {
               Cancel
             </Button>
           </div>
-        </Modal>
+        </Dialog>
       )}
 
       <Button className="fixed bottom-10 right-10 shadow-lg rounded-full !text-black">View Archived Trainers</Button>

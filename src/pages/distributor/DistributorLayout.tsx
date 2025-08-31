@@ -1,9 +1,9 @@
 import { Outlet } from "react-router-dom";
-import SideBar, { type SideBarItems } from "../../components/navigation/SideBar";
+import SideBar, { type SideBarItems } from "../../components/SideBar";
 
 import history from "../../assets/icons/history.png";
 import dashboard from "../../assets/icons/dashboard.png";
-import Header from "../../components/Header";
+import Header from "../../components/Account";
 
 const sideBarItems: SideBarItems[] = [
   {

@@ -1,9 +1,7 @@
 import { useState } from "react";
-import TextInput from "../../../../components/ui/TextInput";
-import Dropdown from "../../../../components/ui/Dropdown";
-import Button from "../../../../components/ui/Button";
 import { isValidEmail } from "../../../../utils";
-import InputLabel from "../../../../components/ui/InputLabel";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/Button";
 
 type TrainerFormValues = {
   firstName: string;
@@ -76,36 +74,36 @@ const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting
 
         <div className="mt-5 flex flex-col gap-5">
           <div className="flex gap-5">
-            <TextInput
+            <Input
               disabled={isSubmitting}
-              isError={!!errors?.firstName}
-              errorMessage={errors?.firstName}
+              // isError={!!errors?.firstName}
+              // errorMessage={errors?.firstName}
               placeholder="eg. Juan"
               name="firstName"
-              label="First Name"
+              // label="First Name"
               value={trainerData.firstName}
               onChange={handleInputChange}
             />
-            <TextInput
+            <Input
               disabled={isSubmitting}
-              isError={!!errors?.lastName}
-              errorMessage={errors?.lastName}
+              // isError={!!errors?.lastName}
+              // errorMessage={errors?.lastName}
               placeholder="eg. Dela Cruz"
               name="lastName"
-              label="Last Name"
+              // label="Last Name"
               value={trainerData.lastName}
               onChange={handleInputChange}
             />
           </div>
           <div className="flex gap-5">
-            <TextInput
+            <Input
               disabled={isSubmitting}
-              isError={!!errors?.email}
-              errorMessage={errors?.email}
+              // isError={!!errors?.email}
+              // errorMessage={errors?.email}
               type="email"
               placeholder="eg. trainer@slu.edu.ph"
               name="email"
-              label="SLU Email"
+              // label="SLU Email"
               value={trainerData.email}
               onChange={handleInputChange}
             />
@@ -127,21 +125,22 @@ const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting
                 }
               />
 
-              <InputLabel className="!m-0" label={initalValues.group ? "Change Performing Group?" : "Assign Performing Group?"} />
+              {/* <InputLabel className="!m-0" label={initalValues.group ? "Change Performing Group?" : "Assign Performing Group?"} /> */}
             </div>
             {trainerData.assignDepartment &&
               (groupOptions.length !== 0 ? (
-                <Dropdown
-                  isFixed={true}
-                  isError={!!errors?.group}
-                  errorMessage={errors?.group}
-                  disabled={isSubmitting}
-                  onChange={(value) => setTrainerData((prev) => ({ ...prev, group: value }))}
-                  className="mt-5 w-full"
-                  options={groupOptions}
-                  value={trainerData.group as string}
-                  label="Performing Group"
-                />
+                // <Dropdown
+                //   isFixed={true}
+                //   isError={!!errors?.group}
+                //   errorMessage={errors?.group}
+                //   disabled={isSubmitting}
+                //   onChange={(value) => setTrainerData((prev) => ({ ...prev, group: value }))}
+                //   className="mt-5 w-full"
+                //   options={groupOptions}
+                //   value={trainerData.group as string}
+                //   label="Performing Group"
+                // />
+                <p>Show dropdown of groups</p>
               ) : (
                 <h1 className="text-center mt-2 font-medium">All performing groups have respective trainers already</h1>
               ))}

@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useGetScheduleSeatMap } from "../../../../../../_lib/@react-client-query/schedule";
 import type { FlattenedSeat } from "../../../../../../types/seat";
 import { useMemo } from "react";
-import SeatMap from "../../../../../../components/ui/SeatMap";
+import SeatMap from "@/components/SeatMap";
 
 type Props = {
   choosenSeats: FlattenedSeat[];

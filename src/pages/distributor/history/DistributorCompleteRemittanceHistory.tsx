@@ -2,11 +2,12 @@ import { useMemo, useState } from "react";
 import type { RemittanceHistory } from "../../../types/ticket";
 import { useOutletContext } from "react-router-dom";
 import RemittanceSummary from "../../cca/shows/schedules/distributorAndRemitances/remitTicket/RemittanceSummary";
-import Modal from "../../../components/ui/Modal";
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
 import { formatToReadableDate, formatToReadableTime } from "../../../utils/date";
 import { formatCurrency } from "../../../utils";
-import Button from "../../../components/ui/Button";
+import { Button } from "@/components/ui/Button";
+import { Dialog } from "@radix-ui/react-dialog";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -83,7 +84,7 @@ const DistributorCompleteRemittanceHistory = () => {
           )}
         </TableBody>
       </Table>
-      {remittanceHistory.length !== 0 && (
+      {/* {remittanceHistory.length !== 0 && (
         <div className="mt-5">
           <Pagination
             currentPage={page}
@@ -91,10 +92,10 @@ const DistributorCompleteRemittanceHistory = () => {
             onPageChange={(newPage) => setPage(newPage)}
           />
         </div>
-      )}
+      )} */}
 
       {selectedHistory && (
-        <Modal isOpen={!!selectedHistory} onClose={() => setSelectedHistory(null)} title="Remittance Summary">
+        <Dialog open={!!selectedHistory} onOpenChange={() => setSelectedHistory(null)}>
           <RemittanceSummary
             seatingType={selectedHistory.seatingType}
             remarksValue={selectedHistory.remarks}
@@ -112,7 +113,7 @@ const DistributorCompleteRemittanceHistory = () => {
               seatSection: t.seatSection,
             }))}
           />
-        </Modal>
+        </Dialog>
       )}
     </>
   );

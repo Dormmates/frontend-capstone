@@ -1,14 +1,17 @@
 import { useOutletContext, useParams } from "react-router-dom";
 import { useGetDistributorRemittanceHistory } from "../../../../../../../_lib/@react-client-query/schedule";
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../../components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../../components/ui/table";
 import { useMemo, useState } from "react";
 import { formatToReadableDate, formatToReadableTime } from "../../../../../../../utils/date";
-import Button from "../../../../../../../components/ui/Button";
+
 import type { Schedule } from "../../../../../../../types/schedule";
 import { formatCurrency } from "../../../../../../../utils";
 import type { RemittanceHistory } from "../../../../../../../types/ticket";
-import Modal from "../../../../../../../components/ui/Modal";
+
 import RemittanceSummary from "../../remitTicket/RemittanceSummary";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import Pagination from "@/components/Pagination";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -80,7 +83,7 @@ const DistributorRemittanceHistory = () => {
                   )}
                 </TableCell>
                 <TableCell>
-                  <Button onClick={() => setSelectedHistory(log)} className="!bg-gray !text-black !border-lightGrey border-2">
+                  <Button onClick={() => setSelectedHistory(log)} variant="outline">
                     View Summary
                   </Button>
                 </TableCell>
@@ -89,32 +92,36 @@ const DistributorRemittanceHistory = () => {
           )}
         </TableBody>
       </Table>
-      {data.length !== 0 && (
-        <div className="mt-5">
-          <Pagination currentPage={page} totalPage={Math.ceil(data.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
-        </div>
-      )}
+
+      <div className="mt-5">
+        <Pagination currentPage={page} totalPage={Math.ceil(data.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
+      </div>
 
       {selectedHistory && (
-        <Modal isOpen={!!selectedHistory} onClose={() => setSelectedHistory(null)} title="Remittance Summary">
-          <RemittanceSummary
-            seatingType={schedule.seatingType}
-            remarksValue={selectedHistory.remarks}
-            discountPercentage={selectedHistory.tickets.find((t) => t.discountPercentage)?.discountPercentage}
-            commissionFee={schedule.commissionFee}
-            discountedTickets={selectedHistory.tickets
-              .filter((t) => t.discountPercentage)
-              .map((t) => ({ ticketPrice: t.ticketPrice, controlNumber: t.controlNumber, seatSection: t.seatSection }))}
-            lostTickets={selectedHistory.tickets
-              .filter((t) => t.status === "lost")
-              .map((t) => ({ ticketPrice: t.ticketPrice, controlNumber: t.controlNumber, seatSection: t.seatSection }))}
-            soldTickets={selectedHistory.tickets.map((t) => ({
-              ticketPrice: t.ticketPrice,
-              controlNumber: t.controlNumber,
-              seatSection: t.seatSection,
-            }))}
-          />
-        </Modal>
+        <Dialog open={!!selectedHistory} onOpenChange={() => setSelectedHistory(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Remittance Summary</DialogTitle>
+            </DialogHeader>
+            <RemittanceSummary
+              seatingType={schedule.seatingType}
+              remarksValue={selectedHistory.remarks}
+              discountPercentage={selectedHistory.tickets.find((t) => t.discountPercentage)?.discountPercentage}
+              commissionFee={schedule.commissionFee}
+              discountedTickets={selectedHistory.tickets
+                .filter((t) => t.discountPercentage)
+                .map((t) => ({ ticketPrice: t.ticketPrice, controlNumber: t.controlNumber, seatSection: t.seatSection }))}
+              lostTickets={selectedHistory.tickets
+                .filter((t) => t.status === "lost")
+                .map((t) => ({ ticketPrice: t.ticketPrice, controlNumber: t.controlNumber, seatSection: t.seatSection }))}
+              soldTickets={selectedHistory.tickets.map((t) => ({
+                ticketPrice: t.ticketPrice,
+                controlNumber: t.controlNumber,
+                seatSection: t.seatSection,
+              }))}
+            />
+          </DialogContent>
+        </Dialog>
       )}
     </>
   );

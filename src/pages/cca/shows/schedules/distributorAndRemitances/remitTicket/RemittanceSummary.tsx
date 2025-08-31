@@ -1,11 +1,15 @@
 import { useState } from "react";
-import Button from "../../../../../../components/ui/Button";
-import LongCard from "../../../../../../components/ui/LongCard";
-import LongCardItem from "../../../../../../components/ui/LongCardItem";
+
+import LongCard from "../../../../../../components/LongCard";
+import LongCardItem from "../../../../../../components/LongCardItem";
 import { formatCurrency } from "../../../../../../utils";
-import { TextArea } from "../../../../../../components/ui/TextInput";
+
 import type { SeatSection } from "../../../../../../types/seat";
 import type { SeatingConfiguration } from "../../../../../../types/schedule";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
 
 type Props = {
   seatingType: SeatingConfiguration;
@@ -48,8 +52,8 @@ const RemittanceSummary = ({
   }, 0);
 
   return (
-    <div className="flex flex-col mt-10 w-full max-w-[650px]">
-      <LongCard label="Ticket Summary">
+    <div className="flex flex-col mt-5 w-full max-w-[650px]">
+      <LongCard className="w-full" label="Ticket Summary">
         <LongCardItem label="Sold Tickets" value={`${soldTickets.length} ticket(s) `} />
         <LongCardItem label="Lost Tickets" value={`${lostTickets.length} ticket(s)`} />
         <LongCardItem label="Discounted Tickets" value={`${discountedTickets.length} ticket(s)`} />
@@ -94,23 +98,25 @@ const RemittanceSummary = ({
           <p className="text-darkGrey">Total Discount: </p>
           <p>{formatCurrency(totalDiscount)}</p>
         </div>
-        <hr className="border-lightGrey my-2" />
+        <Separator className="my-2" />
         <div className="flex items-center justify-between">
           <p>Expected Amount to Remit: </p>
           <p className="text-lg font-medium">{formatCurrency(expectedRemit)}</p>
         </div>
       </div>
 
-      <TextArea
-        disabled={disabled || !onSubmit}
-        className="my-5"
-        onChange={(e) => setRemarks(e.target.value)}
-        value={!onSubmit && remarksValue ? remarksValue : remarks}
-        label="Remarks (Optional)"
-      />
+      <div className="flex flex-col mt-4 ">
+        <Label>Remarks (Optional)</Label>
+        <Textarea
+          disabled={disabled || !onSubmit}
+          className="mt-2"
+          onChange={(e) => setRemarks(e.target.value)}
+          value={!onSubmit && remarksValue ? remarksValue : remarks}
+        />
+      </div>
 
       {onSubmit && cancelSubmit && (
-        <div className="flex self-end gap-3">
+        <div className="flex self-end gap-3 mt-5">
           <Button disabled={disabled} onClick={() => onSubmit(remarks)} className="!bg-green">
             Confirm
           </Button>

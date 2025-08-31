@@ -1,14 +1,16 @@
 import { useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import type { AllocationHistory } from "../../../types/ticket";
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
 import { formatToReadableDate, formatToReadableTime } from "../../../utils/date";
-import Button from "../../../components/ui/Button";
-import Modal from "../../../components/ui/Modal";
-import LongCard from "../../../components/ui/LongCard";
-import LongCardItem from "../../../components/ui/LongCardItem";
-import TextInput from "../../../components/ui/TextInput";
+
+import LongCard from "../../../components/LongCard";
+import LongCardItem from "../../../components/LongCardItem";
+
 import { compressControlNumbers } from "../../../utils/controlNumber";
+import { Button } from "@/components/ui/Button";
+import { Dialog } from "@radix-ui/react-dialog";
+import { Input } from "@/components/ui/input";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -84,20 +86,16 @@ const DistributorCompleteAllocationHistory = () => {
           )}
         </TableBody>
       </Table>
-      <div className="mt-5">
+      {/* <div className="mt-5">
         <Pagination
           currentPage={page}
           totalPage={Math.ceil(allocationHistory.length / ITEMS_PER_PAGE)}
           onPageChange={(newPage) => setPage(newPage)}
         />
-      </div>
+      </div> */}
 
       {selectedHistory && (
-        <Modal
-          title={selectedHistory.actionType === "allocate" ? "Tickets Allocated" : "Tickets Unallocated"}
-          isOpen={!!selectedHistory}
-          onClose={() => setSelectedHistory(null)}
-        >
+        <Dialog open={!!selectedHistory} onOpenChange={() => setSelectedHistory(null)}>
           <div className="my-5">
             <LongCard label="Tickets">
               <LongCardItem
@@ -118,13 +116,13 @@ const DistributorCompleteAllocationHistory = () => {
               />
             </LongCard>
           </div>
-          <TextInput
+          <Input
             onChange={(e) => e}
             disabled={true}
-            label={selectedHistory.actionType === "allocate" ? "Ticket Control Numbers Allocated" : "Ticket Control Numbers Unallocated"}
+            // label={selectedHistory.actionType === "allocate" ? "Ticket Control Numbers Allocated" : "Ticket Control Numbers Unallocated"}
             value={compressControlNumbers(selectedHistory.tickets.map((ticket) => ticket.controlNumber))}
           />
-        </Modal>
+        </Dialog>
       )}
     </>
   );

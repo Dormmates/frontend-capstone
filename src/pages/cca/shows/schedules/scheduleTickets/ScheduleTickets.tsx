@@ -1,28 +1,40 @@
 import { useOutletContext, useParams } from "react-router-dom";
 import { useGetScheduleTickets } from "../../../../../_lib/@react-client-query/schedule";
 import { useEffect, useMemo, useState } from "react";
-import SimpleCard from "../../../../../components/ui/SimpleCard";
-import LongCard from "../../../../../components/ui/LongCard";
-import LongCardItem from "../../../../../components/ui/LongCardItem";
+
+import LongCard from "../../../../../components/LongCard";
+import LongCardItem from "../../../../../components/LongCardItem";
 import { useDebounce } from "../../../../../hooks/useDeabounce";
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../components/ui/table";
 import type { Schedule } from "../../../../../types/schedule";
-import TextInput from "../../../../../components/ui/TextInput";
-import Dropdown from "../../../../../components/ui/Dropdown";
-import Button from "../../../../../components/ui/Button";
+
 import { formatTicket } from "../../../../../utils/controlNumber";
+import SimpleCard from "@/components/SimpleCard";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import Dropdown from "@/components/Dropdown";
+import Pagination from "@/components/Pagination";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const statusOptions = [
-  { label: "All Status", value: "" },
-  { label: "Sold", value: "sold" },
-  { label: "Not Allocated", value: "not_allocated" },
-  { label: "Allocated", value: "allocated" },
+  { name: "All Status", value: "all" },
+  { name: "Sold", value: "sold" },
+  { name: "Not Allocated", value: "not_allocated" },
+  { name: "Allocated", value: "allocated" },
 ];
 
 const sectionOptions = [
-  { label: "All Seat Section", value: "" },
-  { label: "Orchestra Tickets", value: "orchestra" },
-  { label: "Balcony Tickets", value: "balcony" },
+  { name: "All Seat Section", value: "all" },
+  { name: "Orchestra Tickets", value: "orchestra" },
+  { name: "Balcony Tickets", value: "balcony" },
+  { name: "Complimentary Tickets", value: "complimentary" },
 ];
 
 const ITEMS_PER_PAGE = 10;
@@ -31,7 +43,7 @@ const ScheduleTickets = () => {
   const { schedule } = useOutletContext<{ schedule: Schedule }>();
   const { scheduleId } = useParams();
   const { data: tickets, isLoading: loadingTickets, isError: errorTickets } = useGetScheduleTickets(scheduleId as string);
-  const [filterValues, setFilterValues] = useState({ controlNumber: "", section: "", status: "" });
+  const [filterValues, setFilterValues] = useState({ controlNumber: "", section: "all", status: "all" });
   const debouncedSearch = useDebounce(filterValues.controlNumber);
   const [page, setPage] = useState(1);
 
@@ -40,15 +52,19 @@ const ScheduleTickets = () => {
 
     return tickets.filter((ticket) => {
       const matchStatus =
-        !filterValues.status ||
-        (filterValues.status === "sold"
-          ? ticket.isRemitted
-          : filterValues.status === "unsold"
-          ? ticket.status === "allocated"
-          : ticket.status === filterValues.status);
+        filterValues.status === "all" || // show all
+        (filterValues.status === "sold" && ticket.isRemitted) ||
+        (filterValues.status === "allocated" && ticket.status === "allocated") ||
+        (filterValues.status === "not_allocated" && ticket.status !== "allocated");
 
-      const matchSection = !filterValues.section || ticket.ticketSection === filterValues.section;
-      const matchControlNumber = !filterValues.controlNumber || String(ticket.controlNumber) === filterValues.controlNumber.trim();
+      // Section filter
+      const matchSection =
+        filterValues.section === "all" ||
+        (filterValues.section === "complimentary" && ticket.isComplimentary) ||
+        ticket.ticketSection === filterValues.section;
+
+      const matchControlNumber =
+        !filterValues.controlNumber || filterValues.controlNumber == "all" || String(ticket.controlNumber) === filterValues.controlNumber.trim();
       return matchStatus && matchSection && matchControlNumber;
     });
   }, [tickets, filterValues.section, filterValues.status, debouncedSearch]);
@@ -120,7 +136,7 @@ const ScheduleTickets = () => {
 
       <div>
         <div className="flex gap-5 mt-10 w-full">
-          <TextInput
+          <Input
             className="max-w-[400px]"
             placeholder="Search Tickets by Control Number"
             value={filterValues.controlNumber}
@@ -128,17 +144,24 @@ const ScheduleTickets = () => {
           />
           <div className="flex gap-5">
             <Dropdown
-              options={statusOptions}
+              className="w-fit"
+              label="Select Status"
+              placeholder="Select Status"
+              items={statusOptions}
               onChange={(value) => setFilterValues((prev) => ({ ...prev, status: value }))}
               value={filterValues.status}
             />
             <Dropdown
-              options={sectionOptions}
+              className="w-fit"
+              label="Select Status"
+              placeholder="Select Section"
+              items={sectionOptions}
               onChange={(value) => setFilterValues((prev) => ({ ...prev, section: value }))}
               value={filterValues.section}
             />
           </div>
         </div>
+
         <div className="flex justify-end">
           <Pagination
             currentPage={page}
@@ -146,7 +169,7 @@ const ScheduleTickets = () => {
             onPageChange={(newPage) => setPage(newPage)}
           />
         </div>
-        <Table>
+        <Table className="mt-5">
           <TableHeader>
             <TableRow>
               <TableHead>Control No.</TableHead>
@@ -154,7 +177,7 @@ const ScheduleTickets = () => {
               {schedule.seatingType === "controlledSeating" && <TableHead>Seat Number</TableHead>}
               <TableHead>Is Complimentary</TableHead>
               <TableHead>Ticket Status</TableHead>
-              <TableHead>Action</TableHead>
+              <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -174,19 +197,21 @@ const ScheduleTickets = () => {
                   <TableCell>{ticket.isComplimentary ? "Yes" : "No"}</TableCell>
                   <TableCell>{["sold", "remitted"].includes(ticket.status) ? "Sold" : ticket.status}</TableCell>
 
-                  <TableCell>
-                    <div className="flex gap-2 justify-end items-center ">
-                      <Button className="!bg-gray !border-darkGrey !border-2 !text-black">View Ticket</Button>
-                      <Dropdown
-                        value="Options"
-                        options={[
-                          { label: "Transfer to another Schedule", onClick: () => alert("Transfer Ticket") },
-                          {
-                            label: ticket.isComplimentary ? "Mark as Non-Complimentary" : "Mark as Complimentary",
-                            onClick: () => alert("Handle Change"),
-                          },
-                        ]}
-                      />
+                  <TableCell className="text-right">
+                    <div className="flex gap-2 justify-end  items-center ">
+                      <Button>View Ticket</Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <Button variant="outline">Ticket Options</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuLabel>Select Options</DropdownMenuLabel>
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem>Transfer Ticket to another Schedule</DropdownMenuItem>
+                            {ticket.isComplimentary && <DropdownMenuItem> Mark as Non-Complimentary</DropdownMenuItem>}
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </TableCell>
                 </TableRow>

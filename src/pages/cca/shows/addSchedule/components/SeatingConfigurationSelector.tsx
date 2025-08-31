@@ -1,6 +1,5 @@
 import React from "react";
 import type { ScheduleFormData, SeatingConfiguration } from "../../../../../types/schedule";
-import Dropdown from "../../../../../components/ui/Dropdown";
 
 const seatOptions = [
   { label: "Free Seating", value: "freeSeating" },
@@ -14,14 +13,15 @@ interface Props {
 
 const SeatingConfigurationSelector = ({ scheduleData, setScheduleData }: Props) => {
   return (
-    <Dropdown<SeatingConfiguration>
-      className="z-50"
-      options={seatOptions}
-      label="Seating Configuration"
-      value={scheduleData.ticketType === "nonTicketed" ? "freeSeating" : scheduleData.seatingConfiguration}
-      disabled={scheduleData.ticketType === "nonTicketed"}
-      onChange={(value) => setScheduleData((prev) => ({ ...prev, seatingConfiguration: value }))}
-    />
+    // <Dropdown<SeatingConfiguration>
+    //   className="z-50"
+    //   options={seatOptions}
+    //   label="Seating Configuration"
+    //   value={scheduleData.ticketType === "nonTicketed" ? "freeSeating" : scheduleData.seatingConfiguration}
+    //   disabled={scheduleData.ticketType === "nonTicketed"}
+    //   onChange={(value) => setScheduleData((prev) => ({ ...prev, seatingConfiguration: value }))}
+    // />
+    <p>Seating Configuration </p>
   );
 };
 

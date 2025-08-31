@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
 import { ContentWrapper } from "../../../components/layout/Wrapper";
-import SimpleCard from "../../../components/ui/SimpleCard";
+
 import { useAddDepartment, useDeleteDepartment, useEditDepartment, useGetDepartments } from "../../../_lib/@react-client-query/department";
-import Button from "../../../components/ui/Button";
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
-import Modal from "../../../components/ui/Modal";
-import TextInput from "../../../components/ui/TextInput";
+
 import type { Department } from "../../../types/department";
 import { useQueryClient } from "@tanstack/react-query";
 import ToastNotification from "../../../utils/toastNotification";
 
 import deleteIcon from "../../../assets/icons/delete.png";
-import InputLabel from "../../../components/ui/InputLabel";
+
 import { getFileId } from "../../../utils";
+import SimpleCard from "@/components/SimpleCard";
+import { Button } from "@/components/ui/Button";
+import { Dialog } from "@radix-ui/react-dialog";
+import { Input } from "@/components/ui/input";
 
 const PerformingGroups = () => {
   const addDepartment = useAddDepartment();
@@ -176,7 +179,6 @@ const PerformingGroups = () => {
                       <Button
                         onClick={() => setGroupDeletion({ departmentId: department.departmentId, confirm: true })}
                         disabled={department.totalShows !== 0}
-                        variant="plain"
                       >
                         <img src={deleteIcon} alt="delete" />
                       </Button>
@@ -190,18 +192,17 @@ const PerformingGroups = () => {
       </div>
 
       {(addGroup || selectedGroup) && (
-        <Modal
-          onClose={() => {
+        <Dialog
+          onOpenChange={() => {
             setErrors({});
             setAddGroup(false);
             setSelectedGroup(null);
           }}
-          isOpen={addGroup || !!selectedGroup}
-          title={selectedGroup ? "Edit Group Details" : "Add New Group"}
+          open={addGroup || !!selectedGroup}
         >
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-2 mt-5">
-              <InputLabel label={addGroup ? "Group Logo" : "Edit Group Logo"} />
+              {/* <InputLabel label={addGroup ? "Group Logo" : "Edit Group Logo"} /> */}
 
               {(newGroup.imagePreview || editGroup.imagePreview) && (
                 <div className="h-[200px] w-full border rounded border-lightGrey p-2">
@@ -245,11 +246,11 @@ const PerformingGroups = () => {
               {errors?.logo && <p className="text-sm text-red mt-1">{errors.logo}</p>}
             </div>
 
-            <TextInput
+            <Input
               disabled={addDepartment.isPending || editDepartment.isPending}
-              isError={!!errors?.name}
-              errorMessage={errors?.name}
-              label={"Group Name"}
+              // isError={!!errors?.name}
+              // errorMessage={errors?.name}
+              // label={"Group Name"}
               value={addGroup ? newGroup.name : editGroup.name}
               onChange={
                 addGroup
@@ -266,18 +267,18 @@ const PerformingGroups = () => {
               {addGroup ? "Add Group" : "Save Changes"}
             </Button>
           </div>
-        </Modal>
+        </Dialog>
       )}
 
       {groupDeletion.confirm && (
-        <Modal onClose={() => setGroupDeletion({ confirm: false, departmentId: "" })} isOpen={groupDeletion.confirm} title="Delete Performing Group">
+        <Dialog onOpenChange={() => setGroupDeletion({ confirm: false, departmentId: "" })} open={groupDeletion.confirm}>
           <div className="flex flex-col mt-10 gap-10 text-lg">
             <h1 className="text-center ">Are you sure you want to delete this group?</h1>
             <Button disabled={deleteDepartment.isPending} onClick={handleDelete} className="!bg-green self-end">
               Confirm
             </Button>
           </div>
-        </Modal>
+        </Dialog>
       )}
     </ContentWrapper>
   );

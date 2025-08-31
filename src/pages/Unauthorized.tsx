@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { PageWrapper, ContentWrapper } from "../components/layout/Wrapper";
-import Button from "../components/ui/Button";
+
 import errorIcon from "../assets/icons/error.png";
+import { Button } from "@/components/ui/Button";
 
 const Unauthorized = () => {
   const navigate = useNavigate();

@@ -2,30 +2,31 @@ import { useOutletContext } from "react-router-dom";
 import type { AllocatedTicketToDistributor } from "../../../../../../../types/ticket";
 import { useMemo, useState } from "react";
 import { useDebounce } from "../../../../../../../hooks/useDeabounce";
-import TextInput from "../../../../../../../components/ui/TextInput";
-import Dropdown from "../../../../../../../components/ui/Dropdown";
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../../components/ui/Table";
-import Button from "../../../../../../../components/ui/Button";
-import Modal from "../../../../../../../components/ui/Modal";
-import LongCard from "../../../../../../../components/ui/LongCard";
-import LongCardItem from "../../../../../../../components/ui/LongCardItem";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../../components/ui/table";
+import LongCard from "../../../../../../../components/LongCard";
+import LongCardItem from "../../../../../../../components/LongCardItem";
 import type { Schedule } from "../../../../../../../types/schedule";
 import type { ShowData } from "../../../../../../../types/show";
 import { formatToReadableDate, formatToReadableTime } from "../../../../../../../utils/date";
 import { formatTicket } from "../../../../../../../utils/controlNumber";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import Pagination from "@/components/Pagination";
+import Dropdown from "@/components/Dropdown";
 
 const ITEMS_PER_PAGE = 5;
 
 const verificationOptions = [
-  { label: "All Verification Status", value: "" },
-  { label: "Verified", value: "verified" },
-  { label: "Pending", value: "pending" },
+  { name: "All Verification Status", value: "all" },
+  { name: "Verified", value: "verified" },
+  { name: "Pending", value: "pending" },
 ];
 
 const saleOptions = [
-  { label: "All Sale Status", value: "" },
-  { label: "Sold", value: "sold" },
-  { label: "Unsold", value: "unsold" },
+  { name: "All Sale Status", value: "all" },
+  { name: "Sold", value: "sold" },
+  { name: "Unsold", value: "unsold" },
 ];
 
 const DistributorTicketsAllocated = () => {
@@ -41,8 +42,14 @@ const DistributorTicketsAllocated = () => {
   const filteredTickets = useMemo(() => {
     return allocatedTickets.filter((ticket) => {
       const matchesSearch = !debouncedSearch || ticket.controlNumber?.toString().includes(debouncedSearch);
-      const matchesSale = !filter.saleStatus || (filter.saleStatus === "sold" ? ticket.isRemitted || ticket.status === "sold" : !ticket.isRemitted);
-      const matchesVerification = !filter.verificationStatus || (filter.verificationStatus === "verified" ? ticket.isRemitted : !ticket.isRemitted);
+      const matchesSale =
+        !filter.saleStatus ||
+        filter.saleStatus == "all" ||
+        (filter.saleStatus === "sold" ? ticket.isRemitted || ticket.status === "sold" : !ticket.isRemitted);
+      const matchesVerification =
+        !filter.verificationStatus ||
+        filter.verificationStatus == "all" ||
+        (filter.verificationStatus === "verified" ? ticket.isRemitted : !ticket.isRemitted);
 
       return matchesSearch && matchesSale && matchesVerification;
     });
@@ -58,16 +65,26 @@ const DistributorTicketsAllocated = () => {
     <>
       <div className="flex flex-col gap-10">
         <div className="flex gap-3 items-center">
-          <TextInput
+          <Input
             className="max-w-[450px]"
             onChange={(e) => setFilter((prev) => ({ ...prev, search: e.target.value }))}
             value={filter.search}
             placeholder="Search Ticket By Control Number"
           />
-          <Dropdown value={filter.saleStatus} options={saleOptions} onChange={(value) => setFilter((prev) => ({ ...prev, saleStatus: value }))} />
           <Dropdown
+            className="max-w-fit"
+            label="Select Option"
+            placeholder="Select Sale Status"
+            value={filter.saleStatus}
+            items={saleOptions}
+            onChange={(value) => setFilter((prev) => ({ ...prev, saleStatus: value }))}
+          />
+          <Dropdown
+            className="max-w-fit"
+            label="Select Option"
+            placeholder="Select Verification Status"
             value={filter.verificationStatus}
-            options={verificationOptions}
+            items={verificationOptions}
             onChange={(value) => setFilter((prev) => ({ ...prev, verificationStatus: value }))}
           />
         </div>
@@ -115,7 +132,7 @@ const DistributorTicketsAllocated = () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => setSelectedTicket(ticket)} className="!bg-gray !text-black !border-lightGrey border-2">
+                    <Button onClick={() => setSelectedTicket(ticket)} variant="outline">
                       View Ticket
                     </Button>
                   </TableCell>
@@ -135,29 +152,28 @@ const DistributorTicketsAllocated = () => {
       </div>
 
       {selectedTicket && (
-        <Modal
-          onClose={() => setSelectedTicket(null)}
-          isOpen={!!selectedTicket}
-          title={`Ticket ${formatTicket(selectedTicket.controlNumber)} (${show.title} - ${formatToReadableDate(
-            schedule.datetime + ""
-          )} - ${formatToReadableTime(schedule.datetime + "")})`}
-        >
-          <LongCard className="mt-8 w-full" label="Ticket">
-            <LongCardItem label="Section" value={(selectedTicket.ticketSection + "").toUpperCase()} />
-            {schedule.seatingType === "controlledSeating" && (
-              <>
-                <LongCardItem label="Seat Number" value={selectedTicket.seatNumber + ""} />
-              </>
-            )}
-            <LongCardItem label="Ticket Status" value={selectedTicket.status !== "sold" ? "Unsold" : "Sold"} />
-            <LongCardItem label="Verification Status" value={selectedTicket.isRemitted ? "Verified" : "Pending"} />
-            <LongCardItem label="Ticket Price" value={selectedTicket.ticketPrice} />
-          </LongCard>
-          <div className="flex mt-5 gap-3 flex-col">
-            <p className="text-lightGrey text-sm">Distributor Name</p>
-            <p className="text-lg">{selectedTicket.distributor}</p>
-          </div>
-        </Modal>
+        <Dialog onOpenChange={() => setSelectedTicket(null)} open={!!selectedTicket}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Allocation History</DialogTitle>
+            </DialogHeader>
+            <LongCard className="mt-8 w-full" label="Ticket">
+              <LongCardItem label="Section" value={(selectedTicket.ticketSection + "").toUpperCase()} />
+              {schedule.seatingType === "controlledSeating" && (
+                <>
+                  <LongCardItem label="Seat Number" value={selectedTicket.seatNumber + ""} />
+                </>
+              )}
+              <LongCardItem label="Ticket Status" value={selectedTicket.status == "sold" || selectedTicket.isRemitted ? "Sold" : "Sold"} />
+              <LongCardItem label="Verification Status" value={selectedTicket.isRemitted ? "Verified" : "Pending"} />
+              <LongCardItem label="Ticket Price" value={selectedTicket.ticketPrice} />
+            </LongCard>
+            <div className="flex mt-5 gap-3 flex-col">
+              <p className="text-lightGrey text-sm">Distributor Name</p>
+              <p className="text-lg">{selectedTicket.distributor}</p>
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
     </>
   );

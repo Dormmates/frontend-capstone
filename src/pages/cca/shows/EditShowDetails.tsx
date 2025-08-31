@@ -1,10 +1,7 @@
 import { useMemo, useState } from "react";
 import type { ShowData, ShowType } from "../../../types/show";
 import { ContentWrapper } from "../../../components/layout/Wrapper";
-import TextInput, { TextArea } from "../../../components/ui/TextInput";
-import Dropdown from "../../../components/ui/Dropdown";
-import InputLabel from "../../../components/ui/InputLabel";
-import Button from "../../../components/ui/Button";
+
 import { useAuthContext } from "../../../context/AuthContext";
 
 import { useGetGenres } from "../../../_lib/@react-client-query/genre";
@@ -13,6 +10,10 @@ import { getFileId } from "../../../utils";
 import ToastNotification from "../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Department } from "../../../types/department";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 const productionType = [
   { label: "Showcase", value: "showCase" },
@@ -206,18 +207,10 @@ const EditShowDetails = ({ selectedShow, close, groups }: Props) => {
 
         <div className="flex mt-5 flex-col gap-5 lg:flex-row">
           <div className="flex gap-5 flex-col w-full">
-            <TextInput
-              disabled={isUploading}
-              isError={!!errors.title}
-              errorMessage={errors.title}
-              label="Show Title"
-              value={showData.title}
-              onChange={handleInputChange}
-              name="title"
-            />
+            <Input disabled={isUploading} value={showData.title} onChange={handleInputChange} name="title" />
 
             <div className="flex gap-10 lg:flex-col lg:gap-5 xl:flex-row xl:gap-10">
-              <Dropdown
+              {/* <Dropdown
                 isError={!!errors.group}
                 errorMessage={errors.group}
                 disabled={user?.role !== "head" || isUploading || showData.productionType == "majorProduction"}
@@ -236,21 +229,13 @@ const EditShowDetails = ({ selectedShow, close, groups }: Props) => {
                 options={user?.role === "head" ? [...productionType, { label: "Major Production", value: "majorProduction" }] : productionType}
                 value={showData.productionType}
                 onChange={(value) => setShowData((prev) => ({ ...prev, productionType: value as ShowType }))}
-              />
+              /> */}
             </div>
 
-            <TextArea
-              disabled={isUploading}
-              label="Description"
-              name="description"
-              value={showData.description}
-              onChange={handleTextAreaChange}
-              isError={!!errors.description}
-              errorMessage={errors.description}
-            />
+            <Textarea disabled={isUploading} name="description" value={showData.description} onChange={handleTextAreaChange} />
 
             <div className="flex flex-col">
-              <InputLabel label="Genres" />
+              <Label>Genres</Label>
               <div className="flex items-center gap-5 flex-wrap">
                 <div className="flex gap-3 flex-wrap">
                   {showData.genre.map((genre, index) => {
@@ -265,7 +250,7 @@ const EditShowDetails = ({ selectedShow, close, groups }: Props) => {
                         >
                           X
                         </button>
-                        <Dropdown
+                        {/* <Dropdown
                           isFixed={true}
                           disabled={isUploading}
                           isError={!showData.genre[index]}
@@ -273,7 +258,7 @@ const EditShowDetails = ({ selectedShow, close, groups }: Props) => {
                           options={availableGenres}
                           value={genre}
                           onChange={(value) => handleGenreChange(index, value)}
-                        />
+                        /> */}
                       </div>
                     );
                   })}
@@ -292,7 +277,7 @@ const EditShowDetails = ({ selectedShow, close, groups }: Props) => {
           </div>
 
           <div className="w-full max-w-[500px]">
-            <InputLabel label="Show Image Cover" />
+            <Label>Show Image Cover</Label>
             <div className="flex flex-col gap-2">
               {showData.showImagePreview && (
                 <div className="h-full w-full border rounded border-lightGrey p-2">
