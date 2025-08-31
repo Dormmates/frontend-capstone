@@ -1,3 +1,4 @@
+import type { SeatingConfiguration } from "./schedule";
 import type { SeatSection } from "./seat";
 
 type TicketStatuses = "sold" | "lost" | "not_allocated" | "allocated";
@@ -37,6 +38,9 @@ export interface AllocatedTicketToDistributor {
 
 export interface AllocationHistory {
   actionType: "allocate" | "unallocate";
+  showCover: string;
+  showTitle: string;
+  showDate: Date;
   allocationLogId: string;
   allocatedBy: {
     firstName: string;
@@ -62,9 +66,13 @@ export interface RemittanceHistory {
   receivedBy: string;
   dateRemitted: Date;
   totalRemittance: number;
-  commission: number;
+  totalCommission: number;
   remarks: string;
   discountPercentage: number;
+  seatingType: SeatingConfiguration;
+  showDate: Date;
+  showCover: string;
+  showTitle: string;
   tickets: {
     controlNumber: number;
     ticketPrice: number;

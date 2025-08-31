@@ -14,12 +14,13 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
   const { data, isLoading, isError } = useGetScheduleSeatMap(scheduleId as string);
 
   const seatAvailabilityCount = useMemo(() => {
-    if (!data) return { available: 0, unavailable: 0, reserved: 0 };
+    if (!data) return { available: 0, unavailable: 0, reserved: 0, sold: 0 };
     const available = data.filter((seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status === "available").length;
     const reserved = data.filter((seat) => seat.status === "reserved").length;
+    const sold = data.filter((seat) => seat.status === "sold").length;
     const unavailable = data.length - available - reserved;
 
-    return { available, unavailable, reserved };
+    return { available, unavailable, reserved, sold };
   }, [data]);
 
   const handleClick = (seat: FlattenedSeat) => {
@@ -69,6 +70,10 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
               <div className="w-5 h-5 bg-red border"></div>
               <p>Reserved Seats : {seatAvailabilityCount.reserved}</p>
             </div>
+            <div className="flex gap-2 items-center">
+              <div className="w-5 h-5 bg-green border"></div>
+              <p>Sold Seats : {seatAvailabilityCount.sold}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -82,10 +87,11 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
         rowClick={(seats) => console.log(seats)}
         sectionClick={(seats) => console.log(seats)}
         recStyle={(seat) => `${
-          seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status == "reserved"
+          seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status == "reserved" || seat.status === "sold"
             ? "fill-darkGrey !cursor-not-allowed"
             : "hover:fill-blue-200 cursor-pointer"
         }
+         ${seat.status === "sold" && "fill-green !cursor-not-allowed"}
         ${seat.status === "reserved" && "fill-red !cursor-not-allowed"}
         ${choosenSeats.includes(seat) ? "fill-blue-600" : ""}`}
       />

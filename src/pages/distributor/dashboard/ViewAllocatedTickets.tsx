@@ -61,7 +61,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
           ? ticket.status === "allocated"
           : filterOptions.status === "sold"
           ? ticket.status === "sold" || ticket.isRemitted
-          : ticket.status === filterOptions.status);
+          : ticket.status === "allocated");
 
       const matchesRemittance =
         !filterOptions.remittanceStatus ||

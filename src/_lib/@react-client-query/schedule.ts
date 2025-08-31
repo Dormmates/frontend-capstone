@@ -187,6 +187,17 @@ export const useGetDistributorAllocationHistory = (distributorId: string, schedu
   });
 };
 
+export const useGetAllDistributorAllocationHistory = (distributorId: string) => {
+  return useQuery<AllocationHistory[], Error>({
+    queryKey: ["allocationHistory", distributorId],
+    queryFn: async () => {
+      const res = await request<AllocationHistory[]>(`/api/schedule/allocationHistory/${distributorId}`, {}, "get");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
 export const useGetDistributorRemittanceHistory = (distributorId: string, scheduleId: string) => {
   return useQuery<RemittanceHistory[], Error>({
     queryKey: ["schedule", "remittanceHistory", scheduleId, distributorId],
@@ -198,6 +209,16 @@ export const useGetDistributorRemittanceHistory = (distributorId: string, schedu
   });
 };
 
+export const useGetAllDistributorRemittanceHistory = (distributorId: string) => {
+  return useQuery<RemittanceHistory[], Error>({
+    queryKey: ["remittanceHistory", distributorId],
+    queryFn: async () => {
+      const res = await request<RemittanceHistory[]>(`/api/schedule/remittanceHistory/${distributorId}`, {}, "get");
+      return res.data;
+    },
+    retry: false,
+  });
+};
 export const useGetAllocatedTicketsOfDistributor = (distributorId: string, scheduleId: string) => {
   return useQuery<AllocatedTicketToDistributor[], Error>({
     queryKey: ["schedule", "allocated", scheduleId, distributorId],

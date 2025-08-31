@@ -321,7 +321,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
         <Modal isOpen={showSummary} onClose={() => setShowSummary(false)} title="Remittance Summary">
           <RemittanceSummary
             cancelSubmit={() => setShowSummary(false)}
-            schedule={schedule}
+            seatingType={schedule.seatingType}
             disabled={remit.isPending}
             onSubmit={(remarks) => handleSubmit(remarks)}
             soldTickets={distributorData.filter((ticket) => parsed.soldList.includes(ticket.controlNumber))}

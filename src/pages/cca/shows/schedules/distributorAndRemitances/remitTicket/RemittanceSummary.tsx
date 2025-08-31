@@ -5,10 +5,10 @@ import LongCardItem from "../../../../../../components/ui/LongCardItem";
 import { formatCurrency } from "../../../../../../utils";
 import { TextArea } from "../../../../../../components/ui/TextInput";
 import type { SeatSection } from "../../../../../../types/seat";
-import type { Schedule } from "../../../../../../types/schedule";
+import type { SeatingConfiguration } from "../../../../../../types/schedule";
 
 type Props = {
-  schedule: Schedule;
+  seatingType: SeatingConfiguration;
   soldTickets: { controlNumber: number; ticketPrice: number; seatSection: SeatSection | null }[];
   lostTickets: { controlNumber: number; ticketPrice: number; seatSection: SeatSection | null }[];
   discountedTickets: { controlNumber: number; ticketPrice: number; seatSection: SeatSection | null }[];
@@ -29,7 +29,7 @@ const RemittanceSummary = ({
   onSubmit,
   disabled,
   remarksValue,
-  schedule,
+  seatingType,
   cancelSubmit,
 }: Props) => {
   const [remarks, setRemarks] = useState("");
@@ -57,7 +57,7 @@ const RemittanceSummary = ({
 
       <div className="mt-4 p-3 bg-gray border border-lightGrey rounded-md">
         <h2 className="font-medium mb-2">Ticket Price/s</h2>
-        {schedule.seatingType === "controlledSeating" ? (
+        {seatingType === "controlledSeating" ? (
           (() => {
             const tickets = [...soldTickets, ...lostTickets];
             const sectionMap: Record<string, { prices: Set<number>; count: number }> = {};

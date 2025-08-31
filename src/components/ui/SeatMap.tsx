@@ -202,7 +202,9 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
                   ) : (
                     <div>Ticket Control Number: {hoveredSeat.ticketControlNumber}</div>
                   )}
-                  {hoveredSeat.distributor && <div className="font-bold">Reserved to: {hoveredSeat.distributor.name}</div>}
+                  {hoveredSeat.distributor && hoveredSeat.status === "reserved" && (
+                    <div className="font-bold">Reserved to: {hoveredSeat.distributor.name}</div>
+                  )}
                   {hoveredSeat.isComplimentary && <div className="font-bold">Complimentary Seat</div>}
                 </>
               )}

@@ -1,48 +1,35 @@
-import { useOutletContext, useParams } from "react-router-dom";
-import { useGetDistributorRemittanceHistory } from "../../../../../../../_lib/@react-client-query/schedule";
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../../components/ui/Table";
 import { useMemo, useState } from "react";
-import { formatToReadableDate, formatToReadableTime } from "../../../../../../../utils/date";
-import Button from "../../../../../../../components/ui/Button";
-import type { Schedule } from "../../../../../../../types/schedule";
-import { formatCurrency } from "../../../../../../../utils";
-import type { RemittanceHistory } from "../../../../../../../types/ticket";
-import Modal from "../../../../../../../components/ui/Modal";
-import RemittanceSummary from "../../remitTicket/RemittanceSummary";
+import type { RemittanceHistory } from "../../../types/ticket";
+import { useOutletContext } from "react-router-dom";
+import RemittanceSummary from "../../cca/shows/schedules/distributorAndRemitances/remitTicket/RemittanceSummary";
+import Modal from "../../../components/ui/Modal";
+import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
+import { formatToReadableDate, formatToReadableTime } from "../../../utils/date";
+import { formatCurrency } from "../../../utils";
+import Button from "../../../components/ui/Button";
 
 const ITEMS_PER_PAGE = 5;
 
-const DistributorRemittanceHistory = () => {
-  const { schedule } = useOutletContext<{ schedule: Schedule }>();
-  const { scheduleId, distributorId } = useParams();
-  const { data, isLoading, isError } = useGetDistributorRemittanceHistory(distributorId as string, scheduleId as string);
-
+const DistributorCompleteRemittanceHistory = () => {
+  const { remittanceHistory } = useOutletContext<{ remittanceHistory: RemittanceHistory[] }>();
   const [page, setPage] = useState(1);
   const [selectedHistory, setSelectedHistory] = useState<RemittanceHistory | null>(null);
 
   const paginatedLogs = useMemo(() => {
-    if (!data) return [];
+    if (!remittanceHistory) return [];
     const start = (page - 1) * ITEMS_PER_PAGE;
     const end = start + ITEMS_PER_PAGE;
-    return data.slice(start, end);
-  }, [page, data]);
-
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-
-  if (!data || isError) {
-    return <h1>Error loading</h1>;
-  }
-
-  console.log(data);
+    return remittanceHistory.slice(start, end);
+  }, [page, remittanceHistory]);
 
   return (
     <>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Total Tickets Remitted</TableHead>
+            <TableHead>Show</TableHead>
+            <TableHead>Show Schedule</TableHead>
+            <TableHead>Tickets Remitted</TableHead>
             <TableHead>Date Remitted</TableHead>
             <TableHead>Time Remitted</TableHead>
             <TableHead>Remitted To</TableHead>
@@ -52,7 +39,7 @@ const DistributorRemittanceHistory = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.length == 0 ? (
+          {remittanceHistory.length == 0 ? (
             <TableRow>
               <TableCell className="text-center py-10 text-gray-400" colSpan={6}>
                 No Remittance Yet
@@ -61,13 +48,20 @@ const DistributorRemittanceHistory = () => {
           ) : (
             paginatedLogs.map((log) => (
               <TableRow key={log.remittanceId}>
+                <TableCell>
+                  <div className="flex flex-col lg:flex-row items-center gap-2">
+                    <img className="w-5" src={log.showCover} alt="cover" />
+                    <p>{log.showTitle}</p>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  {formatToReadableDate(log.showDate + "")} at {formatToReadableTime(log.showDate + "")}
+                </TableCell>
                 <TableCell>{log.tickets.length}</TableCell>
                 <TableCell>{formatToReadableDate(log.dateRemitted + "")}</TableCell>
                 <TableCell>{formatToReadableTime(log.dateRemitted + "")}</TableCell>
                 <TableCell>{log.receivedBy}</TableCell>
-                <TableCell>
-                  {formatCurrency(log.tickets.reduce((acc, cur) => (acc += Number(cur.ticketPrice) - schedule.commissionFee), 0))}
-                </TableCell>
+                <TableCell>{formatCurrency(log.totalRemittance)}</TableCell>
                 <TableCell>
                   {log.actionType === "remit" ? (
                     <p className="flex items-center gap-2">
@@ -89,19 +83,23 @@ const DistributorRemittanceHistory = () => {
           )}
         </TableBody>
       </Table>
-      {data.length !== 0 && (
+      {remittanceHistory.length !== 0 && (
         <div className="mt-5">
-          <Pagination currentPage={page} totalPage={Math.ceil(data.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
+          <Pagination
+            currentPage={page}
+            totalPage={Math.ceil(remittanceHistory.length / ITEMS_PER_PAGE)}
+            onPageChange={(newPage) => setPage(newPage)}
+          />
         </div>
       )}
 
       {selectedHistory && (
         <Modal isOpen={!!selectedHistory} onClose={() => setSelectedHistory(null)} title="Remittance Summary">
           <RemittanceSummary
-            seatingType={schedule.seatingType}
+            seatingType={selectedHistory.seatingType}
             remarksValue={selectedHistory.remarks}
             discountPercentage={selectedHistory.tickets.find((t) => t.discountPercentage)?.discountPercentage}
-            commissionFee={schedule.commissionFee}
+            commissionFee={selectedHistory.totalCommission / selectedHistory.tickets.length}
             discountedTickets={selectedHistory.tickets
               .filter((t) => t.discountPercentage)
               .map((t) => ({ ticketPrice: t.ticketPrice, controlNumber: t.controlNumber, seatSection: t.seatSection }))}
@@ -120,4 +118,4 @@ const DistributorRemittanceHistory = () => {
   );
 };
 
-export default DistributorRemittanceHistory;
+export default DistributorCompleteRemittanceHistory;

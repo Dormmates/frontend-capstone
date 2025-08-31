@@ -37,6 +37,8 @@ import {
   DistributorAllocationHistory,
   DistributorRemittanceHistory,
 } from "../pages/cca/index";
+import DistributorCompleteAllocationHistory from "../pages/distributor/history/DistributorCompleteAllocationHistory";
+import DistributorCompleteRemittanceHistory from "../pages/distributor/history/DistributorCompleteRemittanceHistory";
 
 const AppRoute = () => {
   const { user } = useAuthContext();
@@ -63,7 +65,10 @@ const AppRoute = () => {
         {user?.role === "distributor" ? (
           <>
             <Route index element={<DistributorDashboard />} />
-            <Route path="history" element={<DistributorHistory />} />
+            <Route path="history" element={<DistributorHistory />}>
+              <Route index element={<DistributorCompleteAllocationHistory />} />
+              <Route path="remittance" element={<DistributorCompleteRemittanceHistory />} />
+            </Route>
           </>
         ) : (
           <>
