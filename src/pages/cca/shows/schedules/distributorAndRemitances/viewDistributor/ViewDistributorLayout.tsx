@@ -208,7 +208,7 @@ const ViewDistributorLayout = () => {
 
       {isRemitTicket && (
         <Modal className="w-full max-w-[700px]" isOpen={isRemitTicket} title="Remit Ticket Sales" onClose={() => setIsRemitTicket(false)}>
-          <RemitTickets distributorData={data} />
+          <RemitTickets closeRemit={() => setIsRemitTicket(false)} distributorData={data} />
         </Modal>
       )}
     </div>

@@ -1,17 +1,24 @@
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { useGetDistributorRemittanceHistory } from "../../../../../../../_lib/@react-client-query/schedule";
 import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../../components/ui/Table";
 import { useMemo, useState } from "react";
 import { formatToReadableDate, formatToReadableTime } from "../../../../../../../utils/date";
 import Button from "../../../../../../../components/ui/Button";
+import type { Schedule } from "../../../../../../../types/schedule";
+import { formatCurrency } from "../../../../../../../utils";
+import type { RemittanceHistory } from "../../../../../../../types/ticket";
+import Modal from "../../../../../../../components/ui/Modal";
+import RemittanceSummary from "../../remitTicket/RemittanceSummary";
 
 const ITEMS_PER_PAGE = 5;
 
 const DistributorRemittanceHistory = () => {
+  const { schedule } = useOutletContext<{ schedule: Schedule }>();
   const { scheduleId, distributorId } = useParams();
   const { data, isLoading, isError } = useGetDistributorRemittanceHistory(distributorId as string, scheduleId as string);
 
   const [page, setPage] = useState(1);
+  const [selectedHistory, setSelectedHistory] = useState<RemittanceHistory | null>(null);
 
   const paginatedLogs = useMemo(() => {
     if (!data) return [];
@@ -28,6 +35,8 @@ const DistributorRemittanceHistory = () => {
     return <h1>Error loading</h1>;
   }
 
+  console.log(data);
+
   return (
     <>
       <Table>
@@ -38,6 +47,7 @@ const DistributorRemittanceHistory = () => {
             <TableHead>Time Remitted</TableHead>
             <TableHead>Remitted To</TableHead>
             <TableHead>Amount Remitted</TableHead>
+            <TableHead>Remittance Type</TableHead>
             <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -55,9 +65,24 @@ const DistributorRemittanceHistory = () => {
                 <TableCell>{formatToReadableDate(log.dateRemitted + "")}</TableCell>
                 <TableCell>{formatToReadableTime(log.dateRemitted + "")}</TableCell>
                 <TableCell>{log.receivedBy}</TableCell>
-                <TableCell>{log.totalRemittance}</TableCell>
                 <TableCell>
-                  <Button className="!bg-gray !text-black !border-lightGrey border-2">View Summary</Button>
+                  {formatCurrency(log.tickets.reduce((acc, cur) => (acc += Number(cur.ticketPrice) - schedule.commissionFee), 0))}
+                </TableCell>
+                <TableCell>
+                  {log.actionType === "remit" ? (
+                    <p className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-green rounded-full"></span>Remit
+                    </p>
+                  ) : (
+                    <p className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-red rounded-full"></span>Unremit
+                    </p>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Button onClick={() => setSelectedHistory(log)} className="!bg-gray !text-black !border-lightGrey border-2">
+                    View Summary
+                  </Button>
                 </TableCell>
               </TableRow>
             ))
@@ -68,6 +93,28 @@ const DistributorRemittanceHistory = () => {
         <div className="mt-5">
           <Pagination currentPage={page} totalPage={Math.ceil(data.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
         </div>
+      )}
+
+      {selectedHistory && (
+        <Modal isOpen={!!selectedHistory} onClose={() => setSelectedHistory(null)} title="Remittance Summary">
+          <RemittanceSummary
+            schedule={schedule}
+            remarksValue={selectedHistory.remarks}
+            discountPercentage={selectedHistory.tickets.find((t) => t.discountPercentage)?.discountPercentage}
+            commissionFee={schedule.commissionFee}
+            discountedTickets={selectedHistory.tickets
+              .filter((t) => t.discountPercentage)
+              .map((t) => ({ ticketPrice: t.ticketPrice, controlNumber: t.controlNumber, seatSection: t.seatSection }))}
+            lostTickets={selectedHistory.tickets
+              .filter((t) => t.status === "lost")
+              .map((t) => ({ ticketPrice: t.ticketPrice, controlNumber: t.controlNumber, seatSection: t.seatSection }))}
+            soldTickets={selectedHistory.tickets.map((t) => ({
+              ticketPrice: t.ticketPrice,
+              controlNumber: t.controlNumber,
+              seatSection: t.seatSection,
+            }))}
+          />
+        </Modal>
       )}
     </>
   );

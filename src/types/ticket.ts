@@ -1,3 +1,5 @@
+import type { SeatSection } from "./seat";
+
 type TicketStatuses = "sold" | "lost" | "not_allocated" | "allocated";
 type TicketSection = "orchestra" | "balcony";
 
@@ -21,6 +23,7 @@ export interface AllocatedTicketToDistributor {
   ticketPrice: number;
   seatNumber: string | null;
   ticketSection: string | null;
+  seatSection: SeatSection | null;
   controlNumber: number;
   isRemitted: boolean;
   dateAllocated: Date;
@@ -54,16 +57,20 @@ export interface AllocationHistory {
 }
 
 export interface RemittanceHistory {
+  actionType: "remit" | "unremit";
   remittanceId: string;
   receivedBy: string;
   dateRemitted: Date;
   totalRemittance: number;
   commission: number;
   remarks: string;
+  discountPercentage: number;
   tickets: {
     controlNumber: number;
     ticketPrice: number;
     status: TicketStatuses;
+    discountPercentage?: number;
+    seatSection: SeatSection | null;
   }[];
 }
 

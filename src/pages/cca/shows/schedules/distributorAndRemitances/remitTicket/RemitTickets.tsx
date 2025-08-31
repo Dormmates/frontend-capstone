@@ -8,26 +8,33 @@ import TextInput from "../../../../../../components/ui/TextInput";
 import ToastNotification from "../../../../../../utils/toastNotification";
 import { useRemitTicketSale } from "../../../../../../_lib/@react-client-query/schedule";
 import { useAuthContext } from "../../../../../../context/AuthContext";
+import Modal from "../../../../../../components/ui/Modal";
+import RemittanceSummary from "./RemittanceSummary";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   distributorData: AllocatedTicketToDistributor[];
+  closeRemit: () => void;
 };
 
 type FormProps = {
   sold: string;
   lost: string;
   discounted: string;
-  discountPercentage: number | null;
+  discountPercentage: number | undefined;
 };
 
-const RemitTickets = ({ distributorData }: Props) => {
+type ParsedProps = { soldList: number[]; lostList: number[]; discountedList: number[] };
+
+const RemitTickets = ({ distributorData, closeRemit }: Props) => {
+  const queryClient = useQueryClient();
   const remit = useRemitTicketSale();
   const { user } = useAuthContext();
   const { schedule } = useOutletContext<{ schedule: Schedule }>();
   const { distributorId } = useParams();
 
   const [controlFrom, setControlFrom] = useState<"system" | "me">("system");
-  // const [showSummary, setShowSummary] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
 
   const distributorTickets = useMemo(() => {
     if (!distributorData) return { soldTickets: [], unsoldTickets: [] };
@@ -44,8 +51,9 @@ const RemitTickets = ({ distributorData }: Props) => {
     sold: systemSold,
     lost: "",
     discounted: "",
-    discountPercentage: null,
+    discountPercentage: undefined,
   });
+  const [parsed, setParsed] = useState<ParsedProps>({ soldList: [], lostList: [], discountedList: [] });
 
   const [error, setErrors] = useState<Partial<Record<keyof FormProps, string>>>({});
 
@@ -75,13 +83,13 @@ const RemitTickets = ({ distributorData }: Props) => {
         sold: systemSold,
         lost: "",
         discounted: "",
-        discountPercentage: null,
+        discountPercentage: undefined,
       });
       setErrors({});
     }
   }, [controlFrom]);
 
-  const handleSubmit = () => {
+  const validate = () => {
     const newErrors: typeof error = {};
     let isValid = true;
 
@@ -150,27 +158,40 @@ const RemitTickets = ({ distributorData }: Props) => {
       }
     }
 
-    if (!isValid) {
-      setErrors(newErrors);
-      return;
-    }
+    setErrors(newErrors);
 
+    if (isValid) {
+      setParsed({ soldList, lostList, discountedList });
+      setShowSummary(true);
+    }
+  };
+
+  const handleSubmit = (remarks: string | null) => {
     const payload: any = {
-      sold: soldList,
-      lost: lostList,
+      sold: parsed.soldList,
+      lost: parsed.lostList,
       scheduleId: schedule.scheduleId,
       distributorId,
       actionBy: user?.userId,
     };
 
-    if (discountedList.length > 0 && form.discountPercentage) {
-      payload.discounted = discountedList;
+    if (parsed.discountedList.length > 0 && form.discountPercentage) {
+      payload.discounted = parsed.discountedList;
       payload.discountPercentage = form.discountPercentage;
+    }
+
+    if (remarks) {
+      payload.remarks = remarks;
     }
 
     remit.mutate(payload, {
       onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", schedule.scheduleId], exact: true });
+        queryClient.invalidateQueries({ queryKey: ["schedule", "allocated", schedule.scheduleId, distributorId], exact: true });
+        queryClient.invalidateQueries({ queryKey: ["schedule", "remittanceHistory", schedule.scheduleId, distributorId], exact: true });
+        setShowSummary(false);
         ToastNotification.success("Remitted");
+        closeRemit();
       },
       onError: (err) => {
         ToastNotification.error(err.message);
@@ -205,6 +226,7 @@ const RemitTickets = ({ distributorData }: Props) => {
             <div>
               <div className="flex items-center gap-2">
                 <input
+                  disabled={remit.isPending}
                   className="cursor-pointer"
                   id="system"
                   type="radio"
@@ -220,6 +242,7 @@ const RemitTickets = ({ distributorData }: Props) => {
 
               <div className="flex items-center gap-2">
                 <input
+                  disabled={remit.isPending}
                   className="cursor-pointer"
                   id="me"
                   type="radio"
@@ -236,7 +259,7 @@ const RemitTickets = ({ distributorData }: Props) => {
 
             <div className="bg-gray border border-lightGrey p-3 rounded-md mt-3 flex flex-col gap-2">
               <TextInput
-                disabled={controlFrom === "system"}
+                disabled={controlFrom === "system" || remit.isPending}
                 label={
                   controlFrom === "system" ? (
                     <p>Marked as Sold (by Distributor)</p>
@@ -254,17 +277,9 @@ const RemitTickets = ({ distributorData }: Props) => {
               />
             </div>
 
-            {/* <div className="mt-2">
-          <p>Total Ticket Sales: {formatCurrency(distributorTickets.soldTickets.reduce((acc, cur) => (acc += Number(cur.ticketPrice)), 0))}</p>
-          <p>Total Distributor Commission: {formatCurrency(distributorTickets.soldTickets.length * schedule.commissionFee)}</p>
-          <p>
-            Expected Amount to Remit:{" "}
-            {formatCurrency(distributorTickets.soldTickets.reduce((acc, cur) => (acc += cur.ticketPrice - schedule.commissionFee), 0))}
-          </p>
-        </div> */}
-
             <div className="mt-5 flex gap-3 flex-col">
               <TextInput
+                disabled={remit.isPending}
                 isError={!!error.lost}
                 errorMessage={error.lost}
                 name="lost"
@@ -275,6 +290,7 @@ const RemitTickets = ({ distributorData }: Props) => {
 
               <div className="flex flex-col items-center gap-3 md:flex-row">
                 <TextInput
+                  disabled={remit.isPending}
                   isError={!!error.discounted}
                   errorMessage={error.discounted}
                   name="discounted"
@@ -283,6 +299,8 @@ const RemitTickets = ({ distributorData }: Props) => {
                   label="Ticket control number discounted  (Optional)"
                 />
                 <TextInput
+                  disabled={remit.isPending}
+                  type="number"
                   placeholder="%"
                   name="discountPercentage"
                   label="Discount Percentage"
@@ -293,10 +311,26 @@ const RemitTickets = ({ distributorData }: Props) => {
             </div>
           </div>
 
-          <Button onClick={handleSubmit} className="!bg-green self-end mt-5">
+          <Button disabled={remit.isPending} onClick={validate} className="!bg-green self-end mt-5">
             Remit Tickets
           </Button>
         </>
+      )}
+
+      {showSummary && (
+        <Modal isOpen={showSummary} onClose={() => setShowSummary(false)} title="Remittance Summary">
+          <RemittanceSummary
+            cancelSubmit={() => setShowSummary(false)}
+            schedule={schedule}
+            disabled={remit.isPending}
+            onSubmit={(remarks) => handleSubmit(remarks)}
+            soldTickets={distributorData.filter((ticket) => parsed.soldList.includes(ticket.controlNumber))}
+            lostTickets={distributorData.filter((ticket) => parsed.lostList.includes(ticket.controlNumber))}
+            discountedTickets={distributorData.filter((ticket) => parsed.discountedList.includes(ticket.controlNumber))}
+            discountPercentage={form.discountPercentage}
+            commissionFee={schedule.commissionFee}
+          />
+        </Modal>
       )}
     </div>
   );

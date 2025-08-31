@@ -1,4 +1,5 @@
 export type SeatStatus = "reserved" | "vip" | "available" | "sold" | "complimentarySeat";
+export type SeatSection = "orchestraLeft" | "orchestraRight" | "orchestraMiddle" | "balconyLeft" | "balconyRight" | "balconyMiddle";
 
 export interface Seat {
   seatNumber: string;
