@@ -1,12 +1,12 @@
 import { useOutletContext } from "react-router-dom";
-import type { AllocatedTicketToDistributor } from "../../../../../../../types/ticket";
+import type { AllocatedTicketToDistributor } from "@/types/ticket.ts";
 import { useMemo, useState } from "react";
-import { useDebounce } from "../../../../../../../hooks/useDeabounce";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../../components/ui/table";
+import { useDebounce } from "@/hooks/useDeabounce.ts";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import LongCard from "../../../../../../../components/LongCard";
 import LongCardItem from "../../../../../../../components/LongCardItem";
-import type { Schedule } from "../../../../../../../types/schedule";
-import { formatTicket } from "../../../../../../../utils/controlNumber";
+import type { Schedule } from "@/types/schedule.ts";
+import { formatTicket } from "@/utils/controlNumber.ts";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";

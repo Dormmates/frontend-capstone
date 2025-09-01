@@ -1,12 +1,12 @@
 import { useOutletContext, useParams } from "react-router-dom";
-import { useGetDistributorRemittanceHistory } from "../../../../../../../_lib/@react-client-query/schedule";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../../components/ui/table";
+import { useGetDistributorRemittanceHistory } from "@/_lib/@react-client-query/schedule.ts";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import { useMemo, useState } from "react";
-import { formatToReadableDate, formatToReadableTime } from "../../../../../../../utils/date";
+import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 
-import type { Schedule } from "../../../../../../../types/schedule";
-import { formatCurrency } from "../../../../../../../utils";
-import type { RemittanceHistory } from "../../../../../../../types/ticket";
+import type { Schedule } from "@/types/schedule.ts";
+import { formatCurrency } from "@/utils";
+import type { RemittanceHistory } from "@/types/ticket.ts";
 
 import RemittanceSummary from "../../remitTicket/RemittanceSummary";
 import { Button } from "@/components/ui/button";

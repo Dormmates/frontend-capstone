@@ -1,15 +1,15 @@
 import { useParams } from "react-router-dom";
-import { useGetDistributorAllocationHistory } from "../../../../../../../_lib/@react-client-query/schedule";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../../components/ui/table";
+import { useGetDistributorAllocationHistory } from "@/_lib/@react-client-query/schedule.ts";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import { useMemo, useState } from "react";
-import { formatToReadableDate, formatToReadableTime } from "../../../../../../../utils/date";
+import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 
-import type { AllocationHistory } from "../../../../../../../types/ticket";
+import type { AllocationHistory } from "@/types/ticket.ts";
 
 import LongCard from "../../../../../../../components/LongCard";
 import LongCardItem from "../../../../../../../components/LongCardItem";
 
-import { compressControlNumbers } from "../../../../../../../utils/controlNumber";
+import { compressControlNumbers } from "@/utils/controlNumber.ts";
 import { Button } from "@/components/ui/button";
 
 import InputField from "@/components/InputField";
