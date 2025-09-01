@@ -121,12 +121,11 @@ const PerformingGroups = () => {
     });
   };
 
-  const handleDelete = () => {
-    deleteDepartment.mutate(groupDeletion.departmentId, {
+  const handleDelete = (groupId: string) => {
+    deleteDepartment.mutate(groupId, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["departments"] });
         ToastNotification.success("Deleted Group");
-        setGroupDeletion({ confirm: false, departmentId: "" });
       },
       onError: (er) => {
         ToastNotification.error(er.message);
@@ -186,7 +185,7 @@ const PerformingGroups = () => {
                             <img src={deleteIcon} alt="delete" />
                           </Button>
                         }
-                        onConfirm={() => handleDelete()}
+                        onConfirm={() => handleDelete(department.departmentId)}
                         title="Delete Performing Group"
                         description="This action cannot be undone. This will permanently delete the selected performing group."
                       />
