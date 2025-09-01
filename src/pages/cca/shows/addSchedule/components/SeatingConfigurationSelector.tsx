@@ -1,11 +1,11 @@
 import React from "react";
 import type { ScheduleFormData, SeatingConfiguration } from "../../../../../types/schedule";
-import Dropdown from "../../../../../components/ui/Dropdown";
+import Dropdown from "@/components/Dropdown";
 
 const seatOptions = [
-  { label: "Free Seating", value: "freeSeating" },
-  { label: "Controlled Seating", value: "controlledSeating" },
-] as const satisfies ReadonlyArray<{ label: string; value: SeatingConfiguration }>;
+  { name: "Free Seating", value: "freeSeating" },
+  { name: "Controlled Seating", value: "controlledSeating" },
+];
 
 interface Props {
   scheduleData: ScheduleFormData;
@@ -14,13 +14,14 @@ interface Props {
 
 const SeatingConfigurationSelector = ({ scheduleData, setScheduleData }: Props) => {
   return (
-    <Dropdown<SeatingConfiguration>
-      className="z-50"
-      options={seatOptions}
+    <Dropdown
+      includeHeader={true}
+      className="z-50 max-w-[250px]"
+      items={seatOptions}
       label="Seating Configuration"
       value={scheduleData.ticketType === "nonTicketed" ? "freeSeating" : scheduleData.seatingConfiguration}
       disabled={scheduleData.ticketType === "nonTicketed"}
-      onChange={(value) => setScheduleData((prev) => ({ ...prev, seatingConfiguration: value }))}
+      onChange={(value) => setScheduleData((prev) => ({ ...prev, seatingConfiguration: value as SeatingConfiguration }))}
     />
   );
 };

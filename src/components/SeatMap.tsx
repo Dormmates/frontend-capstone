@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
-import type { FlattenedSeat } from "../../types/seat.ts";
-import { formatSectionName } from "../../utils/seatmap.ts";
+import type { FlattenedSeat } from "../types/seat.ts";
+import { formatSectionName } from "../utils/seatmap.ts";
 
 interface Props {
   seatClick: (seat: FlattenedSeat) => void;

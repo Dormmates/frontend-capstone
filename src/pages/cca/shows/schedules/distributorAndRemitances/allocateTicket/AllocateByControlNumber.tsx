@@ -1,7 +1,7 @@
-import TextInput from "../../../../../../components/ui/TextInput";
-import ControlNumberInputTutorial from "../../../../../../components/ui/ControlNumberInputTutorial";
+import ControlNumberInputTutorial from "../../../../../../components/ControlNumberInputTutorial";
 
 import type { Ticket } from "../../../../../../types/ticket";
+import InputField from "@/components/InputField";
 
 type Props = {
   controlNumber: string;
@@ -34,11 +34,10 @@ const AllocateByControlNumber = ({ controlNumber, setControlNumbers, unAllocated
         )}
       </div>
       <ControlNumberInputTutorial className="max-w-[600px]" />
-      <TextInput
+      <InputField
         disabled={unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0}
         className="max-w-[600px]"
-        isError={!!error}
-        errorMessage={error}
+        error={error}
         onChange={(e) => setControlNumbers(e.target.value)}
         value={controlNumber}
         label={"Enter Ticket Control Numbers to be Allocated"}

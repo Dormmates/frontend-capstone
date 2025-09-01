@@ -2,9 +2,10 @@ import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useGetAllDistributorAllocationHistory, useGetAllDistributorRemittanceHistory } from "../../../_lib/@react-client-query/schedule";
 import { useAuthContext } from "../../../context/AuthContext";
 import { ContentWrapper } from "../../../components/layout/Wrapper";
-import SimpleCard from "../../../components/ui/SimpleCard";
+
 import { useMemo } from "react";
 import { formatCurrency } from "../../../utils";
+import SimpleCard from "@/components/SimpleCard";
 
 const links = [
   { path: "", name: "Allocation History" },
@@ -54,10 +55,8 @@ const DistributorHistory = () => {
     return <h1>Error loading</h1>;
   }
 
-  console.log(remittanceHistory);
-
   return (
-    <ContentWrapper className="lg:!p-20">
+    <ContentWrapper>
       <h1 className="font-bold text-4xl">Distributor History</h1>
 
       <div className="flex gap-3 mt-10">

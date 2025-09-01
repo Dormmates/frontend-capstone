@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
 import { ContentWrapper } from "../../../components/layout/Wrapper";
-import SimpleCard from "../../../components/ui/SimpleCard";
+
 import { useAddDepartment, useDeleteDepartment, useEditDepartment, useGetDepartments } from "../../../_lib/@react-client-query/department";
-import Button from "../../../components/ui/Button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
-import Modal from "../../../components/ui/Modal";
-import TextInput from "../../../components/ui/TextInput";
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table";
+
 import type { Department } from "../../../types/department";
 import { useQueryClient } from "@tanstack/react-query";
 import ToastNotification from "../../../utils/toastNotification";
 
 import deleteIcon from "../../../assets/icons/delete.png";
-import InputLabel from "../../../components/ui/InputLabel";
+
 import { getFileId } from "../../../utils";
+import SimpleCard from "@/components/SimpleCard";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Modal from "@/components/Modal";
+import InputField from "@/components/InputField";
+import { Label } from "@/components/ui/label";
+import AlertModal from "@/components/AlertModal";
 
 const PerformingGroups = () => {
   const addDepartment = useAddDepartment();
@@ -129,15 +135,15 @@ const PerformingGroups = () => {
   };
 
   return (
-    <ContentWrapper className="lg:!p-20">
+    <ContentWrapper>
       <h1 className="text-3xl">Performing Groups</h1>
 
       <div className="flex justify-between mt-10">
         <SimpleCard label="Total Groups" value={departments?.length + ""} />
 
-        <Button onClick={() => setAddGroup(true)} className="text-black self-end">
-          Add New Group
-        </Button>
+        <div className="flex items-end">
+          <Button onClick={() => setAddGroup(true)}>Add New Group</Button>
+        </div>
       </div>
 
       <div className="mt-10">
@@ -170,16 +176,20 @@ const PerformingGroups = () => {
                   <TableCell>{department.totalShows}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end items-center gap-2">
-                      <Button onClick={() => setSelectedGroup(department)} className="!bg-gray !text-black !border-lightGrey border-2">
+                      <Button onClick={() => setSelectedGroup(department)} variant="outline">
                         Edit Details
                       </Button>
-                      <Button
-                        onClick={() => setGroupDeletion({ departmentId: department.departmentId, confirm: true })}
-                        disabled={department.totalShows !== 0}
-                        variant="plain"
-                      >
-                        <img src={deleteIcon} alt="delete" />
-                      </Button>
+
+                      <AlertModal
+                        trigger={
+                          <Button disabled={department.totalShows !== 0} variant="ghost">
+                            <img src={deleteIcon} alt="delete" />
+                          </Button>
+                        }
+                        onConfirm={() => handleDelete()}
+                        title="Delete Performing Group"
+                        description="This action cannot be undone. This will permanently delete the selected performing group."
+                      />
                     </div>
                   </TableCell>
                 </TableRow>
@@ -191,17 +201,17 @@ const PerformingGroups = () => {
 
       {(addGroup || selectedGroup) && (
         <Modal
+          title={addGroup ? "Add new Performing Group" : "Edit Performing Group"}
           onClose={() => {
             setErrors({});
             setAddGroup(false);
             setSelectedGroup(null);
           }}
           isOpen={addGroup || !!selectedGroup}
-          title={selectedGroup ? "Edit Group Details" : "Add New Group"}
         >
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-2 mt-5">
-              <InputLabel label={addGroup ? "Group Logo" : "Edit Group Logo"} />
+              <Label>{addGroup ? "Group Logo" : "Edit Group Logo"}</Label>
 
               {(newGroup.imagePreview || editGroup.imagePreview) && (
                 <div className="h-[200px] w-full border rounded border-lightGrey p-2">
@@ -212,7 +222,7 @@ const PerformingGroups = () => {
                   />
                 </div>
               )}
-              <input
+              <Input
                 disabled={addDepartment.isPending || editDepartment.isPending}
                 type="file"
                 accept="image/*"
@@ -245,10 +255,9 @@ const PerformingGroups = () => {
               {errors?.logo && <p className="text-sm text-red mt-1">{errors.logo}</p>}
             </div>
 
-            <TextInput
+            <InputField
               disabled={addDepartment.isPending || editDepartment.isPending}
-              isError={!!errors?.name}
-              errorMessage={errors?.name}
+              error={errors?.name}
               label={"Group Name"}
               value={addGroup ? newGroup.name : editGroup.name}
               onChange={
@@ -258,23 +267,8 @@ const PerformingGroups = () => {
               }
             />
 
-            <Button
-              disabled={addDepartment.isPending || editDepartment.isPending}
-              onClick={addGroup ? handleAddDepartment : handleEditDepartment}
-              className="self-end !bg-green"
-            >
+            <Button disabled={addDepartment.isPending || editDepartment.isPending} onClick={addGroup ? handleAddDepartment : handleEditDepartment}>
               {addGroup ? "Add Group" : "Save Changes"}
-            </Button>
-          </div>
-        </Modal>
-      )}
-
-      {groupDeletion.confirm && (
-        <Modal onClose={() => setGroupDeletion({ confirm: false, departmentId: "" })} isOpen={groupDeletion.confirm} title="Delete Performing Group">
-          <div className="flex flex-col mt-10 gap-10 text-lg">
-            <h1 className="text-center ">Are you sure you want to delete this group?</h1>
-            <Button disabled={deleteDepartment.isPending} onClick={handleDelete} className="!bg-green self-end">
-              Confirm
             </Button>
           </div>
         </Modal>

@@ -1,21 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { ContentWrapper } from "../../../../components/layout/Wrapper";
-import Button from "../../../../components/ui/Button";
-import SimpleCard from "../../../../components/ui/SimpleCard";
-import TextInput from "../../../../components/ui/TextInput";
 import { useDebounce } from "../../../../hooks/useDeabounce";
 import { useEditDistributor, useGetDistributors, useGetDistributorTypes, useNewDistributor } from "../../../../_lib/@react-client-query/accounts";
-import Modal from "../../../../components/ui/Modal";
-
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../components/ui/table";
 import archiveIcon from "../../../../assets/icons/archive.png";
-import Dropdown from "../../../../components/ui/Dropdown";
 import type { Distributor } from "../../../../types/user";
-
 import DistributorForm from "./DistributorForm";
 import { useGetDepartments } from "../../../../_lib/@react-client-query/department";
 import ToastNotification from "../../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
+import SimpleCard from "@/components/SimpleCard";
+import { Button } from "@/components/ui/button";
+import Dropdown from "@/components/Dropdown";
+import Pagination from "@/components/Pagination";
+import InputField from "@/components/InputField";
+import Modal from "@/components/Modal";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -30,10 +29,10 @@ const Distributors = () => {
 
   const [isAddDistributor, setIsAddDistributor] = useState(false);
   const [selectedDistributor, setSelectedDistributor] = useState<Distributor | null>(null);
-  const [type, setType] = useState("");
+  const [type, setType] = useState("all");
 
-  const distributorTypeOptions = (distributorTypes ?? []).map((type) => ({ label: type.name, value: String(type.id) }));
-  const groupOptions = (departments ?? []).map((department) => ({ label: department.name, value: department.departmentId }));
+  const distributorTypeOptions = (distributorTypes ?? []).map((type) => ({ name: type.name, value: String(type.id) }));
+  const groupOptions = (departments ?? []).map((department) => ({ name: department.name, value: department.departmentId }));
 
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
@@ -50,7 +49,7 @@ const Distributors = () => {
 
         return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
       })
-      .filter((distributor) => !type || Number(type) === distributor.distributor.distributortypes.id);
+      .filter((distributor) => !type || type === "all" || Number(type) === distributor.distributor.distributortypes.id);
   }, [debouncedSearch, distributors, type]);
 
   const paginatedDistributors = useMemo(() => {
@@ -78,37 +77,38 @@ const Distributors = () => {
       <div className="flex justify-between mt-10">
         <SimpleCard label="Total Distributors" value={searchedDistributors.length} />
         <div className="self-end flex gap-2">
-          <Button className="text-black">Bulk Creation</Button>
-          <Button onClick={() => setIsAddDistributor(true)} className="text-black">
-            Add New Distributor
-          </Button>
+          <Button>Bulk Creation</Button>
+          <Button onClick={() => setIsAddDistributor(true)}>Add New Distributor</Button>
         </div>
       </div>
 
       <div className="mt-10 flex flex-col gap-10">
         <div className="flex gap-3">
-          <TextInput
-            className="min-w-[450px] max-w-[450px]"
+          <InputField
+            className="w-full"
             onChange={(e) => setSearchValue(e.target.value)}
             value={searchValue}
             placeholder="Search by Distributor Name"
           />
           <Dropdown
+            className="max-w-fit"
+            placeholder="Distributor Type"
+            label="Distributor Type"
             value={type}
             onChange={(value) => setType(value)}
-            options={[{ label: "All Distributor Type", value: "" }, ...distributorTypeOptions]}
+            items={[{ name: "All Distributor Type", value: "all" }, ...distributorTypeOptions]}
           />
         </div>
 
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Full Name</TableHead>
+              <TableHead>Full Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Contact Number</TableHead>
               <TableHead>Distributor Type</TableHead>
               <TableHead>Performing Group</TableHead>
-              <TableHead className="text-end pr-28">Action</TableHead>
+              <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -121,19 +121,19 @@ const Distributors = () => {
             ) : (
               paginatedDistributors?.map((distributor) => (
                 <TableRow key={distributor.userId}>
-                  <TableCell className="text-center !p-0">{distributor.firstName + " " + distributor.lastName}</TableCell>
+                  <TableCell>{distributor.firstName + " " + distributor.lastName}</TableCell>
                   <TableCell>{distributor.email}</TableCell>
                   <TableCell>{distributor.distributor.contactNumber}</TableCell>
                   <TableCell>{distributor.distributor.distributortypes.name}</TableCell>
                   <TableCell>{distributor.distributor.department?.name ?? "No Department"}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end items-center gap-2">
-                      <Button className="!bg-grey !text-black !border-lightGrey border-2">View Distributor</Button>
-                      <Button onClick={() => setSelectedDistributor(distributor)} className="!bg-white !text-black !border-lightGrey border-2">
+                      <Button variant="secondary">View Distributor</Button>
+                      <Button onClick={() => setSelectedDistributor(distributor)} variant="outline">
                         Edit Details
                       </Button>
                       <div className="relative group">
-                        <Button className="!p-0" variant="plain">
+                        <Button variant="ghost" className="!p-0">
                           <img src={archiveIcon} alt="archive" />
                         </Button>
 
@@ -154,7 +154,13 @@ const Distributors = () => {
       </div>
 
       {isAddDistributor && (
-        <Modal className="max-w-[800px] w-full" isOpen={isAddDistributor} title="Add New Distributor" onClose={() => setIsAddDistributor(false)}>
+        <Modal
+          description="Input Distributor details and click save."
+          className="max-w-3xl"
+          title="Add New Distributor"
+          isOpen={isAddDistributor}
+          onClose={() => setIsAddDistributor(false)}
+        >
           <DistributorForm
             initialValues={{
               firstName: "",
@@ -192,7 +198,13 @@ const Distributors = () => {
       )}
 
       {selectedDistributor && (
-        <Modal className="max-w-[800px] w-full" isOpen={!!selectedDistributor} title="Edit Distributor" onClose={() => setSelectedDistributor(null)}>
+        <Modal
+          description="Edit distributor details and click save"
+          className="max-w-3xl"
+          title="Edit Distributor Details"
+          isOpen={!!selectedDistributor}
+          onClose={() => setSelectedDistributor(null)}
+        >
           <DistributorForm
             isSubmitting={editDistributor.isPending}
             initialValues={{
@@ -245,7 +257,7 @@ const Distributors = () => {
         </Modal>
       )}
 
-      <Button className="fixed bottom-10 right-10 shadow-lg rounded-full !text-black">View Archived Distributors</Button>
+      <Button className="fixed bottom-10 right-10 shadow-lg rounded-full ">View Archived Distributors</Button>
     </ContentWrapper>
   );
 };

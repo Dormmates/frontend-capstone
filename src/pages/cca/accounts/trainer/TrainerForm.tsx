@@ -1,9 +1,9 @@
 import { useState } from "react";
-import TextInput from "../../../../components/ui/TextInput";
-import Dropdown from "../../../../components/ui/Dropdown";
-import Button from "../../../../components/ui/Button";
 import { isValidEmail } from "../../../../utils";
-import InputLabel from "../../../../components/ui/InputLabel";
+import { Button } from "@/components/ui/button";
+import InputField from "@/components/InputField";
+import { Label } from "@/components/ui/label";
+import Dropdown from "@/components/Dropdown";
 
 type TrainerFormValues = {
   firstName: string;
@@ -15,7 +15,7 @@ type TrainerFormValues = {
 
 type TrainerFormProps = {
   initalValues: TrainerFormValues;
-  groupOptions: { label: string; value: string }[];
+  groupOptions: { name: string; value: string }[];
   isSubmitting: boolean;
   onSubmit: (payload: TrainerFormValues) => void;
   close: () => void;
@@ -76,20 +76,18 @@ const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting
 
         <div className="mt-5 flex flex-col gap-5">
           <div className="flex gap-5">
-            <TextInput
+            <InputField
               disabled={isSubmitting}
-              isError={!!errors?.firstName}
-              errorMessage={errors?.firstName}
+              error={errors?.firstName}
               placeholder="eg. Juan"
               name="firstName"
               label="First Name"
               value={trainerData.firstName}
               onChange={handleInputChange}
             />
-            <TextInput
+            <InputField
               disabled={isSubmitting}
-              isError={!!errors?.lastName}
-              errorMessage={errors?.lastName}
+              error={errors?.lastName}
               placeholder="eg. Dela Cruz"
               name="lastName"
               label="Last Name"
@@ -98,10 +96,9 @@ const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting
             />
           </div>
           <div className="flex gap-5">
-            <TextInput
+            <InputField
               disabled={isSubmitting}
-              isError={!!errors?.email}
-              errorMessage={errors?.email}
+              error={errors?.email}
               type="email"
               placeholder="eg. trainer@slu.edu.ph"
               name="email"
@@ -111,7 +108,7 @@ const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting
             />
           </div>
           <div>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center mb-5">
               <input
                 disabled={isSubmitting}
                 type="checkbox"
@@ -127,20 +124,19 @@ const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting
                 }
               />
 
-              <InputLabel className="!m-0" label={initalValues.group ? "Change Performing Group?" : "Assign Performing Group?"} />
+              <Label>{initalValues.group ? "Change Performing Group?" : "Assign Performing Group?"}</Label>
             </div>
             {trainerData.assignDepartment &&
               (groupOptions.length !== 0 ? (
                 <Dropdown
-                  isFixed={true}
-                  isError={!!errors?.group}
-                  errorMessage={errors?.group}
+                  error={errors?.group}
                   disabled={isSubmitting}
                   onChange={(value) => setTrainerData((prev) => ({ ...prev, group: value }))}
-                  className="mt-5 w-full"
-                  options={groupOptions}
+                  className="w-full"
+                  items={groupOptions}
                   value={trainerData.group as string}
                   label="Performing Group"
+                  includeHeader={true}
                 />
               ) : (
                 <h1 className="text-center mt-2 font-medium">All performing groups have respective trainers already</h1>
@@ -149,11 +145,11 @@ const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting
         </div>
       </div>
       <div className="flex justify-end mt-5 gap-2">
-        <Button disabled={isSubmitting} onClick={handleSubmit} className="!bg-green">
-          {initalValues.firstName ? "Save Changes" : "Add Trainer"}
-        </Button>
-        <Button disabled={isSubmitting} onClick={close} className="!bg-red">
+        <Button disabled={isSubmitting} onClick={close} variant="outline">
           Cancel
+        </Button>
+        <Button disabled={isSubmitting} onClick={handleSubmit}>
+          {initalValues.firstName ? "Save Changes" : "Add Trainer"}
         </Button>
       </div>
     </div>

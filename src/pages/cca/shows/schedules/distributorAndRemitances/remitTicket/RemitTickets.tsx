@@ -1,16 +1,20 @@
 import React, { useEffect, useMemo, useState } from "react";
 import type { AllocatedTicketToDistributor } from "../../../../../../types/ticket";
-import Button from "../../../../../../components/ui/Button";
+
 import { useOutletContext, useParams } from "react-router-dom";
 import type { Schedule } from "../../../../../../types/schedule";
 import { compressControlNumbers, parseControlNumbers, validateControlInput } from "../../../../../../utils/controlNumber";
-import TextInput from "../../../../../../components/ui/TextInput";
+
 import ToastNotification from "../../../../../../utils/toastNotification";
 import { useRemitTicketSale } from "../../../../../../_lib/@react-client-query/schedule";
 import { useAuthContext } from "../../../../../../context/AuthContext";
-import Modal from "../../../../../../components/ui/Modal";
+
 import RemittanceSummary from "./RemittanceSummary";
 import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogDescription } from "@radix-ui/react-dialog";
+import InputField from "@/components/InputField";
 
 type Props = {
   distributorData: AllocatedTicketToDistributor[];
@@ -257,20 +261,11 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
               </div>
             </div>
 
-            <div className="bg-gray border border-lightGrey p-3 rounded-md mt-3 flex flex-col gap-2">
-              <TextInput
+            <div className=" border border-lightGrey p-3 rounded-md mt-3 flex flex-col gap-2">
+              <InputField
                 disabled={controlFrom === "system" || remit.isPending}
-                label={
-                  controlFrom === "system" ? (
-                    <p>Marked as Sold (by Distributor)</p>
-                  ) : (
-                    <p>
-                      Enter Ticket Control Numbers which are <span className="font-bold">Sold</span>
-                    </p>
-                  )
-                }
-                isError={!!error.sold}
-                errorMessage={error.sold}
+                label={controlFrom === "system" ? "Marked as Sold (by Distributor)" : "Enter Ticket Control Numbers which are Sold"}
+                error={error.sold}
                 value={form.sold}
                 onChange={handleInput}
                 name="sold"
@@ -278,10 +273,9 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
             </div>
 
             <div className="mt-5 flex gap-3 flex-col">
-              <TextInput
+              <InputField
                 disabled={remit.isPending}
-                isError={!!error.lost}
-                errorMessage={error.lost}
+                error={error.lost}
                 name="lost"
                 value={form.lost}
                 onChange={handleInput}
@@ -289,19 +283,19 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
               />
 
               <div className="flex flex-col items-center gap-3 md:flex-row">
-                <TextInput
+                <InputField
                   disabled={remit.isPending}
-                  isError={!!error.discounted}
-                  errorMessage={error.discounted}
+                  error={error.discounted}
                   name="discounted"
                   value={form.discounted}
                   onChange={handleInput}
                   label="Ticket control number discounted  (Optional)"
                 />
-                <TextInput
+                <InputField
                   disabled={remit.isPending}
                   type="number"
                   placeholder="%"
+                  error={error.discountPercentage}
                   name="discountPercentage"
                   label="Discount Percentage"
                   value={form.discountPercentage as number}
@@ -318,19 +312,25 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
       )}
 
       {showSummary && (
-        <Modal isOpen={showSummary} onClose={() => setShowSummary(false)} title="Remittance Summary">
-          <RemittanceSummary
-            cancelSubmit={() => setShowSummary(false)}
-            seatingType={schedule.seatingType}
-            disabled={remit.isPending}
-            onSubmit={(remarks) => handleSubmit(remarks)}
-            soldTickets={distributorData.filter((ticket) => parsed.soldList.includes(ticket.controlNumber))}
-            lostTickets={distributorData.filter((ticket) => parsed.lostList.includes(ticket.controlNumber))}
-            discountedTickets={distributorData.filter((ticket) => parsed.discountedList.includes(ticket.controlNumber))}
-            discountPercentage={form.discountPercentage}
-            commissionFee={schedule.commissionFee}
-          />
-        </Modal>
+        <Dialog open={showSummary} onOpenChange={() => setShowSummary(false)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Remittanec Summary</DialogTitle>
+              <DialogDescription>Please review the summary before proceding</DialogDescription>
+            </DialogHeader>
+            <RemittanceSummary
+              cancelSubmit={() => setShowSummary(false)}
+              seatingType={schedule.seatingType}
+              disabled={remit.isPending}
+              onSubmit={(remarks) => handleSubmit(remarks)}
+              soldTickets={distributorData.filter((ticket) => parsed.soldList.includes(ticket.controlNumber))}
+              lostTickets={distributorData.filter((ticket) => parsed.lostList.includes(ticket.controlNumber))}
+              discountedTickets={distributorData.filter((ticket) => parsed.discountedList.includes(ticket.controlNumber))}
+              discountPercentage={form.discountPercentage}
+              commissionFee={schedule.commissionFee}
+            />
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

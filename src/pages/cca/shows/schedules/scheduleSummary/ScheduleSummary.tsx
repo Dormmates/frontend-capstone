@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
 import { Pie } from "react-chartjs-2";
 import { useGetScheduleSummary } from "../../../../../_lib/@react-client-query/schedule";
-
-import SimpleCard from "../../../../../components/ui/SimpleCard";
-import Button from "../../../../../components/ui/Button";
+import SimpleCard from "@/components/SimpleCard";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { formatCurrency } from "@/utils";
 
 const ScheduleSummary = () => {
   const { scheduleId } = useParams();
@@ -60,15 +61,13 @@ const ScheduleSummary = () => {
           <p>
             Sale Progress (<span className="font-medium"> {percentage}%</span>)
           </p>
-          <div className="relative border border-lightGrey w-full rounded-sm h-5">
-            <div className="absolute top-0 left-0 h-full bg-primary transition-all duration-500" style={{ width: `${percentage}%` }} />
-          </div>
+          <Progress value={percentage} />
         </div>
         <div className="flex justify-between">
           <div className="flex gap-2">
-            <SimpleCard className="border-l-primary" label="Expected Total Sales" value={summary.expectedSales} />
-            <SimpleCard label="Current Sales" value={summary.currentSales} />
-            <SimpleCard className="border-l-red" label="Remaining" value={summary.remainingSales} />
+            <SimpleCard className="border-l-primary" label="Expected Total Sales" value={formatCurrency(summary.expectedSales)} />
+            <SimpleCard label="Current Sales" value={formatCurrency(summary.currentSales)} />
+            <SimpleCard className="border-l-red" label="Remaining" value={formatCurrency(summary.remainingSales)} />
           </div>
           <div className="flex items-end">
             <Button>Generate Sales Report</Button>

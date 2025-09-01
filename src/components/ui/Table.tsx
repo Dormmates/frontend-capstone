@@ -1,72 +1,120 @@
-import type { TableHTMLAttributes, HTMLAttributes, ThHTMLAttributes, TdHTMLAttributes } from "react";
-import merge from "../../utils/merge";
-import Button from "./Button";
-import next from "../../assets/icons/next.png";
-import prev from "../../assets/icons/prev.png";
+import * as React from "react"
 
-type PaginationProps = {
-  className?: string;
-  currentPage: number;
-  totalPage: number;
-  onPageChange?: (newPage: number) => void;
-};
+import { cn } from "@/lib/utils"
 
-export const Table = ({ className, ...props }: TableHTMLAttributes<HTMLTableElement>) => (
-  <div className="w-full overflow-auto">
-    <table className={merge("w-full caption-bottom text-sm text-left text-darkGrey", className)} {...props} />
+const Table = React.forwardRef<
+  HTMLTableElement,
+  React.HTMLAttributes<HTMLTableElement>
+>(({ className, ...props }, ref) => (
+  <div className="relative w-full overflow-auto">
+    <table
+      ref={ref}
+      className={cn("w-full caption-bottom text-sm", className)}
+      {...props}
+    />
   </div>
-);
+))
+Table.displayName = "Table"
 
-export const TableHeader = ({ className, ...props }: HTMLAttributes<HTMLTableSectionElement>) => (
-  <thead className={merge("bg-lightPrimary text-primary", className)} {...props} />
-);
+const TableHeader = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />
+))
+TableHeader.displayName = "TableHeader"
 
-export const TableBody = ({ className, ...props }: HTMLAttributes<HTMLTableSectionElement>) => <tbody className={merge("", className)} {...props} />;
+const TableBody = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <tbody
+    ref={ref}
+    className={cn("[&_tr:last-child]:border-0", className)}
+    {...props}
+  />
+))
+TableBody.displayName = "TableBody"
 
-export const TableRow = ({ className, ...props }: HTMLAttributes<HTMLTableRowElement>) => (
-  <tr className={merge("rounded-lg", className)} {...props} />
-);
+const TableFooter = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <tfoot
+    ref={ref}
+    className={cn(
+      "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
+      className
+    )}
+    {...props}
+  />
+))
+TableFooter.displayName = "TableFooter"
 
-export const TableHead = ({ className, ...props }: ThHTMLAttributes<HTMLTableCellElement>) => (
-  <th className={merge("h-12 px-4 text-left align-middle font-medium", className)} {...props} />
-);
+const TableRow = React.forwardRef<
+  HTMLTableRowElement,
+  React.HTMLAttributes<HTMLTableRowElement>
+>(({ className, ...props }, ref) => (
+  <tr
+    ref={ref}
+    className={cn(
+      "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+      className
+    )}
+    {...props}
+  />
+))
+TableRow.displayName = "TableRow"
 
-export const TableCell = ({ className, ...props }: TdHTMLAttributes<HTMLTableCellElement>) => (
-  <td className={merge("p-4 align-middle border-b border-tableBorderb", className)} {...props} />
-);
+const TableHead = React.forwardRef<
+  HTMLTableCellElement,
+  React.ThHTMLAttributes<HTMLTableCellElement>
+>(({ className, ...props }, ref) => (
+  <th
+    ref={ref}
+    className={cn(
+      "h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      className
+    )}
+    {...props}
+  />
+))
+TableHead.displayName = "TableHead"
 
-export const TableCaption = ({ className, ...props }: HTMLAttributes<HTMLTableCaptionElement>) => (
-  <caption className={merge("mt-4 text-sm", className)} {...props} />
-);
+const TableCell = React.forwardRef<
+  HTMLTableCellElement,
+  React.TdHTMLAttributes<HTMLTableCellElement>
+>(({ className, ...props }, ref) => (
+  <td
+    ref={ref}
+    className={cn(
+      "p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      className
+    )}
+    {...props}
+  />
+))
+TableCell.displayName = "TableCell"
 
-export const Pagination = ({ className = "", currentPage, totalPage, onPageChange }: PaginationProps) => {
-  const handlePrev = () => {
-    if (currentPage > 1 && onPageChange) {
-      onPageChange(currentPage - 1);
-    }
-  };
+const TableCaption = React.forwardRef<
+  HTMLTableCaptionElement,
+  React.HTMLAttributes<HTMLTableCaptionElement>
+>(({ className, ...props }, ref) => (
+  <caption
+    ref={ref}
+    className={cn("mt-4 text-sm text-muted-foreground", className)}
+    {...props}
+  />
+))
+TableCaption.displayName = "TableCaption"
 
-  const handleNext = () => {
-    if (currentPage < totalPage && onPageChange) {
-      onPageChange(currentPage + 1);
-    }
-  };
-
-  return (
-    <div className="flex justify-center">
-      <div className={`flex items-center gap-1 ${className}`}>
-        <Button variant="plain" onClick={handlePrev} disabled={currentPage === 1} className="disabled:opacity-50">
-          <img src={prev} alt="Previous" />
-        </Button>
-
-        <div className="text-sm text-darkGrey font-bold">
-          {currentPage} / {totalPage}
-        </div>
-
-        <Button variant="plain" onClick={handleNext} disabled={currentPage === totalPage} className="disabled:opacity-50">
-          <img src={next} alt="Next" />
-        </Button>
-      </div>
-    </div>
-  );
-};
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+}

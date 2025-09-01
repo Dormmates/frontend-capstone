@@ -1,13 +1,15 @@
 import { PageWrapper, ContentWrapper } from "../../components/layout/Wrapper";
-import logo from "../../assets/images/cca-logo.png";
-import background from "../../assets/images/background-login.png";
-import TextInput, { PasswordInput } from "../../components/ui/TextInput";
 import { useState } from "react";
-import Button from "../../components/ui/Button";
 import { Link } from "react-router-dom";
 import { useLogin } from "../../_lib/@react-client-query/auth";
 import { useAuthContext } from "../../context/AuthContext";
 import ToastNotification from "../../utils/toastNotification";
+
+import { Button } from "@/components/ui/button";
+import InputField from "@/components/InputField";
+import PasswordField from "@/components/PasswordField";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { isValidEmail } from "@/utils";
 
 const CCALogin = () => {
   const login = useLogin();
@@ -29,7 +31,7 @@ const CCALogin = () => {
   const validate = () => {
     const newErrors: typeof errors = {};
     if (!formContent.email) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formContent.email)) newErrors.email = "Invalid email";
+    else if (!isValidEmail(formContent.email)) newErrors.email = "Invalid email format";
 
     if (!formContent.password) newErrors.password = "Password is required";
     else if (formContent.password.length < 6) newErrors.password = "Password too short";
@@ -39,9 +41,7 @@ const CCALogin = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const submitForm = () => {
     if (!validate()) return;
 
     setLoggingIn(true);
@@ -65,45 +65,52 @@ const CCALogin = () => {
 
   return (
     <PageWrapper className="min-h-screen flex items-center justify-center w-full">
-      <img src={background} alt="" className="fixed inset-0 w-full h-full object-cover -z-10" />
-      <ContentWrapper className="w-full">
-        <div className="flex flex-col justify-center gap-10 items-center mx-auto w-full lg:max-w-[50%] h-full">
-          <div>
+      {/* <img src={background} alt="" className="fixed inset-0 w-full h-full object-cover -z-10" /> */}
+      <ContentWrapper className="w-full flex justify-center">
+        {/* <div>
             <img src={logo} alt="CCA Logo" className="object-cover" />
-          </div>
-          <h1 className="font-bold text-4xl">CCA Trainer/Head Login</h1>
-          <h2 className="text-3xl text-center">Welcome CCA Staff</h2>
-          <form className="w-full flex flex-col gap-5" onSubmit={submitForm}>
-            <TextInput
-              disabled={loginIn}
-              label="Email"
-              name="email"
-              value={formContent.email}
-              type="email"
-              onChange={handleInputChange}
-              placeholder="(eg. cca@slu.edu.ph)"
-              isError={!!errors.email}
-              errorMessage={errors.email}
-            />
-            <PasswordInput
-              disabled={loginIn}
-              label="Password"
-              name="password"
-              value={formContent.password}
-              onChange={handleInputChange}
-              placeholder="Password"
-              isError={!!errors.password}
-              errorMessage={errors.password}
-            />
-            <Button className="w-full" type="submit" disabled={loginIn} loadingMessage="Please Wait...">
+          </div> */}
+
+        <Card className="w-full max-w-2xl">
+          <CardHeader>
+            <CardTitle className="text-xl">Welcome CCA Staff</CardTitle>
+            <CardDescription>Log in as a CCA Trainer or CCA Head</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form className="w-full flex flex-col gap-5">
+              <InputField
+                error={errors.email}
+                label="Email"
+                disabled={loginIn}
+                name="email"
+                value={formContent.email}
+                type="email"
+                onChange={handleInputChange}
+                placeholder="(eg. cca@slu.edu.ph)"
+              />
+              <PasswordField
+                error={errors.password}
+                label="Password"
+                disabled={loginIn}
+                name="password"
+                value={formContent.password}
+                onChange={handleInputChange}
+                placeholder="Password"
+              />
+            </form>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-3">
+            <Button onClick={() => submitForm()} className="w-full" type="submit" disabled={loginIn}>
               Login
             </Button>
             {loginError && <h1 className="mx-auto text-red">{loginError}</h1>}
-            <Link className="mx-auto hover:opacity-50 duration-500 ease-linear " to="/distributor/login">
-              I'm a distributor : <span className="text-blue-800 underline font-bold">Login as Distributor</span>
-            </Link>
-          </form>
-        </div>
+            <Button className="w-full" variant="outline">
+              <Link className="mx-auto hover:opacity-50 duration-500 ease-linear " to="/distributor/login">
+                Login as Distributor
+              </Link>
+            </Button>
+          </CardFooter>
+        </Card>
       </ContentWrapper>
     </PageWrapper>
   );

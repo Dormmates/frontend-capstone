@@ -1,9 +1,6 @@
 import { useMemo, useState } from "react";
 import { NavLink, Outlet, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useGetAllocatedTicketsOfDistributor, useUnAllocateTicket } from "../../../../../../_lib/@react-client-query/schedule";
-import BreadCrumb from "../../../../../../components/ui/BreadCrumb";
-import Button from "../../../../../../components/ui/Button";
-
 import allocated_icon from "../../../../../../assets/icons/allocated_tickets.png";
 import unsold_icon from "../../../../../../assets/icons/unsold_ticket.png";
 import sold_icon from "../../../../../../assets/icons/sold_ticket.png";
@@ -14,13 +11,16 @@ import remitted_icon from "../../../../../../assets/icons/remitted.png";
 import balance_due_icon from "../../../../../../assets/icons/balance_due.png";
 import type { ShowData } from "../../../../../../types/show";
 import type { Schedule } from "../../../../../../types/schedule";
-import Modal from "../../../../../../components/ui/Modal";
 import UnallocateTicket from "../unallocateTicket/UnallocateTicket";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "../../../../../../context/AuthContext";
 import ToastNotification from "../../../../../../utils/toastNotification";
 import RemitTickets from "../remitTicket/RemitTickets";
 import { formatCurrency } from "../../../../../../utils";
+import { Button } from "@/components/ui/button";
+import Breadcrumbs from "@/components/BreadCrumbs";
+import { Separator } from "@/components/ui/separator";
+import Modal from "@/components/Modal";
 
 const links = [
   {
@@ -94,14 +94,11 @@ const ViewDistributorLayout = () => {
 
   return (
     <div className="flex flex-col gap-5 mt-5">
-      <BreadCrumb
-        backLink={`/shows/schedule/${showId}/${scheduleId}/d&r/`}
-        items={[
-          { name: "Distributor", path: `/shows/schedule/${showId}/${scheduleId}/d&r/` },
-          { name: distributorName, path: "" },
-        ]}
+      <Breadcrumbs
+        backHref={`/shows/schedule/${showId}/${scheduleId}/d&r/`}
+        items={[{ name: "Distributor List", href: `/shows/schedule/${showId}/${scheduleId}/d&r/` }, { name: distributorName }]}
       />
-      <div className="flex flex-col gap-5 mt-5">
+      <div className="flex flex-col gap-5 ">
         <h1 className="text-2xl">{distributorName}</h1>
         <div className="flex gap-3 items-center">
           <Button className="!bg-green">Allocate Ticket</Button>
@@ -152,8 +149,8 @@ const ViewDistributorLayout = () => {
           </div>
         </div>
       </div>
-      <hr className="w-full border-lightGrey mt-5" />
-      <div className="my-5 flex gap-5">
+      <Separator />
+      <div className="mb-5 flex gap-5">
         {links.map((link, index) => (
           <NavLink
             key={index}
@@ -171,10 +168,15 @@ const ViewDistributorLayout = () => {
       </div>
 
       {isUnallocateTicket && (
-        <Modal isOpen={isUnallocateTicket} onClose={() => setIsUnallocateTicket(false)} title="Ticket Unallocation">
+        <Modal
+          description={`Distributor: ${distributorName}`}
+          title="Unallocate Ticket"
+          isOpen={isUnallocateTicket}
+          onClose={() => setIsUnallocateTicket(false)}
+        >
           <UnallocateTicket
             controlNumbersAllocated={data
-              .filter((ticket) => !ticket.isRemitted && ticket.status == "allocated")
+              .filter((ticket) => !ticket.isRemitted && ticket.status === "allocated")
               .map((ticket) => ticket.controlNumber)}
             close={() => setIsUnallocateTicket(false)}
             disabled={unAllocateTicket.isPending}
@@ -194,7 +196,7 @@ const ViewDistributorLayout = () => {
                   setIsUnallocateTicket(false);
                   ToastNotification.success("Ticket Unallocated");
                 },
-                onError: (err) => {
+                onError: (err: any) => {
                   ToastNotification.error(err.message);
                 },
               });
@@ -207,7 +209,7 @@ const ViewDistributorLayout = () => {
       )}
 
       {isRemitTicket && (
-        <Modal className="w-full max-w-[700px]" isOpen={isRemitTicket} title="Remit Ticket Sales" onClose={() => setIsRemitTicket(false)}>
+        <Modal className="max-w-2xl" title="Remit Ticket Sales" isOpen={isRemitTicket} onClose={() => setIsRemitTicket(false)}>
           <RemitTickets closeRemit={() => setIsRemitTicket(false)} distributorData={data} />
         </Modal>
       )}

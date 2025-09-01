@@ -1,11 +1,12 @@
 import { Outlet } from "react-router-dom";
-import SideBar, { type SideBarItems } from "../../components/navigation/SideBar";
-
+import SideBar from "@/components/SideBar";
 import history from "../../assets/icons/history.png";
 import dashboard from "../../assets/icons/dashboard.png";
-import Header from "../../components/Header";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import Header from "@/components/Header";
 
-const sideBarItems: SideBarItems[] = [
+const sideBarItems = [
   {
     icon: dashboard,
     name: "Dashboard",
@@ -20,15 +21,18 @@ const sideBarItems: SideBarItems[] = [
 
 const DistributorLayout = () => {
   return (
-    <div className="min-w-[800px] min-h-screen">
-      <Header />
-      <div className="flex h-[calc(100vh-120px)] pt-[120px]">
-        <SideBar items={sideBarItems} />
-        <div className="flex-grow overflow-x-auto" style={{ height: "calc(100vh - 120px)" }}>
-          <Outlet />
-        </div>
-      </div>
-    </div>
+    <SidebarProvider>
+      <SideBar items={sideBarItems} />
+
+      <main className="flex flex-col w-full h-screen">
+        <Header />
+        <ScrollArea className="flex-1">
+          <div className="p-4">
+            <Outlet />
+          </div>
+        </ScrollArea>
+      </main>
+    </SidebarProvider>
   );
 };
 

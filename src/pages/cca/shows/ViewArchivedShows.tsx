@@ -1,12 +1,12 @@
 import type { ShowData } from "../../../types/show";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
-import Button from "../../../components/ui/Button";
-
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import archiveIcon from "../../../assets/icons/archive.png";
 import deleteIcon from "../../../assets/icons/delete.png";
-import SimpleCard from "../../../components/ui/SimpleCard";
 import { useState } from "react";
-import Modal from "../../../components/ui/Modal";
+import SimpleCard from "@/components/SimpleCard";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import Modal from "@/components/Modal";
 
 type Props = {
   archivedShow: ShowData[];
@@ -20,8 +20,8 @@ const ViewArchivedShows = ({ archivedShow, unArchiveShow, deletShow, isPending }
   const [isDelete, setIsDelete] = useState(false);
 
   return (
-    <div className="mt-10 flex flex-col gap-5">
-      <SimpleCard label="Total Shows" value={archivedShow.length} />
+    <div className="flex flex-col gap-5">
+      <SimpleCard className="w-fit" label="Total Shows" value={archivedShow.length} />
       <Table>
         <TableHeader>
           <TableRow>
@@ -52,39 +52,37 @@ const ViewArchivedShows = ({ archivedShow, unArchiveShow, deletShow, isPending }
                 <TableCell>{show.department ? show.department.name : "All Department"}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end items-center gap-2">
-                    <div className="relative group">
-                      <Button
-                        disabled={isPending}
-                        className="!p-0 "
-                        onClick={() => {
-                          unArchiveShow(show);
-                        }}
-                        variant="plain"
-                      >
-                        <img src={archiveIcon} alt="archive" />
-                      </Button>
-
-                      <div className="absolute  -left-28 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
-                        Unarchive Show
-                      </div>
-                    </div>
-                    <div className="relative group">
-                      <Button
-                        disabled={isPending}
-                        className="!p-0"
-                        onClick={() => {
-                          setIsDelete(true);
-                          setSelectedShow(show);
-                        }}
-                        variant="plain"
-                      >
-                        <img src={deleteIcon} alt="delete" />
-                      </Button>
-
-                      <div className="absolute  -left-40 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
-                        Permanently Delete Show
-                      </div>
-                    </div>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Button
+                          disabled={isPending}
+                          variant="ghost"
+                          className="p-0"
+                          onClick={() => {
+                            unArchiveShow(show);
+                          }}
+                        >
+                          <img src={archiveIcon} alt="archive" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Unarchive Show</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Button
+                          disabled={isPending}
+                          variant="ghost"
+                          className="p-0"
+                          onClick={() => {
+                            setIsDelete(true);
+                            setSelectedShow(show);
+                          }}
+                        >
+                          <img src={deleteIcon} alt="delete" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Permanently Delete Show</TooltipContent>
+                    </Tooltip>
                   </div>
                 </TableCell>
               </TableRow>
@@ -94,8 +92,8 @@ const ViewArchivedShows = ({ archivedShow, unArchiveShow, deletShow, isPending }
       </Table>
 
       {isDelete && (
-        <Modal isOpen={isDelete} onClose={() => setIsDelete(false)} title={`Permanently Delete Show`}>
-          <div className="flex gap-5 mt-10">
+        <Modal title="Permanently Delete Show" isOpen={isDelete} onClose={() => setIsDelete(false)}>
+          <div className="flex gap-5 mt-5">
             <div className="w-[200px] flex items-center justify-center">
               <img className="object-cover min-w-[200px] h-full" src={selectedShow?.showCover} alt="Show Image" />
             </div>

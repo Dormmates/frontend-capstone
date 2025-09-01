@@ -1,5 +1,5 @@
+import SeatMap from "@/components/SeatMap.tsx";
 import type { FlattenedSeat } from "../../../../../types/seat.ts";
-import SeatMap from "../../../../../components/ui/SeatMap.tsx";
 
 interface Props {
   seatClick: (seat: FlattenedSeat) => void;

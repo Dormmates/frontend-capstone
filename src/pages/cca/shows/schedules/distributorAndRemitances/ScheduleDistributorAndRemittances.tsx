@@ -1,11 +1,13 @@
 import { Link, useParams } from "react-router-dom";
 import { useGetScheduleDistributors } from "../../../../../_lib/@react-client-query/schedule";
-import SimpleCard from "../../../../../components/ui/SimpleCard";
+
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "../../../../../hooks/useDeabounce";
-import TextInput from "../../../../../components/ui/TextInput";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../components/ui/Table";
-import Button from "../../../../../components/ui/Button";
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../components/ui/table";
+import SimpleCard from "@/components/SimpleCard";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -44,17 +46,15 @@ const ScheduleDistributorAndRemittances = () => {
     return <h1>Error</h1>;
   }
 
-  console.log(distributors);
-
   return (
     <>
       <h1 className="text-2xl">Manage Distributors</h1>
 
-      <SimpleCard label="Total Distributors" value={distributors.length} />
+      <SimpleCard className="w-fit border-l-green" label="Total Distributors" value={distributors.length} />
 
       <div className="flex flex-col gap-10">
         <div className="flex justify-between">
-          <TextInput
+          <Input
             className="max-w-[500px]"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
@@ -95,7 +95,7 @@ const ScheduleDistributorAndRemittances = () => {
                   <TableCell>{dist.totalSold}</TableCell>
                   <TableCell className="text-center">
                     <Link to={`/shows/schedule/${showId}/${scheduleId}/d&r/${dist.userId}`}>
-                      <Button className="!bg-gray !text-black !border-lightGrey border-2">View Distributor</Button>
+                      <Button variant="outline">View Distributor</Button>
                     </Link>
                   </TableCell>
                 </TableRow>

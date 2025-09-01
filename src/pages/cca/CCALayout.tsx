@@ -1,17 +1,18 @@
 import { Outlet } from "react-router-dom";
-import SideBar, { type SideBarItems } from "../../components/navigation/SideBar";
+import { useAuthContext } from "../../context/AuthContext";
 
 import accounts from "../../assets/icons/accounts.png";
 import dashboard from "../../assets/icons/dashboard.png";
 import groups from "../../assets/icons/performing-groups.png";
 import shows from "../../assets/icons/shows.png";
-import Header from "../../components/Header";
-
-import { useAuthContext } from "../../context/AuthContext";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import SideBar from "@/components/SideBar";
+import Header from "@/components/Header";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CCALayout = () => {
   const { user } = useAuthContext();
-  const sideBarItems: SideBarItems[] = [
+  const sideBarItems = [
     {
       icon: dashboard,
       name: "Dashboard",
@@ -42,16 +43,18 @@ const CCALayout = () => {
   ];
 
   return (
-    <div className="min-w-[1200px] ">
-      <Header />
-      <div className="flex h-[calc(100vh-120px)] pt-[120px]">
-        <SideBar items={sideBarItems} />
+    <SidebarProvider>
+      <SideBar items={sideBarItems} />
 
-        <div className="flex-grow overflow-x-auto" style={{ height: "calc(100vh - 120px)" }}>
-          <Outlet />
-        </div>
-      </div>
-    </div>
+      <main className="flex flex-col w-full h-screen">
+        <Header />
+        <ScrollArea className="flex-1">
+          <div className="p-4">
+            <Outlet />
+          </div>
+        </ScrollArea>
+      </main>
+    </SidebarProvider>
   );
 };
 

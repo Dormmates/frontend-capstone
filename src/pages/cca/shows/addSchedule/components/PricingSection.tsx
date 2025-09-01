@@ -1,13 +1,13 @@
 import React from "react";
-import Dropdown from "../../../../../components/ui/Dropdown";
-import TextInput from "../../../../../components/ui/TextInput";
-
 import type { ErrorKeys, ScheduleFormData, SeatPricing } from "../../../../../types/schedule";
+import Dropdown from "@/components/Dropdown";
+import InputField from "@/components/InputField";
+import { Label } from "@/components/ui/label";
 
 const pricingOptions = [
-  { label: "Fixed", value: "fixed" },
-  { label: "Sectioned Pricing", value: "sectionedPricing" },
-] as const satisfies ReadonlyArray<{ label: string; value: SeatPricing }>;
+  { name: "Fixed", value: "fixed" },
+  { name: "Sectioned Pricing", value: "sectionedPricing" },
+];
 
 interface Props {
   scheduleData: ScheduleFormData;
@@ -29,98 +29,94 @@ interface Props {
 const PricingSection = ({ scheduleData, ticketPrice, sectionedPrice, handleSeatPricingType, setTicketPrice, errors, handlePriceChange }: Props) => {
   return (
     <div>
-      <Dropdown<SeatPricing>
-        options={pricingOptions}
-        label="Seat Pricing"
+      <Dropdown
+        includeHeader={true}
+        items={pricingOptions}
+        label="Seat Pricing Type"
         disabled={scheduleData.seatingConfiguration === "freeSeating"}
         value={scheduleData.seatingConfiguration === "freeSeating" ? "fixed" : scheduleData.seatPricing}
-        className="mb-5"
-        onChange={handleSeatPricingType}
+        className="mb-5 max-w-[250px]"
+        onChange={(value) => handleSeatPricingType(value as SeatPricing)}
       />
+      <Label>Seating Price</Label>
 
       {scheduleData.seatPricing === "fixed" || scheduleData.seatingConfiguration === "freeSeating" ? (
-        <div className="border border-lightGrey rounded-md w-fit p-5">
-          <TextInput
+        <div className="border border-lightGrey rounded-md max-w-[250px] p-3 mt-3">
+          <InputField
             placeholder="PHP"
             onChange={setTicketPrice}
             label="Ticket Price"
-            className="max-w-[250px]"
+            className="w-full "
             type="number"
-            isError={!!errors?.ticketPrice}
-            errorMessage={errors?.ticketPrice}
+            error={errors?.ticketPrice}
             value={ticketPrice}
+            min={0}
           />
         </div>
       ) : (
-        <div className="border border-lightGrey rounded-md w-full p-5">
+        <div className="border border-lightGrey rounded-md w-full p-5 mt-3">
           <div className="w-full flex flex-col gap-5">
             <div className="flex gap-5 w-full">
-              <TextInput
+              <InputField
                 onChange={handlePriceChange}
                 label="Orchestra Left"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="orchestraLeft"
                 type="number"
-                isError={!!errors?.orchestraLeft}
-                errorMessage={errors?.orchestraLeft}
+                error={errors?.orchestraLeft}
                 value={sectionedPrice.orchestraLeft}
               />
-              <TextInput
+              <InputField
                 onChange={handlePriceChange}
                 label="Orchestra Middle"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="orchestraMiddle"
                 type="number"
-                isError={!!errors?.orchestraMiddle}
-                errorMessage={errors?.orchestraMiddle}
+                error={errors?.orchestraMiddle}
                 value={sectionedPrice.orchestraMiddle}
               />
-              <TextInput
+              <InputField
                 onChange={handlePriceChange}
                 label="Orchestra Right"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="orchestraRight"
                 type="number"
-                isError={!!errors?.orchestraRight}
-                errorMessage={errors?.orchestraRight}
+                error={errors?.orchestraRight}
                 value={sectionedPrice.orchestraRight}
               />
             </div>
             <div className="w-full flex  gap-5">
-              <TextInput
+              <InputField
                 onChange={handlePriceChange}
                 label="Balcony Left"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="balconyLeft"
                 type="number"
-                isError={!!errors?.balconyLeft}
-                errorMessage={errors?.balconyLeft}
+                error={errors?.balconyLeft}
                 value={sectionedPrice.balconyLeft}
               />
-              <TextInput
+              <InputField
                 onChange={handlePriceChange}
                 label="Balcony Middle"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="balconyMiddle"
                 type="number"
-                isError={!!errors?.balconyMiddle}
-                errorMessage={errors?.balconyMiddle}
+                error={errors?.balconyMiddle}
                 value={sectionedPrice.balconyMiddle}
               />
-              <TextInput
+              <InputField
                 onChange={handlePriceChange}
                 label="Balcony Right"
                 placeholder="PHP"
                 className="w-full min-w-[300px]"
                 name="balconyRight"
                 type="number"
-                isError={!!errors?.balconyRight}
-                errorMessage={errors?.balconyRight}
+                error={errors?.balconyRight}
                 value={sectionedPrice.balconyRight}
               />
             </div>

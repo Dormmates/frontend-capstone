@@ -2,11 +2,14 @@ import { useMemo, useState } from "react";
 import type { RemittanceHistory } from "../../../types/ticket";
 import { useOutletContext } from "react-router-dom";
 import RemittanceSummary from "../../cca/shows/schedules/distributorAndRemitances/remitTicket/RemittanceSummary";
-import Modal from "../../../components/ui/Modal";
-import { Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/Table";
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table";
 import { formatToReadableDate, formatToReadableTime } from "../../../utils/date";
 import { formatCurrency } from "../../../utils";
-import Button from "../../../components/ui/Button";
+import { Button } from "@/components/ui/button";
+
+import Pagination from "@/components/Pagination";
+import Modal from "@/components/Modal";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -74,7 +77,7 @@ const DistributorCompleteRemittanceHistory = () => {
                   )}
                 </TableCell>
                 <TableCell>
-                  <Button onClick={() => setSelectedHistory(log)} className="!bg-gray !text-black !border-lightGrey border-2">
+                  <Button onClick={() => setSelectedHistory(log)} variant="outline">
                     View Summary
                   </Button>
                 </TableCell>
@@ -83,18 +86,17 @@ const DistributorCompleteRemittanceHistory = () => {
           )}
         </TableBody>
       </Table>
-      {remittanceHistory.length !== 0 && (
-        <div className="mt-5">
-          <Pagination
-            currentPage={page}
-            totalPage={Math.ceil(remittanceHistory.length / ITEMS_PER_PAGE)}
-            onPageChange={(newPage) => setPage(newPage)}
-          />
-        </div>
-      )}
+
+      <div className="mt-5">
+        <Pagination
+          currentPage={page}
+          totalPage={Math.ceil(remittanceHistory.length / ITEMS_PER_PAGE)}
+          onPageChange={(newPage) => setPage(newPage)}
+        />
+      </div>
 
       {selectedHistory && (
-        <Modal isOpen={!!selectedHistory} onClose={() => setSelectedHistory(null)} title="Remittance Summary">
+        <Modal title="Remittance Summary" isOpen={!!selectedHistory} onClose={() => setSelectedHistory(null)}>
           <RemittanceSummary
             seatingType={selectedHistory.seatingType}
             remarksValue={selectedHistory.remarks}
