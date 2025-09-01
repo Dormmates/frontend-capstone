@@ -1,6 +1,6 @@
 import { ContentWrapper } from "../../../../components/layout/Wrapper";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import archiveIcon from "../../../../assets/icons/archive.png";
 import unassign from "../../../../assets/icons/unassign.png";
