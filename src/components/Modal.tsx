@@ -1,6 +1,6 @@
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogOverlay } from "./ui/dialog";
-import { ScrollArea } from "./ui/scroll-area";
+import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogOverlay } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ModalProps {
   children: React.ReactNode;

@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import InputField from "./InputField";
 import PasswordField from "./PasswordField";
 import { ScrollArea } from "./ui/scroll-area";
+import { Button } from "./ui/button";
 
 type Props = {
   openAccount: boolean;

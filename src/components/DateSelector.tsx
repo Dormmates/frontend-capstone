@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Label } from "./ui/label";
-import { Popover, PopoverTrigger } from "./ui/popover";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { PopoverContent } from "@radix-ui/react-popover";
-import { Calendar } from "./ui/calendar";
+import { Calendar } from "@/components/ui/calendar";
 
 interface DateSelectorProps {
   date: Date | null;

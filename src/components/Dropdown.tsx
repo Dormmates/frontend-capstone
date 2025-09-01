@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "./ui/label";
+import { Label } from "@/components/ui/label";
 
 interface Props {
   items: {

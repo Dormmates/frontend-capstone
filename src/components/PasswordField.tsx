@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Label } from "./ui/label";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;

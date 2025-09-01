@@ -1,4 +1,4 @@
-import { Label } from "./ui/label";
+import { Label } from "@/components/ui/label";
 
 export interface LongCardItem {
   label: string;
