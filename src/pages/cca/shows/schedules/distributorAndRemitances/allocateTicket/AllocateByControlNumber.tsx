@@ -1,6 +1,6 @@
 import ControlNumberInputTutorial from "../../../../../../components/ControlNumberInputTutorial";
 
-import type { Ticket } from "../../../../../../types/ticket";
+import type { Ticket } from "@/types/ticket.ts";
 import InputField from "@/components/InputField";
 
 type Props = {

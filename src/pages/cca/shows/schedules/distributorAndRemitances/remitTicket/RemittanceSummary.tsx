@@ -2,10 +2,10 @@ import { useState } from "react";
 
 import LongCard from "../../../../../../components/LongCard";
 import LongCardItem from "../../../../../../components/LongCardItem";
-import { formatCurrency } from "../../../../../../utils";
+import { formatCurrency } from "@/utils";
 
-import type { SeatSection } from "../../../../../../types/seat";
-import type { SeatingConfiguration } from "../../../../../../types/schedule";
+import type { SeatSection } from "@/types/seat.ts";
+import type { SeatingConfiguration } from "@/types/schedule.ts";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";

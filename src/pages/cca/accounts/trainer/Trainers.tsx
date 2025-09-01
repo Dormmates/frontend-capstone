@@ -1,20 +1,20 @@
-import { ContentWrapper } from "../../../../components/layout/Wrapper";
+import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import archiveIcon from "../../../../assets/icons/archive.png";
 import unassign from "../../../../assets/icons/unassign.png";
 
-import { useEditTrainer, useGetTrainers, useNewTrainer } from "../../../../_lib/@react-client-query/accounts";
+import { useEditTrainer, useGetTrainers, useNewTrainer } from "@/_lib/@react-client-query/accounts.ts";
 
 import { useEffect, useMemo, useState } from "react";
-import { useDebounce } from "../../../../hooks/useDeabounce";
+import { useDebounce } from "@/hooks/useDeabounce.ts";
 
-import { useGetDepartments, useRemoveDepartmentTrainerByTrainerId } from "../../../../_lib/@react-client-query/department";
+import { useGetDepartments, useRemoveDepartmentTrainerByTrainerId } from "@/_lib/@react-client-query/department.ts";
 
 import ToastNotification from "../../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
-import type { Trainer } from "../../../../types/user";
+import type { Trainer } from "@/types/user.ts";
 
 import TrainerForm from "./TrainerForm";
 import SimpleCard from "@/components/SimpleCard";

@@ -1,23 +1,23 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetShow } from "../../../../_lib/@react-client-query/show";
+import { useGetShow } from "@/_lib/@react-client-query/show.ts";
 import React, { useState } from "react";
-import { ContentWrapper } from "../../../../components/layout/Wrapper";
+import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 
-import type { FlattenedSeat } from "../../../../types/seat";
-import type { ErrorKeys, ScheduleFormData, ScheduleFormErrors, SeatPricing } from "../../../../types/schedule";
+import type { FlattenedSeat } from "@/types/seat.ts";
+import type { ErrorKeys, ScheduleFormData, ScheduleFormErrors, SeatPricing } from "@/types/schedule.ts";
 import ScheduleDateSelection from "./components/ScheduleDateSelection";
 import TicketTypeSelection from "./components/TicketTypeSelection";
 import SeatingConfigurationSelector from "./components/SeatingConfigurationSelector";
 import PricingSection from "./components/PricingSection";
-import { parseControlNumbers, validateControlInput } from "../../../../utils/controlNumber";
+import { parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 import TicketDetailsSection from "./components/TicketDetailsSection";
 
 import { seatMap } from "../../../../../seatdata";
-import { flattenSeatMap, formatSectionName } from "../../../../utils/seatmap";
+import { flattenSeatMap, formatSectionName } from "@/utils/seatmap.ts";
 
 import SeatMapSchedule from "./components/SeatMapSchedule";
 import ToastNotification from "../../../../utils/toastNotification";
-import { useAddSchedule, type AddSchedulePayload } from "../../../../_lib/@react-client-query/schedule";
+import { useAddSchedule, type AddSchedulePayload } from "@/_lib/@react-client-query/schedule.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/BreadCrumbs";
@@ -252,8 +252,7 @@ const AddSchedule = () => {
         }
       }
 
-      if (scheduleData.seatingConfiguration === "controlledSeating") {
-      }
+
     }
 
     setErrors(newErrors);

@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { ContentWrapper } from "../../../components/layout/Wrapper";
+import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 
-import { useAddDepartment, useDeleteDepartment, useEditDepartment, useGetDepartments } from "../../../_lib/@react-client-query/department";
+import { useAddDepartment, useDeleteDepartment, useEditDepartment, useGetDepartments } from "@/_lib/@react-client-query/department.ts";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 
-import type { Department } from "../../../types/department";
+import type { Department } from "@/types/department.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import ToastNotification from "../../../utils/toastNotification";
 
 import deleteIcon from "../../../assets/icons/delete.png";
 
-import { getFileId } from "../../../utils";
+import { getFileId } from "@/utils";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

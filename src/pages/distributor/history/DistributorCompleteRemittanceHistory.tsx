@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
-import type { RemittanceHistory } from "../../../types/ticket";
+import type { RemittanceHistory } from "@/types/ticket.ts";
 import { useOutletContext } from "react-router-dom";
 import RemittanceSummary from "../../cca/shows/schedules/distributorAndRemitances/remitTicket/RemittanceSummary";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table";
-import { formatToReadableDate, formatToReadableTime } from "../../../utils/date";
-import { formatCurrency } from "../../../utils";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
+import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
+import { formatCurrency } from "@/utils";
 import { Button } from "@/components/ui/button";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal";

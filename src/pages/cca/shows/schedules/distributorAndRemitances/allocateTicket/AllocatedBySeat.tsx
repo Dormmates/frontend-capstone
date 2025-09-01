@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import { useGetScheduleSeatMap } from "../../../../../../_lib/@react-client-query/schedule";
-import type { FlattenedSeat } from "../../../../../../types/seat";
+import { useGetScheduleSeatMap } from "@/_lib/@react-client-query/schedule.ts";
+import type { FlattenedSeat } from "@/types/seat.ts";
 import { useMemo } from "react";
 import SeatMap from "@/components/SeatMap";
 

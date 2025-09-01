@@ -1,4 +1,4 @@
-import type { ShowData } from "../../../types/show";
+import type { ShowData } from "@/types/show.ts";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import archiveIcon from "../../../assets/icons/archive.png";
 import deleteIcon from "../../../assets/icons/delete.png";

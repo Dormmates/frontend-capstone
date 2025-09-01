@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Pie } from "react-chartjs-2";
-import { useGetScheduleSummary } from "../../../../../_lib/@react-client-query/schedule";
+import { useGetScheduleSummary } from "@/_lib/@react-client-query/schedule.ts";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";

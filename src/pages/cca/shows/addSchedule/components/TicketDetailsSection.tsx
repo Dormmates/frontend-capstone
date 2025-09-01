@@ -1,5 +1,5 @@
 import ControlNumberInputTutorial from "../../../../../components/ControlNumberInputTutorial";
-import type { ErrorKeys, ScheduleFormData } from "../../../../../types/schedule";
+import type { ErrorKeys, ScheduleFormData } from "@/types/schedule.ts";
 import InputField from "@/components/InputField";
 
 interface Props {

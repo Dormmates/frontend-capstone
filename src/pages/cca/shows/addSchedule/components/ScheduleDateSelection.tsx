@@ -1,4 +1,4 @@
-import type { ScheduleFormData } from "../../../../../types/schedule";
+import type { ScheduleFormData } from "@/types/schedule.ts";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
 import DateSelector from "@/components/DateSelector";

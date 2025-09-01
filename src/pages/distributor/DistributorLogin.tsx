@@ -1,7 +1,7 @@
 import { PageWrapper, ContentWrapper } from "../../components/layout/Wrapper";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useLogin } from "../../_lib/@react-client-query/auth";
+import { useLogin } from "@/_lib/@react-client-query/auth.ts";
 import { useAuthContext } from "../../context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";

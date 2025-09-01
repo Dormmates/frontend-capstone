@@ -1,10 +1,9 @@
 import { PageWrapper, ContentWrapper } from "../../components/layout/Wrapper";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useLogin } from "../../_lib/@react-client-query/auth";
+import { useLogin } from "@/_lib/@react-client-query/auth.ts";
 import { useAuthContext } from "../../context/AuthContext";
 import ToastNotification from "../../utils/toastNotification";
-
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
 import PasswordField from "@/components/PasswordField";

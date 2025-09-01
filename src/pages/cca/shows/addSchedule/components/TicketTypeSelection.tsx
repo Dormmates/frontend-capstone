@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { ScheduleFormData, TicketType } from "../../../../../types/schedule";
+import type { ScheduleFormData, TicketType } from "@/types/schedule.ts";
 import Dropdown from "@/components/Dropdown";
 
 const ticketTypes = [

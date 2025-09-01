@@ -1,5 +1,5 @@
 import React from "react";
-import type { ErrorKeys, ScheduleFormData, SeatPricing } from "../../../../../types/schedule";
+import type { ErrorKeys, ScheduleFormData, SeatPricing } from "@/types/schedule.ts";
 import Dropdown from "@/components/Dropdown";
 import InputField from "@/components/InputField";
 import { Label } from "@/components/ui/label";

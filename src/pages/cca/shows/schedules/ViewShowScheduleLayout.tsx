@@ -1,9 +1,9 @@
 import { NavLink, Outlet, useParams } from "react-router-dom";
 
-import { useGetShow } from "../../../../_lib/@react-client-query/show";
-import { ContentWrapper } from "../../../../components/layout/Wrapper";
-import { useGetScheduleInformation } from "../../../../_lib/@react-client-query/schedule";
-import { formatToReadableDate, formatToReadableTime } from "../../../../utils/date";
+import { useGetShow } from "@/_lib/@react-client-query/show.ts";
+import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
+import { useGetScheduleInformation } from "@/_lib/@react-client-query/schedule.ts";
+import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import ShowCard from "@/components/ShowCard";
 

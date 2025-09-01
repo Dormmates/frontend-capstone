@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
 
-import { useAuthContext } from "../../../context/AuthContext";
-import { useGetDepartments } from "../../../_lib/@react-client-query/department";
-import { useGetGenres } from "../../../_lib/@react-client-query/genre";
+import { useAuthContext } from "@/context/AuthContext.tsx";
+import { useGetDepartments } from "@/_lib/@react-client-query/department.ts";
+import { useGetGenres } from "@/_lib/@react-client-query/genre.ts";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";

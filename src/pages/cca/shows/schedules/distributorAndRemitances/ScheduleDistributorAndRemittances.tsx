@@ -1,10 +1,10 @@
 import { Link, useParams } from "react-router-dom";
-import { useGetScheduleDistributors } from "../../../../../_lib/@react-client-query/schedule";
+import { useGetScheduleDistributors } from "@/_lib/@react-client-query/schedule.ts";
 
 import { useEffect, useMemo, useState } from "react";
-import { useDebounce } from "../../../../../hooks/useDeabounce";
+import { useDebounce } from "@/hooks/useDeabounce.ts";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import SimpleCard from "@/components/SimpleCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

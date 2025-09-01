@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import InputField from "./InputField";
 import PasswordField from "./PasswordField";
-import { ScrollArea } from "./ui/scroll-area";
-import { Button } from "./ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   openAccount: boolean;
@@ -56,7 +56,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
           <Card className="mt-5">
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
-              <CardDescription>Edit your personal informations</CardDescription>
+              <CardDescription>Edit your personal information</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col gap-5 ">

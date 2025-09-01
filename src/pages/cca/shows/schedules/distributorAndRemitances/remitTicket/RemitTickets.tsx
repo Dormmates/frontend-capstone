@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
-import type { AllocatedTicketToDistributor } from "../../../../../../types/ticket";
+import type { AllocatedTicketToDistributor } from "@/types/ticket.ts";
 
 import { useOutletContext, useParams } from "react-router-dom";
-import type { Schedule } from "../../../../../../types/schedule";
-import { compressControlNumbers, parseControlNumbers, validateControlInput } from "../../../../../../utils/controlNumber";
+import type { Schedule } from "@/types/schedule.ts";
+import { compressControlNumbers, parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 
 import ToastNotification from "../../../../../../utils/toastNotification";
-import { useRemitTicketSale } from "../../../../../../_lib/@react-client-query/schedule";
-import { useAuthContext } from "../../../../../../context/AuthContext";
+import { useRemitTicketSale } from "@/_lib/@react-client-query/schedule.ts";
+import { useAuthContext } from "@/context/AuthContext.tsx";
 
 import RemittanceSummary from "./RemittanceSummary";
 import { useQueryClient } from "@tanstack/react-query";

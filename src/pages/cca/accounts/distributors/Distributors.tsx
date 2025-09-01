@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { ContentWrapper } from "../../../../components/layout/Wrapper";
-import { useDebounce } from "../../../../hooks/useDeabounce";
-import { useEditDistributor, useGetDistributors, useGetDistributorTypes, useNewDistributor } from "../../../../_lib/@react-client-query/accounts";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../components/ui/table";
+import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
+import { useDebounce } from "@/hooks/useDeabounce.ts";
+import { useEditDistributor, useGetDistributors, useGetDistributorTypes, useNewDistributor } from "@/_lib/@react-client-query/accounts.ts";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import archiveIcon from "../../../../assets/icons/archive.png";
-import type { Distributor } from "../../../../types/user";
+import type { Distributor } from "@/types/user.ts";
 import DistributorForm from "./DistributorForm";
-import { useGetDepartments } from "../../../../_lib/@react-client-query/department";
+import { useGetDepartments } from "@/_lib/@react-client-query/department.ts";
 import ToastNotification from "../../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import SimpleCard from "@/components/SimpleCard";

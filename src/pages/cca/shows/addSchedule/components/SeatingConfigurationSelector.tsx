@@ -1,5 +1,5 @@
 import React from "react";
-import type { ScheduleFormData, SeatingConfiguration } from "../../../../../types/schedule";
+import type { ScheduleFormData, SeatingConfiguration } from "@/types/schedule.ts";
 import Dropdown from "@/components/Dropdown";
 
 const seatOptions = [

@@ -1,15 +1,15 @@
 import { Link, useParams } from "react-router-dom";
-import { useGetShow } from "../../../_lib/@react-client-query/show";
-import { ContentWrapper } from "../../../components/layout/Wrapper";
-import { useCloseSchedule, useDeleteSchedule, useGetShowSchedules, useOpenSchedule, useReschedule } from "../../../_lib/@react-client-query/schedule";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table";
-import { formatToReadableDate, formatToReadableTime } from "../../../utils/date";
+import { useGetShow } from "@/_lib/@react-client-query/show.ts";
+import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
+import { useCloseSchedule, useDeleteSchedule, useGetShowSchedules, useOpenSchedule, useReschedule } from "@/_lib/@react-client-query/schedule.ts";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
+import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import deleteIcon from "../../../assets/icons/delete.png";
-import { useShowScheduleContext } from "../../../context/ShowSchedulesContext";
+import { useShowScheduleContext } from "@/context/ShowSchedulesContext.tsx";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import ToastNotification from "../../../utils/toastNotification";
-import type { Schedule } from "../../../types/schedule";
+import type { Schedule } from "@/types/schedule.ts";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

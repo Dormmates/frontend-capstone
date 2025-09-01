@@ -1,10 +1,10 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { useGetAllDistributorAllocationHistory, useGetAllDistributorRemittanceHistory } from "../../../_lib/@react-client-query/schedule";
-import { useAuthContext } from "../../../context/AuthContext";
-import { ContentWrapper } from "../../../components/layout/Wrapper";
+import { useGetAllDistributorAllocationHistory, useGetAllDistributorRemittanceHistory } from "@/_lib/@react-client-query/schedule.ts";
+import { useAuthContext } from "@/context/AuthContext.tsx";
+import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 
 import { useMemo } from "react";
-import { formatCurrency } from "../../../utils";
+import { formatCurrency } from "@/utils";
 import SimpleCard from "@/components/SimpleCard";
 
 const links = [

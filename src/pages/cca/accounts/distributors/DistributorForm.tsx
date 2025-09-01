@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { isValidEmail } from "../../../../utils";
+import { isValidEmail } from "@/utils";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
 import Dropdown from "@/components/Dropdown";

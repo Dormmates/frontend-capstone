@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import type { AllocationHistory } from "../../../types/ticket";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table";
-import { formatToReadableDate, formatToReadableTime } from "../../../utils/date";
+import type { AllocationHistory } from "@/types/ticket.ts";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
+import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 
 import LongCard from "../../../components/LongCard";
 import LongCardItem from "../../../components/LongCardItem";
 
-import { compressControlNumbers } from "../../../utils/controlNumber";
+import { compressControlNumbers } from "@/utils/controlNumber.ts";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
 import Modal from "@/components/Modal";

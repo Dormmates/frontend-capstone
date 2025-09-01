@@ -1,8 +1,8 @@
 import { useOutletContext, useParams } from "react-router-dom";
-import type { Schedule } from "../../../../../types/schedule";
+import type { Schedule } from "@/types/schedule.ts";
 import NotFound from "../../../../NotFound";
 
-import { useGetScheduleSeatMap } from "../../../../../_lib/@react-client-query/schedule";
+import { useGetScheduleSeatMap } from "@/_lib/@react-client-query/schedule.ts";
 import { useMemo } from "react";
 import SeatMap from "@/components/SeatMap";
 
@@ -10,8 +10,6 @@ const ScheduleSeats = () => {
   const { schedule } = useOutletContext<{ schedule: Schedule }>();
   const { scheduleId } = useParams();
   const { data, isLoading, isError } = useGetScheduleSeatMap(scheduleId as string);
-
-  if (schedule.seatingType === "freeSeating") return <NotFound />;
 
   const seatSummary = useMemo(() => {
     if (!data)
@@ -37,6 +35,8 @@ const ScheduleSeats = () => {
       { vip: 0, complimentary: 0, sold: 0, reserved: 0, available: 0, notAvailable: 0 }
     );
   }, [data]);
+
+  if (schedule.seatingType === "freeSeating") return <NotFound />;
 
   if (isLoading) {
     return <h1>Loading...</h1>;

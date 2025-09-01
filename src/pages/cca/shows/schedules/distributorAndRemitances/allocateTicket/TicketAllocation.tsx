@@ -1,31 +1,28 @@
 import { useMemo, useState } from "react";
-import { useGetShow } from "../../../../../../_lib/@react-client-query/show";
+import { useGetShow } from "@/_lib/@react-client-query/show.ts";
 import { useParams } from "react-router-dom";
-import { ContentWrapper } from "../../../../../../components/layout/Wrapper";
+import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 
 import LongCard from "../../../../../../components/LongCard";
 import LongCardItem from "../../../../../../components/LongCardItem";
-import { formatToReadableDate, formatToReadableTime } from "../../../../../../utils/date";
+import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import {
   useAllocateTicketByControlNumber,
   useGetScheduleInformation,
   useGetScheduleTickets,
-} from "../../../../../../_lib/@react-client-query/schedule";
-import type { Distributor } from "../../../../../../types/user";
-
+} from "@/_lib/@react-client-query/schedule.ts";
+import type { Distributor } from "@/types/user.ts";
 import AllocateByControlNumber from "./AllocateByControlNumber";
 import AllocatedBySeat from "./AllocatedBySeat";
-
-import type { ShowData } from "../../../../../../types/show";
-import { useGetDistributors } from "../../../../../../_lib/@react-client-query/accounts";
-import { useDebounce } from "../../../../../../hooks/useDeabounce";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../components/ui/table";
-
+import type { ShowData } from "@/types/show.ts";
+import { useGetDistributors } from "@/_lib/@react-client-query/accounts.ts";
+import { useDebounce } from "@/hooks/useDeabounce.ts";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import ToastNotification from "../../../../../../utils/toastNotification";
-import { useAuthContext } from "../../../../../../context/AuthContext";
-import { parseControlNumbers, validateControlInput } from "../../../../../../utils/controlNumber";
+import { useAuthContext } from "@/context/AuthContext.tsx";
+import { parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 import { useQueryClient } from "@tanstack/react-query";
-import type { FlattenedSeat } from "../../../../../../types/seat";
+import type { FlattenedSeat } from "@/types/seat.ts";
 import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import { Label } from "@/components/ui/label";
@@ -92,7 +89,7 @@ const TicketAllocation = () => {
     } else if (allocationMethod == "seat") {
       if (!choosenSeats || choosenSeats.length == 0) {
         ToastNotification.error("Please choose atleast one seat");
-        newErrors.seatError == "Please choose atleast one seat";
+        newErrors.seatError = "Please choose atleast one seat";
         isValid = false;
       }
     }

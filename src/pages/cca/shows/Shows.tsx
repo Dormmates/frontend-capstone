@@ -1,16 +1,16 @@
-import { ContentWrapper } from "../../../components/layout/Wrapper";
+import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 
 import { Link } from "react-router-dom";
-import { useArchiveShow, useDeleteShow, useGetShows, useUnArchiveShow, useUpdateShow } from "../../../_lib/@react-client-query/show";
+import { useArchiveShow, useDeleteShow, useGetShows, useUnArchiveShow, useUpdateShow } from "@/_lib/@react-client-query/show.ts";
 import { useMemo, useState, useEffect } from "react";
 
-import { useGetDepartments } from "../../../_lib/@react-client-query/department";
-import type { Department } from "../../../types/department";
-import { useAuthContext } from "../../../context/AuthContext";
+import { useGetDepartments } from "@/_lib/@react-client-query/department.ts";
+import type { Department } from "@/types/department.ts";
+import { useAuthContext } from "@/context/AuthContext.tsx";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useDebounce } from "../../../hooks/useDeabounce";
+import { useDebounce } from "@/hooks/useDeabounce.ts";
 import archiveIcon from "../../../assets/icons/archive.png";
-import type { ShowData } from "../../../types/show";
+import type { ShowData } from "@/types/show.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import ToastNotification from "../../../utils/toastNotification";
 import ViewArchivedShows from "./ViewArchivedShows";

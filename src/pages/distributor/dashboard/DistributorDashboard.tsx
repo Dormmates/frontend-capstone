@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
-import { useGetShowsAndDistributorTickets } from "../../../_lib/@react-client-query/show";
-import { ContentWrapper } from "../../../components/layout/Wrapper";
+import { useGetShowsAndDistributorTickets } from "@/_lib/@react-client-query/show.ts";
+import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 
-import { useAuthContext } from "../../../context/AuthContext";
+import { useAuthContext } from "@/context/AuthContext.tsx";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { formatToReadableDate, formatToReadableTime } from "../../../utils/date";
-import type { DistributorScheduleTickets } from "../../../types/ticket";
+import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
+import type { DistributorScheduleTickets } from "@/types/ticket.ts";
 
 import ViewAllocatedTickets from "./ViewAllocatedTickets";
-import { formatCurrency } from "../../../utils";
+import { formatCurrency } from "@/utils";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/Modal";
