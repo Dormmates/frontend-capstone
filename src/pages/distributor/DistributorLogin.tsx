@@ -1,48 +1,24 @@
 import { PageWrapper, ContentWrapper } from "../../components/layout/Wrapper";
-import logo from "../../assets/images/cca-logo.png";
-import background from "../../assets/images/background-login.png";
-
 import { useState } from "react";
-
 import { Link } from "react-router-dom";
-
 import { useLogin } from "../../_lib/@react-client-query/auth";
 import { useAuthContext } from "../../context/AuthContext";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import InputField from "@/components/InputField";
+import PasswordField from "@/components/PasswordField";
 
-const distributorOptions = [
-  { label: "CCA Member", value: "1" },
-  { label: "Faculty", value: "2" },
-  { label: "Visitor", value: "3" },
-];
-
-const groups = [
-  { label: "Group 1", value: "1" },
-  { label: "Group 2", value: "2" },
-  { label: "Group 3", value: "3" },
-];
+import { isValidEmail } from "@/utils";
 
 const DistributorLogin = () => {
   const login = useLogin();
   const { setUser } = useAuthContext();
-  const [openModal, setOpenModal] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
   const [formContent, setFormContent] = useState({
     email: "",
     password: "",
-  });
-
-  const [newDistributor, setNewDistributor] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    contactNumber: "",
-    distributorType: "",
-    group: "",
-    password: "",
-    confirmPassword: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,13 +26,21 @@ const DistributorLogin = () => {
     setFormContent((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleNewAccountInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewDistributor((prev) => ({ ...prev, [name]: value }));
+  const validate = () => {
+    const newErrors: typeof errors = {};
+    if (!formContent.email) newErrors.email = "Email is required";
+    else if (!isValidEmail(formContent.email)) newErrors.email = "Invalid email format";
+
+    if (!formContent.password) newErrors.password = "Password is required";
+    else if (formContent.password.length < 6) newErrors.password = "Password too short";
+
+    setErrors(newErrors);
+    setLoginError("");
+    return Object.keys(newErrors).length === 0;
   };
 
-  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const submitForm = () => {
+    if (!validate()) return;
 
     login.mutate(
       { ...formContent, expectedRole: "distributor" },
@@ -73,38 +57,84 @@ const DistributorLogin = () => {
 
   return (
     <PageWrapper className="min-h-screen flex items-center justify-center w-full">
-      <img src={background} alt="" className="fixed inset-0 w-full h-full object-cover -z-10" />
-      <ContentWrapper className="w-full">
-        <div className="flex flex-col justify-center gap-10 items-center mx-auto w-full lg:max-w-[50%]">
-          <div>
-            <img src={logo} alt="CCA Logo" />
-          </div>
-          <h1 className="font-bold text-4xl">Distributor Login</h1>
-          <h2 className="text-3xl text-center">Welcome Distributor</h2>
-          <form className="w-full flex flex-col gap-5" onSubmit={submitForm}>
-            <Input
-              // label="Email"
-              name="email"
-              value={formContent.email}
-              type="email"
-              onChange={handleInputChange}
-              placeholder="(eg. cca@slu.edu.ph)"
-            />
-            <Input name="password" value={formContent.password} onChange={handleInputChange} placeholder="Password" />
-            <Button className="w-full" type="submit">
+      <ContentWrapper className="w-full flex justify-center">
+        <Card className="w-full max-w-2xl">
+          <CardHeader>
+            <CardTitle className="text-xl">Welcome Distributor</CardTitle>
+            <CardDescription>You are logging in as Distributor</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form className="w-full flex flex-col gap-5">
+              <InputField
+                error={errors.email}
+                label="Email"
+                name="email"
+                value={formContent.email}
+                type="email"
+                onChange={handleInputChange}
+                placeholder="(eg. cca@slu.edu.ph)"
+              />
+              <PasswordField
+                error={errors.password}
+                label="Password"
+                name="password"
+                value={formContent.password}
+                onChange={handleInputChange}
+                placeholder="Password"
+              />
+            </form>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-3">
+            <Button className="w-full" onClick={submitForm}>
               Login
             </Button>
-          </form>
-          <Button className="w-full -mt-8 font-normal" variant="outline" type="button" onClick={() => setOpenModal(true)}>
-            Request Distributor Account
-          </Button>
-          {loginError && <h1 className="mx-auto text-red">{loginError}</h1>}
-          <Link className="mx-auto hover:opacity-50 duration-500 ease-linear " to="/">
-            I'm a CCA Staff : <span className="text-blue-800 underline font-bold">Login as CCA Trainer or Head</span>
-          </Link>
-        </div>
+            {loginError && <h1 className="mx-auto text-red">{loginError}</h1>}
+            <Button className="w-full" variant="outline">
+              <Link className="mx-auto hover:opacity-50 duration-500 ease-linear " to="/">
+                Login as CCA Staff
+              </Link>
+            </Button>
+          </CardFooter>
+        </Card>
+      </ContentWrapper>
+    </PageWrapper>
+  );
+};
 
-        {/* <Modal className="w-[95%] lg:w-[65%]" isOpen={openModal} onClose={() => setOpenModal(false)} title="Request Distributor Account">
+export default DistributorLogin;
+
+// const distributorOptions = [
+//   { label: "CCA Member", value: "1" },
+//   { label: "Faculty", value: "2" },
+//   { label: "Visitor", value: "3" },
+// ];
+
+// const groups = [
+//   { label: "Group 1", value: "1" },
+//   { label: "Group 2", value: "2" },
+//   { label: "Group 3", value: "3" },
+// ];
+
+// const [openModal, setOpenModal] = useState(false);
+
+// const [newDistributor, setNewDistributor] = useState({
+//   firstName: "",
+//   lastName: "",
+//   email: "",
+//   contactNumber: "",
+//   distributorType: "",
+//   group: "",
+//   password: "",
+//   confirmPassword: "",
+// });
+
+// const handleNewAccountInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//   const { name, value } = e.target;
+//   setNewDistributor((prev) => ({ ...prev, [name]: value }));
+// };
+
+{
+  /* <Modal className="w-[95%] lg:w-[65%]" isOpen={openModal} onClose={() => setOpenModal(false)} title="Request Distributor Account">
           <form onSubmit={submitForm}>
             <ContentWrapper className="border border-lightGrey  rounded-md mt-5">
               <h1 className="text-xl mb-5">Basic Information</h1>
@@ -212,10 +242,5 @@ const DistributorLogin = () => {
               </Button>
             </div>
           </form>
-        </Modal> */}
-      </ContentWrapper>
-    </PageWrapper>
-  );
-};
-
-export default DistributorLogin;
+        </Modal> */
+}

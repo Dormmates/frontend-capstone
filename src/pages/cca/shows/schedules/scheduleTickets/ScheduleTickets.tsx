@@ -10,7 +10,6 @@ import type { Schedule } from "../../../../../types/schedule";
 
 import { formatTicket } from "../../../../../utils/controlNumber";
 import SimpleCard from "@/components/SimpleCard";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Dropdown from "@/components/Dropdown";
 import Pagination from "@/components/Pagination";
@@ -22,6 +21,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import InputField from "@/components/InputField";
 
 const statusOptions = [
   { name: "All Status", value: "all" },
@@ -52,12 +52,11 @@ const ScheduleTickets = () => {
 
     return tickets.filter((ticket) => {
       const matchStatus =
-        filterValues.status === "all" || // show all
+        filterValues.status === "all" ||
         (filterValues.status === "sold" && ticket.isRemitted) ||
         (filterValues.status === "allocated" && ticket.status === "allocated") ||
         (filterValues.status === "not_allocated" && ticket.status !== "allocated");
 
-      // Section filter
       const matchSection =
         filterValues.section === "all" ||
         (filterValues.section === "complimentary" && ticket.isComplimentary) ||
@@ -136,7 +135,7 @@ const ScheduleTickets = () => {
 
       <div>
         <div className="flex gap-5 mt-10 w-full">
-          <Input
+          <InputField
             className="max-w-[400px]"
             placeholder="Search Tickets by Control Number"
             value={filterValues.controlNumber}
@@ -201,7 +200,7 @@ const ScheduleTickets = () => {
                     <div className="flex gap-2 justify-end  items-center ">
                       <Button>View Ticket</Button>
                       <DropdownMenu>
-                        <DropdownMenuTrigger>
+                        <DropdownMenuTrigger asChild>
                           <Button variant="outline">Ticket Options</Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>

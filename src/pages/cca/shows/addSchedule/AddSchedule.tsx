@@ -19,9 +19,10 @@ import SeatMapSchedule from "./components/SeatMapSchedule";
 import ToastNotification from "../../../../utils/toastNotification";
 import { useAddSchedule, type AddSchedulePayload } from "../../../../_lib/@react-client-query/schedule";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/input";
-import { Dialog } from "@radix-ui/react-dialog";
+import { Button } from "@/components/ui/button";
+import Breadcrumbs from "@/components/BreadCrumbs";
+import InputField from "@/components/InputField";
+import Modal from "@/components/Modal";
 
 type ControlKey = "orchestraControlNumber" | "balconyControlNumber" | "complimentaryControlNumber";
 
@@ -341,7 +342,11 @@ const AddSchedule = () => {
   };
 
   const validateControlNumbers = (): boolean => {
-    const controlKeys: ControlKey[] = ["orchestraControlNumber", "balconyControlNumber", "complimentaryControlNumber"];
+    const controlKeys: ControlKey[] = ["orchestraControlNumber", "balconyControlNumber"];
+
+    if (scheduleData.totalComplimentary && scheduleData.totalComplimentary > 0) {
+      controlKeys.push("complimentaryControlNumber");
+    }
 
     let isValid = true;
     const newErrors: typeof errors = {};
@@ -426,6 +431,7 @@ const AddSchedule = () => {
 
   const validateTicketInput = () => {
     const section = selectedSeats?.[0]?.section;
+    const isSeat = seatToggle;
     const isRow = rowToggle;
     const isSection = sectionToggle;
     const controlStr = ticketInput.controlNumber.trim();
@@ -442,6 +448,7 @@ const AddSchedule = () => {
     }
 
     let controlNums: number[];
+
     try {
       controlNums = parseControlNumbers(controlStr);
     } catch (err: unknown) {
@@ -468,6 +475,11 @@ const AddSchedule = () => {
     }
 
     if (!selectedSeats?.length) return;
+
+    if (isSeat && controlNums.length !== 1) {
+      ToastNotification.error("Please provide only one control number when assigning an individual seat.");
+      return;
+    }
 
     const seatMap = new Map(
       selectedSeats
@@ -499,11 +511,14 @@ const AddSchedule = () => {
   };
 
   const handleSubmit = () => {
-    if (!validate()) return;
+    if (!validate()) {
+      ToastNotification.error("Please fix all shown errors");
+      return;
+    }
 
     if (scheduleData.ticketType === "ticketed") {
       if (!validateControlNumbers()) {
-        ToastNotification.error("Please fix all errors first");
+        ToastNotification.error("Please fix control number errors");
         return;
       }
 
@@ -579,14 +594,14 @@ const AddSchedule = () => {
 
   return (
     <ContentWrapper className="lg:!p-20 flex flex-col">
-      {/* <BreadCrumb
-        backLink={`/shows/${id}`}
+      <Breadcrumbs
+        backHref={`/shows/${id}`}
         items={[
-          { name: data.title, path: `/shows/${id}` },
-          { name: "Add Schedule", path: "" },
+          { name: `Return to Schedule List`, href: `/shows/${id}` },
+          { name: "Add Schedule", href: "" },
         ]}
-      /> */}
-      <h1 className="text-3xl mt-10">Add Schedule for {data.title}</h1>
+      />
+      <h1 className="text-3xl mt-10">Add Schedule for "{data.title}"</h1>
 
       <div className="mt-5 flex flex-col gap-5">
         <div className="flex flex-col gap-5">
@@ -599,7 +614,7 @@ const AddSchedule = () => {
               errors={errors}
             />
 
-            <Button onClick={addAnotherDate} className="!text-black font-normal underline !p-0 !w-fit !h-fit self-end">
+            <Button variant="ghost" onClick={addAnotherDate}>
               Add Another Schedule
             </Button>
           </div>
@@ -626,16 +641,15 @@ const AddSchedule = () => {
 
         {scheduleData.ticketType == "ticketed" && (
           <div>
-            <Input
+            <InputField
               placeholder="PHP"
               onChange={handleInputChange}
-              // label="Commission Fee"
+              label="Commission Fee"
               className="max-w-[250px]"
               type="number"
               name="commissionFee"
               value={scheduleData.commissionFee + ""}
-              // isError={!!errors.commisionFee}
-              // errorMessage={errors.commisionFee}
+              error={errors.commisionFee}
             />
           </div>
         )}
@@ -661,7 +675,6 @@ const AddSchedule = () => {
                 handleOpenTicketModal("seat");
               }}
               rowClick={(clickedSeats: FlattenedSeat[]) => {
-                //clickedSeats.filter((seat) => seat.ticketControlNumber === 0)
                 setSelectedSeats(clickedSeats);
                 handleOpenTicketModal("row");
               }}
@@ -672,18 +685,19 @@ const AddSchedule = () => {
             />
 
             {(seatToggle || rowToggle || sectionToggle) && (
-              <Dialog
-                // className="flex flex-col max-w-[500px]"
-                // title="Assign Ticket Control Number"
-                onOpenChange={() => {
+              <Modal
+                className="flex flex-col max-w-xl"
+                title="Assign Ticket Control Number"
+                description="Input Ticket Control Number to be assigned on the seats"
+                onClose={() => {
                   setSeatToggle(false);
                   setRowToggle(false);
                   setSectionToggle(false);
                   setTicketInput({ controlNumber: "", isComplimentary: false });
                 }}
-                open={seatToggle || rowToggle || sectionToggle}
+                isOpen={seatToggle || rowToggle || sectionToggle}
               >
-                <div className="mt-5 bg-zinc-100 border border-darkGrey p-2">
+                <div className=" bg-zinc-100 border border-darkGrey p-2">
                   <p>Section: {formatSectionName(selectedSeats?.[0]?.section || "")}</p>
                   {!sectionToggle && (rowToggle ? <p>{getRowLabel(selectedSeats)}</p> : <p>Seat Number: {selectedSeats?.[0]?.seatNumber}</p>)}
                   <p>PHP {selectedSeats?.[0]?.ticketPrice?.toFixed(2) || "0.00"}</p>
@@ -710,7 +724,7 @@ const AddSchedule = () => {
                     getRemainingControlNumbers("orchestra").length != 0 ||
                     getRemainingControlNumbers("balcony").length != 0 ? (
                       <>
-                        <div className="flex gap-2 mt-5">
+                        <div className="flex gap-2 my-5">
                           <input
                             type="checkbox"
                             checked={ticketInput.isComplimentary}
@@ -729,8 +743,8 @@ const AddSchedule = () => {
                           ((getRemainingControlNumbers("orchestra").length !== 0 && selectedSeats[0]?.section.includes("orchestra")) ||
                             (getRemainingControlNumbers("balcony").length !== 0 && selectedSeats[0]?.section.includes("balcony")))) ? (
                           <>
-                            <Input
-                              className="mt-5"
+                            <InputField
+                              className="mt-10"
                               value={ticketInput.controlNumber}
                               onChange={(e) =>
                                 setTicketInput((prev) => ({
@@ -738,14 +752,9 @@ const AddSchedule = () => {
                                   controlNumber: e.target.value,
                                 }))
                               }
-                              // label={
-                              //   <p className="flex flex-col gap-2">
-                              //     Input Ticket Control Number to be assigned:
-                              //     <span className="font-semibold">
-                              //       "{selectedSeats.filter((seat) => seat.ticketControlNumber === 0).length}" control number required
-                              //     </span>
-                              //   </p>
-                              // }
+                              label={`Input at least (${
+                                selectedSeats.filter((seat) => seat.ticketControlNumber === 0).length
+                              }) Ticket Control Number to be assigned:`}
                             />
 
                             <Button onClick={validateTicketInput} className="self-end mt-4 !bg-green">
@@ -794,7 +803,7 @@ const AddSchedule = () => {
                     )}
                   </>
                 )}
-              </Dialog>
+              </Modal>
             )}
           </>
         )}

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { isValidEmail } from "../../../../utils";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
+import InputField from "@/components/InputField";
+import Dropdown from "@/components/Dropdown";
 
 type DistributorFormValues = {
   firstName: string;
@@ -14,8 +15,8 @@ type DistributorFormValues = {
 
 type DistributorFormProps = {
   initialValues: DistributorFormValues;
-  distributorTypeOptions: { label: string; value: string }[];
-  groupOptions: { label: string; value: string }[];
+  distributorTypeOptions: { name: string; value: string }[];
+  groupOptions: { name: string; value: string }[];
   onSubmit: (values: DistributorFormValues) => void;
   onCancel: () => void;
   isSubmitting: boolean;
@@ -82,81 +83,87 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
   };
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 -mt-5">
       <div className="border border-lightGrey rounded-md p-5 mt-5">
         <h1 className="text-lg">Basic Information</h1>
         <div className="mt-5 flex flex-col gap-5">
           <div className="flex gap-5">
-            <Input disabled={isSubmitting} placeholder="eg. Juan" name="firstName" value={formData.firstName} onChange={handleInputChange} />
-            <Input
+            <InputField
+              error={errors.firstName}
+              label="First Name"
+              disabled={isSubmitting}
+              placeholder="eg. Juan"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
+            />
+            <InputField
+              error={errors.lastName}
               disabled={isSubmitting}
               placeholder="eg. Dela Cruz"
               name="lastName"
-              // label="Last Name"
+              label="Last Name"
               value={formData.lastName}
               onChange={handleInputChange}
             />
           </div>
 
           <div className="flex gap-5">
-            <Input
+            <InputField
               disabled={isSubmitting}
-              // isError={!!errors.email}
-              // errorMessage={errors.email}
+              error={errors.email}
               type="email"
               placeholder={formData.type === "2" ? "eg. member@slu.edu.ph" : "eg. distributor@gmail.com"}
               name="email"
-              // label="SLU Email"
+              label="SLU Email"
               value={formData.email}
               onChange={handleInputChange}
             />
-            <Input
+            <InputField
               disabled={isSubmitting}
-              // isError={!!errors.contactNumber}
-              // errorMessage={errors.contactNumber}
+              error={errors.contactNumber}
               placeholder="eg. 0928293752"
               name="contactNumber"
-              // label="Contact Number"
+              label="Contact Number"
               value={formData.contactNumber}
               onChange={handleInputChange}
             />
           </div>
 
           <div className="flex gap-5">
-            {/* <Dropdown
+            <Dropdown
               disabled={isSubmitting}
-              isError={!!errors.type}
-              errorMessage={errors.type}
+              error={errors.type}
               className="w-full"
               label="Distributor Type"
               onChange={(value) => setFormData((prev) => ({ ...prev, type: value }))}
               value={formData.type}
-              options={distributorTypeOptions}
-            /> */}
+              items={distributorTypeOptions}
+              includeHeader={true}
+            />
 
             {formData.type === "2" && (
-              // <Dropdown
-              //   disabled={isSubmitting}
-              //   isError={!!errors.department}
-              //   errorMessage={errors.department}
-              //   className="w-full"
-              //   label="Performing Group"
-              //   onChange={(value) => setFormData((prev) => ({ ...prev, department: value }))}
-              //   value={formData.department || ""}
-              //   options={groupOptions}
-              // />
-              <p>Show</p>
+              <Dropdown
+                includeHeader={true}
+                disabled={isSubmitting}
+                error={errors.department}
+                className="w-full"
+                label="Performing Group"
+                onChange={(value) => setFormData((prev) => ({ ...prev, department: value }))}
+                value={formData.department || ""}
+                items={groupOptions}
+              />
             )}
           </div>
         </div>
       </div>
 
       <div className="flex justify-end gap-5">
-        <Button disabled={isSubmitting} onClick={handleSubmit} className="!bg-green">
-          Save
-        </Button>
-        <Button disabled={isSubmitting} onClick={onCancel} className="!bg-red">
+        <Button disabled={isSubmitting} onClick={onCancel} variant="outline">
           Cancel
+        </Button>
+        <Button disabled={isSubmitting} onClick={handleSubmit}>
+          Save
         </Button>
       </div>
     </div>

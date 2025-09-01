@@ -1,24 +1,15 @@
 import { Link, useParams } from "react-router-dom";
 import { useGetShow } from "../../../_lib/@react-client-query/show";
 import { ContentWrapper } from "../../../components/layout/Wrapper";
-
 import { useCloseSchedule, useDeleteSchedule, useGetShowSchedules, useOpenSchedule, useReschedule } from "../../../_lib/@react-client-query/schedule";
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table";
 import { formatToReadableDate, formatToReadableTime } from "../../../utils/date";
-
 import deleteIcon from "../../../assets/icons/delete.png";
 import { useShowScheduleContext } from "../../../context/ShowSchedulesContext";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import ToastNotification from "../../../utils/toastNotification";
 import type { Schedule } from "../../../types/schedule";
-
-import DateInput from "../../../components/ui/DateInput";
-import TimeInput from "../../../components/ui/TimeInput";
-import down_arrow from "../../../assets/icons/down_arrow.png";
-import { Dialog } from "@radix-ui/react-dialog";
-import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -31,6 +22,10 @@ import {
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import ShowCard from "@/components/ShowCard";
+import Modal from "@/components/Modal";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import DateSelector from "@/components/DateSelector";
+import InputField from "@/components/InputField";
 
 const ViewShow = () => {
   const queryClient = useQueryClient();
@@ -240,7 +235,7 @@ const ViewShow = () => {
                                 >
                                   {schedule.isOpen ? "Close Schedule" : "Open Schedule"}
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleReschedule()}>Reschedule</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
                               </DropdownMenuGroup>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -265,55 +260,53 @@ const ViewShow = () => {
       </div>
 
       {isReschedule && (
-        <Dialog open={!!isReschedule} onOpenChange={() => setIsReschedule(null)}>
-          <div className="border border-lightGrey rounded-md p-5 flex flex-col gap-5 mt-10">
-            <h1 className="-mb-2 text-xl">Schedule Details</h1>
+        <Modal
+          description="All data related to this schedule will be transfered"
+          title="Reschedule"
+          isOpen={!!isReschedule}
+          onClose={() => setIsReschedule(null)}
+        >
+          <Card className="rounded-md">
+            <CardHeader className="p-4">
+              <CardTitle>Current Schedule Details</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 flex gap-5 -mt-5">
+              <p>{formatToReadableDate(isReschedule.datetime + "")}</p>
+              <p>{formatToReadableTime(isReschedule.datetime + "")}</p>
+            </CardContent>
+          </Card>
 
-            <div className="flex justify-between gap-10">
-              <DateInput label="Old Date" disabled={true} value={new Date(isReschedule.datetime)} onChange={() => {}} />
-              <TimeInput
-                label="Old Time"
-                disabled
-                value={
-                  isReschedule?.datetime
-                    ? new Date(isReschedule.datetime).toLocaleTimeString("en-GB", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })
-                    : undefined
-                }
-                onChange={() => {}}
-              />
-            </div>
-
-            <div className="w-full flex  justify-center">
-              <img src={down_arrow} alt="down arrow" />
-            </div>
-
-            <div className="flex justify-between gap-10">
-              <DateInput
+          <Card className="rounded-md mt-5">
+            <CardHeader className="p-4">
+              <CardTitle>Input New Schedule</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 flex flex-col gap-3">
+              <DateSelector
+                date={newDate.date}
                 disabled={reschedule.isPending}
-                label="New Date"
-                value={newDate.date}
-                onChange={(date) => setNewDate((prev) => ({ ...prev, date }))}
+                initialValue={newDate.date}
+                handleDateSelect={(date) => setNewDate((prev) => ({ ...prev, date }))}
               />
-              <TimeInput
-                disabled={reschedule.isPending}
-                label="New Time"
-                value={newDate.time}
-                onChange={(time) => setNewDate((prev) => ({ ...prev, time }))}
+              <InputField
+                label="Time"
+                type="time"
+                step={1}
+                value={newDate.time?.slice(0, 5)}
+                onChange={(e) => setNewDate((prev) => ({ ...prev, time: e.target.value }))}
+                className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden"
               />
-            </div>
-          </div>
+            </CardContent>
+          </Card>
+
           <div className="flex mt-5 justify-end gap-3">
-            <Button disabled={reschedule.isPending} className="!bg-green" onClick={handleReschedule}>
+            <Button disabled={reschedule.isPending} onClick={handleReschedule}>
               Reschedule
             </Button>
-            <Button disabled={reschedule.isPending} className="!bg-red" onClick={() => setIsReschedule(null)}>
+            <Button variant="destructive" disabled={reschedule.isPending} onClick={() => setIsReschedule(null)}>
               Cancel
             </Button>
           </div>
-        </Dialog>
+        </Modal>
       )}
     </ContentWrapper>
   );

@@ -1,6 +1,8 @@
 import type { ScheduleFormData } from "../../../../../types/schedule";
-import DateInput from "../../../../../components/ui/DateInput";
-import TimeInput from "../../../../../components/ui/TimeInput";
+import { Button } from "@/components/ui/button";
+import InputField from "@/components/InputField";
+import DateSelector from "@/components/DateSelector";
+import { X } from "lucide-react";
 
 interface Props {
   scheduleData: ScheduleFormData;
@@ -10,38 +12,53 @@ interface Props {
   errors?: Partial<Record<"dates", string>>;
 }
 
-const ScheduleDateSelection = ({ scheduleData, removeDate, handleDateChange, handleTimeChange, errors }: Props) => {
+interface DateTimeSelectionProps {
+  dateItem: { date: Date | null; time: string };
+  index: number;
+  handleDateChange: (value: Date, index: number) => void;
+  handleTimeChange: (value: string, index: number) => void;
+  removeDate: (index: number) => void;
+  removeHidden: boolean;
+  errors?: Partial<Record<"dates", string>>;
+}
+
+const ScheduleDateSelection = ({ errors, scheduleData, removeDate, handleDateChange, handleTimeChange }: Props) => {
   return (
     <div className="flex flex-col gap-5">
-      {scheduleData.dates.map((date, index) => {
-        return (
-          <div key={index} className="border p-2 border-lightGrey rounded-md w-fit relative">
-            <div className="flex gap-5 w-fit">
-              <DateInput
-                isError={!!errors?.dates}
-                errorMessage={errors?.dates}
-                label="Date"
-                onChange={(e) => handleDateChange(e, index)}
-                value={date.date}
-              />
-              <TimeInput
-                isError={!!errors?.dates}
-                errorMessage={errors?.dates}
-                label="Time"
-                onChange={(e) => handleTimeChange(e, index)}
-                value={date.time}
-              />
-            </div>
-            <button
-              type="button"
-              className={`text-sm text-red mt-1 absolute -top-3 -right-1 font-bold z-10 ${scheduleData.dates.length === 1 && "hidden"}`}
-              onClick={() => removeDate(index)}
-            >
-              X
-            </button>
-          </div>
-        );
-      })}
+      {scheduleData.dates.map((dateItem, index) => (
+        <DateTimeSelection
+          key={index}
+          errors={errors}
+          dateItem={dateItem}
+          index={index}
+          handleDateChange={handleDateChange}
+          handleTimeChange={handleTimeChange}
+          removeDate={removeDate}
+          removeHidden={scheduleData.dates.length === 1}
+        />
+      ))}
+    </div>
+  );
+};
+
+const DateTimeSelection = ({ dateItem, removeHidden, index, handleDateChange, handleTimeChange, removeDate, errors }: DateTimeSelectionProps) => {
+  return (
+    <div className="flex gap-4 items-start relative border p-3 rounded-sm">
+      <DateSelector error={errors?.dates} date={dateItem.date} handleDateSelect={(selectedDate) => handleDateChange(selectedDate, index)} />
+      <InputField
+        error={errors?.dates}
+        label="Time"
+        type="time"
+        step={1}
+        id={`time-picker-${index}`}
+        value={dateItem.time?.slice(0, 5)}
+        onChange={(e) => handleTimeChange(e.target.value, index)}
+        className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden"
+      />
+
+      <Button onClick={() => removeDate(index)} className={`absolute -top-5 -right-6 ${removeHidden && "hidden"}`} variant="ghost">
+        <X className="text-red" />
+      </Button>
     </div>
   );
 };

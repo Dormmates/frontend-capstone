@@ -1,11 +1,12 @@
 import React from "react";
 
 import type { ScheduleFormData, TicketType } from "../../../../../types/schedule";
+import Dropdown from "@/components/Dropdown";
 
 const ticketTypes = [
-  { label: "Ticketed", value: "ticketed" },
-  { label: "Non-Ticketed", value: "nonTicketed" },
-] as const satisfies ReadonlyArray<{ label: string; value: TicketType }>;
+  { name: "Ticketed", value: "ticketed" },
+  { name: "Non-Ticketed", value: "nonTicketed" },
+];
 
 interface Props {
   scheduleData: ScheduleFormData;
@@ -14,14 +15,15 @@ interface Props {
 
 const TicketTypeSelection = ({ scheduleData, setScheduleData }: Props) => {
   return (
-    // <Dropdown<TicketType>
-    //   className="z-[999999]"
-    //   options={ticketTypes}
-    //   label="Ticket Type"
-    //   value={scheduleData.ticketType}
-    //   onChange={(value) => setScheduleData((prev) => ({ ...prev, ticketType: value }))}
-    // />
-    <p>Ticket Type</p>
+    <Dropdown
+      includeHeader={true}
+      placeholder="Select Ticket Type"
+      className="z-[999999] max-w-[250px]"
+      items={ticketTypes}
+      label="Ticket Types"
+      value={scheduleData.ticketType}
+      onChange={(value) => setScheduleData((prev) => ({ ...prev, ticketType: value as TicketType }))}
+    />
   );
 };
 

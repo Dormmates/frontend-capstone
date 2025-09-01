@@ -1,4 +1,4 @@
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -29,6 +29,8 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import Account from "./Account";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { useLogout } from "@/_lib/@react-client-query/auth";
+import ToastNotification from "@/utils/toastNotification";
 
 interface SideBarItems {
   icon: string;
@@ -44,7 +46,9 @@ interface CCASideBarProps {
 
 export const SideBar = ({ items }: CCASideBarProps) => {
   const location = useLocation();
-  const { user } = useAuthContext();
+  const navigate = useNavigate();
+  const { user, setUser } = useAuthContext();
+  const logout = useLogout();
   const [openAccount, setOpenAccount] = useState(false);
 
   return (
@@ -151,7 +155,24 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
 
-                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      logout.mutate(
+                        {},
+                        {
+                          onSuccess: () => {
+                            setUser(null);
+                            navigate("/");
+                          },
+                          onError: (err) => {
+                            ToastNotification.error(err.message);
+                          },
+                        }
+                      );
+                    }}
+                  >
+                    Logout
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>

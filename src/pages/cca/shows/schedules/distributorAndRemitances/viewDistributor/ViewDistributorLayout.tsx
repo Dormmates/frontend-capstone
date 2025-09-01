@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { NavLink, Outlet, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useGetAllocatedTicketsOfDistributor, useUnAllocateTicket } from "../../../../../../_lib/@react-client-query/schedule";
-
 import allocated_icon from "../../../../../../assets/icons/allocated_tickets.png";
 import unsold_icon from "../../../../../../assets/icons/unsold_ticket.png";
 import sold_icon from "../../../../../../assets/icons/sold_ticket.png";
@@ -12,7 +11,6 @@ import remitted_icon from "../../../../../../assets/icons/remitted.png";
 import balance_due_icon from "../../../../../../assets/icons/balance_due.png";
 import type { ShowData } from "../../../../../../types/show";
 import type { Schedule } from "../../../../../../types/schedule";
-
 import UnallocateTicket from "../unallocateTicket/UnallocateTicket";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "../../../../../../context/AuthContext";
@@ -22,8 +20,7 @@ import { formatCurrency } from "../../../../../../utils";
 import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import Modal from "@/components/Modal";
 
 const links = [
   {
@@ -171,59 +168,50 @@ const ViewDistributorLayout = () => {
       </div>
 
       {isUnallocateTicket && (
-        <Dialog open={isUnallocateTicket} onOpenChange={() => setIsUnallocateTicket(false)}>
-          <DialogContent className="max-w-xl max-h-[85vh] p-0 ">
-            <ScrollArea className="max-h-[85vh] p-6">
-              <DialogHeader className="mb-10">
-                <DialogTitle>Unallocate Ticket</DialogTitle>
-                <DialogDescription>Distributor: {distributorName}</DialogDescription>
-              </DialogHeader>
+        <Modal
+          description={`Distributor: ${distributorName}`}
+          title="Unallocate Ticket"
+          isOpen={isUnallocateTicket}
+          onClose={() => setIsUnallocateTicket(false)}
+        >
+          <UnallocateTicket
+            controlNumbersAllocated={data
+              .filter((ticket) => !ticket.isRemitted && ticket.status === "allocated")
+              .map((ticket) => ticket.controlNumber)}
+            close={() => setIsUnallocateTicket(false)}
+            disabled={unAllocateTicket.isPending}
+            onSubmit={(controlNumbers) => {
+              const payload = {
+                distributorId: distributorId as string,
+                scheduleId: scheduleId as string,
+                unallocatedBy: user?.userId as string,
+                controlNumbers,
+              };
 
-              <UnallocateTicket
-                controlNumbersAllocated={data
-                  .filter((ticket) => !ticket.isRemitted && ticket.status === "allocated")
-                  .map((ticket) => ticket.controlNumber)}
-                close={() => setIsUnallocateTicket(false)}
-                disabled={unAllocateTicket.isPending}
-                onSubmit={(controlNumbers) => {
-                  const payload = {
-                    distributorId: distributorId as string,
-                    scheduleId: scheduleId as string,
-                    unallocatedBy: user?.userId as string,
-                    controlNumbers,
-                  };
-
-                  unAllocateTicket.mutate(payload, {
-                    onSuccess: () => {
-                      queryClient.invalidateQueries({ queryKey: ["schedule", "allocated", scheduleId, distributorId], exact: true });
-                      queryClient.invalidateQueries({ queryKey: ["schedule", "seatmap", scheduleId], exact: true });
-                      queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId] });
-                      setIsUnallocateTicket(false);
-                      ToastNotification.success("Ticket Unallocated");
-                    },
-                    onError: (err: any) => {
-                      ToastNotification.error(err.message);
-                    },
-                  });
-                }}
-                schedule={schedule}
-                show={show}
-                distributorName={distributorName}
-              />
-            </ScrollArea>
-          </DialogContent>
-        </Dialog>
+              unAllocateTicket.mutate(payload, {
+                onSuccess: () => {
+                  queryClient.invalidateQueries({ queryKey: ["schedule", "allocated", scheduleId, distributorId], exact: true });
+                  queryClient.invalidateQueries({ queryKey: ["schedule", "seatmap", scheduleId], exact: true });
+                  queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId] });
+                  setIsUnallocateTicket(false);
+                  ToastNotification.success("Ticket Unallocated");
+                },
+                onError: (err: any) => {
+                  ToastNotification.error(err.message);
+                },
+              });
+            }}
+            schedule={schedule}
+            show={show}
+            distributorName={distributorName}
+          />
+        </Modal>
       )}
 
       {isRemitTicket && (
-        <Dialog open={isRemitTicket} onOpenChange={() => setIsRemitTicket(false)}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Remit Ticket Sales</DialogTitle>
-            </DialogHeader>
-            <RemitTickets closeRemit={() => setIsRemitTicket(false)} distributorData={data} />
-          </DialogContent>
-        </Dialog>
+        <Modal className="max-w-2xl" title="Remit Ticket Sales" isOpen={isRemitTicket} onClose={() => setIsRemitTicket(false)}>
+          <RemitTickets closeRemit={() => setIsRemitTicket(false)} distributorData={data} />
+        </Modal>
       )}
     </div>
   );

@@ -1,6 +1,4 @@
 import { PageWrapper, ContentWrapper } from "../../components/layout/Wrapper";
-import logo from "../../assets/images/cca-logo.png";
-import background from "../../assets/images/background-login.png";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLogin } from "../../_lib/@react-client-query/auth";
@@ -68,54 +66,51 @@ const CCALogin = () => {
   return (
     <PageWrapper className="min-h-screen flex items-center justify-center w-full">
       {/* <img src={background} alt="" className="fixed inset-0 w-full h-full object-cover -z-10" /> */}
-      <ContentWrapper className="w-full">
-        <div className="flex flex-col justify-center gap-10 items-center mx-auto w-full lg:max-w-[600px] h-full">
-          {/* <div>
+      <ContentWrapper className="w-full flex justify-center">
+        {/* <div>
             <img src={logo} alt="CCA Logo" className="object-cover" />
           </div> */}
-          <h1 className="font-bold text-4xl"></h1>
-          <h2 className="text-3xl text-center"></h2>
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle className="text-xl">Welcome CCA Staff</CardTitle>
-              <CardDescription>Log in as a CCA Trainer or CCA Head</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form className="w-full flex flex-col gap-5">
-                <InputField
-                  error={errors.email}
-                  label="Email"
-                  disabled={loginIn}
-                  name="email"
-                  value={formContent.email}
-                  type="email"
-                  onChange={handleInputChange}
-                  placeholder="(eg. cca@slu.edu.ph)"
-                />
-                <PasswordField
-                  error={errors.password}
-                  label="Password"
-                  disabled={loginIn}
-                  name="password"
-                  value={formContent.password}
-                  onChange={handleInputChange}
-                  placeholder="Password"
-                />
-              </form>
-            </CardContent>
-            <CardFooter className="flex flex-col gap-3">
-              <Button onClick={() => submitForm()} className="w-full" type="submit" disabled={loginIn}>
-                Login
-              </Button>
-              {loginError && <h1 className="mx-auto text-red">{loginError}</h1>}
-              <Button className="w-full" variant="outline">
-                <Link className="mx-auto hover:opacity-50 duration-500 ease-linear " to="/distributor/login">
-                  Login as Distributor
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
+
+        <Card className="w-full max-w-2xl">
+          <CardHeader>
+            <CardTitle className="text-xl">Welcome CCA Staff</CardTitle>
+            <CardDescription>Log in as a CCA Trainer or CCA Head</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form className="w-full flex flex-col gap-5">
+              <InputField
+                error={errors.email}
+                label="Email"
+                disabled={loginIn}
+                name="email"
+                value={formContent.email}
+                type="email"
+                onChange={handleInputChange}
+                placeholder="(eg. cca@slu.edu.ph)"
+              />
+              <PasswordField
+                error={errors.password}
+                label="Password"
+                disabled={loginIn}
+                name="password"
+                value={formContent.password}
+                onChange={handleInputChange}
+                placeholder="Password"
+              />
+            </form>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-3">
+            <Button onClick={() => submitForm()} className="w-full" type="submit" disabled={loginIn}>
+              Login
+            </Button>
+            {loginError && <h1 className="mx-auto text-red">{loginError}</h1>}
+            <Button className="w-full" variant="outline">
+              <Link className="mx-auto hover:opacity-50 duration-500 ease-linear " to="/distributor/login">
+                Login as Distributor
+              </Link>
+            </Button>
+          </CardFooter>
+        </Card>
       </ContentWrapper>
     </PageWrapper>
   );

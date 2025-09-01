@@ -9,10 +9,10 @@ import { useState } from "react";
 
 import ToastNotification from "../../../../../../utils/toastNotification";
 import { parseControlNumbers, validateControlInput } from "../../../../../../utils/controlNumber";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Modal from "@/components/Modal";
 
 type Props = {
   distributorName: string;
@@ -66,13 +66,15 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
         <LongCardItem label="Time" value={formatToReadableTime(schedule.datetime + "")} />
       </LongCard>
 
-      <div className="border border-lightGrey rounded-md ">
+      <Card className="border border-lightGrey rounded-md ">
         {controlNumbersAllocated.length != 0 ? (
           <>
-            <h1 className="p-5 text-xl">Unallocate Ticket</h1>
+            <CardHeader>
+              <CardTitle className="text-xl">Unallocate Ticket</CardTitle>
+            </CardHeader>
             <ControlNumberInputTutorial />
-            <div className="p-5">
-              <p className="text-sm font-bold mb-5 max-w-[450px]">
+            <CardContent>
+              <p className="text-sm font-bold my-5 max-w-[450px]">
                 Control Numbers available for unallocation: <span className="font-normal">{controlNumbersAllocated.join(", ")}</span>
               </p>
               <InputField
@@ -82,7 +84,7 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
               />
-            </div>
+            </CardContent>
           </>
         ) : (
           <p className="text-center font-bold my-5">
@@ -90,7 +92,7 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
             <br /> all tickets are marked as sold
           </p>
         )}
-      </div>
+      </Card>
 
       {controlNumbersAllocated.length != 0 && (
         <div className="flex justify-end gap-3">
@@ -108,27 +110,27 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
       )}
 
       {openSummary && (
-        <Dialog open={openSummary} onOpenChange={() => setOpenSummary(false)}>
-          <DialogContent className="max-w-xl  shadow-none">
-            <DialogHeader>
-              <DialogTitle>Ticket Unallocation Summary</DialogTitle>
-              <DialogDescription>Please review the summary before proceding</DialogDescription>
-            </DialogHeader>
-            <LongCard className="my-10 w-full" label="Ticket">
-              <LongCardItem label="Distributor Name" value={distributorName} />
-              <LongCardItem label="Total Tickets " value={controlNumbers.length} />
-              <LongCardItem label="Ticket Control Numbers" value={input} />
-            </LongCard>
-            <div className="flex justify-end gap-3">
-              <Button className="!bg-green" disabled={input.length == 0 || !input || disabled} onClick={() => onSubmit(controlNumbers)}>
-                Confirm
-              </Button>
-              <Button disabled={disabled} onClick={() => setOpenSummary(false)} className="!bg-red">
-                Cancel
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <Modal
+          isOpen={openSummary}
+          onClose={() => setOpenSummary(false)}
+          title="Ticket Unallocation Summary"
+          description="Please review the summary before proceding"
+          isTransparent={true}
+        >
+          <LongCard className="w-full" label="Ticket">
+            <LongCardItem label="Distributor Name" value={distributorName} />
+            <LongCardItem label="Total Tickets " value={controlNumbers.length} />
+            <LongCardItem label="Ticket Control Numbers" value={input} />
+          </LongCard>
+          <div className="flex justify-end gap-3 mt-5">
+            <Button className="!bg-green" disabled={input.length == 0 || !input || disabled} onClick={() => onSubmit(controlNumbers)}>
+              Confirm
+            </Button>
+            <Button disabled={disabled} onClick={() => setOpenSummary(false)} className="!bg-red">
+              Cancel
+            </Button>
+          </div>
+        </Modal>
       )}
     </div>
   );

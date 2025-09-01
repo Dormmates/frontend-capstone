@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { PageWrapper, ContentWrapper } from "../components/layout/Wrapper";
 
 import errorIcon from "../assets/icons/error.png";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 
 const Unauthorized = () => {
   const navigate = useNavigate();

@@ -3,7 +3,7 @@ import errorIcon from "../assets/icons/error.png";
 import { ContentWrapper, PageWrapper } from "../components/layout/Wrapper";
 
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 
 const NotFound = () => {
   const navigate = useNavigate();

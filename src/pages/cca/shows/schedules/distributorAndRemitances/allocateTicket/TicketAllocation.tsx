@@ -19,16 +19,19 @@ import AllocatedBySeat from "./AllocatedBySeat";
 import type { ShowData } from "../../../../../../types/show";
 import { useGetDistributors } from "../../../../../../_lib/@react-client-query/accounts";
 import { useDebounce } from "../../../../../../hooks/useDeabounce";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../../components/ui/table";
 
 import ToastNotification from "../../../../../../utils/toastNotification";
 import { useAuthContext } from "../../../../../../context/AuthContext";
 import { parseControlNumbers, validateControlInput } from "../../../../../../utils/controlNumber";
 import { useQueryClient } from "@tanstack/react-query";
 import type { FlattenedSeat } from "../../../../../../types/seat";
-import { Button } from "@/components/ui/Button";
-import { Dialog } from "@radix-ui/react-dialog";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import Breadcrumbs from "@/components/BreadCrumbs";
+import { Label } from "@/components/ui/label";
+import Modal from "@/components/Modal";
+import Pagination from "@/components/Pagination";
+import InputField from "@/components/InputField";
 
 const TicketAllocation = () => {
   const { user } = useAuthContext();
@@ -139,13 +142,13 @@ const TicketAllocation = () => {
 
   return (
     <ContentWrapper className="lg:!p-16 flex flex-col">
-      {/* <BreadCrumb items={[{ name: "Return", path: "" }]} backLink={`/shows/schedule/${showId}/${scheduleId}/d&r`} /> */}
+      <Breadcrumbs items={[{ name: "Return to Distributor List", href: "" }]} backHref={`/shows/schedule/${showId}/${scheduleId}/d&r`} />
 
       <div className="flex flex-col gap-8 mt-10">
         <h1 className="text-3xl">Allocate Ticket To a Distributor</h1>
 
         <div>
-          <LongCard labelStyle="!text-xl" label="Show Details">
+          <LongCard className="w-fit" labelStyle="!text-xl" label="Show Details">
             <LongCardItem label="Show Title" value={showData.title} />
             <LongCardItem label="Date" value={formatToReadableDate(schedule.datetime + "")} />
             <LongCardItem label="Time" value={formatToReadableTime(schedule.datetime + "")} />
@@ -153,13 +156,14 @@ const TicketAllocation = () => {
         </div>
 
         <div className="flex gap-2 flex-col">
-          {/* <InputLabel label="Choose Distributor" /> */}
+          <Label>Choose Distributor</Label>
           <Button
             disabled={
               (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
             }
             onClick={() => setIsChooseDistributor(true)}
-            className={`!text-black border border-lightGrey border-md w-fit ${error.distributorError && "!border-red"}`}
+            className={`w-fit ${error.distributorError && "border-red"}`}
+            variant="outline"
           >
             <div className="flex gap-12">
               {selectedDistributor ? <h1>{selectedDistributor.firstName + " " + selectedDistributor.lastName}</h1> : <h1>No Selected Distributor</h1>}
@@ -170,7 +174,7 @@ const TicketAllocation = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          {/* <InputLabel label="Allocation Method" /> */}
+          <Label>Allocation Method</Label>
           <div className="flex gap-2">
             <div className="flex gap-2">
               <input
@@ -237,7 +241,13 @@ const TicketAllocation = () => {
         )}
 
         {isChooseDistributor && (
-          <Dialog open={isChooseDistributor} onOpenChange={() => setIsChooseDistributor(false)}>
+          <Modal
+            description="Select a distributor whom the ticket will be allocated"
+            className="max-w-4xl"
+            title="Select Distributor"
+            isOpen={isChooseDistributor}
+            onClose={() => setIsChooseDistributor(false)}
+          >
             <ChooseDistributor
               closeModal={() => setIsChooseDistributor(false)}
               selectedDistributor={selectedDistributor}
@@ -247,12 +257,18 @@ const TicketAllocation = () => {
                 setError((prev) => ({ ...prev, distributorError: "" }));
               }}
             />
-          </Dialog>
+          </Modal>
         )}
 
         {isAllocationSummary && (
-          <Dialog open={isAllocationSummary} onOpenChange={() => setIsAllocationSummary(false)}>
-            <LongCard className="mt-10 w-full" label="Ticket">
+          <Modal
+            className="max-w-2xl"
+            title="Allocation Summary"
+            description="Please review the allocation summary first"
+            isOpen={isAllocationSummary}
+            onClose={() => setIsAllocationSummary(false)}
+          >
+            <LongCard className="w-full" label="Ticket">
               <LongCardItem value={selectedDistributor?.firstName + " " + selectedDistributor?.lastName} label="Distributor Name" />
               <LongCardItem value={selectedDistributor?.distributor.distributortypes.name + ""} label="Type" />
               <LongCardItem
@@ -286,7 +302,7 @@ const TicketAllocation = () => {
                 Cancel
               </Button>
             </div>
-          </Dialog>
+          </Modal>
         )}
       </div>
     </ContentWrapper>
@@ -336,8 +352,7 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
 
   return (
     <div className="flex flex-col gap-6">
-      <p className="mt-5 text-sm">List of Distributors</p>
-      <Input placeholder="Search Distributor by Name" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+      <InputField placeholder="Search Distributor by Name" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
       <div>
         <p className="mb-3 text-sm">
           Total Distributors: <span className="font-bold">{distributors.length}</span>
@@ -348,7 +363,7 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
               <TableHead> Name</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Performing Group</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -369,7 +384,7 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
                   </TableCell>
                   <TableCell>{dist.distributor.distributortypes.name}</TableCell>
                   <TableCell>{dist.distributor.department ? dist.distributor.department.name : "No Group"}</TableCell>
-                  <TableCell>
+                  <TableCell className="text-right">
                     <Button
                       disabled={selectedDistributor?.userId === dist.userId}
                       onClick={() => {
@@ -377,7 +392,7 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
                         closeModal();
                         ToastNotification.info(`Selected: ${dist.firstName + " " + dist.lastName}`);
                       }}
-                      className="!bg-gray !text-black !border-lightGrey border-2"
+                      variant="secondary"
                     >
                       Select Distributor
                     </Button>
@@ -388,9 +403,9 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
           </TableBody>
         </Table>
 
-        {/* <div className="mt-5">
+        <div className="mt-5">
           <Pagination currentPage={page} totalPage={Math.ceil(distributors.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
-        </div> */}
+        </div>
       </div>
     </div>
   );

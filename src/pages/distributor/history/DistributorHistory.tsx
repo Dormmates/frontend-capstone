@@ -55,10 +55,8 @@ const DistributorHistory = () => {
     return <h1>Error loading</h1>;
   }
 
-  console.log(remittanceHistory);
-
   return (
-    <ContentWrapper className="lg:!p-20">
+    <ContentWrapper>
       <h1 className="font-bold text-4xl">Distributor History</h1>
 
       <div className="flex gap-3 mt-10">

@@ -1,13 +1,13 @@
 import { ContentWrapper } from "../../../../components/layout/Wrapper";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../components/ui/table";
 
 import archiveIcon from "../../../../assets/icons/archive.png";
 import unassign from "../../../../assets/icons/unassign.png";
 
 import { useEditTrainer, useGetTrainers, useNewTrainer } from "../../../../_lib/@react-client-query/accounts";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "../../../../hooks/useDeabounce";
 
 import { useGetDepartments, useRemoveDepartmentTrainerByTrainerId } from "../../../../_lib/@react-client-query/department";
@@ -18,9 +18,12 @@ import type { Trainer } from "../../../../types/user";
 
 import TrainerForm from "./TrainerForm";
 import SimpleCard from "@/components/SimpleCard";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog } from "@radix-ui/react-dialog";
+import Pagination from "@/components/Pagination";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import Modal from "@/components/Modal";
+import AlertModal from "@/components/AlertModal";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -60,9 +63,13 @@ const Trainers = () => {
     return searchedTrainers.slice(start, end);
   }, [searchedTrainers, page]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [searchedTrainers]);
+
   const groupOptions = (departments ?? [])
     .filter((department) => !department.trainerId || !department.trainerName)
-    .map((department) => ({ label: department.name, value: department.departmentId }));
+    .map((department) => ({ name: department.name, value: department.departmentId }));
 
   const handleRemoveTrainerDepartment = () => {
     removeTrainer.mutate(unassignTrainer.userId, {
@@ -87,14 +94,14 @@ const Trainers = () => {
   }
 
   return (
-    <ContentWrapper className="lg:!p-20">
+    <ContentWrapper>
       <h1 className="text-3xl">Trainers</h1>
 
       <div className="flex justify-between mt-10">
         <SimpleCard label="Total Trainers" value={trainers?.length + ""} />
-        <Button onClick={() => setIsAddTrainer(true)} className="text-black self-end">
-          Add New Trainer
-        </Button>
+        <div className="flex items-end">
+          <Button onClick={() => setIsAddTrainer(true)}>Add New Trainer</Button>
+        </div>
       </div>
 
       <div className="mt-10 flex flex-col gap-10">
@@ -107,10 +114,10 @@ const Trainers = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Full Name</TableHead>
+              <TableHead>Full Name</TableHead>
               <TableHead>Group</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead className="text-end pr-28">Action</TableHead>
+              <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -123,37 +130,39 @@ const Trainers = () => {
             ) : (
               paginatedTrainers?.map((trainer) => (
                 <TableRow key={trainer.userId}>
-                  <TableCell className="text-center">{trainer.firstName + " " + trainer.lastName}</TableCell>
+                  <TableCell>{trainer.firstName + " " + trainer.lastName}</TableCell>
                   <TableCell>{trainer.department ? trainer.department.name : "No Group Assigned"}</TableCell>
                   <TableCell>{trainer.email}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end items-center gap-2">
-                      <Button onClick={() => setSelectedTrainer(trainer)} className="!bg-gray !text-black !border-lightGrey border-2">
+                      <Button onClick={() => setSelectedTrainer(trainer)} variant="outline">
                         Edit Details
                       </Button>
                       <div className="flex items-center gap-2">
-                        <div className="relative group">
-                          <Button
-                            onClick={() => setUnassignTrainer({ userId: trainer.userId, openModal: true })}
-                            disabled={!trainer.department}
-                            className="!p-0"
-                          >
-                            <img src={unassign} alt="archive" />
-                          </Button>
+                        <AlertModal
+                          title="Remove Trainer Assignment"
+                          description="This will remove the user as a trainer on its performing group"
+                          onConfirm={handleRemoveTrainerDepartment}
+                          trigger={
+                            <Button
+                              variant="ghost"
+                              className="p-0"
+                              onClick={() => setUnassignTrainer({ userId: trainer.userId, openModal: true })}
+                              disabled={!trainer.department}
+                            >
+                              <img src={unassign} alt="" />
+                            </Button>
+                          }
+                        />
 
-                          <div className="absolute  -left-48 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
-                            Remove Department Assignment
-                          </div>
-                        </div>
-                        <div className="relative group">
-                          <Button className="!p-0">
-                            <img src={archiveIcon} alt="archive" />
-                          </Button>
-
-                          <div className="absolute  -left-24 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
-                            Archive Trainer
-                          </div>
-                        </div>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Button variant="ghost" className="p-0">
+                              <img src={archiveIcon} alt="archive" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent> Archive Trainer</TooltipContent>
+                        </Tooltip>
                       </div>
                     </div>
                   </TableCell>
@@ -162,13 +171,13 @@ const Trainers = () => {
             )}
           </TableBody>
         </Table>
-        {/* <div className="mt-5">
+        <div className="mt-5">
           <Pagination currentPage={page} totalPage={Math.ceil(trainers.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
-        </div> */}
+        </div>
       </div>
 
       {isAddTrainer && (
-        <Dialog onOpenChange={() => setIsAddTrainer(false)} open={isAddTrainer}>
+        <Modal title="Add new Trainer Account" onClose={() => setIsAddTrainer(false)} isOpen={isAddTrainer}>
           <TrainerForm
             isSubmitting={editTrainer.isPending}
             groupOptions={groupOptions}
@@ -201,11 +210,11 @@ const Trainers = () => {
               });
             }}
           />
-        </Dialog>
+        </Modal>
       )}
 
       {selectedTrainer && (
-        <Dialog onOpenChange={() => setSelectedTrainer(null)} open={!!selectedTrainer}>
+        <Modal title="Edit Trainer" onClose={() => setSelectedTrainer(null)} isOpen={!!selectedTrainer}>
           <TrainerForm
             isSubmitting={editTrainer.isPending}
             groupOptions={groupOptions}
@@ -250,25 +259,10 @@ const Trainers = () => {
               });
             }}
           />
-        </Dialog>
+        </Modal>
       )}
 
-      {unassignTrainer.openModal && (
-        <Dialog open={unassignTrainer.openModal} onOpenChange={() => setUnassignTrainer({ userId: "", openModal: false })}>
-          <h1 className="text-center text-xl mt-5">Are you sure you want to unassign this trainer?</h1>
-
-          <div className="flex items-center justify-end mt-5 gap-5 ">
-            <Button disabled={removeTrainer.isPending} onClick={handleRemoveTrainerDepartment} className="!bg-green">
-              Confirm
-            </Button>
-            <Button disabled={removeTrainer.isPending} className="!bg-red" onClick={() => setUnassignTrainer({ userId: "", openModal: false })}>
-              Cancel
-            </Button>
-          </div>
-        </Dialog>
-      )}
-
-      <Button className="fixed bottom-10 right-10 shadow-lg rounded-full !text-black">View Archived Trainers</Button>
+      <Button className="fixed bottom-10 right-10 shadow-lg rounded-full ">View Archived Trainers</Button>
     </ContentWrapper>
   );
 };

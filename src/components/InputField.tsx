@@ -8,7 +8,6 @@ interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id?: string;
   className?: string;
 }
-
 const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(({ label = "", id = "", error = "", className = "", ...props }, ref) => (
   <div className="space-y-1 w-full">
     {label && (
@@ -16,7 +15,16 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(({ label 
         {label}
       </Label>
     )}
-    <Input id={id} ref={ref} className={`${className} ${error ? "border-red focus-visible:ring-red" : ""}`} {...props} />
+    <Input
+      id={id}
+      ref={ref}
+      className={`
+          ${className} 
+          ${error ? "border-red focus-visible:ring-red" : ""} 
+          ${props.disabled ? "cursor-not-allowed" : "cursor-auto"}
+        `}
+      {...props}
+    />
     {error && <p className="text-sm text-red">{error}</p>}
   </div>
 ));

@@ -6,8 +6,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import LongCard from "../../../../../../../components/LongCard";
 import LongCardItem from "../../../../../../../components/LongCardItem";
 import type { Schedule } from "../../../../../../../types/schedule";
-import type { ShowData } from "../../../../../../../types/show";
-import { formatToReadableDate, formatToReadableTime } from "../../../../../../../utils/date";
 import { formatTicket } from "../../../../../../../utils/controlNumber";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -31,7 +29,7 @@ const saleOptions = [
 
 const DistributorTicketsAllocated = () => {
   const { allocatedTickets } = useOutletContext<{ allocatedTickets: AllocatedTicketToDistributor[] }>();
-  const { schedule, show } = useOutletContext<{ schedule: Schedule; show: ShowData }>();
+  const { schedule } = useOutletContext<{ schedule: Schedule }>();
 
   const [selectedTicket, setSelectedTicket] = useState<AllocatedTicketToDistributor | null>(null);
 

@@ -1,7 +1,7 @@
 import { ContentWrapper } from "../../../components/layout/Wrapper";
 
 import { Link } from "react-router-dom";
-import { useArchiveShow, useDeleteShow, useGetShows, useUnArchiveShow } from "../../../_lib/@react-client-query/show";
+import { useArchiveShow, useDeleteShow, useGetShows, useUnArchiveShow, useUpdateShow } from "../../../_lib/@react-client-query/show";
 import { useMemo, useState, useEffect } from "react";
 
 import { useGetDepartments } from "../../../_lib/@react-client-query/department";
@@ -10,19 +10,19 @@ import { useAuthContext } from "../../../context/AuthContext";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useDebounce } from "../../../hooks/useDeabounce";
 import archiveIcon from "../../../assets/icons/archive.png";
-
 import type { ShowData } from "../../../types/show";
-import EditShowDetails from "./EditShowDetails";
 import { useQueryClient } from "@tanstack/react-query";
 import ToastNotification from "../../../utils/toastNotification";
 import ViewArchivedShows from "./ViewArchivedShows";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import Dropdown from "@/components/Dropdown";
 import Pagination from "@/components/Pagination";
+import ShowForm from "./ShowForm";
+import Modal from "@/components/Modal";
+import { getFileId } from "@/utils";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -44,6 +44,7 @@ const Shows = () => {
   const archiveShow = useArchiveShow();
   const unarchiveShow = useUnArchiveShow();
   const deleteShow = useDeleteShow();
+  const updateShow = useUpdateShow();
 
   const { user } = useAuthContext();
   const { data: shows, isLoading: showsLoading } = useGetShows(user?.role === "trainer" && user?.department ? user.department.departmentId : "");
@@ -95,7 +96,6 @@ const Shows = () => {
   return (
     <ContentWrapper>
       <h1 className="text-3xl">Shows</h1>
-
       <div className="flex justify-between">
         <div className="flex gap-5 mt-10">
           <SimpleCard label="Total Show" value={filteredShows.length} />
@@ -111,7 +111,6 @@ const Shows = () => {
           <Button>Add New Show</Button>
         </Link>
       </div>
-
       <div className="mt-10 flex gap-5">
         <Input
           className="min-w-[450px] max-w-[450px]"
@@ -119,24 +118,25 @@ const Shows = () => {
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search Show by Title"
         />
-        <Dropdown
-          label="Performing Groups"
-          placeholder="Select Performing Group"
-          className="max-w-[200px]"
-          onChange={(value) => setSelectedDepartment(value)}
-          value={user.role === "head" ? selectedDepartment : user?.department ? user.department.departmentId : ""}
-          items={departments}
-        />
-        <Dropdown
-          label="Show Types"
-          placeholder="Select Show Type"
-          className="max-w-[200px]"
-          onChange={(value) => setShowType(value)}
-          value={showType}
-          items={showTypes}
-        />
+        <div className="flex gap-3">
+          <Dropdown
+            label="Performing Groups"
+            placeholder="Select Performing Group"
+            className="max-w-[200px]"
+            onChange={(value) => setSelectedDepartment(value)}
+            value={user.role === "head" ? selectedDepartment : user?.department ? user.department.departmentId : ""}
+            items={departments}
+          />
+          <Dropdown
+            label="Show Types"
+            placeholder="Select Show Type"
+            className="max-w-[200px]"
+            onChange={(value) => setShowType(value)}
+            value={showType}
+            items={showTypes}
+          />
+        </div>
       </div>
-
       <div className="mt-10">
         <Table>
           <TableHeader>
@@ -205,19 +205,67 @@ const Shows = () => {
           <Pagination currentPage={page} totalPage={Math.ceil(filteredShows.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
         </div>
       </div>
-
       <Button onClick={() => setIsViewArchivedShows(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full ">
         View Archived Show
       </Button>
-
       {isEditDetails && (
-        <Dialog open={isEditDetails} onOpenChange={() => setIsEditDetails(false)}>
-          <EditShowDetails groups={departmentsData} close={() => setIsEditDetails(false)} selectedShow={selectedShow as ShowData} />
-        </Dialog>
-      )}
+        <Modal
+          description="Edit show information and click save"
+          className="w-full max-w-4xl"
+          title="Edit Show Details"
+          isOpen={isEditDetails}
+          onClose={() => setIsEditDetails(false)}
+        >
+          <ShowForm
+            isLoading={updateShow.isPending}
+            onSubmit={(data) => {
+              ToastNotification.info("Saving Changes");
+              updateShow.mutate(
+                {
+                  showId: selectedShow?.showId as string,
+                  showTitle: data.title,
+                  description: data.description,
+                  department: data.productionType == "majorProduction" ? null : data.group,
+                  genre: data.genre.join(", "),
+                  createdBy: user?.userId,
+                  showType: data.productionType,
+                  image: data.image as File,
+                  oldFileId: data.image ? (getFileId(selectedShow?.showCover as string) as string) : undefined,
+                },
+                {
+                  onSuccess: (data) => {
+                    queryClient.setQueryData<ShowData>(["show", data.showId], data);
+                    queryClient.setQueryData(["shows"], (oldData: ShowData[] | undefined) => {
+                      if (!oldData) return oldData;
+                      return oldData.map((show) => (show.showId === data.showId ? data : show));
+                    });
 
+                    ToastNotification.success("Updated Show");
+                    setSelectedShow(null);
+                    setIsEditDetails(false);
+                  },
+                  onError: (err) => {
+                    ToastNotification.error(err.message);
+                  },
+                }
+              );
+            }}
+            formType="edit"
+            showFormValue={{
+              title: selectedShow?.title as string,
+              productionType: selectedShow?.showType as string,
+              description: selectedShow?.description as string,
+              genre: selectedShow?.genreNames as string[],
+              imageCover: selectedShow?.showCover as string,
+              group: selectedShow?.department?.departmentId as string,
+              showImagePreview: selectedShow?.showCover as string,
+              image: null,
+            }}
+          />
+        </Modal>
+      )}
       {isArchiveShow && (
-        <Dialog open={isArchiveShow} onOpenChange={() => setIsArchiveShow(false)}>
+        <Modal title="Archive Show" isOpen={isArchiveShow} onClose={() => setIsArchiveShow(false)}>
           <div className="mt-5">
             <h1 className="font-semibold mb-2">Archiving this show will permanently:</h1>
             <ul className="list-disc ml-6 space-y-1">
@@ -272,11 +320,16 @@ const Shows = () => {
               </Button>
             </div>
           </div>
-        </Dialog>
+        </Modal>
       )}
-
       {isViewArchivedShows && (
-        <Dialog onOpenChange={() => setIsViewArchivedShows(false)} open={isViewArchivedShows}>
+        <Modal
+          description="Archived shows can be deleted or unarchived"
+          className="max-w-5xl"
+          title="Archived Shows"
+          onClose={() => setIsViewArchivedShows(false)}
+          isOpen={isViewArchivedShows}
+        >
           <ViewArchivedShows
             isPending={unarchiveShow.isPending || deleteShow.isPending}
             deletShow={(show) => {
@@ -319,7 +372,7 @@ const Shows = () => {
             }}
             archivedShow={shows.filter((show) => show.isArchived)}
           />
-        </Dialog>
+        </Modal>
       )}
     </ContentWrapper>
   );

@@ -10,7 +10,8 @@ import type { DistributorScheduleTickets } from "../../../types/ticket";
 import ViewAllocatedTickets from "./ViewAllocatedTickets";
 import { formatCurrency } from "../../../utils";
 import SimpleCard from "@/components/SimpleCard";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
+import Modal from "@/components/Modal";
 
 const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
   const soldTickets = schedule.tickets.filter((ticket) => ticket.status === "sold");
@@ -46,7 +47,7 @@ const DistributorDashboard = () => {
   }
 
   return (
-    <ContentWrapper className="lg:!p-20">
+    <ContentWrapper>
       <h1 className="font-bold text-4xl">Welcome, {user?.firstName + " " + user?.lastName}</h1>
 
       <div className="flex flex-col mt-10">
@@ -94,7 +95,7 @@ const DistributorDashboard = () => {
                     <TableCell>{schedule.tickets.filter((ticket) => ticket.status === "sold" || ticket.isRemitted).length}</TableCell>
                     <TableCell>{formatCurrency(amountToRemit)}</TableCell>
                     <TableCell>
-                      <Button onClick={() => setSelectedSchedule(schedule)} className="!bg-gray !text-black !border-lightGrey border-2">
+                      <Button onClick={() => setSelectedSchedule(schedule)} variant="outline">
                         View Tickets
                       </Button>
                     </TableCell>
@@ -106,11 +107,11 @@ const DistributorDashboard = () => {
         </Table>
       </div>
 
-      {/* {selectedSchedule && (
+      {selectedSchedule && (
         <Modal className="w-full max-w-[1000px]" isOpen={!!selectedSchedule} onClose={() => setSelectedSchedule(null)} title="Tickets Allocated">
           <ViewAllocatedTickets closeModal={() => setSelectedSchedule(null)} schedule={selectedSchedule} />
         </Modal>
-      )} */}
+      )}
     </ContentWrapper>
   );
 };

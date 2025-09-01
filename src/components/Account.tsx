@@ -80,12 +80,21 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                 </div>
 
                 {user?.distributor && (
-                  <div className="flex gap-5">
-                    <InputField label="Distributor Type" disabled={true} value={user.distributor.distributortypes.name + ""} onChange={() => {}} />
+                  <div className="flex gap-5 mb-5">
+                    <InputField
+                      label="Distributor Type (Cannot Edit)"
+                      disabled={true}
+                      value={user.distributor.distributortypes.name + ""}
+                      onChange={() => {}}
+                    />
 
-                    <div></div>
                     {user.distributor.distributortypes.id === 2 && (
-                      <InputField label="Performing Group" disabled={true} value={user.distributor.department.name} onChange={() => {}} />
+                      <InputField
+                        label="Performing Group (Cannot Edit)"
+                        disabled={true}
+                        value={user.distributor.department.name}
+                        onChange={() => {}}
+                      />
                     )}
                   </div>
                 )}

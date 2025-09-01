@@ -6,7 +6,17 @@ import type { LoginPayload } from "../../types/auth";
 export const useLogin = () => {
   return useMutation<User, Error, LoginPayload>({
     mutationFn: async (data: LoginPayload) => {
-      const res = await request<User>("/api/auth/Login", data, "post");
+      const res = await request<User>("/api/auth/login", data, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useLogout = () => {
+  return useMutation<any, Error, any>({
+    mutationFn: async () => {
+      const res = await request<any>("/api/auth/logout", {}, "post");
       return res.data;
     },
     retry: false,
