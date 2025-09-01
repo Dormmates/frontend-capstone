@@ -34,8 +34,6 @@ const PerformingGroups = () => {
 
   const [errors, setErrors] = useState<{ name?: string; logo?: string }>();
 
-  const [groupDeletion, setGroupDeletion] = useState({ confirm: false, departmentId: "" });
-
   useEffect(() => {
     setEditGroup({ name: selectedGroup?.name as string, imagePreview: selectedGroup?.logoUrl as string, image: null as File | null });
   }, [selectedGroup]);
