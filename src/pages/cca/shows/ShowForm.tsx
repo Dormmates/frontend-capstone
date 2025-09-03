@@ -12,6 +12,7 @@ import Dropdown from "@/components/Dropdown";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import type { ShowType } from "@/types/show";
 
 const productionType = [
   { name: "Showcase", value: "showCase" },
@@ -20,7 +21,7 @@ const productionType = [
 
 interface ShowFormProps {
   title: string;
-  productionType: string;
+  productionType: ShowType;
   description: string;
   genre: string[];
   imageCover: string;
@@ -34,9 +35,10 @@ interface ShowFormInterface {
   isLoading?: boolean;
   formType: "edit" | "create";
   onSubmit: (data: ShowFormProps) => void;
+  showType: "group" | "major";
 }
 
-const ShowForm = ({ showFormValue, isLoading, formType, onSubmit }: ShowFormInterface) => {
+const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: ShowFormInterface) => {
   const { user } = useAuthContext();
   const { data: groups, isLoading: loadingDepartments, error: errorDepartment } = useGetDepartments();
   const { data: genres, isLoading: loadingGenres, error: errorGenres } = useGetGenres();
@@ -52,8 +54,12 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit }: ShowFormInte
       newErrors.title = "Length must be greater than 5 characters";
     }
 
-    if (!showData.productionType) {
+    if (!showData.productionType && showType == "group") {
       newErrors.productionType = "Please choose Production Type";
+    }
+
+    if (!showData.group && showData.productionType !== "majorProduction" && showType == "group") {
+      newErrors.group = "Please choose Performing Group";
     }
 
     if (!showData.description) {
@@ -66,10 +72,6 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit }: ShowFormInte
       newErrors.genre = "Please add at least one genre";
     } else if (showData.genre.some((item) => !item)) {
       newErrors.genre = "Please choose a genre for each field";
-    }
-
-    if (!showData.group && showData.productionType !== "majorProduction") {
-      newErrors.group = "Please choose Performing Group";
     }
 
     if (formType === "create" && !showData.image) {
@@ -163,28 +165,32 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit }: ShowFormInte
               name="title"
             />
 
-            <div className="flex flex-col gap-5 lg:flex-row">
-              <Dropdown
-                includeHeader={true}
-                error={errors.group}
-                disabled={user?.role !== "head" || isLoading || showData.productionType == "majorProduction"}
-                className="w-full"
-                label="Performing Group"
-                items={showData.productionType == "majorProduction" ? [{ name: "All Department", value: "all" }] : groupOptions}
-                value={showData.productionType == "majorProduction" ? "all" : showData.group}
-                onChange={(value) => setShowData((prev) => ({ ...prev, group: value }))}
-              />
-              <Dropdown
-                includeHeader={true}
-                disabled={isLoading}
-                error={errors.productionType}
-                className="w-full"
-                label="Production Type"
-                items={user?.role === "head" ? [...productionType, { name: "Major Production", value: "majorProduction" }] : productionType}
-                value={showData.productionType}
-                onChange={(value) => setShowData((prev) => ({ ...prev, productionType: value }))}
-              />
-            </div>
+            {showType == "group" && (
+              <div className="flex flex-col gap-5 lg:flex-row">
+                <Dropdown
+                  includeHeader={true}
+                  error={errors.group}
+                  disabled={user?.role !== "head" || isLoading || showData.productionType == "majorProduction"}
+                  className="w-full"
+                  label="Performing Group"
+                  placeholder={user?.role === "trainer" ? user.department?.name : "Select Deparment"}
+                  items={showData.productionType == "majorProduction" ? [{ name: "All Department", value: "all" }] : groupOptions}
+                  value={showData.productionType == "majorProduction" ? "all" : showData.group}
+                  onChange={(value) => setShowData((prev) => ({ ...prev, group: value }))}
+                />
+                <Dropdown
+                  includeHeader={true}
+                  disabled={isLoading}
+                  error={errors.productionType}
+                  className="w-full"
+                  label="Production Type"
+                  placeholder={"Choose Production Type"}
+                  items={user?.role === "head" ? [...productionType, { name: "Major Production", value: "majorProduction" }] : productionType}
+                  value={showData.productionType}
+                  onChange={(value) => setShowData((prev) => ({ ...prev, productionType: value as ShowType }))}
+                />
+              </div>
+            )}
 
             <div className="flex flex-col gap-3">
               <Label>Description</Label>

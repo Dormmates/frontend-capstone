@@ -5,6 +5,7 @@ import accounts from "../../assets/icons/accounts.png";
 import dashboard from "../../assets/icons/dashboard.png";
 import groups from "../../assets/icons/performing-groups.png";
 import shows from "../../assets/icons/shows.png";
+import major from "../../assets/icons/major-prod.png";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import SideBar from "@/components/SideBar";
 import Header from "@/components/Header";
@@ -22,6 +23,11 @@ const CCALayout = () => {
       icon: shows,
       name: "Shows",
       path: "/shows",
+    },
+    {
+      icon: major,
+      name: "Major Production",
+      path: "/majorShows",
     },
     {
       icon: groups,

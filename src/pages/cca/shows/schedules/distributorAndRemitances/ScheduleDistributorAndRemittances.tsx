@@ -1,15 +1,11 @@
 import { Link, useParams } from "react-router-dom";
 import { useGetScheduleDistributors } from "@/_lib/@react-client-query/schedule.ts";
-
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
-
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import SimpleCard from "@/components/SimpleCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-const ITEMS_PER_PAGE = 5;
+import PaginatedTable from "@/components/PaginatedTable";
 
 const ScheduleDistributorAndRemittances = () => {
   const { scheduleId, showId } = useParams();
@@ -17,7 +13,6 @@ const ScheduleDistributorAndRemittances = () => {
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue);
-  const [page, setPage] = useState(1);
 
   const searchedDistributors = useMemo(() => {
     if (!distributors) return [];
@@ -27,16 +22,6 @@ const ScheduleDistributorAndRemittances = () => {
       return matchingName;
     });
   }, [debouncedSearch, distributors]);
-
-  const paginatedDistributors = useMemo(() => {
-    const start = (page - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    return searchedDistributors.slice(start, end);
-  }, [searchedDistributors, page]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch]);
 
   if (isLoading) {
     return <h1>Loading....</h1>;
@@ -65,44 +50,54 @@ const ScheduleDistributorAndRemittances = () => {
           </Link>
         </div>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Group</TableHead>
-              <TableHead>Allocated Tickets</TableHead>
-              <TableHead>Sold Tickets </TableHead>
-              <TableHead className="text-center">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {paginatedDistributors.length === 0 ? (
-              <TableRow>
-                <TableCell className="text-center py-10 text-gray-400" colSpan={7}>
-                  No Distributors Found
-                </TableCell>
-              </TableRow>
-            ) : (
-              paginatedDistributors.map((dist, index) => (
-                <TableRow key={index}>
-                  <TableCell>{dist.name}</TableCell>
-                  <TableCell>{dist.email}</TableCell>
-                  <TableCell>{dist.distributorType}</TableCell>
-                  <TableCell>{dist?.department ?? "No Group"}</TableCell>
-                  <TableCell>{dist.totalAllocated}</TableCell>
-                  <TableCell>{dist.totalSold}</TableCell>
-                  <TableCell className="text-center">
-                    <Link to={`/shows/schedule/${showId}/${scheduleId}/d&r/${dist.userId}`}>
-                      <Button variant="outline">View Distributor</Button>
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+        <PaginatedTable
+          emptyMessage="No Distributors found."
+          data={searchedDistributors}
+          columns={[
+            {
+              key: "name",
+              header: "Name",
+              render: (dist) => dist.name,
+            },
+            {
+              key: "email",
+              header: "Email",
+              render: (dist) => dist.email,
+            },
+            {
+              key: "type",
+              header: "Type",
+              render: (dist) => dist.distributorType,
+            },
+            {
+              key: "group",
+              header: "Group",
+              render: (dist) => dist.department ?? "No Group",
+            },
+            {
+              key: "ticket",
+              header: "Allocated Tickets",
+              render: (dist) => dist.totalAllocated,
+            },
+            {
+              key: "sold",
+              header: "Sold Tickets",
+              render: (dist) => dist.totalSold,
+            },
+            {
+              key: "action",
+              header: "Actions",
+              headerClassName: "text-right",
+              render: (dist) => (
+                <div className="flex justify-end">
+                  <Link to={`/shows/schedule/${showId}/${scheduleId}/d&r/${dist.userId}`}>
+                    <Button variant="outline">View Distributor</Button>
+                  </Link>
+                </div>
+              ),
+            },
+          ]}
+        />
       </div>
     </>
   );

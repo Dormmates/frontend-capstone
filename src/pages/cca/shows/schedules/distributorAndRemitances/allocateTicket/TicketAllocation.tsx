@@ -6,11 +6,7 @@ import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import LongCard from "../../../../../../components/LongCard";
 import LongCardItem from "../../../../../../components/LongCardItem";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
-import {
-  useAllocateTicketByControlNumber,
-  useGetScheduleInformation,
-  useGetScheduleTickets,
-} from "@/_lib/@react-client-query/schedule.ts";
+import { useAllocateTicketByControlNumber, useGetScheduleInformation, useGetScheduleTickets } from "@/_lib/@react-client-query/schedule.ts";
 import type { Distributor } from "@/types/user.ts";
 import AllocateByControlNumber from "./AllocateByControlNumber";
 import AllocatedBySeat from "./AllocatedBySeat";
@@ -29,6 +25,7 @@ import { Label } from "@/components/ui/label";
 import Modal from "@/components/Modal";
 import Pagination from "@/components/Pagination";
 import InputField from "@/components/InputField";
+import PaginatedTable from "@/components/PaginatedTable";
 
 const TicketAllocation = () => {
   const { user } = useAuthContext();
@@ -314,13 +311,11 @@ type ChooseDistributorProps = {
 };
 
 const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: ChooseDistributorProps) => {
-  const ITEMS_PER_PAGE = 5;
   const {
     data: distributors,
     isLoading: loadingDistributors,
     isError: distributorsError,
   } = useGetDistributors(show.showType !== "majorProduction" ? show.department?.departmentId : "");
-  const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue);
 
@@ -332,12 +327,6 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
       return fullName.trim().includes(searchValue.trim());
     });
   }, [debouncedSearch, distributors]);
-
-  const paginatedDistributors = useMemo(() => {
-    const start = (page - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    return searchedDistributors.splice(start, end);
-  }, [page, searchedDistributors]);
 
   if (loadingDistributors) {
     return <h1>Loading...</h1>;
@@ -354,55 +343,52 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
         <p className="mb-3 text-sm">
           Total Distributors: <span className="font-bold">{distributors.length}</span>
         </p>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead> Name</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Performing Group</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {paginatedDistributors.length === 0 ? (
-              <TableRow>
-                <TableCell className="text-center py-10 text-gray-400" colSpan={4}>
-                  No Distributors Found
-                </TableCell>
-              </TableRow>
-            ) : (
-              paginatedDistributors.map((dist) => (
-                <TableRow key={dist.userId}>
-                  <TableCell>
-                    <div className="flex gap-2 items-center">
-                      {selectedDistributor?.userId === dist.userId && <div className="w-3 h-3 rounded-full bg-green"></div>}
-                      {dist.firstName + " " + dist.lastName}
-                    </div>
-                  </TableCell>
-                  <TableCell>{dist.distributor.distributortypes.name}</TableCell>
-                  <TableCell>{dist.distributor.department ? dist.distributor.department.name : "No Group"}</TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      disabled={selectedDistributor?.userId === dist.userId}
-                      onClick={() => {
-                        onChoose(dist);
-                        closeModal();
-                        ToastNotification.info(`Selected: ${dist.firstName + " " + dist.lastName}`);
-                      }}
-                      variant="secondary"
-                    >
-                      Select Distributor
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
 
-        <div className="mt-5">
-          <Pagination currentPage={page} totalPage={Math.ceil(distributors.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
-        </div>
+        <PaginatedTable
+          data={searchedDistributors}
+          columns={[
+            {
+              key: "name",
+              header: "Full Name",
+              render: (dist) => (
+                <div className="flex gap-2 items-center">
+                  {selectedDistributor?.userId === dist.userId && <div className="w-3 h-3 rounded-full bg-green"></div>}
+                  {dist.firstName + " " + dist.lastName}
+                </div>
+              ),
+            },
+            {
+              key: "type",
+              header: "Type",
+              render: (dist) => dist.distributor.distributortypes.name,
+            },
+            {
+              key: "group",
+              header: "Performing Group",
+              render: (dist) => (dist.distributor.department ? dist.distributor.department.name : "No Group"),
+            },
+            {
+              key: "action",
+              header: "Actions",
+              headerClassName: "text-center",
+              render: (dist) => (
+                <div className="flex justify-center">
+                  <Button
+                    disabled={selectedDistributor?.userId === dist.userId}
+                    onClick={() => {
+                      onChoose(dist);
+                      closeModal();
+                      ToastNotification.info(`Selected: ${dist.firstName + " " + dist.lastName}`);
+                    }}
+                    variant="outline"
+                  >
+                    Select Distributor
+                  </Button>
+                </div>
+              ),
+            },
+          ]}
+        />
       </div>
     </div>
   );

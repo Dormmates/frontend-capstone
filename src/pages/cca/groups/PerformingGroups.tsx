@@ -19,6 +19,8 @@ import Modal from "@/components/Modal";
 import InputField from "@/components/InputField";
 import { Label } from "@/components/ui/label";
 import AlertModal from "@/components/AlertModal";
+import { DataTable } from "@/components/DataTable";
+import PaginatedTable from "@/components/PaginatedTable";
 
 const PerformingGroups = () => {
   const addDepartment = useAddDepartment();
@@ -37,10 +39,6 @@ const PerformingGroups = () => {
   useEffect(() => {
     setEditGroup({ name: selectedGroup?.name as string, imagePreview: selectedGroup?.logoUrl as string, image: null as File | null });
   }, [selectedGroup]);
-
-  if (fetchingDepartments || errorLoadingDepartments) {
-    return <h1>Loading</h1>;
-  }
 
   const validateGroup = (group: typeof newGroup, isNew: boolean) => {
     const newErrors: typeof errors = {};
@@ -131,6 +129,14 @@ const PerformingGroups = () => {
     });
   };
 
+  if (fetchingDepartments) {
+    return <h1>Loading</h1>;
+  }
+
+  if (errorLoadingDepartments || !departments) {
+    return <h1>Error Loading</h1>;
+  }
+
   return (
     <ContentWrapper>
       <h1 className="text-3xl">Performing Groups</h1>
@@ -144,56 +150,54 @@ const PerformingGroups = () => {
       </div>
 
       <div className="mt-10">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Group Name</TableHead>
-              <TableHead>Trainer</TableHead>
-              <TableHead>Total Shows</TableHead>
-              <TableHead className="text-end pr-28">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {departments?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} className="text-center py-10 text-gray-400">
-                  No Groups found.
-                </TableCell>
-              </TableRow>
-            ) : (
-              departments?.map((department) => (
-                <TableRow key={department.departmentId}>
-                  <TableCell className="w-fit">
-                    <div className="flex items-center w-fit">
-                      <img className="w-10 h-10" src={department.logoUrl} alt="logo" />
-                      <p>{department.name}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell>{department.trainerName ?? "No Trainer"}</TableCell>
-                  <TableCell>{department.totalShows}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end items-center gap-2">
-                      <Button onClick={() => setSelectedGroup(department)} variant="outline">
-                        Edit Details
-                      </Button>
+        <PaginatedTable
+          data={departments}
+          columns={[
+            {
+              key: "name",
+              header: "Group Name",
+              render: (department) => (
+                <div className="flex items-center w-fit">
+                  <img className="w-10 h-10" src={department.logoUrl} alt="logo" />
+                  <p>{department.name}</p>
+                </div>
+              ),
+            },
+            {
+              key: "trainer",
+              header: "Trainer name",
+              render: (department) => department.trainerName ?? "No Trainer",
+            },
+            {
+              key: "total",
+              header: "Total Shows",
+              render: (department) => department.totalShows,
+            },
+            {
+              key: "action",
+              header: "Actions",
+              headerClassName: "text-right",
+              render: (department) => (
+                <div className="flex justify-end items-center gap-2">
+                  <Button onClick={() => setSelectedGroup(department)} variant="outline">
+                    Edit Details
+                  </Button>
 
-                      <AlertModal
-                        trigger={
-                          <Button disabled={department.totalShows !== 0} variant="ghost">
-                            <img src={deleteIcon} alt="delete" />
-                          </Button>
-                        }
-                        onConfirm={() => handleDelete(department.departmentId)}
-                        title="Delete Performing Group"
-                        description="This action cannot be undone. This will permanently delete the selected performing group."
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+                  <AlertModal
+                    trigger={
+                      <Button disabled={department.totalShows !== 0} variant="ghost">
+                        <img src={deleteIcon} alt="delete" />
+                      </Button>
+                    }
+                    onConfirm={() => handleDelete(department.departmentId)}
+                    title="Delete Performing Group"
+                    description="This action cannot be undone. This will permanently delete the selected performing group."
+                  />
+                </div>
+              ),
+            },
+          ]}
+        />
       </div>
 
       {(addGroup || selectedGroup) && (

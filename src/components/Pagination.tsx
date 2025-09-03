@@ -6,7 +6,7 @@ interface PaginationProps {
   currentPage: number;
   totalPage: number;
   onPageChange: (page: number) => void;
-  pageWindow?: number; // optional, number of pages to show
+  pageWindow?: number;
 }
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPage, onPageChange, pageWindow = 5 }) => {

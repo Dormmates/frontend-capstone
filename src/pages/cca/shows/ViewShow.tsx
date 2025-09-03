@@ -2,7 +2,6 @@ import { Link, useParams } from "react-router-dom";
 import { useGetShow } from "@/_lib/@react-client-query/show.ts";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useCloseSchedule, useDeleteSchedule, useGetShowSchedules, useOpenSchedule, useReschedule } from "@/_lib/@react-client-query/schedule.ts";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import deleteIcon from "../../../assets/icons/delete.png";
 import { useShowScheduleContext } from "@/context/ShowSchedulesContext.tsx";
@@ -26,6 +25,8 @@ import Modal from "@/components/Modal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DateSelector from "@/components/DateSelector";
 import InputField from "@/components/InputField";
+import { useAuthContext } from "@/context/AuthContext";
+import PaginatedTable from "@/components/PaginatedTable";
 
 const ViewShow = () => {
   const queryClient = useQueryClient();
@@ -36,6 +37,7 @@ const ViewShow = () => {
 
   const { setSchedules } = useShowScheduleContext();
   const { id } = useParams();
+  const { user } = useAuthContext();
   const { data: show, isLoading: isShowLoading, isError: isShowError, error: showError } = useGetShow(id as string);
   const { data: showSchedules, isLoading: isSchedulesLoading, isError: isSchedulesError, error: schedulesError } = useGetShowSchedules(id as string);
 
@@ -149,113 +151,96 @@ const ViewShow = () => {
   }
 
   return (
-    <ContentWrapper className="lg:!p-20 flex flex-col">
+    <ContentWrapper>
       <Breadcrumbs backHref="/shows" items={[{ name: "Show", href: "/shows" }, { name: show.title }]} />
 
       <div>
         <ShowCard title={show.title} description={show.description} genres={show.genreNames} showImage={show.showCover} className="mt-10" />
 
         <div className="mt-10">
-          <div className="flex justify-between">
+          <div className="flex justify-between mb-10">
             <div className="flex flex-col gap-5">
               <h1 className="font-semibold text-2xl ">Show Schedules</h1>
             </div>
-            <Link className="self-end" to={`/shows/add/schedule/${id}`}>
-              <Button>Add New Schedule</Button>
-            </Link>
+            {user?.role === "head" && (
+              <Link className="self-end" to={`/shows/add/schedule/${id}`}>
+                <Button>Add New Schedule</Button>
+              </Link>
+            )}
           </div>
 
-          <div className="mt-10">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Time</TableHead>
-                  <TableHead>Seating Type</TableHead>
-                  <TableHead>Ticket Type</TableHead>
-                  <TableHead>Schedule Status</TableHead>
+          <PaginatedTable
+            emptyMessage="No Schedules"
+            data={showSchedules}
+            columns={[
+              {
+                key: "date",
+                header: "Date",
+                render: (schedule) => formatToReadableDate(schedule.datetime + ""),
+              },
+              {
+                key: "time",
+                header: "Time",
+                render: (schedule) => formatToReadableTime(schedule.datetime + ""),
+              },
+              {
+                key: "seating",
+                header: "Seating Type",
+                render: (schedule) => schedule.seatingType.toUpperCase(),
+              },
+              {
+                key: "ticket",
+                header: "Ticket Type",
+                render: (schedule) => schedule.ticketType.toUpperCase(),
+              },
+              {
+                key: "action",
+                header: "Actions",
+                headerClassName: "text-right",
+                render: (schedule) => (
+                  <div className="flex gap-2 justify-end items-center ">
+                    <div className="relative group">
+                      <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
+                        <Button disabled={!schedule.isOpen}>Go To Schedule</Button>
+                      </Link>
 
-                  <TableHead className="text-center pl-60">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-
-              <TableBody>
-                {showSchedules.length == 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-10 text-gray-400">
-                      No Schedules
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  showSchedules.map((schedule) => (
-                    <TableRow key={schedule.scheduleId}>
-                      <TableCell>{formatToReadableDate(schedule.datetime + "")}</TableCell>
-                      <TableCell>{formatToReadableTime(schedule.datetime + "")}</TableCell>
-                      <TableCell>{schedule.seatingType.toUpperCase()}</TableCell>
-                      <TableCell>{schedule.ticketType.toUpperCase()}</TableCell>
-                      <TableCell>
-                        {schedule.isOpen ? (
-                          <div className="flex items-center gap-2">
-                            <div className="bg-green w-3 h-3 rounded-full"></div>
-                            <p>Open</p>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <div className="bg-red w-3 h-3 rounded-full"></div>
-                            <p>Closed</p>
-                          </div>
-                        )}
-                      </TableCell>
-
-                      <TableCell>
-                        <div className="flex gap-2 justify-end items-center ">
-                          <div className="relative group">
-                            <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
-                              <Button disabled={!schedule.isOpen}>Go To Schedule</Button>
-                            </Link>
-
-                            {!schedule.isOpen && (
-                              <div className="absolute  -left-28 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
-                                Schedule is Closed
-                              </div>
-                            )}
-                          </div>
-
-                          <DropdownMenu>
-                            <DropdownMenuTrigger>
-                              <Button variant="outline">Options</Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuLabel>Select Options</DropdownMenuLabel>
-                              <DropdownMenuGroup>
-                                <DropdownMenuItem
-                                  onClick={() =>
-                                    schedule.isOpen ? handleCloseSchedule(schedule.scheduleId) : handleOpenSchedule(schedule.scheduleId)
-                                  }
-                                >
-                                  {schedule.isOpen ? "Close Schedule" : "Open Schedule"}
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
-                              </DropdownMenuGroup>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <Button variant="ghost" onClick={() => handleDeleteSchedule(schedule.scheduleId)} disabled={schedule.isOpen}>
-                                <img src={deleteIcon} alt="delete" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>{!schedule.isOpen ? "Delete" : "Cannot Delete Open Schedule"}</TooltipContent>
-                          </Tooltip>
+                      {!schedule.isOpen && (
+                        <div className="absolute  -left-28 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
+                          Schedule is Closed
                         </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                      )}
+                    </div>
+
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <Button variant="outline">Options</Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Select Options</DropdownMenuLabel>
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem
+                            onClick={() => (schedule.isOpen ? handleCloseSchedule(schedule.scheduleId) : handleOpenSchedule(schedule.scheduleId))}
+                          >
+                            {schedule.isOpen ? "Close Schedule" : "Open Schedule"}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Button variant="ghost" onClick={() => handleDeleteSchedule(schedule.scheduleId)} disabled={schedule.isOpen}>
+                          <img src={deleteIcon} alt="delete" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{!schedule.isOpen ? "Delete" : "Cannot Delete Open Schedule"}</TooltipContent>
+                    </Tooltip>
+                  </div>
+                ),
+              },
+            ]}
+          />
         </div>
       </div>
 

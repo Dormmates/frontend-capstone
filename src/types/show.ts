@@ -6,10 +6,10 @@ export type ShowType = "majorConcert" | "showCase" | "majorProduction" | "";
 export interface NewShowPayload {
   showTitle: string;
   description: string;
-  department: any;
+  department: string | null;
   genre: string;
   createdBy: string;
-  showType: any;
+  showType: ShowType;
   image: File;
 }
 

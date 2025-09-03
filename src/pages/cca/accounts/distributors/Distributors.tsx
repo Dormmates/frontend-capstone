@@ -15,6 +15,7 @@ import Dropdown from "@/components/Dropdown";
 import Pagination from "@/components/Pagination";
 import InputField from "@/components/InputField";
 import Modal from "@/components/Modal";
+import PaginatedTable from "@/components/PaginatedTable";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -51,12 +52,6 @@ const Distributors = () => {
       })
       .filter((distributor) => !type || type === "all" || Number(type) === distributor.distributor.distributortypes.id);
   }, [debouncedSearch, distributors, type]);
-
-  const paginatedDistributors = useMemo(() => {
-    const start = (page - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    return searchedDistributors.slice(start, end);
-  }, [searchedDistributors, page]);
 
   useEffect(() => {
     setPage(1);
@@ -100,57 +95,58 @@ const Distributors = () => {
           />
         </div>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Full Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Contact Number</TableHead>
-              <TableHead>Distributor Type</TableHead>
-              <TableHead>Performing Group</TableHead>
-              <TableHead className="text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {paginatedDistributors?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center py-10 text-gray-400">
-                  No Distributor Found.
-                </TableCell>
-              </TableRow>
-            ) : (
-              paginatedDistributors?.map((distributor) => (
-                <TableRow key={distributor.userId}>
-                  <TableCell>{distributor.firstName + " " + distributor.lastName}</TableCell>
-                  <TableCell>{distributor.email}</TableCell>
-                  <TableCell>{distributor.distributor.contactNumber}</TableCell>
-                  <TableCell>{distributor.distributor.distributortypes.name}</TableCell>
-                  <TableCell>{distributor.distributor.department?.name ?? "No Department"}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end items-center gap-2">
-                      <Button variant="secondary">View Distributor</Button>
-                      <Button onClick={() => setSelectedDistributor(distributor)} variant="outline">
-                        Edit Details
-                      </Button>
-                      <div className="relative group">
-                        <Button variant="ghost" className="!p-0">
-                          <img src={archiveIcon} alt="archive" />
-                        </Button>
+        <PaginatedTable
+          data={searchedDistributors}
+          columns={[
+            {
+              key: "name",
+              header: "Full Name",
+              render: (distributor) => distributor.firstName + " " + distributor.lastName,
+            },
+            {
+              key: "email",
+              header: "Email",
+              render: (distributor) => distributor.email,
+            },
+            {
+              key: "contact",
+              header: "Contact Number",
+              render: (distributor) => distributor.distributor.contactNumber,
+            },
+            {
+              key: "type",
+              header: "Distributor Type",
+              render: (distributor) => distributor.distributor.distributortypes.name,
+            },
+            {
+              key: "group",
+              header: "Performing Group",
+              render: (distributor) => distributor.distributor.department?.name ?? "No Department",
+            },
+            {
+              key: "action",
+              header: "Actions",
+              headerClassName: "text-right",
+              render: (distributor) => (
+                <div className="flex justify-end items-center gap-2">
+                  <Button variant="secondary">View Distributor</Button>
+                  <Button onClick={() => setSelectedDistributor(distributor)} variant="outline">
+                    Edit Details
+                  </Button>
+                  <div className="relative group">
+                    <Button variant="ghost" className="!p-0">
+                      <img src={archiveIcon} alt="archive" />
+                    </Button>
 
-                        <div className="absolute  -left-24 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
-                          Archive Distributor
-                        </div>
-                      </div>
+                    <div className="absolute  -left-24 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
+                      Archive Distributor
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-        <div className="mt-5">
-          <Pagination currentPage={page} totalPage={Math.ceil(distributors.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
-        </div>
+                  </div>
+                </div>
+              ),
+            },
+          ]}
+        />
       </div>
 
       {isAddDistributor && (

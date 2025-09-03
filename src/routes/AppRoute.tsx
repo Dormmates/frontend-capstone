@@ -19,7 +19,6 @@ import {
   Trainers,
   CreateShow,
   AddSchedule,
-  Shows,
   ViewShow,
   PerformingGroups,
   CCADashboard,
@@ -36,6 +35,8 @@ import {
   DistributorTicketsAllocated,
   DistributorAllocationHistory,
   DistributorRemittanceHistory,
+  MajorProductionShows,
+  PerformingGroupShows,
 } from "../pages/cca/index";
 import DistributorCompleteAllocationHistory from "../pages/distributor/history/DistributorCompleteAllocationHistory";
 import DistributorCompleteRemittanceHistory from "../pages/distributor/history/DistributorCompleteRemittanceHistory";
@@ -73,7 +74,8 @@ const AppRoute = () => {
         ) : (
           <>
             <Route index element={<CCADashboard />} />
-            <Route path="shows" element={<Shows />} />
+            <Route path="shows" element={<PerformingGroupShows />} />
+            <Route path="majorShows" element={<MajorProductionShows />} />
             <Route path="shows/add" element={<CreateShow />} />
             <Route path="shows/add/schedule/:id" element={<AddSchedule />} />
             <Route path="shows/schedule/:showId/:scheduleId" element={<ViewShowScheduleLayout />}>

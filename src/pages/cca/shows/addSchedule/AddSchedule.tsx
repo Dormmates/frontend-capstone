@@ -251,8 +251,6 @@ const AddSchedule = () => {
           }
         }
       }
-
-
     }
 
     setErrors(newErrors);
@@ -592,7 +590,7 @@ const AddSchedule = () => {
   };
 
   return (
-    <ContentWrapper className="lg:!p-20 flex flex-col">
+    <ContentWrapper>
       <Breadcrumbs
         backHref={`/shows/${id}`}
         items={[

@@ -1,5 +1,4 @@
 import type { ShowData } from "@/types/show.ts";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import archiveIcon from "../../../assets/icons/archive.png";
 import deleteIcon from "../../../assets/icons/delete.png";
 import { useState } from "react";
@@ -7,6 +6,7 @@ import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import Modal from "@/components/Modal";
+import { DataTable } from "@/components/DataTable.tsx";
 
 type Props = {
   archivedShow: ShowData[];
@@ -22,74 +22,71 @@ const ViewArchivedShows = ({ archivedShow, unArchiveShow, deletShow, isPending }
   return (
     <div className="flex flex-col gap-5">
       <SimpleCard className="w-fit" label="Total Shows" value={archivedShow.length} />
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Show Type</TableHead>
-            <TableHead>Department</TableHead>
-            <TableHead className="text-end pr-6">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {archivedShow.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={4} className="text-center py-10 text-gray-400">
-                No shows found.
-              </TableCell>
-            </TableRow>
-          ) : (
-            archivedShow.map((show) => (
-              <TableRow key={show.showId}>
-                <TableCell>
-                  <div className="flex items-center justify-start gap-5">
-                    <img className="w-14 h-14 object-cover object-center" src={show.showCover} alt="show image" />
-
-                    <p>{show.title}</p>
-                  </div>
-                </TableCell>
-                <TableCell className="capitalize">{show.showType}</TableCell>
-                <TableCell>{show.department ? show.department.name : "All Department"}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end items-center gap-2">
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Button
-                          disabled={isPending}
-                          variant="ghost"
-                          className="p-0"
-                          onClick={() => {
-                            unArchiveShow(show);
-                          }}
-                        >
-                          <img src={archiveIcon} alt="archive" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Unarchive Show</TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Button
-                          disabled={isPending}
-                          variant="ghost"
-                          className="p-0"
-                          onClick={() => {
-                            setIsDelete(true);
-                            setSelectedShow(show);
-                          }}
-                        >
-                          <img src={deleteIcon} alt="delete" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Permanently Delete Show</TooltipContent>
-                    </Tooltip>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+      <DataTable
+        columns={[
+          {
+            key: "title",
+            header: "Title",
+            render: (show: ShowData) => (
+              <div className="flex items-center justify-start gap-5">
+                <img className="w-14 h-14 object-cover object-center" src={show.showCover} alt="show image" />
+                <p>{show.title}</p>
+              </div>
+            ),
+          },
+          {
+            key: "showType",
+            header: "Show Type",
+            render: (showData) => showData.showType.toUpperCase(),
+          },
+          {
+            key: "department",
+            header: "Department",
+            render: (showData) => (showData.department ? showData.department.name : "All Department"),
+          },
+          {
+            key: "action",
+            header: "Actions",
+            headerClassName: "text-right",
+            render: (showData) => (
+              <div className="flex justify-end items-center gap-2">
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Button
+                      disabled={isPending}
+                      variant="ghost"
+                      className="p-0"
+                      onClick={() => {
+                        unArchiveShow(showData);
+                      }}
+                    >
+                      <img src={archiveIcon} alt="archive" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Unarchive Show</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Button
+                      disabled={isPending}
+                      variant="ghost"
+                      className="p-0"
+                      onClick={() => {
+                        setIsDelete(true);
+                        setSelectedShow(showData);
+                      }}
+                    >
+                      <img src={deleteIcon} alt="delete" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Permanently Delete Show</TooltipContent>
+                </Tooltip>
+              </div>
+            ),
+          },
+        ]}
+        data={archivedShow}
+      />
 
       {isDelete && (
         <Modal title="Permanently Delete Show" isOpen={isDelete} onClose={() => setIsDelete(false)}>

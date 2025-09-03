@@ -10,10 +10,8 @@ import { formatTicket } from "@/utils/controlNumber.ts";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import Pagination from "@/components/Pagination";
 import Dropdown from "@/components/Dropdown";
-
-const ITEMS_PER_PAGE = 5;
+import PaginatedTable from "@/components/PaginatedTable";
 
 const verificationOptions = [
   { name: "All Verification Status", value: "all" },
@@ -33,7 +31,6 @@ const DistributorTicketsAllocated = () => {
 
   const [selectedTicket, setSelectedTicket] = useState<AllocatedTicketToDistributor | null>(null);
 
-  const [page, setPage] = useState(1);
   const [filter, setFilter] = useState({ search: "", saleStatus: "", verificationStatus: "" });
   const debouncedSearch = useDebounce(filter.search);
 
@@ -53,100 +50,83 @@ const DistributorTicketsAllocated = () => {
     });
   }, [debouncedSearch, filter.saleStatus, filter.verificationStatus, allocatedTickets]);
 
-  const paginatedTickets = useMemo(() => {
-    const start = (page - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    return filteredTickets.slice(start, end);
-  }, [page, filteredTickets]);
-
   return (
     <>
-      <div className="flex flex-col gap-10">
-        <div className="flex gap-3 items-center">
+      <div className="flex flex-col">
+        <div className="flex gap-3 items-center mb-10">
           <Input
             className="max-w-[450px]"
             onChange={(e) => setFilter((prev) => ({ ...prev, search: e.target.value }))}
             value={filter.search}
             placeholder="Search Ticket By Control Number"
           />
-          <Dropdown
-            className="max-w-fit"
-            label="Select Option"
-            placeholder="Select Sale Status"
-            value={filter.saleStatus}
-            items={saleOptions}
-            onChange={(value) => setFilter((prev) => ({ ...prev, saleStatus: value }))}
-          />
-          <Dropdown
-            className="max-w-fit"
-            label="Select Option"
-            placeholder="Select Verification Status"
-            value={filter.verificationStatus}
-            items={verificationOptions}
-            onChange={(value) => setFilter((prev) => ({ ...prev, verificationStatus: value }))}
-          />
+          <div className="flex gap-3">
+            <Dropdown
+              className="max-w-fit"
+              label="Select Option"
+              placeholder="Select Sale Status"
+              value={filter.saleStatus}
+              items={saleOptions}
+              onChange={(value) => setFilter((prev) => ({ ...prev, saleStatus: value }))}
+            />
+            <Dropdown
+              className="max-w-fit"
+              label="Select Option"
+              placeholder="Select Verification Status"
+              value={filter.verificationStatus}
+              items={verificationOptions}
+              onChange={(value) => setFilter((prev) => ({ ...prev, verificationStatus: value }))}
+            />
+          </div>
         </div>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Ticket Control Number</TableHead>
-              <TableHead>Sale Status from Distributor</TableHead>
-              <TableHead>Verification Status</TableHead>
-              <TableHead>Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {paginatedTickets.length == 0 ? (
-              <TableRow>
-                <TableCell className="text-center py-10 text-gray-400" colSpan={4}>
-                  No Tickets found
-                </TableCell>
-              </TableRow>
-            ) : (
-              paginatedTickets.map((ticket) => (
-                <TableRow key={ticket.ticketId}>
-                  <TableCell>{formatTicket(ticket.controlNumber)}</TableCell>
-                  <TableCell>
-                    {ticket.status == "sold" || ticket.isRemitted ? (
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-green"></span>Sold
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-red"></span>Unsold
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {ticket.isRemitted && ticket.status !== "sold" ? (
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-green"></span>Remitted
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-red"></span>Pending
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => setSelectedTicket(ticket)} variant="outline">
-                      View Ticket
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-
-        <div className="-mt-5">
-          <Pagination
-            currentPage={page}
-            totalPage={Math.ceil(filteredTickets.length / ITEMS_PER_PAGE)}
-            onPageChange={(newPage) => setPage(newPage)}
-          />
-        </div>
+        <PaginatedTable
+          data={filteredTickets}
+          columns={[
+            {
+              key: "control",
+              header: "Ticket Control Number",
+              render: (ticket) => formatTicket(ticket.controlNumber),
+            },
+            {
+              key: "status",
+              header: "Sale Status from Distributor",
+              render: (ticket) =>
+                ticket.status == "sold" || ticket.isRemitted ? (
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-green"></span>Sold
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-red"></span>Unsold
+                  </div>
+                ),
+            },
+            {
+              key: "verification",
+              header: "Verification Status",
+              render: (ticket) =>
+                ticket.isRemitted && ticket.status !== "sold" ? (
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-green"></span>Remitted
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-red"></span>Pending
+                  </div>
+                ),
+            },
+            {
+              key: "action",
+              header: "Actions",
+              render: (ticket) => (
+                <Button onClick={() => setSelectedTicket(ticket)} variant="outline">
+                  View Ticket
+                </Button>
+              ),
+            },
+          ]}
+        />
       </div>
 
       {selectedTicket && (

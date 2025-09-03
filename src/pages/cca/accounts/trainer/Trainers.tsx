@@ -15,17 +15,14 @@ import { useGetDepartments, useRemoveDepartmentTrainerByTrainerId } from "@/_lib
 import ToastNotification from "../../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Trainer } from "@/types/user.ts";
-
 import TrainerForm from "./TrainerForm";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Pagination from "@/components/Pagination";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import Modal from "@/components/Modal";
 import AlertModal from "@/components/AlertModal";
-
-const ITEMS_PER_PAGE = 5;
+import PaginatedTable from "@/components/PaginatedTable";
 
 const Trainers = () => {
   const addTrainer = useNewTrainer();
@@ -35,13 +32,12 @@ const Trainers = () => {
 
   const [isAddTrainer, setIsAddTrainer] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [page, setPage] = useState(1);
+
   const debouncedSearch = useDebounce(searchValue);
   const { data: trainers, isLoading: loadingTrainers } = useGetTrainers();
   const { data: departments, isLoading: loadingDepartments } = useGetDepartments();
 
   const [selectedTrainer, setSelectedTrainer] = useState<Trainer | null>(null);
-
   const [unassignTrainer, setUnassignTrainer] = useState({ userId: "", openModal: false });
 
   const searchedTrainers = useMemo(() => {
@@ -56,16 +52,6 @@ const Trainers = () => {
         return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
       });
   }, [debouncedSearch, trainers]);
-
-  const paginatedTrainers = useMemo(() => {
-    const start = (page - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    return searchedTrainers.slice(start, end);
-  }, [searchedTrainers, page]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [searchedTrainers]);
 
   const groupOptions = (departments ?? [])
     .filter((department) => !department.trainerId || !department.trainerName)
@@ -104,76 +90,73 @@ const Trainers = () => {
         </div>
       </div>
 
-      <div className="mt-10 flex flex-col gap-10">
+      <div className="mt-10 flex flex-col">
         <Input
-          className="min-w-[450px] max-w-[450px]"
+          className="min-w-[450px] max-w-[450px] mb-5"
           onChange={(e) => setSearchValue(e.target.value)}
           value={searchValue}
           placeholder="Search by Trainer Name"
         />
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Full Name</TableHead>
-              <TableHead>Group</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead className="text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {paginatedTrainers?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} className="text-center py-10 text-gray-400">
-                  No Trainer Found.
-                </TableCell>
-              </TableRow>
-            ) : (
-              paginatedTrainers?.map((trainer) => (
-                <TableRow key={trainer.userId}>
-                  <TableCell>{trainer.firstName + " " + trainer.lastName}</TableCell>
-                  <TableCell>{trainer.department ? trainer.department.name : "No Group Assigned"}</TableCell>
-                  <TableCell>{trainer.email}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end items-center gap-2">
-                      <Button onClick={() => setSelectedTrainer(trainer)} variant="outline">
-                        Edit Details
-                      </Button>
-                      <div className="flex items-center gap-2">
-                        <AlertModal
-                          title="Remove Trainer Assignment"
-                          description="This will remove the user as a trainer on its performing group"
-                          onConfirm={handleRemoveTrainerDepartment}
-                          trigger={
-                            <Button
-                              variant="ghost"
-                              className="p-0"
-                              onClick={() => setUnassignTrainer({ userId: trainer.userId, openModal: true })}
-                              disabled={!trainer.department}
-                            >
-                              <img src={unassign} alt="" />
-                            </Button>
-                          }
-                        />
 
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Button variant="ghost" className="p-0">
-                              <img src={archiveIcon} alt="archive" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent> Archive Trainer</TooltipContent>
-                        </Tooltip>
-                      </div>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-        <div className="mt-5">
-          <Pagination currentPage={page} totalPage={Math.ceil(trainers.length / ITEMS_PER_PAGE)} onPageChange={(newPage) => setPage(newPage)} />
-        </div>
+        <PaginatedTable
+          data={searchedTrainers}
+          columns={[
+            {
+              key: "name",
+              header: "Full Name",
+              render: (trainer) => trainer.firstName + " " + trainer.lastName,
+            },
+
+            {
+              key: "group",
+              header: "Group",
+              render: (trainer) => (trainer.department ? trainer.department.name : "No Group Assigned"),
+            },
+            {
+              key: "email",
+              header: "Email",
+              render: (trainer) => trainer.email,
+            },
+            {
+              key: "action",
+              header: "Action",
+              headerClassName: "text-right",
+              render: (trainer) => (
+                <div className="flex justify-end items-center gap-2">
+                  <Button onClick={() => setSelectedTrainer(trainer)} variant="outline">
+                    Edit Details
+                  </Button>
+                  <div className="flex items-center gap-2">
+                    <AlertModal
+                      title="Remove Trainer Assignment"
+                      description="This will remove the user as a trainer on its performing group"
+                      onConfirm={handleRemoveTrainerDepartment}
+                      trigger={
+                        <Button
+                          variant="ghost"
+                          className="p-0"
+                          onClick={() => setUnassignTrainer({ userId: trainer.userId, openModal: true })}
+                          disabled={!trainer.department}
+                        >
+                          <img src={unassign} alt="" />
+                        </Button>
+                      }
+                    />
+
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Button variant="ghost" className="p-0">
+                          <img src={archiveIcon} alt="archive" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent> Archive Trainer</TooltipContent>
+                    </Tooltip>
+                  </div>
+                </div>
+              ),
+            },
+          ]}
+        />
       </div>
 
       {isAddTrainer && (

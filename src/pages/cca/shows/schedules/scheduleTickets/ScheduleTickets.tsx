@@ -22,6 +22,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import InputField from "@/components/InputField";
+import { DataTable } from "@/components/DataTable";
+import type { Ticket } from "@/types/ticket";
 
 const statusOptions = [
   { name: "All Status", value: "all" },
@@ -161,63 +163,75 @@ const ScheduleTickets = () => {
           </div>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end mb-5">
           <Pagination
             currentPage={page}
             totalPage={Math.ceil(filteredTickets.length / ITEMS_PER_PAGE)}
             onPageChange={(newPage) => setPage(newPage)}
           />
         </div>
-        <Table className="mt-5">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Control No.</TableHead>
-              <TableHead>Seat Section</TableHead>
-              {schedule.seatingType === "controlledSeating" && <TableHead>Seat Number</TableHead>}
-              <TableHead>Is Complimentary</TableHead>
-              <TableHead>Ticket Status</TableHead>
-              <TableHead className="text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
 
-          <TableBody>
-            {paginatedTicket.length === 0 ? (
-              <TableRow>
-                <TableCell className="text-center py-10 text-gray-400" colSpan={schedule.seatingType === "controlledSeating" ? 6 : 5}>
-                  No Ticket Found
-                </TableCell>
-              </TableRow>
-            ) : (
-              paginatedTicket.map((ticket) => (
-                <TableRow key={ticket.ticketId}>
-                  <TableCell>{formatTicket(ticket.controlNumber)}</TableCell>
-                  <TableCell>{ticket.ticketSection?.toUpperCase() ?? "Complimentary Seat"}</TableCell>
-                  {schedule.seatingType === "controlledSeating" && <TableCell>{ticket.seatNumber}</TableCell>}
-                  <TableCell>{ticket.isComplimentary ? "Yes" : "No"}</TableCell>
-                  <TableCell>{["sold", "remitted"].includes(ticket.status) ? "Sold" : ticket.status}</TableCell>
-
-                  <TableCell className="text-right">
-                    <div className="flex gap-2 justify-end  items-center ">
-                      <Button>View Ticket</Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="outline">Ticket Options</Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuLabel>Select Options</DropdownMenuLabel>
-                          <DropdownMenuGroup>
-                            <DropdownMenuItem>Transfer Ticket to another Schedule</DropdownMenuItem>
-                            {ticket.isComplimentary && <DropdownMenuItem> Mark as Non-Complimentary</DropdownMenuItem>}
-                          </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+        <DataTable
+          data={paginatedTicket}
+          columns={[
+            {
+              key: "no.",
+              header: "Contro No.",
+              render: (ticket) => formatTicket(ticket.controlNumber),
+            },
+            {
+              key: "section",
+              header: "Seat Section",
+              render: (ticket) => ticket.ticketSection?.toUpperCase() ?? "Complimentary Seat",
+            },
+            {
+              key: "section",
+              header: "Seat Section",
+              render: (ticket) => ticket.ticketSection?.toUpperCase() ?? "Complimentary Seat",
+            },
+            ...(schedule.seatingType === "controlledSeating"
+              ? [
+                  {
+                    key: "seat",
+                    header: "Seat Number",
+                    render: (ticket: Ticket) => ticket.seatNumber,
+                  },
+                ]
+              : []),
+            {
+              key: "complimentary",
+              header: "Is Complimentary",
+              render: (ticket) => (ticket.isComplimentary ? "Yes" : "No"),
+            },
+            {
+              key: "status",
+              header: "Ticket Status",
+              render: (ticket) => (["sold", "remitted"].includes(ticket.status) ? "Sold" : ticket.status),
+            },
+            {
+              key: "action",
+              header: "Actions",
+              headerClassName: "text-right",
+              render: (ticket) => (
+                <div className="flex gap-2 justify-end  items-center ">
+                  <Button>View Ticket</Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline">Ticket Options</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuLabel>Select Options</DropdownMenuLabel>
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>Transfer Ticket to another Schedule</DropdownMenuItem>
+                        {ticket.isComplimentary && <DropdownMenuItem> Mark as Non-Complimentary</DropdownMenuItem>}
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              ),
+            },
+          ]}
+        />
       </div>
     </>
   );

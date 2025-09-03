@@ -5,7 +5,9 @@ import Trainers from "./accounts/trainer/Trainers";
 
 import CreateShow from "./shows/CreateShow";
 import AddSchedule from "./shows/addSchedule/AddSchedule";
-import Shows from "./shows/Shows";
+
+import MajorProductionShows from "./shows/MajorProductionShows";
+import PerformingGroupShows from "./shows/PerformingGroupShows";
 import ViewShow from "./shows/ViewShow";
 
 import ViewShowScheduleLayout from "./shows/schedules/ViewShowScheduleLayout";
@@ -33,10 +35,11 @@ export {
   AccountRequests,
   CCAHead,
   Distributors,
+  MajorProductionShows,
+  PerformingGroupShows,
   Trainers,
   CreateShow,
   AddSchedule,
-  Shows,
   ViewShow,
   PerformingGroups,
   CCADashboard,

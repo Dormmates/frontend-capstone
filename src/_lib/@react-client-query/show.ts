@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { request } from "../api";
-import type { NewShowPayload, ShowData, UpdateShowPayload } from "../../types/show";
+import type { NewShowPayload, ShowData, ShowType, UpdateShowPayload } from "../../types/show";
 import type { DistributorScheduleTickets } from "../../types/ticket";
 
 export const useCreateShow = () => {
@@ -10,7 +10,11 @@ export const useCreateShow = () => {
       formData.append("showTitle", data.showTitle);
       formData.append("description", data.description);
       formData.append("genre", data.genre);
-      formData.append("department", data.department);
+
+      if (data.department) {
+        formData.append("department", data.department);
+      }
+
       formData.append("createdBy", data.createdBy);
       formData.append("showType", data.showType);
       formData.append("image", data.image);
@@ -30,7 +34,11 @@ export const useUpdateShow = () => {
       formData.append("showTitle", data.showTitle);
       formData.append("description", data.description);
       formData.append("genre", data.genre);
-      formData.append("department", data.department);
+
+      if (data.department) {
+        formData.append("department", data.department);
+      }
+
       formData.append("createdBy", data.createdBy);
       formData.append("showType", data.showType);
       formData.append("image", data.image);
@@ -46,11 +54,11 @@ export const useUpdateShow = () => {
   });
 };
 
-export const useGetShows = (departmentId?: string) => {
+export const useGetShows = (query: { departmentId?: string; showType?: ShowType }) => {
   return useQuery<ShowData[], Error>({
-    queryKey: ["shows"],
+    queryKey: ["shows", query.departmentId, query.showType].filter(Boolean),
     queryFn: async () => {
-      const res = await request<ShowData[]>(`/api/show`, { departmentId }, "get");
+      const res = await request<ShowData[]>(`/api/show`, query, "get");
       return res.data;
     },
     retry: false,
