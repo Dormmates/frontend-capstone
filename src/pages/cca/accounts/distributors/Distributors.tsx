@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
 import { useEditDistributor, useGetDistributors, useGetDistributorTypes, useNewDistributor } from "@/_lib/@react-client-query/accounts.ts";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import archiveIcon from "../../../../assets/icons/archive.png";
 import type { Distributor } from "@/types/user.ts";
 import DistributorForm from "./DistributorForm";
@@ -12,12 +11,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import Dropdown from "@/components/Dropdown";
-import Pagination from "@/components/Pagination";
 import InputField from "@/components/InputField";
 import Modal from "@/components/Modal";
 import PaginatedTable from "@/components/PaginatedTable";
-
-const ITEMS_PER_PAGE = 5;
 
 const Distributors = () => {
   const addDistributor = useNewDistributor();
@@ -35,7 +31,6 @@ const Distributors = () => {
   const distributorTypeOptions = (distributorTypes ?? []).map((type) => ({ name: type.name, value: String(type.id) }));
   const groupOptions = (departments ?? []).map((department) => ({ name: department.name, value: department.departmentId }));
 
-  const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue);
 
@@ -52,10 +47,6 @@ const Distributors = () => {
       })
       .filter((distributor) => !type || type === "all" || Number(type) === distributor.distributor.distributortypes.id);
   }, [debouncedSearch, distributors, type]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch, type]);
 
   if (loadingDistributors || loadingTypes || loadingDepartments) {
     return <h1>Loaddingg..</h1>;

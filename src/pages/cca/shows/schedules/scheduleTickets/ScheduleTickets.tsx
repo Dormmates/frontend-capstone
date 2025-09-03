@@ -1,13 +1,10 @@
 import { useOutletContext, useParams } from "react-router-dom";
 import { useGetScheduleTickets } from "@/_lib/@react-client-query/schedule.ts";
 import { useEffect, useMemo, useState } from "react";
-
 import LongCard from "../../../../../components/LongCard";
 import LongCardItem from "../../../../../components/LongCardItem";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import type { Schedule } from "@/types/schedule.ts";
-
 import { formatTicket } from "@/utils/controlNumber.ts";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";

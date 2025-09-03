@@ -13,7 +13,6 @@ import AllocatedBySeat from "./AllocatedBySeat";
 import type { ShowData } from "@/types/show.ts";
 import { useGetDistributors } from "@/_lib/@react-client-query/accounts.ts";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import ToastNotification from "../../../../../../utils/toastNotification";
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import { parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
@@ -23,7 +22,6 @@ import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import { Label } from "@/components/ui/label";
 import Modal from "@/components/Modal";
-import Pagination from "@/components/Pagination";
 import InputField from "@/components/InputField";
 import PaginatedTable from "@/components/PaginatedTable";
 

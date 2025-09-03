@@ -2,7 +2,6 @@ import { useOutletContext } from "react-router-dom";
 import type { AllocatedTicketToDistributor } from "@/types/ticket.ts";
 import { useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import LongCard from "../../../../../../../components/LongCard";
 import LongCardItem from "../../../../../../../components/LongCardItem";
 import type { Schedule } from "@/types/schedule.ts";
