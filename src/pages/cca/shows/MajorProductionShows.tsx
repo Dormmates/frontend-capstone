@@ -3,35 +3,21 @@ import { Link } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
-import archiveIcon from "../../../assets/icons/archive.png";
 import type { ShowData } from "@/types/show.ts";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useArchiveShow, useDeleteShow, useGetShows, useUnArchiveShow, useUpdateShow } from "@/_lib/@react-client-query/show.ts";
-import { useQueryClient } from "@tanstack/react-query";
+import { useGetShows } from "@/_lib/@react-client-query/show.ts";
 import Modal from "@/components/Modal";
-import ShowForm from "./ShowForm";
-import ToastNotification from "@/utils/toastNotification";
-import { getFileId } from "@/utils";
-import ArchiveShow from "./ArchiveShow";
+import ArchiveShow from "./showActions/ArchiveShow";
 import ViewArchivedShows from "./ViewArchivedShows";
 import PaginatedTable from "@/components/PaginatedTable";
+import EditShow from "./showActions/EditShow";
 
 const MajorProductionShows = () => {
-  const queryClient = useQueryClient();
-  const archiveShow = useArchiveShow();
-  const unarchivedShow = useUnArchiveShow();
-  const deleteShow = useDeleteShow();
-  const updateShow = useUpdateShow();
-
   const { user } = useAuthContext();
   const { data: shows, isLoading: showsLoading } = useGetShows({ showType: "majorProduction" });
 
-  const [selectedShow, setSelectedShow] = useState<ShowData | null>(null);
-  const [isArchiveShow, setIsArchiveShow] = useState(false);
-  const [isEditDetails, setIsEditDetails] = useState(false);
   const [isViewArchivedShows, setIsViewArchivedShows] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -117,28 +103,8 @@ const MajorProductionShows = () => {
 
                 {user.role === "head" && (
                   <>
-                    <Button
-                      onClick={() => {
-                        setIsEditDetails(true);
-                        setSelectedShow(show);
-                      }}
-                    >
-                      Edit Details
-                    </Button>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          onClick={() => {
-                            setIsArchiveShow(true);
-                            setSelectedShow(show);
-                          }}
-                        >
-                          <img src={archiveIcon} alt="archive" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent side="left">Archive Show</TooltipContent>
-                    </Tooltip>
+                    <EditShow show={show} />
+                    <ArchiveShow show={show} />
                   </>
                 )}
               </div>
@@ -154,94 +120,6 @@ const MajorProductionShows = () => {
         </Button>
       )}
 
-      {isEditDetails && (
-        <Modal
-          description="Edit show information and click save"
-          className="w-full max-w-4xl"
-          title="Edit Show Details"
-          isOpen={isEditDetails}
-          onClose={() => setIsEditDetails(false)}
-        >
-          <ShowForm
-            showType="major"
-            isLoading={updateShow.isPending}
-            onSubmit={(data) => {
-              console.log(data);
-              ToastNotification.info("Saving Changes");
-              updateShow.mutate(
-                {
-                  showId: selectedShow?.showId as string,
-                  showTitle: data.title,
-                  description: data.description,
-                  department: null,
-                  genre: data.genre.join(", "),
-                  createdBy: user?.userId as string,
-                  showType: "majorProduction",
-                  image: data.image as File,
-                  oldFileId: data.image ? (getFileId(selectedShow?.showCover as string) as string) : undefined,
-                },
-                {
-                  onSuccess: (data) => {
-                    queryClient.setQueryData<ShowData>(["show", data.showId], data);
-                    queryClient.setQueryData(["shows", "majorProduction"], (oldData: ShowData[] | undefined) => {
-                      if (!oldData) return oldData;
-                      return oldData.map((show) => (show.showId === data.showId ? data : show));
-                    });
-
-                    ToastNotification.success("Updated Show");
-                    setSelectedShow(null);
-                    setIsEditDetails(false);
-                  },
-                  onError: (err) => {
-                    ToastNotification.error(err.message);
-                  },
-                }
-              );
-            }}
-            formType="edit"
-            showFormValue={{
-              title: selectedShow?.title as string,
-              productionType: "majorProduction",
-              description: selectedShow?.description as string,
-              genre: selectedShow?.genreNames as string[],
-              imageCover: selectedShow?.showCover as string,
-              group: "",
-              showImagePreview: selectedShow?.showCover as string,
-              image: null,
-            }}
-          />
-        </Modal>
-      )}
-
-      {isArchiveShow && (
-        <ArchiveShow
-          onArchive={() => {
-            archiveShow.mutate(
-              { showId: selectedShow?.showId as string },
-              {
-                onSuccess: () => {
-                  queryClient.setQueryData<ShowData[]>(["shows", "majorProduction"].filter(Boolean), (oldData) => {
-                    if (!oldData) return oldData;
-                    return oldData.map((show) => (show.showId === selectedShow?.showId ? { ...show, isArchived: true } : show));
-                  });
-                  ToastNotification.success("Show Archived");
-                  setIsArchiveShow(false);
-                },
-                onError: (err) => {
-                  ToastNotification.error(err.message);
-                },
-              }
-            );
-          }}
-          isPending={archiveShow.isPending}
-          isOpen={isArchiveShow}
-          onClose={() => {
-            setSelectedShow(null);
-            setIsArchiveShow(false);
-          }}
-        />
-      )}
-
       {isViewArchivedShows && (
         <Modal
           description="Archived shows can be deleted or unarchived"
@@ -250,48 +128,7 @@ const MajorProductionShows = () => {
           onClose={() => setIsViewArchivedShows(false)}
           isOpen={isViewArchivedShows}
         >
-          <ViewArchivedShows
-            isPending={unarchivedShow.isPending || deleteShow.isPending}
-            deletShow={(show) => {
-              return new Promise((resolve) => {
-                deleteShow.mutate(
-                  { showId: show.showId },
-                  {
-                    onSuccess: () => {
-                      queryClient.setQueryData<ShowData[]>(["shows", "majorProduction"].filter(Boolean), (oldData) => {
-                        if (!oldData) return oldData;
-                        return oldData.filter((s) => show.showId != s.showId);
-                      });
-                      ToastNotification.success("Show Deleted Permanently");
-                      resolve(true);
-                    },
-                    onError: (err) => {
-                      ToastNotification.error(err.message);
-                      resolve(false);
-                    },
-                  }
-                );
-              });
-            }}
-            unArchiveShow={(show) => {
-              unarchivedShow.mutate(
-                { showId: show.showId },
-                {
-                  onSuccess: () => {
-                    queryClient.setQueryData<ShowData[]>(["shows", "majorProduction"].filter(Boolean), (oldData) => {
-                      if (!oldData) return oldData;
-                      return oldData.map((show) => (show.showId === selectedShow?.showId ? { ...show, isArchived: false } : show));
-                    });
-                    ToastNotification.success("Unarchived Show");
-                  },
-                  onError: (err) => {
-                    ToastNotification.error(err.message);
-                  },
-                }
-              );
-            }}
-            archivedShow={archivedShows}
-          />
+          <ViewArchivedShows archivedShows={archivedShows} />
         </Modal>
       )}
     </ContentWrapper>

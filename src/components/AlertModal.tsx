@@ -11,6 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 interface AlertModalProps {
   trigger?: React.ReactNode;
@@ -19,12 +20,31 @@ interface AlertModalProps {
   cancelText?: string;
   actionText?: string;
   onConfirm: () => void;
+  tooltip?: string;
 }
 
-const AlertModal: React.FC<AlertModalProps> = ({ trigger, title, description, cancelText = "Cancel", actionText = "Continue", onConfirm }) => {
+const AlertModal: React.FC<AlertModalProps> = ({
+  trigger,
+  title,
+  description,
+  cancelText = "Cancel",
+  actionText = "Continue",
+  onConfirm,
+  tooltip,
+}) => {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>{trigger || <Button variant="outline">Show Dialog</Button>}</AlertDialogTrigger>
+      {tooltip ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <AlertDialogTrigger asChild>{trigger || <Button variant="outline">Show Dialog</Button>}</AlertDialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>{tooltip}</TooltipContent>
+        </Tooltip>
+      ) : (
+        <AlertDialogTrigger asChild>{trigger || <Button variant="outline">Show Dialog</Button>}</AlertDialogTrigger>
+      )}
+
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>

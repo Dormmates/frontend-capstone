@@ -152,7 +152,10 @@ const ViewShow = () => {
 
   return (
     <ContentWrapper>
-      <Breadcrumbs backHref="/shows" items={[{ name: "Show", href: "/shows" }, { name: show.title }]} />
+      <Breadcrumbs
+        backHref={show.showType == "majorProduction" ? "/majorShows" : "/shows"}
+        items={[{ name: "Show", href: show.showType == "majorProduction" ? "/majorShows" : "/shows" }, { name: show.title }]}
+      />
 
       <div>
         <ShowCard title={show.title} description={show.description} genres={show.genreNames} showImage={show.showCover} className="mt-10" />
@@ -162,7 +165,7 @@ const ViewShow = () => {
             <div className="flex flex-col gap-5">
               <h1 className="font-semibold text-2xl ">Show Schedules</h1>
             </div>
-            {user?.role === "head" && (
+            {user?.role === "head" && show.showType === "majorProduction" && (
               <Link className="self-end" to={`/shows/add/schedule/${id}`}>
                 <Button>Add New Schedule</Button>
               </Link>
@@ -284,11 +287,11 @@ const ViewShow = () => {
           </Card>
 
           <div className="flex mt-5 justify-end gap-3">
+            <Button variant="outline" disabled={reschedule.isPending} onClick={() => setIsReschedule(null)}>
+              Cancel
+            </Button>
             <Button disabled={reschedule.isPending} onClick={handleReschedule}>
               Reschedule
-            </Button>
-            <Button variant="destructive" disabled={reschedule.isPending} onClick={() => setIsReschedule(null)}>
-              Cancel
             </Button>
           </div>
         </Modal>

@@ -57,7 +57,7 @@ const Distributors = () => {
   }
 
   return (
-    <ContentWrapper className="lg:!p-20">
+    <ContentWrapper>
       <h1 className="text-3xl">Distributors</h1>
 
       <div className="flex justify-between mt-10">
