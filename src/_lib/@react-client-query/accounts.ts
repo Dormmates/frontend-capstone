@@ -122,3 +122,14 @@ export const useArchiveAccount = () => {
     },
   });
 };
+
+export const useGetDistributorData = (id: string) => {
+  return useQuery<Distributor, Error>({
+    queryKey: ["distributor", id],
+    queryFn: async () => {
+      const res = await request<Distributor>(`/api/accounts/distributor/${id}`, {}, "get");
+      return res.data;
+    },
+    retry: false,
+  });
+};

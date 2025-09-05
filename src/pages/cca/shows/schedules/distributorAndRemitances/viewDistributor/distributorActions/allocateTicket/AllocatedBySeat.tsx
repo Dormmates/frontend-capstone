@@ -23,13 +23,18 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
     return { available, unavailable, reserved, sold };
   }, [data]);
 
-  const handleClick = (seat: FlattenedSeat) => {
+  const handleClick = (seats: FlattenedSeat[]) => {
     setChoosenSeats((prev) => {
-      const exists = prev.some((s) => s.seatNumber === seat.seatNumber);
-      if (exists) {
-        return prev.filter((s) => s.seatNumber !== seat.seatNumber);
-      }
-      return [...prev, seat];
+      const updated = [...prev];
+      seats.forEach((seat) => {
+        const index = updated.findIndex((s) => s.seatNumber === seat.seatNumber);
+        if (index !== -1) {
+          updated.splice(index, 1);
+        } else {
+          updated.push(seat);
+        }
+      });
+      return updated;
     });
   };
 
@@ -82,10 +87,18 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
         seatMap={data}
         seatClick={(seat) => {
           if (seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status === "reserved") return;
-          handleClick(seat);
+          handleClick([seat]);
         }}
-        rowClick={(seats) => console.log(seats)}
-        sectionClick={(seats) => console.log(seats)}
+        rowClick={(seats) => {
+          const selectableSeats = seats.filter((seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved");
+          if (selectableSeats.length === 0) return;
+          handleClick(selectableSeats);
+        }}
+        sectionClick={(seats) => {
+          const selectableSeats = seats.filter((seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved");
+          if (selectableSeats.length === 0) return;
+          handleClick(selectableSeats);
+        }}
         recStyle={(seat) => `${
           seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status == "reserved" || seat.status === "sold"
             ? "fill-darkGrey !cursor-not-allowed"

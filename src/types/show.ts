@@ -13,9 +13,9 @@ export interface NewShowPayload {
   image: File;
 }
 
-export interface UpdateShowPayload extends NewShowPayload {
-  oldFileId?: string;
+export interface UpdateShowPayload extends Omit<NewShowPayload, "createdBy"> {
   showId: string;
+  oldFileId?: string;
 }
 
 export interface ShowData {

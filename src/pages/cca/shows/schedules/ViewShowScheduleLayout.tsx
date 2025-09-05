@@ -21,12 +21,12 @@ const ViewShowScheduleLayout = () => {
     { name: "Reservations", path: "reservations" },
   ];
 
-  if (!show || !schedule || errorShow || errorSchedule) {
-    return <p>Error loading</p>;
-  }
-
   if (loadingShow || scheduleLoading) {
     return <p>Loading...</p>;
+  }
+
+  if (!show || !schedule || errorShow || errorSchedule) {
+    return <p>Error loading</p>;
   }
 
   return (

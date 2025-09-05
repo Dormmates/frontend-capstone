@@ -14,7 +14,7 @@ import { useGetDistributors } from "@/_lib/@react-client-query/accounts.ts";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
 import ToastNotification from "@/utils/toastNotification";
 import { useAuthContext } from "@/context/AuthContext.tsx";
-import { parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
+import { compressControlNumbers, parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import type { FlattenedSeat } from "@/types/seat.ts";
 import { Button } from "@/components/ui/button";
@@ -280,7 +280,7 @@ const TicketAllocation = () => {
                 </p>
                 <p>
                   Ticket Control Numbers to be given:{" "}
-                  <span className="font-bold">{choosenSeats.map((seat) => seat.ticketControlNumber).join(", ")} control numbers</span>
+                  <span className="font-bold">{compressControlNumbers(choosenSeats.map((seat) => seat.ticketControlNumber))} control numbers</span>
                 </p>
               </div>
             )}

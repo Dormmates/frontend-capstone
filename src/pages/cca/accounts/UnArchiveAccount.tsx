@@ -2,7 +2,7 @@ import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import archiveIcon from "@/assets/icons/archive.png";
-import type { Distributor, User } from "@/types/user";
+import type { User } from "@/types/user";
 import ToastNotification from "@/utils/toastNotification";
 import { useUnArchiveAccount } from "@/_lib/@react-client-query/accounts";
 
@@ -11,11 +11,6 @@ type ArchiveAccountProps = {
   queryKey: "distributors" | "trainers";
 };
 
-// type QueryDataMap = {
-//   distributors: Distributor[];
-//   trainers: Trainer[];
-// };
-
 const UnArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
   const queryClient = useQueryClient();
   const unarchive = useUnArchiveAccount();
@@ -23,11 +18,6 @@ const UnArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
   const handleSubmit = (close: () => void) => {
     unarchive.mutate(user.userId, {
       onSuccess: () => {
-        // queryClient.setQueryData<QueryDataMap[typeof queryKey]>([queryKey], (oldData) => {
-        //   if (!oldData) return oldData;
-        //   return oldData.filter((s) => (s.userId == user.userId ? { ...s, isArchived: false } : s)) as QueryDataMap[typeof queryKey];
-        // });
-
         queryClient.invalidateQueries({ queryKey: [queryKey], exact: true });
         ToastNotification.success("User UnArchived");
         close();

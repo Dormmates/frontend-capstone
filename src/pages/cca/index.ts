@@ -1,6 +1,7 @@
 import AccountRequests from "./accounts/AccountRequests";
 import CCAHead from "./accounts/CCAHead";
 import Distributors from "./accounts/distributors/Distributors";
+import ViewDistributor from "./accounts/distributors/ViewDistributor";
 import Trainers from "./accounts/trainer/Trainers";
 
 import CreateShow from "./shows/CreateShow";
@@ -31,6 +32,7 @@ import CCADashboard from "./dashboard/CCADashboard";
 import CCALogin from "./CCALogin";
 
 export {
+  ViewDistributor,
   CCALogin,
   AccountRequests,
   CCAHead,

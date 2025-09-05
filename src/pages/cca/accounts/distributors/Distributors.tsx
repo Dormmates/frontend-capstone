@@ -16,6 +16,7 @@ import PaginatedTable from "@/components/PaginatedTable";
 import DeleteAccount from "../DeleteAccount";
 import ArchiveAccount from "../ArchiveAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
+import { Link } from "react-router-dom";
 
 const Distributors = () => {
   const addDistributor = useNewDistributor();
@@ -133,7 +134,9 @@ const Distributors = () => {
               headerClassName: "text-right",
               render: (distributor) => (
                 <div className="flex justify-end items-center gap-2">
-                  <Button variant="secondary">View Distributor</Button>
+                  <Link to={`/manage/distributor/${distributor.userId}`}>
+                    <Button variant="secondary">View Distributor</Button>
+                  </Link>
                   <Button onClick={() => setSelectedDistributor(distributor)} variant="outline">
                     Edit Details
                   </Button>

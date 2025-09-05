@@ -34,17 +34,15 @@ export const useUpdateShow = () => {
       formData.append("showTitle", data.showTitle);
       formData.append("description", data.description);
       formData.append("genre", data.genre);
-
-      if (data.department) {
-        formData.append("department", data.department);
-      }
-
-      formData.append("createdBy", data.createdBy);
       formData.append("showType", data.showType);
       formData.append("image", data.image);
 
       if (data.oldFileId) {
         formData.append("oldFileId", data.oldFileId);
+      }
+
+      if (data.department) {
+        formData.append("department", data.department);
       }
 
       const res = await request<any>("/api/show", data, "patchFormData");
