@@ -52,7 +52,7 @@ export const useUpdateShow = () => {
   });
 };
 
-export const useGetShows = (query: { departmentId?: string; showType?: ShowType }) => {
+export const useGetShows = (query: { departmentId?: string; showType?: ShowType; includeMajorProduction?: boolean; excludeArchived?: boolean }) => {
   return useQuery<ShowData[], Error>({
     queryKey: ["shows", query.departmentId, query.showType].filter(Boolean),
     queryFn: async () => {

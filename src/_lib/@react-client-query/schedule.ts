@@ -70,18 +70,18 @@ export const useReschedule = () => {
   });
 };
 
-export const useGetShowSchedules = (showId: string) => {
+export const useGetShowSchedules = (showId: string, query?: { excludeClosed?: boolean; excludeReservationOff?: boolean }) => {
   return useQuery<Schedule[], Error>({
     queryKey: ["schedules", showId],
     queryFn: async () => {
-      const res = await request<Schedule[]>("/api/schedule", { showId }, "get");
+      const res = await request<Schedule[]>("/api/schedule", { showId, ...query }, "get");
       return res.data;
     },
     retry: false,
   });
 };
 
-export const useGetScheduleInformation = (scheduleId: string) => {
+export const useGetScheduleInformation = (scheduleId: string, options?: { enabled?: boolean }) => {
   return useQuery<Schedule, Error>({
     queryKey: ["schedule", scheduleId],
     queryFn: async () => {
@@ -89,6 +89,7 @@ export const useGetScheduleInformation = (scheduleId: string) => {
       return res.data;
     },
     retry: false,
+    enabled: options?.enabled ?? true,
   });
 };
 

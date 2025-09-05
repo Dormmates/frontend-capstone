@@ -41,6 +41,10 @@ import {
 } from "../pages/cca/index";
 import DistributorCompleteAllocationHistory from "../pages/distributor/history/DistributorCompleteAllocationHistory";
 import DistributorCompleteRemittanceHistory from "../pages/distributor/history/DistributorCompleteRemittanceHistory";
+import CustomerHome from "@/pages/customer/CustomerHome";
+import CustomerLayout from "@/pages/customer/CustomerLayout";
+import CustomerViewShow from "@/pages/customer/CustomerViewShow";
+import CustomerViewSchedule from "@/pages/customer/CustomerViewSchedule";
 
 const AppRoute = () => {
   const { user } = useAuthContext();
@@ -115,6 +119,14 @@ const AppRoute = () => {
         path="/distributor/login"
         element={user ? user.roles.includes("distributor") ? <Navigate to="/" /> : <Navigate to="/" /> : <DistributorLogin />}
       />
+
+      {/* Customer Routes */}
+      <Route path="/customer" element={<CustomerLayout />}>
+        <Route index element={<CustomerHome />} />
+        <Route path="show/:showId" element={<CustomerViewShow />}>
+          <Route path="schedule/:scheduleId" element={<CustomerViewSchedule />} />
+        </Route>
+      </Route>
 
       {/* Others */}
       <Route path="/unathorized" element={<Unauthorized />} />
