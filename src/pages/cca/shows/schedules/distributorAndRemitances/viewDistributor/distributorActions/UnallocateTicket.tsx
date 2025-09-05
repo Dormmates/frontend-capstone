@@ -1,13 +1,11 @@
 import type { ShowData } from "@/types/show.ts";
 import type { Schedule } from "@/types/schedule.ts";
-import LongCard from "../../../../../../components/LongCard";
-import LongCardItem from "../../../../../../components/LongCardItem";
+import LongCard from "@/components/LongCard";
+import LongCardItem from "@/components/LongCardItem";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
-import ControlNumberInputTutorial from "../../../../../../components/ControlNumberInputTutorial";
-
+import ControlNumberInputTutorial from "@/components/ControlNumberInputTutorial";
 import { useState } from "react";
-
-import ToastNotification from "../../../../../../utils/toastNotification";
+import ToastNotification from "@/utils/toastNotification";
 import { parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";

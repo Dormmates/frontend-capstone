@@ -7,6 +7,7 @@ import InputField from "./InputField";
 import PasswordField from "./PasswordField";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import type { Distributor } from "@/types/user";
 
 type Props = {
   openAccount: boolean;
@@ -22,7 +23,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
-    contactNumber: user?.distributor ? user.distributor.contactNumber : "",
+    contactNumber: user?.roles.includes("distributor") ? (user as Distributor).distributor.contactNumber : "",
   });
 
   const closeAccountModal = () => {
@@ -33,7 +34,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
-      contactNumber: user?.distributor ? user.distributor.contactNumber : "",
+      contactNumber: user?.roles.includes("distributor") ? (user as Distributor).distributor.contactNumber : "",
     });
 
     setOpenAccount(false);
@@ -66,7 +67,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                 </div>
                 <InputField label="Email" type="email" value={userForm.email} onChange={handleInputChange} name="email" />
                 <div className="flex gap-5">
-                  {user?.distributor && user.role === "distributor" && (
+                  {user?.roles.includes("distributor") && (
                     <InputField
                       label="Contact Number"
                       type="number"
@@ -79,20 +80,20 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                   {user?.department?.name && <InputField disabled={true} value={user.department.name} onChange={() => {}} />}
                 </div>
 
-                {user?.distributor && (
+                {user?.roles.includes("distributor") && (
                   <div className="flex gap-5 mb-5">
                     <InputField
                       label="Distributor Type (Cannot Edit)"
                       disabled={true}
-                      value={user.distributor.distributortypes.name + ""}
+                      value={(user as Distributor).distributor.distributortypes.name + ""}
                       onChange={() => {}}
                     />
 
-                    {user.distributor.distributortypes.id === 2 && (
+                    {(user as Distributor).distributor.distributortypes.id === 2 && (
                       <InputField
                         label="Performing Group (Cannot Edit)"
                         disabled={true}
-                        value={user.distributor.department.name}
+                        value={(user as Distributor).distributor.department?.name}
                         onChange={() => {}}
                       />
                     )}

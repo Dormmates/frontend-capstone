@@ -6,6 +6,31 @@ body {
   overflow-y: hidden;
 }
 
+/* For WebKit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px; /* smaller width */
+  height: 6px; /* for horizontal scroll */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* transparent track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 100, 0.4); /* less opaque */
+  border-radius: 999px; /* fully rounded */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 100, 100, 0.6); /* darker on hover */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 100, 100, 0.4) transparent;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

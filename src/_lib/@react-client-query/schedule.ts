@@ -292,3 +292,23 @@ export const useRemitTicketSale = () => {
     retry: false,
   });
 };
+
+export const useUnRemitTicketSales = () => {
+  return useMutation<
+    any,
+    Error,
+    {
+      remittedTickets: number[];
+      scheduleId: string;
+      distributorId: string;
+      actionBy: string;
+      remarks?: string | null;
+    }
+  >({
+    mutationFn: async (data: { remittedTickets: number[]; scheduleId: string; distributorId: string; actionBy: string; remarks?: string | null }) => {
+      const res = await request<any>("/api/schedule/unremit", data, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};

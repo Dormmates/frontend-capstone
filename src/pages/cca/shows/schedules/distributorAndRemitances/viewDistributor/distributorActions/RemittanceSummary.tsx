@@ -1,9 +1,7 @@
 import { useState } from "react";
-
-import LongCard from "../../../../../../components/LongCard";
-import LongCardItem from "../../../../../../components/LongCardItem";
+import LongCard from "@/components/LongCard";
+import LongCardItem from "@/components/LongCardItem";
 import { formatCurrency } from "@/utils";
-
 import type { SeatSection } from "@/types/seat.ts";
 import type { SeatingConfiguration } from "@/types/schedule.ts";
 import { Textarea } from "@/components/ui/textarea";

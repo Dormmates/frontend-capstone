@@ -11,13 +11,13 @@ interface Props {
 const ProtectedRoute = ({ children, allowedRoles }: Props) => {
   const { user } = useAuthContext();
 
-  const isValidUser = user && allowedRoles.includes(user.role);
+  const isValidUser = user && user.roles.some((r) => allowedRoles.includes(r));
 
   if (!isValidUser) {
-    return <Navigate to="/unathorized" />;
+    return <Navigate to="/unauthorized" />;
   }
 
-  return children;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

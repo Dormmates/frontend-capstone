@@ -41,7 +41,6 @@ const ViewArchivedShows = ({ archivedShows }: Props) => {
             render: (showData) => (
               <div className="flex justify-end items-center gap-2">
                 <UnArchiveShow show={showData} />
-
                 <DeleteShow show={showData} />
               </div>
             ),

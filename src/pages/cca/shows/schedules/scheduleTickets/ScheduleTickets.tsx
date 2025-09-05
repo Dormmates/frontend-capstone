@@ -30,7 +30,7 @@ const statusOptions = [
 ];
 
 const sectionOptions = [
-  { name: "All Seat Section", value: "all" },
+  { name: "All Tickets", value: "all" },
   { name: "Orchestra Tickets", value: "orchestra" },
   { name: "Balcony Tickets", value: "balcony" },
   { name: "Complimentary Tickets", value: "complimentary" },
@@ -151,7 +151,7 @@ const ScheduleTickets = () => {
             />
             <Dropdown
               className="w-fit"
-              label="Select Status"
+              label="Select Section"
               placeholder="Select Section"
               items={sectionOptions}
               onChange={(value) => setFilterValues((prev) => ({ ...prev, section: value }))}

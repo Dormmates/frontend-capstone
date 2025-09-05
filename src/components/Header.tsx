@@ -3,7 +3,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 
 const Header = () => {
   return (
-    <header className="flex border-b border-b-lightGrey p-2">
+    <header className="flex border-b border-b-lightGrey p-2 w-full bg-white h-12 items-center">
       <Tooltip>
         <TooltipTrigger asChild>
           <SidebarTrigger />

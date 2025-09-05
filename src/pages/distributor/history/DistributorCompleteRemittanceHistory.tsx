@@ -1,97 +1,67 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { RemittanceHistory } from "@/types/ticket.ts";
 import { useOutletContext } from "react-router-dom";
-import RemittanceSummary from "../../cca/shows/schedules/distributorAndRemitances/remitTicket/RemittanceSummary";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import { formatCurrency } from "@/utils";
 import { Button } from "@/components/ui/button";
-import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal";
-
-const ITEMS_PER_PAGE = 5;
+import PaginatedTable from "@/components/PaginatedTable";
+import RemittanceSummary from "@/pages/cca/shows/schedules/distributorAndRemitances/viewDistributor/distributorActions/RemittanceSummary";
 
 const DistributorCompleteRemittanceHistory = () => {
   const { remittanceHistory } = useOutletContext<{ remittanceHistory: RemittanceHistory[] }>();
-  const [page, setPage] = useState(1);
   const [selectedHistory, setSelectedHistory] = useState<RemittanceHistory | null>(null);
-
-  const paginatedLogs = useMemo(() => {
-    if (!remittanceHistory) return [];
-    const start = (page - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    return remittanceHistory.slice(start, end);
-  }, [page, remittanceHistory]);
 
   return (
     <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Show</TableHead>
-            <TableHead>Show Schedule</TableHead>
-            <TableHead>Tickets Remitted</TableHead>
-            <TableHead>Date Remitted</TableHead>
-            <TableHead>Time Remitted</TableHead>
-            <TableHead>Remitted To</TableHead>
-            <TableHead>Amount Remitted</TableHead>
-            <TableHead>Remittance Type</TableHead>
-            <TableHead>Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {remittanceHistory.length == 0 ? (
-            <TableRow>
-              <TableCell className="text-center py-10 text-gray-400" colSpan={6}>
-                No Remittance Yet
-              </TableCell>
-            </TableRow>
-          ) : (
-            paginatedLogs.map((log) => (
-              <TableRow key={log.remittanceId}>
-                <TableCell>
-                  <div className="flex flex-col lg:flex-row items-center gap-2">
-                    <img className="w-5" src={log.showCover} alt="cover" />
-                    <p>{log.showTitle}</p>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  {formatToReadableDate(log.showDate + "")} at {formatToReadableTime(log.showDate + "")}
-                </TableCell>
-                <TableCell>{log.tickets.length}</TableCell>
-                <TableCell>{formatToReadableDate(log.dateRemitted + "")}</TableCell>
-                <TableCell>{formatToReadableTime(log.dateRemitted + "")}</TableCell>
-                <TableCell>{log.receivedBy}</TableCell>
-                <TableCell>{formatCurrency(log.totalRemittance)}</TableCell>
-                <TableCell>
-                  {log.actionType === "remit" ? (
-                    <p className="flex items-center gap-2">
-                      <span className="w-2 h-2 bg-green rounded-full"></span>Remit
-                    </p>
-                  ) : (
-                    <p className="flex items-center gap-2">
-                      <span className="w-2 h-2 bg-red rounded-full"></span>Unremit
-                    </p>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <Button onClick={() => setSelectedHistory(log)} variant="outline">
-                    View Summary
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-
-      <div className="mt-5">
-        <Pagination
-          currentPage={page}
-          totalPage={Math.ceil(remittanceHistory.length / ITEMS_PER_PAGE)}
-          onPageChange={(newPage) => setPage(newPage)}
-        />
-      </div>
+      <PaginatedTable
+        data={remittanceHistory}
+        columns={[
+          {
+            key: "show",
+            header: "Show",
+            render: (log) => (
+              <div className="flex flex-col lg:flex-row items-center gap-2">
+                <img className="w-5" src={log.showCover} alt="cover" />
+                <p>{log.showTitle}</p>
+              </div>
+            ),
+          },
+          {
+            key: "showSchedule",
+            header: "Show Schedule",
+            render: (log) => `${formatToReadableDate(log.showDate + "")} at ${formatToReadableTime(log.showDate + "")}`,
+          },
+          { key: "tickets", header: "Tickets Remitted", render: (log) => log.tickets.length },
+          { key: "dateRemitted", header: "Date Remitted", render: (log) => formatToReadableDate(log.dateRemitted + "") },
+          { key: "timeRemitted", header: "Time Remitted", render: (log) => formatToReadableTime(log.dateRemitted + "") },
+          { key: "receivedBy", header: "Remitted To", render: (log) => log.receivedBy },
+          { key: "amount", header: "Amount Remitted", render: (log) => formatCurrency(log.totalRemittance) },
+          {
+            key: "type",
+            header: "Remittance Type",
+            render: (log) =>
+              log.actionType === "remit" ? (
+                <p className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-green rounded-full"></span>Remit
+                </p>
+              ) : (
+                <p className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-red rounded-full"></span>Unremit
+                </p>
+              ),
+          },
+          {
+            key: "action",
+            header: "Action",
+            render: (log) => (
+              <Button onClick={() => setSelectedHistory(log)} variant="outline">
+                View Summary
+              </Button>
+            ),
+          },
+        ]}
+      />
 
       {selectedHistory && (
         <Modal title="Remittance Summary" isOpen={!!selectedHistory} onClose={() => setSelectedHistory(null)}>

@@ -1,5 +1,4 @@
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
-import archiveIcon from "../../../../assets/icons/archive.png";
 import unassign from "../../../../assets/icons/unassign.png";
 import { useEditTrainer, useGetTrainers, useNewTrainer } from "@/_lib/@react-client-query/accounts.ts";
 import { useMemo, useState } from "react";
@@ -7,17 +6,21 @@ import { useDebounce } from "@/hooks/useDeabounce.ts";
 import { useGetDepartments, useRemoveDepartmentTrainerByTrainerId } from "@/_lib/@react-client-query/department.ts";
 import ToastNotification from "../../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
-import type { Trainer } from "@/types/user.ts";
+import type { User } from "@/types/user.ts";
 import TrainerForm from "./TrainerForm";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import Modal from "@/components/Modal";
 import AlertModal from "@/components/AlertModal";
 import PaginatedTable from "@/components/PaginatedTable";
+import ArchiveAccount from "../ArchiveAccount";
+import DeleteAccount from "../DeleteAccount";
+import UnArchiveAccount from "../UnArchiveAccount";
+import { useAuthContext } from "@/context/AuthContext";
 
 const Trainers = () => {
+  const { user } = useAuthContext();
   const addTrainer = useNewTrainer();
   const editTrainer = useEditTrainer();
   const removeTrainer = useRemoveDepartmentTrainerByTrainerId();
@@ -30,21 +33,30 @@ const Trainers = () => {
   const { data: trainers, isLoading: loadingTrainers } = useGetTrainers();
   const { data: departments, isLoading: loadingDepartments } = useGetDepartments();
 
-  const [selectedTrainer, setSelectedTrainer] = useState<Trainer | null>(null);
+  const [selectedTrainer, setSelectedTrainer] = useState<User | null>(null);
   const [unassignTrainer, setUnassignTrainer] = useState({ userId: "", openModal: false });
+  const [showArchived, setShowArchived] = useState(false);
+
+  const activeTrainers = useMemo(() => {
+    if (!trainers) return [];
+    return trainers.filter((trainers) => !trainers.isArchived);
+  }, [trainers]);
+
+  const archivedTrainers = useMemo(() => {
+    if (!trainers) return [];
+    return trainers.filter((trainers) => trainers.isArchived);
+  }, [trainers]);
 
   const searchedTrainers = useMemo(() => {
-    if (!trainers) return [];
-    return trainers
-      .filter((trainer) => !trainer.isArchived)
-      .filter((trainer) => {
-        const l = trainer.lastName.toLocaleLowerCase().trim();
-        const f = trainer.firstName.toLocaleLowerCase().trim();
-        const s = searchValue.toLocaleLowerCase().trim();
+    if (!activeTrainers) return [];
+    return activeTrainers.filter((trainer) => {
+      const l = trainer.lastName.toLocaleLowerCase().trim();
+      const f = trainer.firstName.toLocaleLowerCase().trim();
+      const s = searchValue.toLocaleLowerCase().trim();
 
-        return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
-      });
-  }, [debouncedSearch, trainers]);
+      return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
+    });
+  }, [debouncedSearch, activeTrainers]);
 
   const groupOptions = (departments ?? [])
     .filter((department) => !department.trainerId || !department.trainerName)
@@ -97,9 +109,13 @@ const Trainers = () => {
             {
               key: "name",
               header: "Full Name",
-              render: (trainer) => trainer.firstName + " " + trainer.lastName,
+              render: (trainer) => (
+                <span className={user?.userId === trainer.userId ? "font-bold" : ""}>
+                  {user?.userId === trainer.userId ? "You: " : ""}
+                  {trainer.firstName} {trainer.lastName}
+                </span>
+              ),
             },
-
             {
               key: "group",
               header: "Group",
@@ -136,14 +152,8 @@ const Trainers = () => {
                       }
                     />
 
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Button variant="ghost" className="p-0">
-                          <img src={archiveIcon} alt="archive" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent> Archive Trainer</TooltipContent>
-                    </Tooltip>
+                    <ArchiveAccount user={trainer as User} queryKey="trainers" />
+                    <DeleteAccount user={trainer as User} queryKey="trainers" />
                   </div>
                 </div>
               ),
@@ -238,7 +248,54 @@ const Trainers = () => {
         </Modal>
       )}
 
-      <Button className="fixed bottom-10 right-10 shadow-lg rounded-full ">View Archived Trainers</Button>
+      {showArchived && (
+        <Modal
+          isOpen={showArchived}
+          onClose={() => setShowArchived(false)}
+          title="Archived Trainers"
+          description="Archived Trainers can be  unarchived"
+          className="max-w-5xl"
+        >
+          <div>
+            <PaginatedTable
+              data={archivedTrainers}
+              columns={[
+                {
+                  key: "name",
+                  header: "Full Name",
+                  render: (trainer) => trainer.firstName + " " + trainer.lastName,
+                },
+
+                {
+                  key: "group",
+                  header: "Group",
+                  render: (trainer) => (trainer.department ? trainer.department.name : "No Group Assigned"),
+                },
+                {
+                  key: "email",
+                  header: "Email",
+                  render: (trainer) => trainer.email,
+                },
+                {
+                  key: "action",
+                  header: "Action",
+                  headerClassName: "text-right",
+                  render: (trainer) => (
+                    <div className="flex justify-end items-center gap-2">
+                      <UnArchiveAccount user={trainer as User} queryKey="trainers" />
+                      <DeleteAccount user={trainer as User} queryKey="trainers" />
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+        </Modal>
+      )}
+
+      <Button onClick={() => setShowArchived(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full ">
+        View Archived Trainers
+      </Button>
     </ContentWrapper>
   );
 };

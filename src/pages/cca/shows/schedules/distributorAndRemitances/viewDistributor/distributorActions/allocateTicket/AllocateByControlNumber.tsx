@@ -1,5 +1,4 @@
-import ControlNumberInputTutorial from "../../../../../../components/ControlNumberInputTutorial";
-
+import ControlNumberInputTutorial from "@/components/ControlNumberInputTutorial";
 import type { Ticket } from "@/types/ticket.ts";
 import InputField from "@/components/InputField";
 

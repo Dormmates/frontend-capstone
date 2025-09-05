@@ -135,6 +135,7 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
               disabled={isSubmitting}
               error={errors.type}
               className="w-full"
+              placeholder="Select Distributor Type"
               label="Distributor Type"
               onChange={(value) => setFormData((prev) => ({ ...prev, type: value }))}
               value={formData.type}
@@ -149,6 +150,7 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
                 error={errors.department}
                 className="w-full"
                 label="Performing Group"
+                placeholder="Select Performing Group"
                 onChange={(value) => setFormData((prev) => ({ ...prev, department: value }))}
                 value={formData.department || ""}
                 items={groupOptions}

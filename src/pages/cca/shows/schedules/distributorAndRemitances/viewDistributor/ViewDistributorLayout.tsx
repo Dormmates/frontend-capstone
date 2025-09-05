@@ -11,16 +11,17 @@ import remitted_icon from "../../../../../../assets/icons/remitted.png";
 import balance_due_icon from "../../../../../../assets/icons/balance_due.png";
 import type { ShowData } from "../../../../../../types/show";
 import type { Schedule } from "../../../../../../types/schedule";
-import UnallocateTicket from "../unallocateTicket/UnallocateTicket";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "../../../../../../context/AuthContext";
 import ToastNotification from "../../../../../../utils/toastNotification";
-import RemitTickets from "../remitTicket/RemitTickets";
 import { formatCurrency } from "../../../../../../utils";
 import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import { Separator } from "@/components/ui/separator";
 import Modal from "@/components/Modal";
+import UnallocateTicket from "./distributorActions/UnallocateTicket";
+import RemitTickets from "./distributorActions/RemitTickets";
+import UnRemitTickets from "./distributorActions/UnRemitTickets";
 
 const links = [
   {
@@ -49,6 +50,7 @@ const ViewDistributorLayout = () => {
 
   const [isUnallocateTicket, setIsUnallocateTicket] = useState(false);
   const [isRemitTicket, setIsRemitTicket] = useState(false);
+  const [isUnRemitTicket, setIsUnRemitTicket] = useState(false);
 
   const summary = useMemo(() => {
     if (!data)
@@ -76,8 +78,6 @@ const ViewDistributorLayout = () => {
     return { totalAllocatedTickets, soldTickets, unsoldTickets, remittedTickets, pendingRemittance, expected, remitted, balanceDue };
   }, [data]);
 
-  console.log(data);
-
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
@@ -101,14 +101,14 @@ const ViewDistributorLayout = () => {
       <div className="flex flex-col gap-5 ">
         <h1 className="text-2xl">{distributorName}</h1>
         <div className="flex gap-3 items-center">
-          <Button className="!bg-green">Allocate Ticket</Button>
+          {/* <Button className="!bg-green">Allocate Ticket</Button> */}
           <Button onClick={() => setIsUnallocateTicket(true)} className="!bg-red">
             Unallocate Ticket
           </Button>
           <Button onClick={() => setIsRemitTicket(true)} className="!bg-primary">
             Remit Tickets
           </Button>
-          <Button className="!bg-rose-500">Unremit Tickets</Button>
+          <Button onClick={() => setIsUnRemitTicket(true)}> Unremit Tickets</Button>
         </div>
         <div className="flex gap-16">
           <div className="flex flex-col gap-3">
@@ -211,6 +211,12 @@ const ViewDistributorLayout = () => {
       {isRemitTicket && (
         <Modal className="max-w-2xl" title="Remit Ticket Sales" isOpen={isRemitTicket} onClose={() => setIsRemitTicket(false)}>
           <RemitTickets closeRemit={() => setIsRemitTicket(false)} distributorData={data} />
+        </Modal>
+      )}
+
+      {isUnRemitTicket && (
+        <Modal className="max-w-2xl" title="Unremit Ticket Sales" isOpen={isUnRemitTicket} onClose={() => setIsUnRemitTicket(false)}>
+          <UnRemitTickets distributorData={data} closeModal={() => setIsUnRemitTicket(false)} />
         </Modal>
       )}
     </div>

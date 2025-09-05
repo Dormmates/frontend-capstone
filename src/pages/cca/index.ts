@@ -12,7 +12,7 @@ import ViewShow from "./shows/ViewShow";
 
 import ViewShowScheduleLayout from "./shows/schedules/ViewShowScheduleLayout";
 import ScheduleDistributorAndRemittances from "./shows/schedules/distributorAndRemitances/ScheduleDistributorAndRemittances";
-import TicketAllocation from "./shows/schedules/distributorAndRemitances/allocateTicket/TicketAllocation";
+import TicketAllocation from "./shows/schedules/distributorAndRemitances/viewDistributor/distributorActions/allocateTicket/TicketAllocation";
 
 import ViewDistributorLayout from "./shows/schedules/distributorAndRemitances/viewDistributor/ViewDistributorLayout";
 import DistributorRemittanceHistory from "./shows/schedules/distributorAndRemitances/viewDistributor/remittanceHistory/DistributorRemittanceHistory";

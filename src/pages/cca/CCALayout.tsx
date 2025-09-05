@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
-
 import accounts from "../../assets/icons/accounts.png";
 import dashboard from "../../assets/icons/dashboard.png";
 import groups from "../../assets/icons/performing-groups.png";
@@ -9,7 +8,6 @@ import major from "../../assets/icons/major-prod.png";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import SideBar from "@/components/SideBar";
 import Header from "@/components/Header";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CCALayout = () => {
   const { user } = useAuthContext();
@@ -33,18 +31,18 @@ const CCALayout = () => {
       icon: groups,
       name: "Performing Groups",
       path: "/performing-groups",
-      hidden: user?.role === "trainer",
+      hidden: !user?.roles.includes("head"),
     },
     {
       icon: accounts,
       name: "Manage Accounts",
       items: [
-        { name: "Trainer", path: "/manage/trainers", hidden: user?.role === "trainer" },
+        { name: "Trainer", path: "/manage/trainers", hidden: !user?.roles.includes("head") },
         { name: "Distributor", path: "/manage/distributors" },
-        { name: "CCA Head", path: "/manage/cca-head", hidden: user?.role === "trainer" },
+        { name: "CCA Head", path: "/manage/cca-head", hidden: !user?.roles.includes("head") },
         { name: "Account Request", path: "/manage/request" },
       ],
-      path: user?.role === "trainer" ? "/manage/distributors" : "/manage/trainers",
+      path: !user?.roles.includes("head") ? "/manage/distributors" : "/manage/trainers",
     },
   ];
 
@@ -52,13 +50,14 @@ const CCALayout = () => {
     <SidebarProvider>
       <SideBar items={sideBarItems} />
 
-      <main className="flex flex-col w-full h-screen">
+      <main className="flex flex-col w-full ">
         <Header />
-        <ScrollArea className="flex-1">
+
+        <div className="overflow-y-auto h-screen mb-5">
           <div className="p-4">
             <Outlet />
           </div>
-        </ScrollArea>
+        </div>
       </main>
     </SidebarProvider>
   );

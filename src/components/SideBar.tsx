@@ -128,7 +128,7 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                           {user?.firstName} {user?.lastName}
                         </p>
                         <p className="text-lightGrey">
-                          {user?.role === "head" ? "CCA Head" : user?.role === "trainer" ? "CCA Trainer" : "Distributor"}
+                          {user?.roles.includes("head") ? "CCA Head" : user?.roles.includes("distributor") ? "Distributor" : "CCA Trainer"}
                         </p>
                       </div>
                     </div>

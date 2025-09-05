@@ -55,7 +55,7 @@ const MajorProductionShows = () => {
             value={filteredShows.filter((s) => s.showType === "majorProduction").length}
           />
         </div>
-        {user.role === "head" && (
+        {user.roles.includes("head") && (
           <Link className="self-end" to={"/shows/add?showType=major"}>
             <Button>Add New Major Production</Button>
           </Link>
@@ -101,7 +101,7 @@ const MajorProductionShows = () => {
                   <Button variant="outline">Go To Schedules</Button>
                 </Link>
 
-                {user.role === "head" && (
+                {user.roles.includes("head") && (
                   <>
                     <EditShow show={show} />
                     <ArchiveShow show={show} />
@@ -114,7 +114,7 @@ const MajorProductionShows = () => {
         data={activeShows}
       />
 
-      {user.role === "head" && (
+      {user.roles.includes("head") && (
         <Button onClick={() => setIsViewArchivedShows(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full">
           View Archived Show
         </Button>

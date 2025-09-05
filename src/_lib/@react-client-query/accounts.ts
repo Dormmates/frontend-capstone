@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import type { Distributor, DistributorTypes, Trainer } from "../../types/user";
+import type { Distributor, DistributorTypes, User } from "../../types/user";
 import { request } from "../api";
 
 interface NewTrainerPayload {
@@ -28,10 +28,10 @@ interface EditDistributorPayload extends NewDistributorPayload {
 }
 
 export const useGetTrainers = () => {
-  return useQuery<Trainer[], Error>({
+  return useQuery<User[], Error>({
     queryKey: ["trainers"],
     queryFn: async () => {
-      const res = await request<Trainer[]>("/api/accounts/trainers", {}, "get");
+      const res = await request<User[]>("/api/accounts/trainers", {}, "get");
       return res.data;
     },
     retry: false,
@@ -91,6 +91,33 @@ export const useEditDistributor = () => {
   return useMutation<any, Error, EditDistributorPayload>({
     mutationFn: async (data: EditDistributorPayload) => {
       const res = await request<any>("/api/accounts/distributor", data, "patch");
+      return res.data;
+    },
+  });
+};
+
+export const useDeleteUser = () => {
+  return useMutation<any, Error, string>({
+    mutationFn: async (userId: string) => {
+      const res = await request<any>("/api/accounts/delete/user", { userId }, "post");
+      return res.data;
+    },
+  });
+};
+
+export const useUnArchiveAccount = () => {
+  return useMutation<any, Error, string>({
+    mutationFn: async (userId: string) => {
+      const res = await request<any>("/api/accounts/unArchive/user", { userId }, "post");
+      return res.data;
+    },
+  });
+};
+
+export const useArchiveAccount = () => {
+  return useMutation<any, Error, string>({
+    mutationFn: async (userId: string) => {
+      const res = await request<any>("/api/accounts/archive/user", { userId }, "post");
       return res.data;
     },
   });

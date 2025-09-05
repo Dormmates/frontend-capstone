@@ -3,7 +3,6 @@ import { useGetShowsAndDistributorTickets } from "@/_lib/@react-client-query/sho
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 
 import { useAuthContext } from "@/context/AuthContext.tsx";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import type { DistributorScheduleTickets } from "@/types/ticket.ts";
 
@@ -12,6 +11,7 @@ import { formatCurrency } from "@/utils";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/Modal";
+import PaginatedTable from "@/components/PaginatedTable";
 
 const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
   const soldTickets = schedule.tickets.filter((ticket) => ticket.status === "sold");
@@ -58,53 +58,58 @@ const DistributorDashboard = () => {
           <SimpleCard className="!border-l-red" label="Unsold Tickets" value={summary.unsoldTickets} />
         </div>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Show Title</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Time</TableHead>
-              <TableHead>Tickets Allocated</TableHead>
-              <TableHead>Sold Tickets</TableHead>
-              <TableHead>Amount to be Remitted</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center py-10 text-gray-400">
-                  No Allocated Tickets
-                </TableCell>
-              </TableRow>
-            ) : (
-              data.map((schedule) => {
+        <PaginatedTable
+          data={data}
+          columns={[
+            {
+              key: "title",
+              header: "Show Title",
+              render: (schedule) => (
+                <div className="flex items-center gap-2">
+                  <img className="w-5" src={schedule.show.showCover} alt="cover" />
+                  <p>{schedule.show.title}</p>
+                </div>
+              ),
+            },
+            {
+              key: "date",
+              header: "Date",
+              render: (schedule) => formatToReadableDate(schedule.datetime + ""),
+            },
+            {
+              key: "time",
+              header: "Time",
+              render: (schedule) => formatToReadableTime(schedule.datetime + ""),
+            },
+            {
+              key: "tickets",
+              header: "Tickets Allocated",
+              render: (schedule) => schedule.tickets.length,
+            },
+            {
+              key: "sold",
+              header: "Sold Tickets",
+              render: (schedule) => schedule.tickets.filter((ticket) => ticket.status === "sold" || ticket.isRemitted).length,
+            },
+            {
+              key: "amount",
+              header: "Amount to be Remitted",
+              render: (schedule) => {
                 const { amountToRemit } = calculateRemittanceAmount(schedule);
-
-                return (
-                  <TableRow key={schedule.scheduleId}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <img className="w-5" src={schedule.show.showCover} alt="cover" />
-                        <p>{schedule.show.title}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell>{formatToReadableDate(schedule.datetime + "")}</TableCell>
-                    <TableCell>{formatToReadableTime(schedule.datetime + "")}</TableCell>
-                    <TableCell>{schedule.tickets.length}</TableCell>
-                    <TableCell>{schedule.tickets.filter((ticket) => ticket.status === "sold" || ticket.isRemitted).length}</TableCell>
-                    <TableCell>{formatCurrency(amountToRemit)}</TableCell>
-                    <TableCell>
-                      <Button onClick={() => setSelectedSchedule(schedule)} variant="outline">
-                        View Tickets
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })
-            )}
-          </TableBody>
-        </Table>
+                return formatCurrency(amountToRemit);
+              },
+            },
+            {
+              key: "action",
+              header: "Actions",
+              render: (schedule) => (
+                <Button onClick={() => setSelectedSchedule(schedule)} variant="outline">
+                  View Tickets
+                </Button>
+              ),
+            },
+          ]}
+        />
       </div>
 
       {selectedSchedule && (

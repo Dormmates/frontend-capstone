@@ -5,10 +5,10 @@ import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import type { Schedule } from "@/types/schedule.ts";
 import { formatCurrency } from "@/utils";
 import type { RemittanceHistory } from "@/types/ticket.ts";
-import RemittanceSummary from "../../remitTicket/RemittanceSummary";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import PaginatedTable from "@/components/PaginatedTable";
+import RemittanceSummary from "../distributorActions/RemittanceSummary";
 
 const DistributorRemittanceHistory = () => {
   const { schedule } = useOutletContext<{ schedule: Schedule }>();

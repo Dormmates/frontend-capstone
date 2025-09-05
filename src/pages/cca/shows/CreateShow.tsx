@@ -63,7 +63,7 @@ const CreateShow = () => {
           description: "",
           genre: [],
           imageCover: "",
-          group: user?.role === "trainer" ? (user.department?.departmentId as string) : "",
+          group: !user?.roles.includes("head") ? (user?.department?.departmentId as string) : "",
           showImagePreview: "",
           image: null,
         }}

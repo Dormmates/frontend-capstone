@@ -52,7 +52,7 @@ const AppRoute = () => {
         element={
           !user ? (
             <CCALogin />
-          ) : user.role === "distributor" ? (
+          ) : user.roles.includes("distributor") ? (
             <ProtectedRoute allowedRoles={["distributor"]}>
               <DistributorLayout />
             </ProtectedRoute>
@@ -63,7 +63,7 @@ const AppRoute = () => {
           )
         }
       >
-        {user?.role === "distributor" ? (
+        {user?.roles.includes("distributor") ? (
           <>
             <Route index element={<DistributorDashboard />} />
             <Route path="history" element={<DistributorHistory />}>
@@ -97,7 +97,7 @@ const AppRoute = () => {
 
             <Route path="shows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
 
-            {user?.role === "head" && (
+            {user?.roles.includes("head") && (
               <>
                 <Route path="performing-groups" element={<PerformingGroups />} />
                 <Route path="manage/trainers" element={<Trainers />} />
@@ -111,7 +111,7 @@ const AppRoute = () => {
       {/* Separate login route for distributor */}
       <Route
         path="/distributor/login"
-        element={user ? user.role === "distributor" ? <Navigate to="/" /> : <Navigate to="/" /> : <DistributorLogin />}
+        element={user ? user.roles.includes("distributor") ? <Navigate to="/" /> : <Navigate to="/" /> : <DistributorLogin />}
       />
 
       {/* Others */}

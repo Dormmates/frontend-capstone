@@ -165,7 +165,8 @@ const ViewShow = () => {
             <div className="flex flex-col gap-5">
               <h1 className="font-semibold text-2xl ">Show Schedules</h1>
             </div>
-            {user?.role === "head" && show.showType === "majorProduction" && (
+            {((show.showType === "majorProduction" && user?.roles.includes("head")) ||
+              (show.showType !== "majorProduction" && (user?.roles.includes("head") || user?.roles.includes("trainer")))) && (
               <Link className="self-end" to={`/shows/add/schedule/${id}`}>
                 <Button>Add New Schedule</Button>
               </Link>

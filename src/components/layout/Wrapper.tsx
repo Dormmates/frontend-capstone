@@ -6,5 +6,5 @@ export const PageWrapper = ({ children, className }: { children: React.ReactNode
 };
 
 export const ContentWrapper = ({ children, className }: { children: React.ReactNode; className?: string }) => {
-  return <div className={merge("px-5 py-2 lg:px-8 lg:py-5", className)}>{children}</div>;
+  return <div className={merge("py-2 lg:px-8 lg:py-5", className)}>{children}</div>;
 };

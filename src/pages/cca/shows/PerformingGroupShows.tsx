@@ -8,7 +8,6 @@ import { useAuthContext } from "@/context/AuthContext.tsx";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
 import type { ShowData } from "@/types/show.ts";
 import SimpleCard from "@/components/SimpleCard";
-import { Input } from "@/components/ui/input";
 import Dropdown from "@/components/Dropdown";
 import ViewArchivedShows from "./ViewArchivedShows";
 import { Button } from "@/components/ui/button";
@@ -16,6 +15,7 @@ import Modal from "@/components/Modal";
 import ArchiveShow from "./showActions/ArchiveShow";
 import PaginatedTable from "@/components/PaginatedTable";
 import EditShow from "./showActions/EditShow";
+import InputField from "@/components/InputField";
 
 const showTypes = [
   { name: "All Show Type", value: "all" },
@@ -32,7 +32,7 @@ const parseDepartments = (departments: Department[]) => {
 const PerformingGroupShows = () => {
   const { user } = useAuthContext();
   const { data: shows, isLoading: showsLoading } = useGetShows({
-    departmentId: user?.role === "trainer" && user?.department ? user.department.departmentId : "",
+    departmentId: !user?.roles.includes("head") && user?.department ? user.department.departmentId : "",
   });
   const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments();
 
@@ -81,21 +81,21 @@ const PerformingGroupShows = () => {
           <Button>Add New Show</Button>
         </Link>
       </div>
-      <div className="mt-10 flex gap-5 mb-5">
-        <Input
-          className="min-w-[450px] max-w-[450px]"
+      <div className="mt-10 flex flex-col gap-5 mb-5">
+        <InputField
+          className="w-full"
           value={filter.search}
           onChange={(e) => setFilter((prev) => ({ ...prev, search: e.target.value }))}
           placeholder="Search Show by Title"
         />
         <div className="flex gap-3">
           <Dropdown
-            disabled={user.role === "trainer"}
+            disabled={!user?.roles.includes("head")}
             label="Performing Groups"
             placeholder="Select Performing Group"
             className="max-w-[200px]"
             onChange={(value) => setFilter((prev) => ({ ...prev, department: value }))}
-            value={user.role === "head" ? filter.department : user?.department ? user.department.departmentId : ""}
+            value={user?.roles.includes("head") ? filter.department : user?.department ? user.department.departmentId : ""}
             items={departments}
           />
           <Dropdown

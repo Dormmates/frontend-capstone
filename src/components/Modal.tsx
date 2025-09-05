@@ -16,7 +16,7 @@ const Modal = ({ children, title, description, className, isOpen, isTransparent 
   return (
     <Dialog onOpenChange={onClose} open={isOpen}>
       <DialogOverlay className={isTransparent ? "bg-transparent" : "bg-white/10"} />
-      <DialogContent className={`max-w-xl ${className}`}>
+      <DialogContent className={`max-w-xl w-[95%]  ${className}`}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}

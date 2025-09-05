@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
 import { useEditDistributor, useGetDistributors, useGetDistributorTypes, useNewDistributor } from "@/_lib/@react-client-query/accounts.ts";
-import archiveIcon from "../../../../assets/icons/archive.png";
-import type { Distributor } from "@/types/user.ts";
+import type { Distributor, User } from "@/types/user.ts";
 import DistributorForm from "./DistributorForm";
 import { useGetDepartments } from "@/_lib/@react-client-query/department.ts";
 import ToastNotification from "../../../../utils/toastNotification";
@@ -14,6 +13,9 @@ import Dropdown from "@/components/Dropdown";
 import InputField from "@/components/InputField";
 import Modal from "@/components/Modal";
 import PaginatedTable from "@/components/PaginatedTable";
+import DeleteAccount from "../DeleteAccount";
+import ArchiveAccount from "../ArchiveAccount";
+import UnArchiveAccount from "../UnArchiveAccount";
 
 const Distributors = () => {
   const addDistributor = useNewDistributor();
@@ -26,6 +28,7 @@ const Distributors = () => {
 
   const [isAddDistributor, setIsAddDistributor] = useState(false);
   const [selectedDistributor, setSelectedDistributor] = useState<Distributor | null>(null);
+  const [showArchived, setShowArchived] = useState(false);
   const [type, setType] = useState("all");
 
   const distributorTypeOptions = (distributorTypes ?? []).map((type) => ({ name: type.name, value: String(type.id) }));
@@ -34,9 +37,19 @@ const Distributors = () => {
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue);
 
-  const searchedDistributors = useMemo(() => {
+  const activeDistributors = useMemo(() => {
     if (!distributors) return [];
-    return distributors
+    return distributors.filter((distributor) => !distributor.isArchived);
+  }, [distributors]);
+
+  const archivedDistributors = useMemo(() => {
+    if (!distributors) return [];
+    return distributors.filter((distributor) => distributor.isArchived);
+  }, [distributors]);
+
+  const searchedDistributors = useMemo(() => {
+    if (!activeDistributors) return [];
+    return activeDistributors
       .filter((distributor) => !distributor.isArchived)
       .filter((distributor) => {
         const l = distributor.lastName.toLocaleLowerCase().trim();
@@ -46,7 +59,7 @@ const Distributors = () => {
         return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
       })
       .filter((distributor) => !type || type === "all" || Number(type) === distributor.distributor.distributortypes.id);
-  }, [debouncedSearch, distributors, type]);
+  }, [debouncedSearch, activeDistributors, type]);
 
   if (loadingDistributors || loadingTypes || loadingDepartments) {
     return <h1>Loaddingg..</h1>;
@@ -87,7 +100,7 @@ const Distributors = () => {
         </div>
 
         <PaginatedTable
-          data={searchedDistributors}
+          data={activeDistributors}
           columns={[
             {
               key: "name",
@@ -124,15 +137,8 @@ const Distributors = () => {
                   <Button onClick={() => setSelectedDistributor(distributor)} variant="outline">
                     Edit Details
                   </Button>
-                  <div className="relative group">
-                    <Button variant="ghost" className="!p-0">
-                      <img src={archiveIcon} alt="archive" />
-                    </Button>
-
-                    <div className="absolute  -left-24 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
-                      Archive Distributor
-                    </div>
-                  </div>
+                  <ArchiveAccount queryKey="distributors" user={distributor as User} />
+                  <DeleteAccount queryKey="distributors" user={distributor as User} />
                 </div>
               ),
             },
@@ -244,7 +250,63 @@ const Distributors = () => {
         </Modal>
       )}
 
-      <Button className="fixed bottom-10 right-10 shadow-lg rounded-full ">View Archived Distributors</Button>
+      {showArchived && (
+        <Modal
+          isOpen={showArchived}
+          onClose={() => setShowArchived(false)}
+          title="Archived Distributors"
+          description="Archived distributors can be  unarchived"
+          className="max-w-5xl"
+        >
+          <div>
+            <PaginatedTable
+              data={archivedDistributors}
+              columns={[
+                {
+                  key: "name",
+                  header: "Full Name",
+                  render: (distributor) => distributor.firstName + " " + distributor.lastName,
+                },
+                {
+                  key: "email",
+                  header: "Email",
+                  render: (distributor) => distributor.email,
+                },
+                {
+                  key: "contact",
+                  header: "Contact Number",
+                  render: (distributor) => distributor.distributor.contactNumber,
+                },
+                {
+                  key: "type",
+                  header: "Distributor Type",
+                  render: (distributor) => distributor.distributor.distributortypes.name,
+                },
+                {
+                  key: "group",
+                  header: "Performing Group",
+                  render: (distributor) => distributor.distributor.department?.name ?? "No Department",
+                },
+                {
+                  key: "action",
+                  header: "Actions",
+                  headerClassName: "text-right",
+                  render: (distributor) => (
+                    <div className="flex justify-end items-center gap-2">
+                      <UnArchiveAccount queryKey="distributors" user={distributor as User} />
+                      <DeleteAccount queryKey="distributors" user={distributor as User} />
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+        </Modal>
+      )}
+
+      <Button onClick={() => setShowArchived(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full ">
+        View Archived Distributors
+      </Button>
     </ContentWrapper>
   );
 };

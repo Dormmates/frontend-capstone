@@ -170,10 +170,10 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                 <Dropdown
                   includeHeader={true}
                   error={errors.group}
-                  disabled={user?.role !== "head" || isLoading || showData.productionType == "majorProduction"}
+                  disabled={!user?.roles.includes("head") || isLoading || showData.productionType == "majorProduction"}
                   className="w-full"
                   label="Performing Group"
-                  placeholder={user?.role === "trainer" ? user.department?.name : "Select Deparment"}
+                  placeholder={!user?.roles.includes("head") ? user?.department?.name : "Select Deparment"}
                   items={showData.productionType == "majorProduction" ? [{ name: "All Department", value: "all" }] : groupOptions}
                   value={showData.productionType == "majorProduction" ? "all" : showData.group}
                   onChange={(value) => setShowData((prev) => ({ ...prev, group: value }))}
@@ -185,7 +185,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                   className="w-full"
                   label="Production Type"
                   placeholder={"Choose Production Type"}
-                  items={user?.role === "head" ? [...productionType, { name: "Major Production", value: "majorProduction" }] : productionType}
+                  items={user?.roles.includes("head") ? [...productionType, { name: "Major Production", value: "majorProduction" }] : productionType}
                   value={showData.productionType}
                   onChange={(value) => setShowData((prev) => ({ ...prev, productionType: value as ShowType }))}
                 />

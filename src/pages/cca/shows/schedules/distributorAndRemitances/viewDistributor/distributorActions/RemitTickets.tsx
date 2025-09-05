@@ -1,14 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import type { AllocatedTicketToDistributor } from "@/types/ticket.ts";
-
 import { useOutletContext, useParams } from "react-router-dom";
 import type { Schedule } from "@/types/schedule.ts";
 import { compressControlNumbers, parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
-
-import ToastNotification from "../../../../../../utils/toastNotification";
+import ToastNotification from "@/utils/toastNotification";
 import { useRemitTicketSale } from "@/_lib/@react-client-query/schedule.ts";
 import { useAuthContext } from "@/context/AuthContext.tsx";
-
 import RemittanceSummary from "./RemittanceSummary";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -127,19 +124,17 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
       isValid = false;
     }
 
-    const distributorTicketNumbers = distributorData.map((t) => t.controlNumber);
-
     for (const num of soldList) {
-      if (!distributorTicketNumbers.includes(num)) {
-        newErrors.sold = `Control number ${num} is not assigned to this distributor`;
+      if (!avaialbleToBeRemitted.includes(num)) {
+        newErrors.sold = `Control number ${num} is not available to be remitted`;
         isValid = false;
         break;
       }
     }
 
     for (const num of lostList) {
-      if (!distributorTicketNumbers.includes(num)) {
-        newErrors.lost = `Control number ${num} is not assigned to this distributor`;
+      if (!avaialbleToBeRemitted.includes(num)) {
+        newErrors.lost = `Control number ${num} is not available to be remitted`;
         isValid = false;
         break;
       }
