@@ -4,30 +4,25 @@ import { Button } from "@/components/ui/button";
 import type { ShowData } from "@/types/show";
 import { useQueryClient } from "@tanstack/react-query";
 import { useArchiveShow } from "@/_lib/@react-client-query/show";
-import { useAuthContext } from "@/context/AuthContext";
+
 import ToastNotification from "@/utils/toastNotification";
+import { useAuthContext } from "@/context/AuthContext";
 
 type ArchiveShowProps = {
   show: ShowData;
 };
 
 const ArchiveShow = ({ show }: ArchiveShowProps) => {
-  const { user } = useAuthContext();
   const queryClient = useQueryClient();
   const archiveShow = useArchiveShow();
+  const { user } = useAuthContext();
 
   const handleSubmit = (close: () => void) => {
     archiveShow.mutate(
-      { showId: show.showId as string },
+      { showId: show.showId as string, actionByName: user?.firstName + " " + user?.lastName, actionById: user?.userId as string },
       {
         onSuccess: () => {
-          queryClient.setQueryData<ShowData[]>(
-            ["shows", ...(show.showType === "majorProduction" ? ["majorProduction"] : []), user?.department?.departmentId].filter(Boolean),
-            (oldData) => {
-              if (!oldData) return oldData;
-              return oldData.map((s) => (s.showId === show?.showId ? { ...s, isArchived: true } : s));
-            }
-          );
+          queryClient.invalidateQueries({ queryKey: ["shows"] });
           close();
           ToastNotification.success("Show Archived");
         },

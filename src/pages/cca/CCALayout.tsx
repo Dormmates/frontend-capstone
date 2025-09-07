@@ -8,9 +8,11 @@ import major from "../../assets/icons/major-prod.png";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import SideBar from "@/components/SideBar";
 import Header from "@/components/Header";
+import { useNotificationSocket } from "@/hooks/useNotificationSocket";
 
 const CCALayout = () => {
   const { user } = useAuthContext();
+  useNotificationSocket();
   const sideBarItems = [
     {
       icon: dashboard,

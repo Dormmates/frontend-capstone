@@ -1,33 +1,27 @@
 import { useUnArchiveShow } from "@/_lib/@react-client-query/show";
 import AlertModal from "@/components/AlertModal";
 import { Button } from "@/components/ui/button";
-import { useAuthContext } from "@/context/AuthContext";
 import type { ShowData } from "@/types/show";
 import ToastNotification from "@/utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import archiveIcon from "../../../../assets/icons/archive.png";
+import { useAuthContext } from "@/context/AuthContext";
 
 type UnArchiveShowProps = {
   show: ShowData;
 };
 
 const UnArchiveShow = ({ show }: UnArchiveShowProps) => {
-  const { user } = useAuthContext();
   const queryClient = useQueryClient();
   const unarchiveShow = useUnArchiveShow();
+  const { user } = useAuthContext();
 
   const handleSubmit = () => {
     unarchiveShow.mutate(
-      { showId: show.showId as string },
+      { showId: show.showId as string, actionByName: user?.firstName + " " + user?.lastName, actionById: user?.userId as string },
       {
         onSuccess: () => {
-          queryClient.setQueryData<ShowData[]>(
-            ["shows", ...(show.showType === "majorProduction" ? ["majorProduction"] : []), user?.department?.departmentId].filter(Boolean),
-            (oldData) => {
-              if (!oldData) return oldData;
-              return oldData.map((s) => (s.showId === show?.showId ? { ...show, isArchived: false } : s));
-            }
-          );
+          queryClient.invalidateQueries({ queryKey: ["shows"] });
           ToastNotification.success("Show Archived");
         },
         onError: (err) => {

@@ -53,12 +53,17 @@ const ScheduleSeatMap = () => {
   return (
     <SeatMap
       recStyle={(seat) => {
-        console.log(seat);
-        return "";
+        return `${seat.ticketControlNumber === 0 && "fill-red"}
+                 ${seat.status === "complimentarySeat" && "fill-blue"}
+              `;
       }}
       seatMap={data}
-      seatClick={() => {}}
-      rowClick={() => {}}
+      seatClick={(seat) => {
+        alert(seat.seatNumber);
+      }}
+      rowClick={(seats) => {
+        alert(seats.map((seat) => seat.seatNumber).join(" "));
+      }}
       sectionClick={() => {}}
     />
   );

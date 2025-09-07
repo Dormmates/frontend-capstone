@@ -9,6 +9,7 @@ import InputField from "@/components/InputField";
 import PasswordField from "@/components/PasswordField";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { isValidEmail } from "@/utils";
+import { connectSocket } from "@/socket";
 
 const CCALogin = () => {
   const login = useLogin();
@@ -50,6 +51,7 @@ const CCALogin = () => {
         onSuccess: (data) => {
           setUser(data);
           ToastNotification.success("Loggin Success");
+          connectSocket(data.userId);
           setLoggingIn(false);
         },
 

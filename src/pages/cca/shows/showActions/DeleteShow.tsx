@@ -2,10 +2,10 @@ import { useDeleteShow } from "@/_lib/@react-client-query/show";
 import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
 import deleteIcon from "../../../../assets/icons/delete.png";
-import { useAuthContext } from "@/context/AuthContext";
 import type { ShowData } from "@/types/show";
 import ToastNotification from "@/utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAuthContext } from "@/context/AuthContext";
 
 type DeleteShowProps = {
   show: ShowData;
@@ -18,21 +18,10 @@ const DeleteShow = ({ show }: DeleteShowProps) => {
 
   const handleDelete = (close: () => void) => {
     deleteShow.mutate(
-      { showId: show.showId },
+      { showId: show.showId, actionByName: user?.firstName + " " + user?.lastName, actionById: user?.userId as string },
       {
         onSuccess: () => {
-          queryClient.setQueryData<ShowData[]>(
-            [
-              "shows",
-              ...(show.showType === "majorProduction" ? ["majorProduction"] : []),
-              ["shows", ...(show.showType === "majorProduction" ? ["majorProduction"] : []), user?.department?.departmentId].filter(Boolean),
-              user?.department?.departmentId,
-            ].filter(Boolean),
-            (oldData) => {
-              if (!oldData) return oldData;
-              return oldData.filter((s) => show.showId != s.showId);
-            }
-          );
+          queryClient.invalidateQueries({ queryKey: ["shows"] });
           close();
           ToastNotification.success("Show Deleted Permanently");
         },

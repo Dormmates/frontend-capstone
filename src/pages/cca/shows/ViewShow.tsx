@@ -27,6 +27,7 @@ import DateSelector from "@/components/DateSelector";
 import InputField from "@/components/InputField";
 import { useAuthContext } from "@/context/AuthContext";
 import PaginatedTable from "@/components/PaginatedTable";
+import NotFound from "@/components/NotFound";
 
 const ViewShow = () => {
   const queryClient = useQueryClient();
@@ -38,8 +39,8 @@ const ViewShow = () => {
   const { setSchedules } = useShowScheduleContext();
   const { id } = useParams();
   const { user } = useAuthContext();
-  const { data: show, isLoading: isShowLoading, isError: isShowError, error: showError } = useGetShow(id as string);
-  const { data: showSchedules, isLoading: isSchedulesLoading, isError: isSchedulesError, error: schedulesError } = useGetShowSchedules(id as string);
+  const { data: show, isLoading: isShowLoading } = useGetShow(id as string);
+  const { data: showSchedules, isLoading: isSchedulesLoading } = useGetShowSchedules(id as string);
 
   const [isReschedule, setIsReschedule] = useState<Schedule | null>(null);
   const [newDate, setNewDate] = useState({ date: new Date(), time: "" });
@@ -141,111 +142,106 @@ const ViewShow = () => {
     return <div>Loading...</div>;
   }
 
-  if (isShowError || isSchedulesError || !showSchedules || !show) {
-    return (
-      <div className="text-red-500">
-        {isShowError && <p>Failed to load show: {showError?.message}</p>}
-        {isSchedulesError && <p>Failed to load schedules: {schedulesError?.message}</p>}
-      </div>
-    );
-  }
-
   return (
     <ContentWrapper>
       <Breadcrumbs
-        backHref={show.showType == "majorProduction" ? "/majorShows" : "/shows"}
-        items={[{ name: "Show", href: show.showType == "majorProduction" ? "/majorShows" : "/shows" }, { name: show.title }]}
+        backHref={show?.showType == "majorProduction" ? "/majorShows" : "/shows"}
+        items={[{ name: "Show", href: show?.showType == "majorProduction" ? "/majorShows" : "/shows" }, { name: show?.title ?? "Show Not Found." }]}
       />
 
       <div>
-        <ShowCard title={show.title} description={show.description} genres={show.genreNames} showImage={show.showCover} className="mt-10" />
+        {show && <ShowCard title={show.title} description={show.description} genres={show.genreNames} showImage={show.showCover} className="mt-10" />}
 
-        <div className="mt-10">
-          <div className="flex justify-between mb-10">
-            <div className="flex flex-col gap-5">
-              <h1 className="font-semibold text-2xl ">Show Schedules</h1>
+        {show && showSchedules && (
+          <div className="mt-10">
+            <div className="flex justify-between mb-10">
+              <div className="flex flex-col gap-5">
+                <h1 className="font-semibold text-2xl ">Show Schedules</h1>
+              </div>
+              {((show.showType === "majorProduction" && user?.roles.includes("head")) ||
+                (show.showType !== "majorProduction" && (user?.roles.includes("head") || user?.roles.includes("trainer")))) && (
+                <Link className="self-end" to={`/shows/add/schedule/${id}`}>
+                  <Button>Add New Schedule</Button>
+                </Link>
+              )}
             </div>
-            {((show.showType === "majorProduction" && user?.roles.includes("head")) ||
-              (show.showType !== "majorProduction" && (user?.roles.includes("head") || user?.roles.includes("trainer")))) && (
-              <Link className="self-end" to={`/shows/add/schedule/${id}`}>
-                <Button>Add New Schedule</Button>
-              </Link>
-            )}
-          </div>
 
-          <PaginatedTable
-            emptyMessage="No Schedules"
-            data={showSchedules}
-            columns={[
-              {
-                key: "date",
-                header: "Date",
-                render: (schedule) => formatToReadableDate(schedule.datetime + ""),
-              },
-              {
-                key: "time",
-                header: "Time",
-                render: (schedule) => formatToReadableTime(schedule.datetime + ""),
-              },
-              {
-                key: "seating",
-                header: "Seating Type",
-                render: (schedule) => schedule.seatingType.toUpperCase(),
-              },
-              {
-                key: "ticket",
-                header: "Ticket Type",
-                render: (schedule) => schedule.ticketType.toUpperCase(),
-              },
-              {
-                key: "action",
-                header: "Actions",
-                headerClassName: "text-right",
-                render: (schedule) => (
-                  <div className="flex gap-2 justify-end items-center ">
-                    <div className="relative group">
-                      <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
-                        <Button disabled={!schedule.isOpen}>Go To Schedule</Button>
-                      </Link>
+            <PaginatedTable
+              emptyMessage="No Schedules"
+              data={showSchedules}
+              columns={[
+                {
+                  key: "date",
+                  header: "Date",
+                  render: (schedule) => formatToReadableDate(schedule.datetime + ""),
+                },
+                {
+                  key: "time",
+                  header: "Time",
+                  render: (schedule) => formatToReadableTime(schedule.datetime + ""),
+                },
+                {
+                  key: "seating",
+                  header: "Seating Type",
+                  render: (schedule) => schedule.seatingType.toUpperCase(),
+                },
+                {
+                  key: "ticket",
+                  header: "Ticket Type",
+                  render: (schedule) => schedule.ticketType.toUpperCase(),
+                },
+                {
+                  key: "action",
+                  header: "Actions",
+                  headerClassName: "text-right",
+                  render: (schedule) => (
+                    <div className="flex gap-2 justify-end items-center ">
+                      <div className="relative group">
+                        <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
+                          <Button disabled={!schedule.isOpen}>Go To Schedule</Button>
+                        </Link>
 
-                      {!schedule.isOpen && (
-                        <div className="absolute  -left-28 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
-                          Schedule is Closed
-                        </div>
-                      )}
+                        {!schedule.isOpen && (
+                          <div className="absolute  -left-28 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
+                            Schedule is Closed
+                          </div>
+                        )}
+                      </div>
+
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <Button variant="outline">Options</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuLabel>Select Options</DropdownMenuLabel>
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem
+                              onClick={() => (schedule.isOpen ? handleCloseSchedule(schedule.scheduleId) : handleOpenSchedule(schedule.scheduleId))}
+                            >
+                              {schedule.isOpen ? "Close Schedule" : "Open Schedule"}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Button variant="ghost" onClick={() => handleDeleteSchedule(schedule.scheduleId)} disabled={schedule.isOpen}>
+                            <img src={deleteIcon} alt="delete" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>{!schedule.isOpen ? "Delete" : "Cannot Delete Open Schedule"}</TooltipContent>
+                      </Tooltip>
                     </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+        )}
 
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <Button variant="outline">Options</Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuLabel>Select Options</DropdownMenuLabel>
-                        <DropdownMenuGroup>
-                          <DropdownMenuItem
-                            onClick={() => (schedule.isOpen ? handleCloseSchedule(schedule.scheduleId) : handleOpenSchedule(schedule.scheduleId))}
-                          >
-                            {schedule.isOpen ? "Close Schedule" : "Open Schedule"}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
-                        </DropdownMenuGroup>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Button variant="ghost" onClick={() => handleDeleteSchedule(schedule.scheduleId)} disabled={schedule.isOpen}>
-                          <img src={deleteIcon} alt="delete" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>{!schedule.isOpen ? "Delete" : "Cannot Delete Open Schedule"}</TooltipContent>
-                    </Tooltip>
-                  </div>
-                ),
-              },
-            ]}
-          />
-        </div>
+        {(!show || !showSchedules) && <NotFound title="Show not found." description="The show does not exist or the show have been deleted." />}
       </div>
 
       {isReschedule && (

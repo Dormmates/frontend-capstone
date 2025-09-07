@@ -75,9 +75,9 @@ export const useGetShow = (id: string) => {
 };
 
 export const useArchiveShow = () => {
-  return useMutation<any, Error, { showId: string }>({
-    mutationFn: async (showId: { showId: string }) => {
-      const res = await request<any>("/api/show/archive", showId, "post");
+  return useMutation<any, Error, { showId: string; actionById: string; actionByName: string }>({
+    mutationFn: async (body: { showId: string; actionById: string; actionByName: string }) => {
+      const res = await request<any>("/api/show/archive", body, "post");
       return res.data;
     },
     retry: false,
@@ -85,9 +85,9 @@ export const useArchiveShow = () => {
 };
 
 export const useUnArchiveShow = () => {
-  return useMutation<any, Error, { showId: string }>({
-    mutationFn: async (showId: { showId: string }) => {
-      const res = await request<any>("/api/show/unarchive", showId, "post");
+  return useMutation<any, Error, { showId: string; actionById: string; actionByName: string }>({
+    mutationFn: async (body: { showId: string; actionById: string; actionByName: string }) => {
+      const res = await request<any>("/api/show/unarchive", body, "post");
       return res.data;
     },
     retry: false,
@@ -95,9 +95,9 @@ export const useUnArchiveShow = () => {
 };
 
 export const useDeleteShow = () => {
-  return useMutation<any, Error, { showId: string }>({
-    mutationFn: async (showId: { showId: string }) => {
-      const res = await request<any>("/api/show/delete", showId, "post");
+  return useMutation<any, Error, { showId: string; actionById: string; actionByName: string }>({
+    mutationFn: async (body: { showId: string; actionById: string; actionByName: string }) => {
+      const res = await request<any>("/api/show/delete", body, "post");
       return res.data;
     },
     retry: false,

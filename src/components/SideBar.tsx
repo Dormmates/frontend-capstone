@@ -31,6 +31,7 @@ import Account from "./Account";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLogout } from "@/_lib/@react-client-query/auth";
 import ToastNotification from "@/utils/toastNotification";
+import { disconnectSocket } from "@/socket";
 
 interface SideBarItems {
   icon: string;
@@ -161,6 +162,7 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                         {},
                         {
                           onSuccess: () => {
+                            disconnectSocket();
                             setUser(null);
                             navigate("/");
                           },
