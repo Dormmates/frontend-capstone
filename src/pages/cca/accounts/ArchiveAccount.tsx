@@ -1,4 +1,3 @@
-import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import archiveIcon from "@/assets/icons/archive.png";

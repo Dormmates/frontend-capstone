@@ -1,10 +1,10 @@
-import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import archiveIcon from "@/assets/icons/archive.png";
 import type { User } from "@/types/user";
 import ToastNotification from "@/utils/toastNotification";
 import { useUnArchiveAccount } from "@/_lib/@react-client-query/accounts";
+import AlertModal from "@/components/AlertModal";
 
 type ArchiveAccountProps = {
   user: User;
@@ -15,7 +15,7 @@ const UnArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
   const queryClient = useQueryClient();
   const unarchive = useUnArchiveAccount();
 
-  const handleSubmit = (close: () => void) => {
+  const handleSubmit = () => {
     unarchive.mutate(user.userId, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [queryKey], exact: true });
@@ -28,11 +28,11 @@ const UnArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
     });
   };
   return (
-    <DialogPopup
+    <AlertModal
       tooltip="Unarchive Account"
-      saveTitle="Unarchive Account"
-      submitAction={(close) => handleSubmit(close)}
-      triggerElement={
+      actionText="Unarchive Account"
+      onConfirm={handleSubmit}
+      trigger={
         <Button className="p-0" variant="ghost">
           <img src={archiveIcon} alt="" />
         </Button>
@@ -41,7 +41,7 @@ const UnArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
       description="This will unarchive the user and move the user from the main list"
     >
       <div>{user.firstName + " " + user.lastName}</div>
-    </DialogPopup>
+    </AlertModal>
   );
 };
 

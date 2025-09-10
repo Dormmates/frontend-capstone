@@ -1,4 +1,3 @@
-import DialogPopup from "@/components/DialogPopup";
 import archiveIcon from "../../../../assets/icons/archive.png";
 import { Button } from "@/components/ui/button";
 import type { ShowData } from "@/types/show";

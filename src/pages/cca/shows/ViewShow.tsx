@@ -18,7 +18,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import ShowCard from "@/components/ShowCard";
 import Modal from "@/components/Modal";
