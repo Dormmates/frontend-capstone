@@ -10,24 +10,34 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { useState } from "react";
 
 type DialogPopupProps = {
   children: React.ReactNode;
   triggerElement: React.ReactNode;
   title: string;
-  submitAction?: (close: () => void) => void;
+  submitAction?: () => void;
   saveTitle?: string;
   description?: string;
   className?: string;
   tooltip?: string;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 };
 
-const DialogPopup = ({ className, triggerElement, title, description, submitAction, saveTitle, children, tooltip }: DialogPopupProps) => {
-  const [open, setOpen] = useState(false);
-
+const DialogPopup = ({
+  className,
+  triggerElement,
+  title,
+  description,
+  submitAction,
+  saveTitle = "Save",
+  children,
+  tooltip,
+  isOpen,
+  setIsOpen,
+}: DialogPopupProps) => {
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       {tooltip ? (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -52,7 +62,7 @@ const DialogPopup = ({ className, triggerElement, title, description, submitActi
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button onClick={() => submitAction(() => setOpen(false))}>{saveTitle}</Button>
+            <Button onClick={submitAction}>{saveTitle}</Button>
           </DialogFooter>
         )}
       </DialogContent>

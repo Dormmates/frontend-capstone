@@ -14,6 +14,7 @@ import DistributorAllocationHistory from "./DistributorAllocationHistory";
 import DistributorRemittanceHistory from "./DistributorRemittanceHistory";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
   const soldTickets = schedule.tickets.filter((ticket) => ticket.status === "sold");
@@ -122,10 +123,6 @@ const ViewDistributor = () => {
 const DistributorHistory = () => {
   const { distributorId } = useParams();
 
-  const histories = ["Allocation History", "Remittance History"] as const;
-  type HistoryType = (typeof histories)[number];
-  const [toView, setToView] = useState<HistoryType>("Allocation History");
-
   const {
     data: allocationHistory,
     isLoading: loadingAllocation,
@@ -148,18 +145,20 @@ const DistributorHistory = () => {
 
   return (
     <div>
-      <h1 className="text-xl mt-2">Distributor History</h1>
+      <h1 className="text-xl mt-5">Distributor History</h1>
 
-      <div className="flex gap-3 mt-5">
-        {histories.map((l) => (
-          <Button onClick={() => setToView(l)} className="font-normal p-0" variant="ghost">
-            <p className={`${toView === l ? "font-bold" : "text-darkGrey"}`}>{l}</p>
-          </Button>
-        ))}
-      </div>
-
-      {toView === "Allocation History" && <DistributorAllocationHistory allocationHistory={allocationHistory} />}
-      {toView === "Remittance History" && <DistributorRemittanceHistory remittanceHistory={remittanceHistory} />}
+      <Tabs className="mt-5" defaultValue="Allocation History">
+        <TabsList>
+          <TabsTrigger value="Allocation History">Allocation History</TabsTrigger>
+          <TabsTrigger value="Remittance History">Remittance History</TabsTrigger>
+        </TabsList>
+        <TabsContent value="Allocation History">
+          <DistributorAllocationHistory allocationHistory={allocationHistory} />
+        </TabsContent>
+        <TabsContent value="Remittance History">
+          <DistributorRemittanceHistory remittanceHistory={remittanceHistory} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

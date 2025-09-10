@@ -7,6 +7,7 @@ import { useArchiveShow } from "@/_lib/@react-client-query/show";
 
 import ToastNotification from "@/utils/toastNotification";
 import { useAuthContext } from "@/context/AuthContext";
+import AlertModal from "@/components/AlertModal";
 
 type ArchiveShowProps = {
   show: ShowData;
@@ -17,7 +18,7 @@ const ArchiveShow = ({ show }: ArchiveShowProps) => {
   const archiveShow = useArchiveShow();
   const { user } = useAuthContext();
 
-  const handleSubmit = (close: () => void) => {
+  const handleSubmit = () => {
     archiveShow.mutate(
       { showId: show.showId as string, actionByName: user?.firstName + " " + user?.lastName, actionById: user?.userId as string },
       {
@@ -34,22 +35,20 @@ const ArchiveShow = ({ show }: ArchiveShowProps) => {
   };
 
   return (
-    <DialogPopup
+    <AlertModal
       tooltip="Archive Show"
       className="max-w-2xl"
-      submitAction={(close) => {
-        handleSubmit(close);
-      }}
-      saveTitle="Archive"
+      onConfirm={handleSubmit}
+      actionText="Archive"
       title="Archive Show"
       description="This will move this show on the archive list"
-      triggerElement={
+      trigger={
         <Button disabled={archiveShow.isPending} variant="ghost" className="p-0">
           <img src={archiveIcon} alt="archive" />
         </Button>
       }
     >
-      <div className="mt-5">
+      <div>
         <h1 className="font-semibold mb-2">Archiving this show will permanently:</h1>
         <ul className="list-disc ml-6 space-y-1">
           <li>Remove the show from the active and archived shows list.</li>
@@ -73,7 +72,7 @@ const ArchiveShow = ({ show }: ArchiveShowProps) => {
           <p className=" font-medium">This action will erase all data related to this show and cannot be undone.</p>
         </div>
       </div>
-    </DialogPopup>
+    </AlertModal>
   );
 };
 

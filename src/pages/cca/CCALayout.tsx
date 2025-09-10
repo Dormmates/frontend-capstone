@@ -42,7 +42,7 @@ const CCALayout = () => {
         { name: "Trainer", path: "/manage/trainers", hidden: !user?.roles.includes("head") },
         { name: "Distributor", path: "/manage/distributors" },
         { name: "CCA Head", path: "/manage/cca-head", hidden: !user?.roles.includes("head") },
-        { name: "Account Request", path: "/manage/request" },
+        // { name: "Account Request", path: "/manage/request" },
       ],
       path: !user?.roles.includes("head") ? "/manage/distributors" : "/manage/trainers",
     },

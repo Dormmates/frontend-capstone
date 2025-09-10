@@ -99,7 +99,7 @@ const AppRoute = () => {
             <Route path="shows/:id" element={<ViewShow />} />
             <Route path="manage/distributors" element={<Distributors />} />
             <Route path="manage/distributor/:distributorId" element={<ViewDistributor />} />
-            <Route path="manage/request" element={<AccountRequests />} />
+            {/* <Route path="manage/request" element={<AccountRequests />} /> */}
 
             <Route path="shows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
 

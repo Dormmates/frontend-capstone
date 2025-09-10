@@ -1,10 +1,10 @@
 import { useDeleteUser } from "@/_lib/@react-client-query/accounts";
-import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
 import type { User } from "@/types/user";
 import ToastNotification from "@/utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import deletIcon from "@/assets/icons/delete.png";
+import AlertModal from "@/components/AlertModal";
 
 type DeleteAccountProps = {
   user: User;
@@ -15,13 +15,11 @@ const DeleteAccount = ({ user, queryKey }: DeleteAccountProps) => {
   const queryClient = useQueryClient();
   const deleteUser = useDeleteUser();
 
-  const handleSubmit = (close: () => void) => {
+  const handleSubmit = () => {
     deleteUser.mutate(user.userId, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [queryKey], exact: true });
-
         ToastNotification.success("User Deleted");
-        close();
       },
       onError: (err) => {
         ToastNotification.error(err.message);
@@ -30,11 +28,12 @@ const DeleteAccount = ({ user, queryKey }: DeleteAccountProps) => {
   };
 
   return (
-    <DialogPopup
+    <AlertModal
       tooltip="Delete User"
-      saveTitle="Delete Account"
-      submitAction={(close) => handleSubmit(close)}
-      triggerElement={
+      confirmation="Delete"
+      actionText="Delete User"
+      onConfirm={handleSubmit}
+      trigger={
         <Button className="p-0" variant="ghost">
           <img src={deletIcon} alt="" />
         </Button>
@@ -43,7 +42,7 @@ const DeleteAccount = ({ user, queryKey }: DeleteAccountProps) => {
       description="This will permanently delete this user"
     >
       <div>{user.firstName + " " + user.lastName}</div>
-    </DialogPopup>
+    </AlertModal>
   );
 };
 

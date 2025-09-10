@@ -39,7 +39,7 @@ const UnArchiveShow = ({ show }: UnArchiveShowProps) => {
       description="This action will unarchive this show and move it to the show lists"
       tooltip="Unarchive Show"
       trigger={
-        <Button variant="ghost" className="p-0">
+        <Button variant="ghost" className="p-0" disabled={unarchiveShow.isPending}>
           <img src={archiveIcon} alt="" />
         </Button>
       }

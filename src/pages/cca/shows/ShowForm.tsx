@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import { useGetDepartments } from "@/_lib/@react-client-query/department.ts";
 import { useGetGenres } from "@/_lib/@react-client-query/genre.ts";
@@ -9,10 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import InputField from "@/components/InputField";
 import Dropdown from "@/components/Dropdown";
-import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { ShowType } from "@/types/show";
+import { MultiSelect } from "@/components/MultiSelect";
+import { toast } from "sonner";
 
 const productionType = [
   { name: "Showcase", value: "showCase" },
@@ -25,7 +24,7 @@ interface ShowFormProps {
   description: string;
   genre: string[];
   imageCover: string;
-  group: string;
+  group: string | null;
   showImagePreview: string;
   image: File | null;
 }
@@ -85,7 +84,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
   const haveChanges = useMemo(() => {
     return (
       showData.title.trim() !== showFormValue.title.trim() ||
-      showData.group !== (showFormValue.group || user?.department?.departmentId || "") ||
+      (showData.productionType !== "majorProduction" && showData.group !== (showFormValue.group || user?.department?.departmentId || "")) ||
       showData.productionType !== showFormValue.productionType ||
       showData.description.trim() !== showFormValue.description.trim() ||
       JSON.stringify(showData.genre) !== JSON.stringify(showFormValue.genre) ||
@@ -109,27 +108,6 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
     setShowData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleGenreChange = (index: number, value: string | number) => {
-    const updatedGenres = [...showData.genre];
-    updatedGenres[index] = String(value);
-    setShowData((prev) => ({ ...prev, genre: updatedGenres }));
-  };
-
-  const addGenre = () => {
-    setShowData((prev) => ({
-      ...prev,
-      genre: [...prev.genre, ""],
-    }));
-  };
-
-  const removeGenre = (index: number) => {
-    const newGenre = showData.genre.filter((_, i) => i !== index);
-    setShowData((prev) => ({
-      ...prev,
-      genre: newGenre,
-    }));
-  };
-
   if (loadingDepartments || loadingGenres) {
     return <h1>Loading...</h1>;
   }
@@ -144,7 +122,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
   }));
 
   const genreValues = (genres ?? []).map((genre) => ({
-    name: genre.name,
+    label: genre.name,
     value: genre.name,
   }));
 
@@ -173,9 +151,9 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                   disabled={!user?.roles.includes("head") || isLoading || showData.productionType == "majorProduction"}
                   className="w-full"
                   label="Performing Group"
-                  placeholder={!user?.roles.includes("head") ? user?.department?.name : "Select Deparment"}
-                  items={showData.productionType == "majorProduction" ? [{ name: "All Department", value: "all" }] : groupOptions}
-                  value={showData.productionType == "majorProduction" ? "all" : showData.group}
+                  placeholder={!user?.roles.includes("head") ? user?.department?.name : "Select Group"}
+                  items={showData.productionType == "majorProduction" ? [{ name: "All Group", value: "all" }] : groupOptions}
+                  value={showData.productionType == "majorProduction" ? "all" : (showData.group as string)}
                   onChange={(value) => setShowData((prev) => ({ ...prev, group: value }))}
                 />
                 <Dropdown
@@ -195,6 +173,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
             <div className="flex flex-col gap-3">
               <Label>Description</Label>
               <Textarea
+                rows={5}
                 className={`${errors.description && "border-red"}`}
                 disabled={isLoading}
                 name="description"
@@ -205,47 +184,14 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
             </div>
 
             <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-5">
-                <Label> Genres</Label>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      disabled={isLoading}
-                      type="button"
-                      className={`flex items-center w-5 h-5 !p-3 justify-center ${genres.length === showData.genre.length && "hidden"}`}
-                      onClick={addGenre}
-                    >
-                      +
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Add Genre</TooltipContent>
-                </Tooltip>
-              </div>
-
-              <div className="flex items-center gap-5 ">
-                <div className="flex gap-3 flex-wrap">
-                  {showData.genre.map((genre, index) => {
-                    const availableGenres = genreValues.filter((g) => !showData.genre.includes(g.value) || g.value === genre);
-
-                    return (
-                      <div key={index} className="relative">
-                        <Button onClick={() => removeGenre(index)} className="absolute -top-4 -right-5" variant="ghost">
-                          <X className="text-red" />
-                        </Button>
-                        <Dropdown
-                          label="Choose Genre"
-                          disabled={isLoading}
-                          error={!showData.genre[index] ? "Please Choose Genre" : undefined}
-                          className="w-full"
-                          items={availableGenres}
-                          value={genre}
-                          onChange={(value) => handleGenreChange(index, value)}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+              <Label> Genres</Label>
+              <MultiSelect
+                disabled={isLoading}
+                placeholder="Choose Genres"
+                options={genreValues}
+                onValueChange={(a) => setShowData((prev) => ({ ...prev, genre: a }))}
+                defaultValue={showData.genre}
+              />
               {errors.genre && <p className="text-sm text-red mt-1">{errors.genre}</p>}
             </div>
           </div>
@@ -266,8 +212,25 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
-                    if (file.size > 1024 * 1024) {
-                      alert("Image must be less than 1MB.");
+                    const allowedExtensions = ["png", "jpg", "jpeg"];
+                    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+                    const maxSize = 5 * 1024 * 1024;
+
+                    if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+                      toast("File extension not allowed", {
+                        position: "top-center",
+                        description: "Only PNG, JPG, and JPEG files are allowed.",
+                        duration: 5000,
+                      });
+                      return;
+                    }
+
+                    if (file.size > maxSize) {
+                      toast("Image too large", {
+                        position: "top-center",
+                        description: "Image must be less than 5MB.",
+                        duration: 5000,
+                      });
                       return;
                     }
 

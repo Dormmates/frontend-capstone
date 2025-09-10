@@ -28,6 +28,7 @@ import InputField from "@/components/InputField";
 import { useAuthContext } from "@/context/AuthContext";
 import PaginatedTable from "@/components/PaginatedTable";
 import NotFound from "@/components/NotFound";
+import AlertModal from "@/components/AlertModal";
 
 const ViewShow = () => {
   const queryClient = useQueryClient();
@@ -191,6 +192,22 @@ const ViewShow = () => {
                   render: (schedule) => schedule.ticketType.toUpperCase(),
                 },
                 {
+                  key: "status",
+                  header: "Status",
+                  render: (schedule) =>
+                    schedule.isOpen ? (
+                      <div className="flex items-center gap-2">
+                        <span className="bg-green w-2 h-2 rounded-full"></span>
+                        <p>Open</p>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span className="bg-red w-2 h-2 rounded-full"></span>
+                        <p>Close</p>
+                      </div>
+                    ),
+                },
+                {
                   key: "action",
                   header: "Actions",
                   headerClassName: "text-right",
@@ -215,24 +232,42 @@ const ViewShow = () => {
                         <DropdownMenuContent>
                           <DropdownMenuLabel>Select Options</DropdownMenuLabel>
                           <DropdownMenuGroup>
-                            <DropdownMenuItem
-                              onClick={() => (schedule.isOpen ? handleCloseSchedule(schedule.scheduleId) : handleOpenSchedule(schedule.scheduleId))}
-                            >
-                              {schedule.isOpen ? "Close Schedule" : "Open Schedule"}
+                            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                              <AlertModal
+                                confirmation={schedule.isOpen ? "Close" : "Open"}
+                                actionText="Confirm"
+                                onConfirm={() =>
+                                  schedule.isOpen ? handleCloseSchedule(schedule.scheduleId) : handleOpenSchedule(schedule.scheduleId)
+                                }
+                                title={schedule.isOpen ? "Close Schedule" : "Open Schedule"}
+                                description={schedule.isOpen ? "This action will close this schedule." : "This action will open this schedule."}
+                                trigger={<p>{schedule.isOpen ? "Close Schedule" : "Open Schedule"}</p>}
+                              />
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
                           </DropdownMenuGroup>
                         </DropdownMenuContent>
                       </DropdownMenu>
 
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Button variant="ghost" onClick={() => handleDeleteSchedule(schedule.scheduleId)} disabled={schedule.isOpen}>
+                      <AlertModal
+                        tooltip={!schedule.isOpen ? "Delete" : "Cannot Delete Open Schedule"}
+                        confirmation="Delete"
+                        actionText="Confirm"
+                        onConfirm={() => handleDeleteSchedule(schedule.scheduleId)}
+                        title="Delete Schedule"
+                        trigger={
+                          <Button variant="ghost" size="icon" disabled={schedule.isOpen}>
                             <img src={deleteIcon} alt="delete" />
                           </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>{!schedule.isOpen ? "Delete" : "Cannot Delete Open Schedule"}</TooltipContent>
-                      </Tooltip>
+                        }
+                      >
+                        <div className="-mt-2 space-y-2 text-center">
+                          <p className="text-sm text-muted-foreground">Are you sure you want to delete this schedule?</p>
+                          <p className="text-sm font-medium">
+                            {formatToReadableDate(schedule.datetime + "")} at {formatToReadableTime(schedule.datetime + "")}
+                          </p>
+                        </div>
+                      </AlertModal>
                     </div>
                   ),
                 },
@@ -275,10 +310,10 @@ const ViewShow = () => {
               <InputField
                 label="Time"
                 type="time"
-                step={1}
+                step={60}
                 value={newDate.time?.slice(0, 5)}
                 onChange={(e) => setNewDate((prev) => ({ ...prev, time: e.target.value }))}
-                className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden"
+                className="bg-background appearance-none"
               />
             </CardContent>
           </Card>

@@ -1,11 +1,11 @@
 import { useDeleteShow } from "@/_lib/@react-client-query/show";
-import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
 import deleteIcon from "../../../../assets/icons/delete.png";
 import type { ShowData } from "@/types/show";
 import ToastNotification from "@/utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/context/AuthContext";
+import AlertModal from "@/components/AlertModal";
 
 type DeleteShowProps = {
   show: ShowData;
@@ -16,13 +16,12 @@ const DeleteShow = ({ show }: DeleteShowProps) => {
   const deleteShow = useDeleteShow();
   const { user } = useAuthContext();
 
-  const handleDelete = (close: () => void) => {
+  const handleDelete = () => {
     deleteShow.mutate(
       { showId: show.showId, actionByName: user?.firstName + " " + user?.lastName, actionById: user?.userId as string },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["shows"] });
-          close();
           ToastNotification.success("Show Deleted Permanently");
         },
         onError: (err) => {
@@ -33,20 +32,18 @@ const DeleteShow = ({ show }: DeleteShowProps) => {
   };
 
   return (
-    <DialogPopup
+    <AlertModal
       tooltip="Permanently Delete Show"
       className="max-w-2xl"
       description="This will permanently delete this show"
       title="Delete Show"
-      saveTitle="Delete"
-      triggerElement={
+      actionText="Delete"
+      trigger={
         <Button disabled={deleteShow.isPending} variant="ghost" className="p-0">
           <img src={deleteIcon} alt="delete" />
         </Button>
       }
-      submitAction={(close) => {
-        handleDelete(close);
-      }}
+      onConfirm={handleDelete}
     >
       <div className="flex gap-5 mt-5">
         <div className="w-[200px] flex items-center justify-center">
@@ -79,7 +76,7 @@ const DeleteShow = ({ show }: DeleteShowProps) => {
       <div className="border-red border  bg-gray p-2 rounded-sm mt-5">
         <p className=" font-medium">The operation cannot be undone</p>
       </div>
-    </DialogPopup>
+    </AlertModal>
   );
 };
 

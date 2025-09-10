@@ -5,6 +5,7 @@ import archiveIcon from "@/assets/icons/archive.png";
 import type { User } from "@/types/user";
 import ToastNotification from "@/utils/toastNotification";
 import { useArchiveAccount } from "@/_lib/@react-client-query/accounts";
+import AlertModal from "@/components/AlertModal";
 
 type ArchiveAccountProps = {
   user: User;
@@ -15,12 +16,11 @@ const ArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
   const queryClient = useQueryClient();
   const archive = useArchiveAccount();
 
-  const handleSubmit = (close: () => void) => {
+  const handleSubmit = () => {
     archive.mutate(user.userId, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [queryKey], exact: true });
         ToastNotification.success("User Archived");
-        close();
       },
       onError: (err) => {
         ToastNotification.error(err.message);
@@ -28,11 +28,12 @@ const ArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
     });
   };
   return (
-    <DialogPopup
+    <AlertModal
+      confirmation="Archive"
       tooltip="Archive Account"
-      saveTitle="Archive Account"
-      submitAction={(close) => handleSubmit(close)}
-      triggerElement={
+      actionText="Archive Account"
+      onConfirm={handleSubmit}
+      trigger={
         <Button className="p-0" variant="ghost">
           <img src={archiveIcon} alt="" />
         </Button>
@@ -41,7 +42,7 @@ const ArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
       description="This will archive the user and remove the user from the main list"
     >
       <div>{user.firstName + " " + user.lastName}</div>
-    </DialogPopup>
+    </AlertModal>
   );
 };
 

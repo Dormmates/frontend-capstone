@@ -6,17 +6,21 @@ import ToastNotification from "@/utils/toastNotification";
 import { getFileId } from "@/utils";
 import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 type EditShowProps = {
   show: ShowData;
 };
 
 const EditShow = ({ show }: EditShowProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
   const updateShow = useUpdateShow();
 
   return (
     <DialogPopup
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
       triggerElement={<Button>Edit Show Details</Button>}
       description="Edit show information and click save"
       title="Edit Show"
@@ -41,9 +45,9 @@ const EditShow = ({ show }: EditShowProps) => {
             },
             {
               onSuccess: (data) => {
+                setIsOpen(false);
                 queryClient.setQueryData<ShowData>(["show", data.showId], data);
                 queryClient.invalidateQueries({ queryKey: ["shows"] });
-
                 ToastNotification.success("Updated Show");
               },
               onError: (err) => {
@@ -59,7 +63,7 @@ const EditShow = ({ show }: EditShowProps) => {
           description: show.description as string,
           genre: show.genreNames as string[],
           imageCover: show.showCover as string,
-          group: show.department?.departmentId as string,
+          group: show.department ? (show.department.departmentId as string) : null,
           showImagePreview: show.showCover as string,
           image: null,
         }}

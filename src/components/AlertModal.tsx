@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,15 +12,19 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import InputField from "./InputField";
 
 interface AlertModalProps {
   trigger?: React.ReactNode;
   title: string;
-  description: string;
+  description?: string;
   cancelText?: string;
   actionText?: string;
   onConfirm: () => void;
   tooltip?: string;
+  confirmation?: string;
+  children?: React.ReactNode;
+  className?: string;
 }
 
 const AlertModal: React.FC<AlertModalProps> = ({
@@ -31,9 +35,26 @@ const AlertModal: React.FC<AlertModalProps> = ({
   actionText = "Continue",
   onConfirm,
   tooltip,
+  confirmation = "Confirm",
+  children,
+  className,
 }) => {
+  const [input, setInput] = useState("");
+  const [error, setError] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const handleConfirm = () => {
+    if (input.trim() !== confirmation) {
+      setError(`Please input "${confirmation}" to proceed with the action`);
+      return;
+    }
+    setInput("");
+    onConfirm();
+    setOpen(false);
+  };
+
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       {tooltip ? (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -45,14 +66,35 @@ const AlertModal: React.FC<AlertModalProps> = ({
         <AlertDialogTrigger asChild>{trigger || <Button variant="outline">Show Dialog</Button>}</AlertDialogTrigger>
       )}
 
-      <AlertDialogContent>
+      <AlertDialogContent className={className}>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
+        {children}
+        <div>
+          <InputField
+            error={error}
+            label={
+              <p>
+                Type "<span className="text-red">{confirmation}</span>" to continue
+              </p>
+            }
+            onChange={(e) => setInput(e.target.value)}
+            value={input}
+          />
+        </div>
         <AlertDialogFooter>
-          <AlertDialogCancel>{cancelText}</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>{actionText}</AlertDialogAction>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setOpen(false);
+              setError("");
+            }}
+          >
+            {cancelText}
+          </Button>
+          <Button onClick={handleConfirm}>{actionText}</Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

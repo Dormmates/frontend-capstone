@@ -49,11 +49,11 @@ const DateTimeSelection = ({ dateItem, removeHidden, index, handleDateChange, ha
         error={errors?.dates}
         label="Time"
         type="time"
-        step={1}
+        step={60}
         id={`time-picker-${index}`}
         value={dateItem.time?.slice(0, 5)}
         onChange={(e) => handleTimeChange(e.target.value, index)}
-        className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden"
+        className="bg-background appearance-none"
       />
 
       <Button onClick={() => removeDate(index)} className={`absolute -top-5 -right-6 ${removeHidden && "hidden"}`} variant="ghost">
