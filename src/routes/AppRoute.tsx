@@ -13,7 +13,7 @@ import DistributorHistory from "../pages/distributor/history/DistributorHistory"
 import DistributorLogin from "../pages/distributor/DistributorLogin";
 
 import {
-  CCAHead,
+  CCAHeads,
   Distributors,
   Trainers,
   CreateShow,
@@ -106,7 +106,7 @@ const AppRoute = () => {
               <>
                 <Route path="performing-groups" element={<PerformingGroups />} />
                 <Route path="manage/trainers" element={<Trainers />} />
-                <Route path="manage/cca-head" element={<CCAHead />} />
+                <Route path="manage/cca-head" element={<CCAHeads />} />
               </>
             )}
           </>

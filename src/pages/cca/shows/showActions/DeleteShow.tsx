@@ -40,7 +40,7 @@ const DeleteShow = ({ show }: DeleteShowProps) => {
       actionText="Delete"
       trigger={
         <Button disabled={deleteShow.isPending} variant="ghost" className="p-0">
-          <img src={deleteIcon} alt="delete" />
+          <img src={deleteIcon} alt="delete" className="w-7 h-7" />
         </Button>
       }
       onConfirm={handleDelete}

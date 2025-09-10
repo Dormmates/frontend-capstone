@@ -43,7 +43,7 @@ const ArchiveShow = ({ show }: ArchiveShowProps) => {
       description="This will move this show on the archive list"
       trigger={
         <Button disabled={archiveShow.isPending} variant="ghost" className="p-0">
-          <img src={archiveIcon} alt="archive" />
+          <img src={archiveIcon} alt="archive" className="w-7 h-7" />
         </Button>
       }
     >

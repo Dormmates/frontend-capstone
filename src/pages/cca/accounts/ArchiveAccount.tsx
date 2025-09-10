@@ -8,7 +8,7 @@ import AlertModal from "@/components/AlertModal";
 
 type ArchiveAccountProps = {
   user: User;
-  queryKey: "distributors" | "trainers";
+  queryKey: "distributors" | "trainers" | "heads";
 };
 
 const ArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
@@ -34,7 +34,7 @@ const ArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
       onConfirm={handleSubmit}
       trigger={
         <Button className="p-0" variant="ghost">
-          <img src={archiveIcon} alt="" />
+          <img src={archiveIcon} alt="" className="w-7 h-7" />
         </Button>
       }
       title="Archive User"

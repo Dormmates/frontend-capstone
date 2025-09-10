@@ -40,7 +40,7 @@ const UnArchiveShow = ({ show }: UnArchiveShowProps) => {
       tooltip="Unarchive Show"
       trigger={
         <Button variant="ghost" className="p-0" disabled={unarchiveShow.isPending}>
-          <img src={archiveIcon} alt="" />
+          <img src={archiveIcon} alt="" className="w-7 h-7" />
         </Button>
       }
     />

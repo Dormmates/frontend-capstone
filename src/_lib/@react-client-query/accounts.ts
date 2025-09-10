@@ -133,3 +133,40 @@ export const useGetDistributorData = (id: string) => {
     retry: false,
   });
 };
+
+export const useGetCCAHeads = () => {
+  return useQuery<User[], Error>({
+    queryKey: ["heads"],
+    queryFn: async () => {
+      const res = await request<User[]>("/api/accounts/heads", {}, "get");
+      return res.data;
+    },
+  });
+};
+
+export const useAddCCARole = () => {
+  return useMutation<any, Error, string[]>({
+    mutationFn: async (userIds: string[]) => {
+      const res = await request<any>("/api/accounts/role/head", { userIds }, "post");
+      return res.data;
+    },
+  });
+};
+
+export const useNewCCAHead = () => {
+  return useMutation<any, Error, Omit<NewTrainerPayload, "departmentId">>({
+    mutationFn: async (payload: Omit<NewTrainerPayload, "departmentId">) => {
+      const res = await request<any>("/api/accounts/head", payload, "post");
+      return res.data;
+    },
+  });
+};
+
+export const useRemoveCCAHeadRole = () => {
+  return useMutation<any, Error, string>({
+    mutationFn: async (userId: string) => {
+      const res = await request<any>("/api/accounts/role/delete/head", { userId }, "post");
+      return res.data;
+    },
+  });
+};

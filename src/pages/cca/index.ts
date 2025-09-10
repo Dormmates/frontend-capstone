@@ -1,5 +1,5 @@
 import AccountRequests from "./accounts/AccountRequests";
-import CCAHead from "./accounts/CCAHead";
+import CCAHeads from "./accounts/heads/CCAHeads";
 import Distributors from "./accounts/distributors/Distributors";
 import ViewDistributor from "./accounts/distributors/ViewDistributor";
 import Trainers from "./accounts/trainer/Trainers";
@@ -35,7 +35,7 @@ export {
   ViewDistributor,
   CCALogin,
   AccountRequests,
-  CCAHead,
+  CCAHeads,
   Distributors,
   MajorProductionShows,
   PerformingGroupShows,

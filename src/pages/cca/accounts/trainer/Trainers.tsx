@@ -52,7 +52,7 @@ const Trainers = () => {
     return activeTrainers.filter((trainer) => {
       const l = trainer.lastName.toLocaleLowerCase().trim();
       const f = trainer.firstName.toLocaleLowerCase().trim();
-      const s = searchValue.toLocaleLowerCase().trim();
+      const s = debouncedSearch.toLocaleLowerCase().trim();
 
       return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
     });
@@ -130,33 +130,40 @@ const Trainers = () => {
               key: "action",
               header: "Action",
               headerClassName: "text-right",
-              render: (trainer) => (
-                <div className="flex justify-end items-center gap-2">
-                  <Button onClick={() => setSelectedTrainer(trainer)} variant="outline">
-                    Edit Details
-                  </Button>
-                  <div className="flex items-center gap-2">
-                    <AlertModal
-                      title="Remove Trainer Assignment"
-                      description="This will remove the user as a trainer on its performing group"
-                      onConfirm={handleRemoveTrainerDepartment}
-                      trigger={
-                        <Button
-                          variant="ghost"
-                          className="p-0"
-                          onClick={() => setUnassignTrainer({ userId: trainer.userId, openModal: true })}
-                          disabled={!trainer.department}
-                        >
-                          <img src={unassign} alt="" />
-                        </Button>
-                      }
-                    />
-
-                    <ArchiveAccount user={trainer as User} queryKey="trainers" />
-                    <DeleteAccount user={trainer as User} queryKey="trainers" />
+              render: (trainer) =>
+                user?.userId === trainer.userId ? (
+                  <p></p>
+                ) : (
+                  <div className="flex justify-end items-center gap-2">
+                    <Button onClick={() => setSelectedTrainer(trainer)} variant="outline">
+                      Edit Details
+                    </Button>
+                    <div className="flex items-center gap-2">
+                      <AlertModal
+                        title="Remove Trainer Assignment"
+                        description="This will remove the user as a trainer on its performing group"
+                        onConfirm={handleRemoveTrainerDepartment}
+                        trigger={
+                          <Button
+                            variant="ghost"
+                            className="p-0"
+                            onClick={() =>
+                              setUnassignTrainer({
+                                userId: trainer.userId,
+                                openModal: true,
+                              })
+                            }
+                            disabled={!trainer.department}
+                          >
+                            <img src={unassign} alt="" />
+                          </Button>
+                        }
+                      />
+                      <ArchiveAccount user={trainer as User} queryKey="trainers" />
+                      <DeleteAccount user={trainer as User} queryKey="trainers" />
+                    </div>
                   </div>
-                </div>
-              ),
+                ),
             },
           ]}
         />

@@ -8,7 +8,7 @@ import AlertModal from "@/components/AlertModal";
 
 type DeleteAccountProps = {
   user: User;
-  queryKey: "distributors" | "trainers";
+  queryKey: "distributors" | "trainers" | "heads";
 };
 
 const DeleteAccount = ({ user, queryKey }: DeleteAccountProps) => {
@@ -35,7 +35,7 @@ const DeleteAccount = ({ user, queryKey }: DeleteAccountProps) => {
       onConfirm={handleSubmit}
       trigger={
         <Button className="p-0" variant="ghost">
-          <img src={deletIcon} alt="" />
+          <img src={deletIcon} alt="" className="w-7 h-7" />
         </Button>
       }
       title="Delete User"
