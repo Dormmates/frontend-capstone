@@ -52,10 +52,10 @@ const CCALayout = () => {
     <SidebarProvider>
       <SideBar items={sideBarItems} />
 
-      <main className="flex flex-col w-full ">
+      <main className="flex flex-col w-full">
         <Header />
 
-        <div className="overflow-y-auto h-screen mb-5">
+        <div className="overflow-y-auto h-[calc(100vh-3rem)]">
           <div className="p-4">
             <Outlet />
           </div>

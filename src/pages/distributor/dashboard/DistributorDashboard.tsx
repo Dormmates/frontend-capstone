@@ -1,11 +1,9 @@
 import { useMemo, useState } from "react";
 import { useGetShowsAndDistributorTickets } from "@/_lib/@react-client-query/show.ts";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
-
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import type { DistributorScheduleTickets } from "@/types/ticket.ts";
-
 import ViewAllocatedTickets from "./ViewAllocatedTickets";
 import { formatCurrency } from "@/utils";
 import SimpleCard from "@/components/SimpleCard";

@@ -1,10 +1,10 @@
 import { useDeleteUser } from "@/_lib/@react-client-query/accounts";
 import { Button } from "@/components/ui/button";
 import type { User } from "@/types/user";
-import ToastNotification from "@/utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import deletIcon from "@/assets/icons/delete.png";
 import AlertModal from "@/components/AlertModal";
+import { toast } from "sonner";
 
 type DeleteAccountProps = {
   user: User;
@@ -16,14 +16,14 @@ const DeleteAccount = ({ user, queryKey }: DeleteAccountProps) => {
   const deleteUser = useDeleteUser();
 
   const handleSubmit = () => {
-    deleteUser.mutate(user.userId, {
-      onSuccess: () => {
+    toast.promise(deleteUser.mutateAsync(user.userId), {
+      position: "top-center",
+      loading: "Deleting user...",
+      success: () => {
         queryClient.invalidateQueries({ queryKey: [queryKey], exact: true });
-        ToastNotification.success("User Deleted");
+        return "User Deleted";
       },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
+      error: (err) => err.message || "Failed to delete user",
     });
   };
 

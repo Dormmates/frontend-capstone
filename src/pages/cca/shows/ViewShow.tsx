@@ -7,7 +7,6 @@ import deleteIcon from "../../../assets/icons/delete.png";
 import { useShowScheduleContext } from "@/context/ShowSchedulesContext.tsx";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import ToastNotification from "../../../utils/toastNotification";
 import type { Schedule } from "@/types/schedule.ts";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +27,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import PaginatedTable from "@/components/PaginatedTable";
 import NotFound from "@/components/NotFound";
 import AlertModal from "@/components/AlertModal";
+import { toast } from "sonner";
 
 const ViewShow = () => {
   const queryClient = useQueryClient();
@@ -52,55 +52,61 @@ const ViewShow = () => {
   }, [showSchedules]);
 
   const handleCloseSchedule = (scheduleId: string) => {
-    closeSchedule.mutate(scheduleId, {
-      onSuccess: () => {
+    toast.promise(
+      closeSchedule.mutateAsync(scheduleId).then(() => {
         queryClient.setQueryData<Schedule[]>(["schedules", id], (oldData) => {
           if (!oldData) return oldData;
           return oldData.map((schedule) => (schedule.scheduleId === scheduleId ? { ...schedule, isOpen: false } : schedule));
         });
-        ToastNotification.success("Schedule Closed");
-      },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
-    });
+      }),
+      {
+        position: "top-center",
+        loading: "Closing schedule...",
+        success: "Schedule Closed ",
+        error: (err: any) => err.message || "Failed to close schedule",
+      }
+    );
   };
 
   const handleOpenSchedule = (scheduleId: string) => {
-    openSchedule.mutate(scheduleId, {
-      onSuccess: () => {
+    toast.promise(
+      openSchedule.mutateAsync(scheduleId).then(() => {
         queryClient.setQueryData<Schedule[]>(["schedules", id], (oldData) => {
           if (!oldData) return oldData;
           return oldData.map((schedule) => (schedule.scheduleId === scheduleId ? { ...schedule, isOpen: true } : schedule));
         });
-        ToastNotification.success("Schedule is now Open");
-      },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
-    });
+      }),
+      {
+        position: "top-center",
+        loading: "Opening schedule...",
+        success: "Schedule is now Open ",
+        error: (err: any) => err.message || "Failed to open schedule",
+      }
+    );
   };
 
   const handleDeleteSchedule = (scheduleId: string) => {
-    deleteSchedule.mutate(scheduleId, {
-      onSuccess: () => {
+    toast.promise(
+      deleteSchedule.mutateAsync(scheduleId).then(() => {
         queryClient.setQueryData<Schedule[]>(["schedules", id], (oldData) => {
           if (!oldData) return oldData;
           return oldData.filter((schedule) => schedule.scheduleId !== scheduleId);
         });
-        ToastNotification.success("Schedule is deleted");
-      },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
-    });
+      }),
+      {
+        position: "top-center",
+        loading: "Deleting schedule...",
+        success: "Schedule deleted ",
+        error: (err: any) => err.message || "Failed to delete schedule",
+      }
+    );
   };
 
-  const handleReschedule = () => {
+  const handleReschedule = async () => {
     if (!isReschedule) return;
 
     if (!newDate.date || !newDate.time) {
-      ToastNotification.error("Please provide new Date and Time");
+      toast.error("Please provide new Date and Time", { position: "top-center" });
       return;
     }
 
@@ -110,30 +116,31 @@ const ViewShow = () => {
     combinedNewDate.setHours(hours || 0, minutes || 0, 0, 0);
 
     if (oldDate.getTime() === combinedNewDate.getTime()) {
-      ToastNotification.error("The new schedule date and time cannot be the same as the old one.");
+      toast.error("The new schedule date and time cannot be the same as the old one.", { position: "top-center" });
       return;
     }
 
-    reschedule.mutate(
-      {
-        scheduleId: isReschedule.scheduleId,
-        newDateTime: combinedNewDate,
-      },
-      {
-        onSuccess: () => {
+    toast.promise(
+      reschedule
+        .mutateAsync({
+          scheduleId: isReschedule.scheduleId,
+          newDateTime: combinedNewDate,
+        })
+        .then(() => {
           queryClient.setQueryData<Schedule[]>(["schedules", id], (oldData) => {
             if (!oldData) return oldData;
             return oldData.map((schedule) =>
               schedule.scheduleId === isReschedule.scheduleId ? { ...schedule, datetime: combinedNewDate } : schedule
             );
           });
-          ToastNotification.success("Schedule updated successfully");
           setIsReschedule(null);
           setNewDate({ date: new Date(), time: "" });
-        },
-        onError: (err) => {
-          ToastNotification.error(err.message);
-        },
+        }),
+      {
+        position: "top-center",
+        loading: "Updating schedule...",
+        success: "Schedule updated successfully ✅",
+        error: (err: any) => err.message || "Failed to update schedule",
       }
     );
   };

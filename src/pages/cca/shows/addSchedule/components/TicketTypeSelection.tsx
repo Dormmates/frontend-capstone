@@ -18,7 +18,7 @@ const TicketTypeSelection = ({ scheduleData, setScheduleData }: Props) => {
     <Dropdown
       includeHeader={true}
       placeholder="Select Ticket Type"
-      className="z-[999999] max-w-[250px]"
+      className=" max-w-[250px]"
       items={ticketTypes}
       label="Ticket Types"
       value={scheduleData.ticketType}

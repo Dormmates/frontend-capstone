@@ -3,7 +3,6 @@ import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useAddDepartment, useDeleteDepartment, useEditDepartment, useGetDepartments } from "@/_lib/@react-client-query/department.ts";
 import type { Department } from "@/types/department.ts";
 import { useQueryClient } from "@tanstack/react-query";
-import ToastNotification from "../../../utils/toastNotification";
 import deleteIcon from "../../../assets/icons/delete.png";
 import { getFileId } from "@/utils";
 import SimpleCard from "@/components/SimpleCard";
@@ -14,6 +13,7 @@ import InputField from "@/components/InputField";
 import { Label } from "@/components/ui/label";
 import AlertModal from "@/components/AlertModal";
 import PaginatedTable from "@/components/PaginatedTable";
+import { toast } from "sonner";
 
 const PerformingGroups = () => {
   const addDepartment = useAddDepartment();
@@ -58,20 +58,21 @@ const PerformingGroups = () => {
   const handleAddDepartment = () => {
     if (!validateGroup(newGroup, true)) return;
 
-    ToastNotification.info("Adding Group");
-
-    addDepartment.mutate(
-      { name: newGroup.name, image: newGroup.image as File },
+    toast.promise(
+      addDepartment.mutateAsync({
+        name: newGroup.name,
+        image: newGroup.image as File,
+      }),
       {
-        onSuccess: () => {
+        position: "top-center",
+        loading: "Adding group...",
+        success: () => {
           queryClient.invalidateQueries({ exact: true, queryKey: ["departments"] });
           setAddGroup(false);
-          ToastNotification.success("Added Group");
           setNewGroup({ name: "", imagePreview: "", image: null });
+          return "Group added";
         },
-        onError: (er) => {
-          ToastNotification.error(er.message);
-        },
+        error: (err) => err.message || "Failed to add group",
       }
     );
   };
@@ -80,11 +81,10 @@ const PerformingGroups = () => {
     if (!validateGroup(editGroup, false)) return;
 
     if (editGroup.name.trim() === (selectedGroup?.name?.trim() ?? "") && !editGroup.image) {
-      ToastNotification.info("No Changes Detected");
+      toast.info("No Changes Detected", { position: "top-center" });
       return;
     }
 
-    ToastNotification.info("Editing Group");
     const payload: {
       departmentId: string;
       name: string;
@@ -97,28 +97,28 @@ const PerformingGroups = () => {
       oldFileId: editGroup.image ? (getFileId(selectedGroup?.logoUrl as string) as string) : undefined,
     };
 
-    editDepartment.mutate(payload, {
-      onSuccess: () => {
+    toast.promise(editDepartment.mutateAsync(payload), {
+      position: "top-center",
+      loading: "Updating group...",
+      success: () => {
         queryClient.invalidateQueries({ exact: true, queryKey: ["departments"] });
         setSelectedGroup(null);
-        ToastNotification.success("Edited Group");
         setEditGroup({ name: "", imagePreview: "", image: null });
+        return "Group updated";
       },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
+      error: (err) => err.message || "Failed to update group",
     });
   };
 
   const handleDelete = (groupId: string) => {
-    deleteDepartment.mutate(groupId, {
-      onSuccess: () => {
+    toast.promise(deleteDepartment.mutateAsync(groupId), {
+      position: "top-center",
+      loading: "Deleting group...",
+      success: () => {
         queryClient.invalidateQueries({ queryKey: ["departments"] });
-        ToastNotification.success("Deleted Group");
+        return "Group deleted ";
       },
-      onError: (er) => {
-        ToastNotification.error(er.message);
-      },
+      error: (err) => err.message || "Failed to delete group",
     });
   };
 

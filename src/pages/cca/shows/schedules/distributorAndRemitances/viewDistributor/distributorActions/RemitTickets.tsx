@@ -3,7 +3,6 @@ import type { AllocatedTicketToDistributor } from "@/types/ticket.ts";
 import { useOutletContext, useParams } from "react-router-dom";
 import type { Schedule } from "@/types/schedule.ts";
 import { compressControlNumbers, parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
-import ToastNotification from "@/utils/toastNotification";
 import { useRemitTicketSale } from "@/_lib/@react-client-query/schedule.ts";
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import RemittanceSummary from "./RemittanceSummary";
@@ -12,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import InputField from "@/components/InputField";
+import { toast } from "sonner";
 
 type Props = {
   distributorData: AllocatedTicketToDistributor[];
@@ -183,18 +183,18 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
       payload.remarks = remarks;
     }
 
-    remit.mutate(payload, {
-      onSuccess: () => {
+    toast.promise(remit.mutateAsync(payload), {
+      position: "top-center",
+      loading: "Processing remittance...",
+      success: () => {
         queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", schedule.scheduleId], exact: true });
         queryClient.invalidateQueries({ queryKey: ["schedule", "allocated", schedule.scheduleId, distributorId], exact: true });
         queryClient.invalidateQueries({ queryKey: ["schedule", "remittanceHistory", schedule.scheduleId, distributorId], exact: true });
         setShowSummary(false);
-        ToastNotification.success("Remitted");
         closeRemit();
+        return "Tickets remitted";
       },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
+      error: (err: any) => err.message || "Failed to remit tickets",
     });
   };
 

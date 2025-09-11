@@ -3,15 +3,17 @@ import type { FlattenedSeat } from "../types/seat.ts";
 import { formatSectionName } from "../utils/seatmap.ts";
 
 interface Props {
-  seatClick: (seat: FlattenedSeat) => void;
-  rowClick: (seats: FlattenedSeat[]) => void;
-  sectionClick: (seats: FlattenedSeat[]) => void;
-  recStyle: (seat: FlattenedSeat) => string;
+  seatClick?: (seat: FlattenedSeat) => void;
+  rowClick?: (seats: FlattenedSeat[]) => void;
+  sectionClick?: (seats: FlattenedSeat[]) => void;
+  recStyle?: (seat: FlattenedSeat) => string;
   seatMap: FlattenedSeat[];
   disabled?: boolean;
+  width?: string | number;
+  height?: string | number;
 }
 
-const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disabled = false }: Props) => {
+const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disabled = false, width = "100%", height = "100%" }: Props) => {
   const tooltipRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [scale, setScale] = useState(1);
@@ -82,8 +84,8 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
         <div className="w-full h-full overflow-hidden flex justify-center items-center">
           <svg
             ref={svgRef}
-            width="1405"
-            height="492"
+            width={width}
+            height={height}
             viewBox="-50 -50 1105 492"
             style={{
               transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
@@ -105,7 +107,7 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
                     <g key={`${sectionName}-${rowName}`}>
                       <text
                         className={`${!disabled ? "hover:underline cursor-pointer" : ""}`}
-                        onClick={!disabled ? () => rowClick(seats) : undefined}
+                        onClick={!disabled ? () => rowClick && rowClick(seats) : undefined}
                         onMouseEnter={!disabled ? () => setHoveredRow(`${sectionName}-${rowName}`) : undefined}
                         onMouseLeave={!disabled ? () => setHoveredRow(null) : undefined}
                         x={seats[0].x - 5}
@@ -131,9 +133,9 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
                             ${disabled ? "cursor-not-allowed" : "cursor-pointer"} 
                             ${hoveredSection === `${sectionName}` ? "fill-blue-200" : !disabled ? "hover:fill-blue-200" : ""}
                             ${hoveredRow === `${sectionName}-${rowName}` ? "fill-blue-200" : !disabled ? "hover:fill-blue-200" : ""}
-                            ${recStyle(seat)}
+                            ${recStyle && recStyle(seat)}
                         `}
-                          onClick={!disabled ? () => seatClick(seat) : undefined}
+                          onClick={!disabled ? () => seatClick && seatClick(seat) : undefined}
                           onMouseEnter={!disabled ? (e) => handleMouseEnter(e, seat) : undefined}
                           onMouseMove={!disabled ? handleMouseMoveOverSeat : undefined}
                           onMouseLeave={!disabled ? () => setHoveredSeat(null) : undefined}
@@ -159,7 +161,7 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
                               const sectionSeats = Object.entries(rows)
                                 .map(([_, rows]) => rows)
                                 .flat();
-                              sectionClick(sectionSeats);
+                              sectionClick && sectionClick(sectionSeats);
                             }
                           : undefined
                       }

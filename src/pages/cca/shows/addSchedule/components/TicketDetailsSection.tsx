@@ -18,7 +18,7 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
         <div className="flex gap-5 ">
           <InputField
             onChange={handleInputChange}
-            label=" Total Number ofOrchestra Tickets"
+            label=" Total Number of Orchestra Tickets"
             className="w-full min-w-[300px]"
             name="totalOrchestra"
             type="number"
@@ -50,12 +50,12 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
         <div className="flex gap-5 w-full">
           <InputField
             onChange={handleInputChange}
-            label="Control Number of <Orchestra Tickets"
+            label="Control Number of Orchestra Tickets"
             placeholder="eg. 1-250"
             className="w-full min-w-[300px]"
             name="orchestraControlNumber"
             value={!scheduleData.totalOrchestra ? "" : scheduleData.orchestraControlNumber}
-            error={errors?.totalOrchestra}
+            error={errors?.orchestraControlNumber}
             disabled={!scheduleData.totalOrchestra}
           />
 
@@ -66,7 +66,7 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
             className="w-full min-w-[300px]"
             name="balconyControlNumber"
             value={!scheduleData.totalBalcony ? "" : scheduleData.balconyControlNumber}
-            error={errors?.totalBalcony}
+            error={errors?.balconyControlNumber}
             disabled={!scheduleData.totalBalcony}
           />
 
@@ -77,7 +77,7 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
             className="w-full min-w-[300px]"
             name="complimentaryControlNumber"
             value={!scheduleData.totalComplimentary ? "" : scheduleData.complimentaryControlNumber}
-            error={errors?.totalComplimentary}
+            error={errors?.complimentaryControlNumber}
             disabled={!scheduleData.totalComplimentary}
           />
         </div>

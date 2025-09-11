@@ -56,7 +56,7 @@ const DateTimeSelection = ({ dateItem, removeHidden, index, handleDateChange, ha
         className="bg-background appearance-none"
       />
 
-      <Button onClick={() => removeDate(index)} className={`absolute -top-5 -right-6 ${removeHidden && "hidden"}`} variant="ghost">
+      <Button onClick={() => removeDate(index)} className={`absolute  -top-5 -right-6 ${removeHidden && "hidden"}`} variant="link">
         <X className="text-red" />
       </Button>
     </div>

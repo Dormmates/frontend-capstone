@@ -3,10 +3,9 @@ import { Button } from "@/components/ui/button";
 import type { ShowData } from "@/types/show";
 import { useQueryClient } from "@tanstack/react-query";
 import { useArchiveShow } from "@/_lib/@react-client-query/show";
-
-import ToastNotification from "@/utils/toastNotification";
 import { useAuthContext } from "@/context/AuthContext";
 import AlertModal from "@/components/AlertModal";
+import { toast } from "sonner";
 
 type ArchiveShowProps = {
   show: ShowData;
@@ -18,17 +17,21 @@ const ArchiveShow = ({ show }: ArchiveShowProps) => {
   const { user } = useAuthContext();
 
   const handleSubmit = () => {
-    archiveShow.mutate(
-      { showId: show.showId as string, actionByName: user?.firstName + " " + user?.lastName, actionById: user?.userId as string },
+    toast.promise(
+      archiveShow.mutateAsync({
+        showId: show.showId as string,
+        actionByName: user?.firstName + " " + user?.lastName,
+        actionById: user?.userId as string,
+      }),
       {
-        onSuccess: () => {
+        position: "top-center",
+        loading: "Archiving show...",
+        success: () => {
           queryClient.invalidateQueries({ queryKey: ["shows"] });
           close();
-          ToastNotification.success("Show Archived");
+          return "Show Archived";
         },
-        onError: (err) => {
-          ToastNotification.error(err.message);
-        },
+        error: (err: Error) => err.message || "Failed to archive show",
       }
     );
   };

@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetShow } from "@/_lib/@react-client-query/show.ts";
 import React, { useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
-
 import type { FlattenedSeat } from "@/types/seat.ts";
 import type { ErrorKeys, ScheduleFormData, ScheduleFormErrors, SeatPricing } from "@/types/schedule.ts";
 import ScheduleDateSelection from "./components/ScheduleDateSelection";
@@ -11,18 +10,17 @@ import SeatingConfigurationSelector from "./components/SeatingConfigurationSelec
 import PricingSection from "./components/PricingSection";
 import { parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 import TicketDetailsSection from "./components/TicketDetailsSection";
-
 import { seatMap } from "../../../../../seatdata";
 import { flattenSeatMap, formatSectionName } from "@/utils/seatmap.ts";
-
 import SeatMapSchedule from "./components/SeatMapSchedule";
-import ToastNotification from "../../../../utils/toastNotification";
 import { useAddSchedule, type AddSchedulePayload } from "@/_lib/@react-client-query/schedule.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import InputField from "@/components/InputField";
 import Modal from "@/components/Modal";
+import { formatTo12Hour, formatToReadableDate } from "@/utils/date";
+import { toast } from "sonner";
 
 type ControlKey = "orchestraControlNumber" | "balconyControlNumber" | "complimentaryControlNumber";
 
@@ -77,6 +75,7 @@ const AddSchedule = () => {
   const [rowToggle, setRowToggle] = useState(false);
   const [sectionToggle, setSectionToggle] = useState(false);
   const [seatToggle, setSeatToggle] = useState(false);
+  const [openScheduleSummary, setOpenScheduleSummary] = useState(false);
 
   const [ticketInput, setTicketInput] = useState({ controlNumber: "", isComplimentary: false });
   const [assignedControlNumbers, setAssignedControlNumbers] = useState<{
@@ -99,7 +98,7 @@ const AddSchedule = () => {
 
   const handleOpenTicketModal = (type: "seat" | "row" | "section") => {
     if (!validateControlNumbers()) {
-      ToastNotification.error("Please enter valid values for ticket control number first");
+      toast.error("Please enter valid values for ticket control number first", { position: "top-center" });
       return;
     }
 
@@ -401,7 +400,7 @@ const AddSchedule = () => {
     // Update state with new assignedControlNumbers
     setAssignedControlNumbers(updatedAssigned);
 
-    ToastNotification.success("Control number(s) removed");
+    toast.success("Control number(s) removed", { position: "top-center" });
 
     // Close modal + reset
     setSeatToggle(false);
@@ -435,12 +434,12 @@ const AddSchedule = () => {
     const isComplimentary = ticketInput.isComplimentary;
 
     if (!section || !controlStr) {
-      ToastNotification.error("Missing control number or section");
+      toast.error("Missing control number or section", { position: "top-center" });
       return;
     }
 
     if (!validateControlInput(controlStr)) {
-      ToastNotification.error(`"${controlStr}" control number input contain invalid characters`);
+      toast.error(`"${controlStr}" control number input contain invalid characters`, { position: "top-center" });
       return;
     }
 
@@ -450,9 +449,9 @@ const AddSchedule = () => {
       controlNums = parseControlNumbers(controlStr);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        ToastNotification.error(err.message);
+        toast.error(err.message, { position: "top-center" });
       } else {
-        ToastNotification.error("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.", { position: "top-center" });
       }
       return;
     }
@@ -462,19 +461,21 @@ const AddSchedule = () => {
     // Validate against duplicates
     for (const num of controlNums) {
       if (!unassigned.includes(num)) {
-        ToastNotification.error(`Control number ${num} is already used or not valid for this section`);
+        toast.error(`Control number ${num} is already used or not valid for this section`, { position: "top-center" });
         return;
       }
     }
     if ((isRow || isSection) && controlNums.length > (selectedSeats?.length || 0)) {
-      ToastNotification.error(`Control number count (${controlNums.length}) must not be greater than required (${selectedSeats?.length || 0})`);
+      toast.error(`Control number count (${controlNums.length}) must not be greater than required (${selectedSeats?.length || 0})`, {
+        position: "top-center",
+      });
       return;
     }
 
     if (!selectedSeats?.length) return;
 
     if (isSeat && controlNums.length !== 1) {
-      ToastNotification.error("Please provide only one control number when assigning an individual seat.");
+      toast.error("Please provide only one control number when assigning an individual seat.", { position: "top-center" });
       return;
     }
 
@@ -498,7 +499,7 @@ const AddSchedule = () => {
     );
 
     assignControlNumbers(controlNums, getSection(!isComplimentary ? section : "complimentary"));
-    ToastNotification.success("Control number(s) assigned");
+    toast.success("Control number(s) assigned", { position: "top-center" });
 
     // Close modal
     setSeatToggle(false);
@@ -508,28 +509,6 @@ const AddSchedule = () => {
   };
 
   const handleSubmit = () => {
-    if (!validate()) {
-      ToastNotification.error("Please fix all shown errors");
-      return;
-    }
-
-    if (scheduleData.ticketType === "ticketed") {
-      if (!validateControlNumbers()) {
-        ToastNotification.error("Please fix control number errors");
-        return;
-      }
-
-      if (
-        (getRemainingControlNumbers("orchestra").length != 0 ||
-          getRemainingControlNumbers("balcony").length != 0 ||
-          getRemainingControlNumbers("complimentary").length != 0) &&
-        scheduleData.seatingConfiguration === "controlledSeating"
-      ) {
-        ToastNotification.error("Not all Ticket Controll Number are assigned");
-        return;
-      }
-    }
-
     const payload: AddSchedulePayload = { ...scheduleData, showId: data.showId };
 
     if (scheduleData.ticketType === "ticketed") {
@@ -554,8 +533,8 @@ const AddSchedule = () => {
       }
     }
 
-    addSchedule.mutate(payload, {
-      onSuccess: () => {
+    toast.promise(
+      addSchedule.mutateAsync(payload).then(() => {
         setScheduleData({
           dates: [{ date: new Date(), time: "" }],
           ticketType: "ticketed",
@@ -579,14 +558,15 @@ const AddSchedule = () => {
           balconyRight: "",
         });
         queryClient.invalidateQueries({ exact: true, queryKey: ["schedules", id] });
-
         navigate(`/shows/${id}`);
-        ToastNotification.success("Schedule Addded");
-      },
-      onError: (error) => {
-        ToastNotification.error(error.message);
-      },
-    });
+      }),
+      {
+        position: "top-center",
+        loading: "Adding schedule...",
+        success: "Schedule Added",
+        error: (err) => err.message || "Failed to add schedule",
+      }
+    );
   };
 
   return (
@@ -611,9 +591,13 @@ const AddSchedule = () => {
               errors={errors}
             />
 
-            <Button variant="ghost" onClick={addAnotherDate}>
-              Add Another Schedule
-            </Button>
+            {scheduleData.dates.length < 3 ? (
+              <Button variant="ghost" onClick={addAnotherDate}>
+                Add Another Schedule
+              </Button>
+            ) : (
+              <p>You can only add up to 3 schedules at a time.</p>
+            )}
           </div>
 
           <div>
@@ -805,9 +789,127 @@ const AddSchedule = () => {
           </>
         )}
 
-        <Button className="w-fit self-end" onClick={handleSubmit}>
+        <Button
+          className="w-fit self-end"
+          onClick={() => {
+            if (!validate()) {
+              toast.error("Please fix all shown errors", { position: "top-center" });
+              return;
+            }
+
+            if (scheduleData.ticketType === "ticketed") {
+              if (!validateControlNumbers()) {
+                toast.error("Please fix control number errors", { position: "top-center" });
+                return;
+              }
+
+              if (
+                (getRemainingControlNumbers("orchestra").length != 0 ||
+                  getRemainingControlNumbers("balcony").length != 0 ||
+                  getRemainingControlNumbers("complimentary").length != 0) &&
+                scheduleData.seatingConfiguration === "controlledSeating"
+              ) {
+                toast.error("Not all Ticket Controll Number are assigned", { position: "top-center" });
+                return;
+              }
+            }
+
+            setOpenScheduleSummary(true);
+          }}
+        >
           Add Schedule
         </Button>
+
+        {openScheduleSummary && (
+          <Modal
+            className="max-w-6xl"
+            description="Please review the details before you proceed"
+            isOpen={openScheduleSummary}
+            onClose={() => setOpenScheduleSummary(false)}
+            title="Schedule Summary"
+          >
+            <div className="space-y-4">
+              {/* Dates */}
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Dates ({scheduleData.dates.length})</h3>
+                <ul className="list-disc list-inside space-y-1">
+                  {scheduleData.dates.map((date, index) => (
+                    <li key={index}>
+                      {formatToReadableDate(date.date + "")} at {formatTo12Hour(date.time)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Ticket & Seating Info */}
+              <div className="grid grid-cols-2 gap-4">
+                <p>
+                  <span className="font-semibold">Ticket Type:</span> {scheduleData.ticketType}
+                </p>
+                <p>
+                  <span className="font-semibold">Seating Configuration:</span> {scheduleData.seatingConfiguration}
+                </p>
+                <p>
+                  <span className="font-semibold">Seat Pricing:</span> {scheduleData.seatPricing}
+                </p>
+
+                <p>
+                  <span className="font-semibold">Commission Fee:</span> ₱{scheduleData.commissionFee}
+                </p>
+
+                {scheduleData.seatPricing === "fixed" && (
+                  <p>
+                    <span className="font-semibold">Ticket Price:</span> ₱{ticketPrice}
+                  </p>
+                )}
+              </div>
+
+              {/* Sectioned Pricing */}
+              {scheduleData.seatPricing === "sectionedPricing" && (
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Sectioned Pricing</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    <p>Orchestra Left: ₱{sectionedPrice.orchestraLeft}</p>
+                    <p>Orchestra Middle: ₱{sectionedPrice.orchestraMiddle}</p>
+                    <p> Orchestra Right: ₱{sectionedPrice.orchestraRight}</p>
+                    <p>Balcony Left: ₱{sectionedPrice.balconyLeft}</p>
+                    <p>Balcony Middle: ₱{sectionedPrice.balconyMiddle}</p>
+                    <p>Balcony Right: ₱{sectionedPrice.balconyRight}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Fees & Tickets */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <p>
+                  <span className="font-semibold">Orchestra Tickets:</span> {scheduleData.totalOrchestra} ({scheduleData.orchestraControlNumber})
+                </p>
+                <p>
+                  <span className="font-semibold">Balcony Tickets:</span> {scheduleData.totalBalcony} ({scheduleData.balconyControlNumber})
+                </p>
+                <p>
+                  <span className="font-semibold">Complimentary Tickets:</span> {scheduleData.totalComplimentary} (
+                  {scheduleData.complimentaryControlNumber})
+                </p>
+              </div>
+
+              {/* Controlled Seating */}
+              {scheduleData.seatingConfiguration === "controlledSeating" && (
+                <div className="flex flex-col gap-2">
+                  <SeatMapSchedule disabled={true} seatMap={seatData} />
+                  <p className="text-red-500 text-sm self-end italic">Note: Unassigned Seat will be disabled</p>
+                </div>
+              )}
+            </div>
+
+            {/* Footer button */}
+            <div className="flex justify-end mt-6">
+              <Button disabled={addSchedule.isPending} onClick={handleSubmit}>
+                Add Schedule
+              </Button>
+            </div>
+          </Modal>
+        )}
       </div>
     </ContentWrapper>
   );

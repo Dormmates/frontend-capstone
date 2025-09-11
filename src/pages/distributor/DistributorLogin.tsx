@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import InputField from "@/components/InputField";
 import PasswordField from "@/components/PasswordField";
-
 import { isValidEmail } from "@/utils";
+import { toast } from "sonner";
 
 const DistributorLogin = () => {
   const login = useLogin();
@@ -42,15 +42,15 @@ const DistributorLogin = () => {
   const submitForm = () => {
     if (!validate()) return;
 
-    login.mutate(
-      { ...formContent, expectedRole: "distributor" },
+    toast.promise(
+      login.mutateAsync({ ...formContent, expectedRole: "distributor" }).then((data) => {
+        setUser(data);
+      }),
       {
-        onSuccess: (data) => {
-          setUser(data);
-        },
-        onError: (er) => {
-          setLoginError(er.message);
-        },
+        position: "top-center",
+        loading: "Logging in...",
+        success: "Login Successful ",
+        error: (err: any) => err.message || "Failed to login, please try again",
       }
     );
   };

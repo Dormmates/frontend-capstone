@@ -3,7 +3,6 @@ import type { AllocatedTicketToDistributor } from "@/types/ticket.ts";
 import { useOutletContext, useParams } from "react-router-dom";
 import type { Schedule } from "@/types/schedule.ts";
 import { compressControlNumbers, parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
-import ToastNotification from "@/utils/toastNotification";
 import { useUnRemitTicketSales } from "@/_lib/@react-client-query/schedule.ts";
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import { useQueryClient } from "@tanstack/react-query";
@@ -18,6 +17,7 @@ import LongCardItem from "@/components/LongCardItem";
 import { formatCurrency } from "@/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 type Props = {
   distributorData: AllocatedTicketToDistributor[];
@@ -88,25 +88,26 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
   };
 
   const handleSubmit = () => {
-    unremit.mutate(
-      {
-        remittedTickets: unremitTickets.map((t) => t.controlNumber),
-        actionBy: user?.userId as string,
-        scheduleId: schedule.scheduleId,
-        distributorId: distributorId as string,
-        remarks,
-      },
-      {
-        onSuccess: () => {
+    toast.promise(
+      unremit
+        .mutateAsync({
+          remittedTickets: unremitTickets.map((t) => t.controlNumber),
+          actionBy: user?.userId as string,
+          scheduleId: schedule.scheduleId,
+          distributorId: distributorId as string,
+          remarks,
+        })
+        .then(() => {
           queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", schedule.scheduleId], exact: true });
           queryClient.invalidateQueries({ queryKey: ["schedule", "allocated", schedule.scheduleId, distributorId], exact: true });
           queryClient.invalidateQueries({ queryKey: ["schedule", "remittanceHistory", schedule.scheduleId, distributorId], exact: true });
-          ToastNotification.success("Unremitted Tickets");
           closeModal();
-        },
-        onError: (err) => {
-          ToastNotification.error(err.message);
-        },
+        }),
+      {
+        position: "top-center",
+        loading: "Unremitting tickets...",
+        success: "Tickets unremitted ",
+        error: (err: any) => err.message || "Failed to unremit tickets",
       }
     );
   };

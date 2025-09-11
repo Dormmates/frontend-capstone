@@ -4,7 +4,6 @@ import { useEditTrainer, useGetTrainers, useNewTrainer } from "@/_lib/@react-cli
 import { useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
 import { useGetDepartments, useRemoveDepartmentTrainerByTrainerId } from "@/_lib/@react-client-query/department.ts";
-import ToastNotification from "../../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import type { User } from "@/types/user.ts";
 import TrainerForm from "./TrainerForm";
@@ -18,6 +17,7 @@ import ArchiveAccount from "../ArchiveAccount";
 import DeleteAccount from "../DeleteAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
 import { useAuthContext } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 const Trainers = () => {
   const { user } = useAuthContext();
@@ -63,16 +63,16 @@ const Trainers = () => {
     .map((department) => ({ name: department.name, value: department.departmentId }));
 
   const handleRemoveTrainerDepartment = () => {
-    removeTrainer.mutate(unassignTrainer.userId, {
-      onSuccess: () => {
+    toast.promise(removeTrainer.mutateAsync(unassignTrainer.userId), {
+      position: "top-center",
+      loading: "Removing trainer from department...",
+      success: () => {
         queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
         queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
-        ToastNotification.success("Trainer Department Removed");
         setUnassignTrainer({ userId: "", openModal: false });
+        return "Trainer department removed";
       },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
+      error: (err) => err.message || "Failed to remove trainer",
     });
   };
 
@@ -190,16 +190,16 @@ const Trainers = () => {
                 departmentId: payload.group as string,
               };
 
-              addTrainer.mutate(data, {
-                onSuccess: () => {
+              toast.promise(addTrainer.mutateAsync(data), {
+                position: "top-center",
+                loading: "Adding new trainer...",
+                success: () => {
                   queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
                   queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
-                  ToastNotification.success("Added New Trainer");
                   setIsAddTrainer(false);
+                  return "New trainer added";
                 },
-                onError: (err) => {
-                  ToastNotification.error(err.message);
-                },
+                error: (err) => err.message || "Failed to add trainer",
               });
             }}
           />
@@ -227,7 +227,7 @@ const Trainers = () => {
                 payload.group !== selectedTrainer.department?.departmentId;
 
               if (!hasChanges) {
-                ToastNotification.info("No Changes Detected");
+                toast.info("No Changes Detected");
                 return;
               }
 
@@ -239,16 +239,16 @@ const Trainers = () => {
                 departmentId: payload.group as string,
               };
 
-              editTrainer.mutate(data, {
-                onSuccess: () => {
+              toast.promise(editTrainer.mutateAsync(data), {
+                position: "top-center",
+                loading: "Updating trainer...",
+                success: () => {
                   queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
                   queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
-                  ToastNotification.success("Updated Trainer Data");
                   setSelectedTrainer(null);
+                  return "Trainer data updated";
                 },
-                onError: (err) => {
-                  ToastNotification.error(err.message);
-                },
+                error: (err) => err.message || "Failed to update trainer",
               });
             }}
           />

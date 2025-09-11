@@ -2,10 +2,10 @@ import { useDeleteShow } from "@/_lib/@react-client-query/show";
 import { Button } from "@/components/ui/button";
 import deleteIcon from "../../../../assets/icons/delete.png";
 import type { ShowData } from "@/types/show";
-import ToastNotification from "@/utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/context/AuthContext";
 import AlertModal from "@/components/AlertModal";
+import { toast } from "sonner";
 
 type DeleteShowProps = {
   show: ShowData;
@@ -17,16 +17,20 @@ const DeleteShow = ({ show }: DeleteShowProps) => {
   const { user } = useAuthContext();
 
   const handleDelete = () => {
-    deleteShow.mutate(
-      { showId: show.showId, actionByName: user?.firstName + " " + user?.lastName, actionById: user?.userId as string },
+    toast.promise(
+      deleteShow.mutateAsync({
+        showId: show.showId,
+        actionByName: user?.firstName + " " + user?.lastName,
+        actionById: user?.userId as string,
+      }),
       {
-        onSuccess: () => {
+        position: "top-center",
+        loading: "Deleting show...",
+        success: () => {
           queryClient.invalidateQueries({ queryKey: ["shows"] });
-          ToastNotification.success("Show Deleted Permanently");
+          return "Show Deleted Permanently";
         },
-        onError: (err) => {
-          ToastNotification.error(err.message);
-        },
+        error: (err: Error) => err.message || "Failed to delete show",
       }
     );
   };

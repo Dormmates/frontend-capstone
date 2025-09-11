@@ -13,7 +13,6 @@ import type { ShowData } from "../../../../../../types/show";
 import type { Schedule } from "../../../../../../types/schedule";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "../../../../../../context/AuthContext";
-import ToastNotification from "../../../../../../utils/toastNotification";
 import { formatCurrency } from "../../../../../../utils";
 import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/BreadCrumbs";
@@ -22,6 +21,7 @@ import Modal from "@/components/Modal";
 import UnallocateTicket from "./distributorActions/UnallocateTicket";
 import RemitTickets from "./distributorActions/RemitTickets";
 import UnRemitTickets from "./distributorActions/UnRemitTickets";
+import { toast } from "sonner";
 
 const links = [
   {
@@ -188,18 +188,20 @@ const ViewDistributorLayout = () => {
                 controlNumbers,
               };
 
-              unAllocateTicket.mutate(payload, {
-                onSuccess: () => {
+              toast.promise(
+                unAllocateTicket.mutateAsync(payload).then(() => {
                   queryClient.invalidateQueries({ queryKey: ["schedule", "allocated", scheduleId, distributorId], exact: true });
                   queryClient.invalidateQueries({ queryKey: ["schedule", "seatmap", scheduleId], exact: true });
                   queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId] });
                   setIsUnallocateTicket(false);
-                  ToastNotification.success("Ticket Unallocated");
-                },
-                onError: (err: any) => {
-                  ToastNotification.error(err.message);
-                },
-              });
+                }),
+                {
+                  position: "top-center",
+                  loading: "Unallocating ticket...",
+                  success: "Tickets Unallocated",
+                  error: (err: any) => err.message || "Failed to unallocate ticket",
+                }
+              );
             }}
             schedule={schedule}
             show={show}

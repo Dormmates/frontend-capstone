@@ -5,7 +5,6 @@ import { useEditDistributor, useGetDistributors, useGetDistributorTypes, useNewD
 import type { Distributor, User } from "@/types/user.ts";
 import DistributorForm from "./DistributorForm";
 import { useGetDepartments } from "@/_lib/@react-client-query/department.ts";
-import ToastNotification from "../../../../utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
@@ -17,6 +16,7 @@ import DeleteAccount from "../DeleteAccount";
 import ArchiveAccount from "../ArchiveAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const Distributors = () => {
   const addDistributor = useNewDistributor();
@@ -170,21 +170,21 @@ const Distributors = () => {
             groupOptions={groupOptions}
             isSubmitting={addDistributor.isPending}
             onSubmit={(payload) => {
-              addDistributor.mutate(
-                {
+              toast.promise(
+                addDistributor.mutateAsync({
                   ...payload,
                   distributorType: Number(payload.type),
                   departmentId: payload.department,
-                },
+                }),
                 {
-                  onSuccess: () => {
+                  position: "top-center",
+                  loading: "Adding distributor...",
+                  success: () => {
                     queryClient.invalidateQueries({ queryKey: ["distributors"], exact: true });
-                    ToastNotification.success("Distributor Added");
                     setIsAddDistributor(false);
+                    return "Distributor Added";
                   },
-                  onError: (err) => {
-                    ToastNotification.error(err.message);
-                  },
+                  error: (err) => err.message || "Failed to add distributor",
                 }
               );
             }}
@@ -223,7 +223,7 @@ const Distributors = () => {
                 (payload.department || null) !== (selectedDistributor.distributor.department?.departmentId || null);
 
               if (!hasChanges) {
-                ToastNotification.info("No Changes Detected");
+                toast.info("No Changes Detected");
                 return;
               }
 
@@ -237,15 +237,15 @@ const Distributors = () => {
                 userId: selectedDistributor.userId,
               };
 
-              editDistributor.mutate(data, {
-                onSuccess: () => {
+              toast.promise(editDistributor.mutateAsync(data), {
+                position: "top-center",
+                loading: "Updating distributor...",
+                success: () => {
                   queryClient.invalidateQueries({ queryKey: ["distributors"], exact: true });
-                  ToastNotification.success("Edited Distributor");
                   setSelectedDistributor(null);
+                  return "Distributor updated";
                 },
-                onError: (err) => {
-                  ToastNotification.error(err.message);
-                },
+                error: (err) => err.message || "Failed to update distributor",
               });
             }}
             onCancel={() => setSelectedDistributor(null)}

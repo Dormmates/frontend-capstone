@@ -16,7 +16,7 @@ import UnArchiveAccount from "../UnArchiveAccount";
 import CreateCCAHead from "./CreateCCAHead";
 import { UserRoundXIcon } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import ToastNotification from "@/utils/toastNotification";
+import { toast } from "sonner";
 
 const CCAHeads = () => {
   const queryClient = useQueryClient();
@@ -110,17 +110,17 @@ const CCAHeads = () => {
                         tooltip="Remove as CCA Head"
                         description={`This will remove this account from the list of CCA Heads and revoke its role privileges.`}
                         onConfirm={() => {
-                          removeCCAHeadRole.mutate(head.userId, {
-                            onSuccess: () => {
-                              ToastNotification.success("Remove Role");
+                          toast.promise(removeCCAHeadRole.mutateAsync(head.userId), {
+                            position: "top-center",
+                            loading: "Removing role...",
+                            success: () => {
                               queryClient.setQueryData<User[]>(["heads"], (oldData) => {
                                 if (!oldData) return oldData;
                                 return oldData.filter((h) => h.userId !== head.userId);
                               });
+                              return "Role removed";
                             },
-                            onError: (err) => {
-                              ToastNotification.error(err.message);
-                            },
+                            error: (err) => err.message || "Failed to remove role",
                           });
                         }}
                         title={`Remove "${head.firstName} ${head.lastName}" as CCA Head`}

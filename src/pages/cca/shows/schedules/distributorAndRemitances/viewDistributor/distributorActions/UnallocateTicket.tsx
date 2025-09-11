@@ -5,12 +5,12 @@ import LongCardItem from "@/components/LongCardItem";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import ControlNumberInputTutorial from "@/components/ControlNumberInputTutorial";
 import { useState } from "react";
-import ToastNotification from "@/utils/toastNotification";
-import { parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
+import { compressControlNumbers, parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Modal from "@/components/Modal";
+import { toast } from "sonner";
 
 type Props = {
   distributorName: string;
@@ -31,7 +31,7 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
   const handleSubmit = () => {
     if (!validateControlInput(input)) {
       setError("Invalid Control Number Input");
-      ToastNotification.error("Invalid Control Number Input");
+      toast.error("Invalid Control Number Input", { position: "top-center" });
       return;
     }
 
@@ -41,7 +41,7 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
 
       if (!allExist) {
         setError("One or more control numbers are not in the allocated list.");
-        ToastNotification.error("One or more control numbers are not in the allocated list.");
+        toast.error("One or more control numbers are not in the allocated list.", { position: "top-center" });
         return;
       }
 
@@ -50,7 +50,7 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
       setOpenSummary(true);
     } catch (err) {
       if (err instanceof Error) {
-        ToastNotification.error(err.message);
+        toast.error(err.message, { position: "top-center" });
         setError(err.message);
       }
     }
@@ -113,12 +113,13 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
           onClose={() => setOpenSummary(false)}
           title="Ticket Unallocation Summary"
           description="Please review the summary before proceding"
+          className="max-w-2xl"
           isTransparent={true}
         >
           <LongCard className="w-full" label="Ticket">
             <LongCardItem label="Distributor Name" value={distributorName} />
             <LongCardItem label="Total Tickets " value={controlNumbers.length} />
-            <LongCardItem label="Ticket Control Numbers" value={input} />
+            <LongCardItem label="Ticket Control Numbers" value={compressControlNumbers(controlNumbers)} />
           </LongCard>
           <div className="flex justify-end gap-3 mt-5">
             <Button className="!bg-green" disabled={input.length == 0 || !input || disabled} onClick={() => onSubmit(controlNumbers)}>

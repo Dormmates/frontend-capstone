@@ -12,7 +12,6 @@ import AllocatedBySeat from "./AllocatedBySeat";
 import type { ShowData } from "@/types/show.ts";
 import { useGetDistributors } from "@/_lib/@react-client-query/accounts.ts";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
-import ToastNotification from "@/utils/toastNotification";
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import { compressControlNumbers, parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 import { useQueryClient } from "@tanstack/react-query";
@@ -23,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import Modal from "@/components/Modal";
 import InputField from "@/components/InputField";
 import PaginatedTable from "@/components/PaginatedTable";
+import { toast } from "sonner";
 
 const TicketAllocation = () => {
   const { user } = useAuthContext();
@@ -59,14 +59,14 @@ const TicketAllocation = () => {
     const newErrors: typeof error = {};
 
     if (!selectedDistributor) {
-      ToastNotification.error("Please choose a distributor");
+      toast.error("Please choose a distributor", { position: "top-center" });
       newErrors.distributorError = "Please choose a distributor";
       isValid = false;
     }
 
     if (allocationMethod === "controlNumber") {
       if (!validateControlInput(controlNumberInput.trim())) {
-        ToastNotification.error("Please enter valid format or a value");
+        toast.error("Please enter valid format or a value", { position: "top-center" });
         newErrors.controlNumberError = "Please enter valid format or a value";
         isValid = false;
       }
@@ -82,7 +82,7 @@ const TicketAllocation = () => {
       }
     } else if (allocationMethod == "seat") {
       if (!choosenSeats || choosenSeats.length == 0) {
-        ToastNotification.error("Please choose atleast one seat");
+        toast.error("Please choose atleast one seat", { position: "top-center" });
         newErrors.seatError = "Please choose atleast one seat";
         isValid = false;
       }
@@ -104,21 +104,23 @@ const TicketAllocation = () => {
         allocationMethod === "controlNumber" ? (parsedControlNumbers as number[]) : choosenSeats.map((seat) => seat.ticketControlNumber),
       allocatedBy: user?.userId as string,
     };
-    allocateTicketByControlNumber.mutate(payload, {
-      onSuccess: () => {
-        ToastNotification.success("Allocated Tickets to the distributor");
+    toast.promise(allocateTicketByControlNumber.mutateAsync(payload), {
+      position: "top-center",
+      loading: "Allocating tickets...",
+      success: () => {
+        queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId], exact: true });
+        queryClient.invalidateQueries({ queryKey: ["schedule", "distributors", scheduleId], exact: true });
+        queryClient.invalidateQueries({ queryKey: ["schedule", "seatmap", scheduleId], exact: true });
         setIsAllocationSummary(false);
         setSelectedDistributor(null);
         setControlNumberInput("");
         setChoosenSeats([]);
         setParsedControlNumbers(undefined);
-        queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId], exact: true });
-        queryClient.invalidateQueries({ queryKey: ["schedule", "distributors", scheduleId], exact: true });
-        queryClient.invalidateQueries({ queryKey: ["schedule", "seatmap", scheduleId], exact: true });
+        return "Tickets allocated";
       },
-      onError: (err) => {
+      error: (err: any) => {
         console.log("Full error details:", err);
-        ToastNotification.error(err.message);
+        return err.message || "Failed to allocate tickets";
       },
     });
   };
@@ -375,7 +377,7 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
                     onClick={() => {
                       onChoose(dist);
                       closeModal();
-                      ToastNotification.info(`Selected: ${dist.firstName + " " + dist.lastName}`);
+                      toast.info(`Selected: ${dist.firstName + " " + dist.lastName}`, { position: "top-center" });
                     }}
                     variant="outline"
                   >

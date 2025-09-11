@@ -24,14 +24,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthContext } from "@/context/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Account from "./Account";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLogout } from "@/_lib/@react-client-query/auth";
-import ToastNotification from "@/utils/toastNotification";
 import { disconnectSocket } from "@/socket";
+import { toast } from "sonner";
 
 interface SideBarItems {
   icon: string;
@@ -167,7 +166,7 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                             navigate("/");
                           },
                           onError: (err) => {
-                            ToastNotification.error(err.message);
+                            toast.error(err.message, { position: "top-center" });
                           },
                         }
                       );

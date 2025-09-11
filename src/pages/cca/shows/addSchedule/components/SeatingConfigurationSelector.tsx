@@ -3,8 +3,8 @@ import type { ScheduleFormData, SeatingConfiguration } from "@/types/schedule.ts
 import Dropdown from "@/components/Dropdown";
 
 const seatOptions = [
-  { name: "Free Seating", value: "freeSeating" },
-  { name: "Controlled Seating", value: "controlledSeating" },
+  { name: "Free Seating", value: "freeSeating" as SeatingConfiguration },
+  { name: "Controlled Seating", value: "controlledSeating" as SeatingConfiguration },
 ];
 
 interface Props {
@@ -21,7 +21,12 @@ const SeatingConfigurationSelector = ({ scheduleData, setScheduleData }: Props) 
       label="Seating Configuration"
       value={scheduleData.ticketType === "nonTicketed" ? "freeSeating" : scheduleData.seatingConfiguration}
       disabled={scheduleData.ticketType === "nonTicketed"}
-      onChange={(value) => setScheduleData((prev) => ({ ...prev, seatingConfiguration: value as SeatingConfiguration }))}
+      onChange={(value) => {
+        if (value === "freeSeating") {
+          setScheduleData((prev) => ({ ...prev, seatPricing: "fixed" }));
+        }
+        setScheduleData((prev) => ({ ...prev, seatingConfiguration: value as SeatingConfiguration }));
+      }}
     />
   );
 };

@@ -3,20 +3,19 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLogin } from "@/_lib/@react-client-query/auth.ts";
 import { useAuthContext } from "../../context/AuthContext";
-import ToastNotification from "../../utils/toastNotification";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
 import PasswordField from "@/components/PasswordField";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { isValidEmail } from "@/utils";
 import { connectSocket } from "@/socket";
+import { toast } from "sonner";
 
 const CCALogin = () => {
   const login = useLogin();
   const { setUser } = useAuthContext();
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [loginError, setLoginError] = useState("");
-  const [loginIn, setLoggingIn] = useState(false);
 
   const [formContent, setFormContent] = useState({
     email: "",
@@ -44,22 +43,16 @@ const CCALogin = () => {
   const submitForm = () => {
     if (!validate()) return;
 
-    setLoggingIn(true);
-    login.mutate(
-      { ...formContent, expectedRole: "cca" },
+    toast.promise(
+      login.mutateAsync({ ...formContent, expectedRole: "cca" }).then((data) => {
+        setUser(data);
+        connectSocket(data.userId);
+      }),
       {
-        onSuccess: (data) => {
-          setUser(data);
-          ToastNotification.success("Loggin Success");
-          connectSocket(data.userId);
-          setLoggingIn(false);
-        },
-
-        onError: (er) => {
-          setLoginError(er.message);
-          ToastNotification.error("Failed to Login, Please Try again");
-          setLoggingIn(false);
-        },
+        position: "top-center",
+        loading: "Logging in...",
+        success: "Login Successful ",
+        error: (err: any) => err.message || "Failed to login, please try again",
       }
     );
   };
@@ -82,7 +75,7 @@ const CCALogin = () => {
               <InputField
                 error={errors.email}
                 label="Email"
-                disabled={loginIn}
+                disabled={login.isPending}
                 name="email"
                 value={formContent.email}
                 type="email"
@@ -92,7 +85,7 @@ const CCALogin = () => {
               <PasswordField
                 error={errors.password}
                 label="Password"
-                disabled={loginIn}
+                disabled={login.isPending}
                 name="password"
                 value={formContent.password}
                 onChange={handleInputChange}
@@ -101,7 +94,7 @@ const CCALogin = () => {
             </form>
           </CardContent>
           <CardFooter className="flex flex-col gap-3">
-            <Button onClick={() => submitForm()} className="w-full" type="submit" disabled={loginIn}>
+            <Button onClick={() => submitForm()} className="w-full" type="submit" disabled={login.isPending}>
               Login
             </Button>
             {loginError && <h1 className="mx-auto text-red">{loginError}</h1>}

@@ -2,10 +2,10 @@ import { useUnArchiveShow } from "@/_lib/@react-client-query/show";
 import AlertModal from "@/components/AlertModal";
 import { Button } from "@/components/ui/button";
 import type { ShowData } from "@/types/show";
-import ToastNotification from "@/utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import archiveIcon from "../../../../assets/icons/archive.png";
 import { useAuthContext } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 type UnArchiveShowProps = {
   show: ShowData;
@@ -17,16 +17,20 @@ const UnArchiveShow = ({ show }: UnArchiveShowProps) => {
   const { user } = useAuthContext();
 
   const handleSubmit = () => {
-    unarchiveShow.mutate(
-      { showId: show.showId as string, actionByName: user?.firstName + " " + user?.lastName, actionById: user?.userId as string },
+    toast.promise(
+      unarchiveShow.mutateAsync({
+        showId: show.showId as string,
+        actionByName: user?.firstName + " " + user?.lastName,
+        actionById: user?.userId as string,
+      }),
       {
-        onSuccess: () => {
+        position: "top-center",
+        loading: "Unarchiving show...",
+        success: () => {
           queryClient.invalidateQueries({ queryKey: ["shows"] });
-          ToastNotification.success("Show Archived");
+          return "Show Unarchived";
         },
-        onError: (err) => {
-          ToastNotification.error(err.message);
-        },
+        error: (err) => err.message || "Failed to unarchive show",
       }
     );
   };

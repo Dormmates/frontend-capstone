@@ -2,11 +2,11 @@ import ShowForm from "./ShowForm";
 import { useAuthContext } from "@/context/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCreateShow } from "@/_lib/@react-client-query/show";
-import ToastNotification from "@/utils/toastNotification";
 import type { ShowData } from "@/types/show";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ContentWrapper } from "@/components/layout/Wrapper";
 import Breadcrumbs from "@/components/BreadCrumbs";
+import { toast } from "sonner";
 
 const CreateShow = () => {
   const [params] = useSearchParams();
@@ -25,10 +25,8 @@ const CreateShow = () => {
         showType={type as "group" | "major"}
         isLoading={createShow.isPending}
         onSubmit={(data) => {
-          console.log(data);
-          ToastNotification.info("Creating new show");
-          createShow.mutate(
-            {
+          toast.promise(
+            createShow.mutateAsync({
               showTitle: data.title,
               description: data.description,
               department: data.productionType == "majorProduction" ? "" : data.group,
@@ -36,23 +34,23 @@ const CreateShow = () => {
               createdBy: user?.userId as string,
               showType: data.productionType,
               image: data.image as File,
-            },
+            }),
             {
-              onSuccess: (data) => {
+              position: "top-center",
+              loading: "Creating show...",
+              success: (data) => {
                 queryClient.setQueryData<ShowData>(["show", data.showId], data);
                 queryClient.setQueryData(["shows"], (oldData: ShowData[] | undefined) => {
                   if (!oldData) return oldData;
                   return oldData.map((show) => (show.showId === data.showId ? data : show));
                 });
+
                 navigate(`/shows/add/schedule/${data.showId}`);
-                ToastNotification.success("Show created");
-                ToastNotification.info("Please add a schedule for the created show", 5000);
-                queryClient.setQueryData<ShowData>(["show", data.showId], data);
+                toast.info("Please add a schedule for the created show", { position: "top-center" });
                 queryClient.invalidateQueries({ queryKey: ["shows"] });
+                return "Show created";
               },
-              onError: (err) => {
-                ToastNotification.error(err.message);
-              },
+              error: (err) => err.message || "Failed to create show",
             }
           );
         }}

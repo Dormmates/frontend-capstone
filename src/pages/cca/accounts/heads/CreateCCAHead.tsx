@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { isValidEmail } from "@/utils";
-import ToastNotification from "@/utils/toastNotification";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -70,16 +69,16 @@ const ByCreation = ({ closeModal }: CreateCCAHeadProps) => {
   const handleSubmit = () => {
     if (!validate()) return;
 
-    addHead.mutate(form, {
-      onSuccess: () => {
+    toast.promise(addHead.mutateAsync(form), {
+      position: "top-center",
+      loading: "Creating head...",
+      success: () => {
         queryClient.invalidateQueries({ queryKey: ["heads"] });
         setForm({ firstName: "", email: "", lastName: "" });
-        ToastNotification.success("Created");
         closeModal();
+        return "CCA Head created";
       },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
+      error: (err) => err.message || "Failed to create head",
     });
   };
 
@@ -144,15 +143,15 @@ const ByAddRole = ({ closeModal }: CreateCCAHeadProps) => {
       return;
     }
 
-    addHeadRole.mutate(selectedTrainers, {
-      onSuccess: () => {
-        ToastNotification.success("Roles Added");
+    toast.promise(addHeadRole.mutateAsync(selectedTrainers), {
+      position: "top-center",
+      loading: "Adding roles...",
+      success: () => {
         queryClient.invalidateQueries({ queryKey: ["heads"], exact: true });
         closeModal();
+        return "Roles added";
       },
-      onError: (error) => {
-        ToastNotification.error(error.message);
-      },
+      error: (error) => error.message || "Failed to add roles",
     });
   };
 

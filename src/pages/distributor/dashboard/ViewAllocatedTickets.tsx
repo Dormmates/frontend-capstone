@@ -9,7 +9,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import LongCard from "../../../components/LongCard";
 import LongCardItem from "../../../components/LongCardItem";
 import { useAuthContext } from "@/context/AuthContext.tsx";
-import ToastNotification from "../../../utils/toastNotification";
 import { formatCurrency, isValidEmail } from "@/utils";
 import { Button } from "@/components/ui/button";
 import Dropdown from "@/components/Dropdown";
@@ -17,6 +16,7 @@ import InputField from "@/components/InputField";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 type Props = {
   schedule: DistributorScheduleTickets;
@@ -123,8 +123,8 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
 
     const mutation = action === "sold" ? markSold : markUnsold;
 
-    mutation.mutate(payload, {
-      onSuccess: () => {
+    toast.promise(
+      mutation.mutateAsync(payload).then(() => {
         queryClient.setQueryData<DistributorScheduleTickets[]>(["show and schedules", "distributor", user?.userId as string], (oldData) => {
           if (!oldData) return oldData;
 
@@ -145,12 +145,14 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
           setCustomerInfo({ email: "", customerName: "", isIncluded: false });
         }
         setIsSumamry(false);
-        ToastNotification.success(`Marked as ${action}`);
-      },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
-    });
+      }),
+      {
+        position: "top-center",
+        loading: `Marking as ${action}...`,
+        success: `Marked as ${action}`,
+        error: (err) => err.message || `Failed to mark as ${action}`,
+      }
+    );
   };
 
   return (

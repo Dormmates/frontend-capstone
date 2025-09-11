@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import archiveIcon from "@/assets/icons/archive.png";
 import type { User } from "@/types/user";
-import ToastNotification from "@/utils/toastNotification";
 import { useArchiveAccount } from "@/_lib/@react-client-query/accounts";
 import AlertModal from "@/components/AlertModal";
+import { toast } from "sonner";
 
 type ArchiveAccountProps = {
   user: User;
@@ -16,14 +16,14 @@ const ArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
   const archive = useArchiveAccount();
 
   const handleSubmit = () => {
-    archive.mutate(user.userId, {
-      onSuccess: () => {
+    toast.promise(archive.mutateAsync(user.userId), {
+      position: "top-center",
+      loading: "Archiving user...",
+      success: () => {
         queryClient.invalidateQueries({ queryKey: [queryKey], exact: true });
-        ToastNotification.success("User Archived");
+        return "User Archived ";
       },
-      onError: (err) => {
-        ToastNotification.error(err.message);
-      },
+      error: (err) => err.message || "Failed to archive user",
     });
   };
   return (

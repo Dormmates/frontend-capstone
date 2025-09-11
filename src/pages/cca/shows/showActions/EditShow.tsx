@@ -2,11 +2,11 @@ import ShowForm from "../ShowForm";
 import type { ShowData } from "@/types/show";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUpdateShow } from "@/_lib/@react-client-query/show";
-import ToastNotification from "@/utils/toastNotification";
 import { getFileId } from "@/utils";
 import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type EditShowProps = {
   show: ShowData;
@@ -30,10 +30,8 @@ const EditShow = ({ show }: EditShowProps) => {
         showType={"group"}
         isLoading={updateShow.isPending}
         onSubmit={(data) => {
-          ToastNotification.info("Saving Changes");
-
-          updateShow.mutate(
-            {
+          toast.promise(
+            updateShow.mutateAsync({
               showId: show.showId as string,
               showTitle: data.title,
               description: data.description,
@@ -42,17 +40,17 @@ const EditShow = ({ show }: EditShowProps) => {
               showType: data.productionType,
               image: data.image as File,
               oldFileId: data.image ? (getFileId(show?.showCover as string) as string) : undefined,
-            },
+            }),
             {
-              onSuccess: (data) => {
+              loading: "Updating show...",
+              position: "top-center",
+              success: (updated) => {
                 setIsOpen(false);
-                queryClient.setQueryData<ShowData>(["show", data.showId], data);
+                queryClient.setQueryData<ShowData>(["show", updated.showId], updated);
                 queryClient.invalidateQueries({ queryKey: ["shows"] });
-                ToastNotification.success("Updated Show");
+                return "Show updated successfully ";
               },
-              onError: (err) => {
-                ToastNotification.error(err.message);
-              },
+              error: (err: Error) => err.message || "Failed to update show",
             }
           );
         }}
