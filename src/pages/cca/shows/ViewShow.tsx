@@ -6,7 +6,6 @@ import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import deleteIcon from "../../../assets/icons/delete.png";
 import { useShowScheduleContext } from "@/context/ShowSchedulesContext.tsx";
 import { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import type { Schedule } from "@/types/schedule.ts";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +27,8 @@ import PaginatedTable from "@/components/PaginatedTable";
 import NotFound from "@/components/NotFound";
 import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
+import SalesReportDialog from "./SalesReportDialog";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ViewShow = () => {
   const queryClient = useQueryClient();
@@ -44,6 +45,7 @@ const ViewShow = () => {
 
   const [isReschedule, setIsReschedule] = useState<Schedule | null>(null);
   const [newDate, setNewDate] = useState({ date: new Date(), time: "" });
+  const [openSalesReport, setOpenSalesReport] = useState(false);
 
   useEffect(() => {
     if (!showSchedules) return;
@@ -165,12 +167,24 @@ const ViewShow = () => {
               <div className="flex flex-col gap-5">
                 <h1 className="font-semibold text-2xl ">Show Schedules</h1>
               </div>
-              {((show.showType === "majorProduction" && user?.roles.includes("head")) ||
-                (show.showType !== "majorProduction" && (user?.roles.includes("head") || user?.roles.includes("trainer")))) && (
-                <Link className="self-end" to={`/shows/add/schedule/${id}`}>
-                  <Button>Add New Schedule</Button>
-                </Link>
-              )}
+              <div className="flex gap-2">
+                <SalesReportDialog
+                  showSchedules={showSchedules}
+                  openSalesReport={openSalesReport}
+                  setOpenSalesReport={setOpenSalesReport}
+                  onGenerateReport={(scheduleIds) => {
+                    const scheduleIdsParam = scheduleIds.join(",");
+                    const url = `/salesreport/${id}/${scheduleIdsParam}`;
+                    window.open(url, "SalesReport", "width=1000,height=700,left=200,top=100,resizable,scrollbars=yes");
+                  }}
+                />
+                {((show.showType === "majorProduction" && user?.roles.includes("head")) ||
+                  (show.showType !== "majorProduction" && (user?.roles.includes("head") || user?.roles.includes("trainer")))) && (
+                  <Link className="self-end" to={`/shows/add/schedule/${id}`}>
+                    <Button>Add New Schedule</Button>
+                  </Link>
+                )}
+              </div>
             </div>
 
             <PaginatedTable

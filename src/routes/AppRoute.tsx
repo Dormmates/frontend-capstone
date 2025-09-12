@@ -44,6 +44,7 @@ import CustomerHome from "@/pages/customer/CustomerHome";
 import CustomerLayout from "@/pages/customer/CustomerLayout";
 import CustomerViewShow from "@/pages/customer/CustomerViewShow";
 import CustomerViewSchedule from "@/pages/customer/CustomerViewSchedule";
+import SalesReport from "@/pages/cca/shows/SalesReport";
 
 const AppRoute = () => {
   const { user } = useAuthContext();
@@ -130,6 +131,7 @@ const AppRoute = () => {
       {/* Others */}
       <Route path="/unathorized" element={<Unauthorized />} />
       <Route path="*" element={<NotFound />} />
+      <Route path="salesreport/:showId/:scheduleIds" element={<SalesReport />} />
     </Routes>
   );
 };

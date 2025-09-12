@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { Pie } from "react-chartjs-2";
 import { useGetScheduleSummary } from "@/_lib/@react-client-query/schedule.ts";
 import SimpleCard from "@/components/SimpleCard";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { formatCurrency } from "@/utils";
 
@@ -68,9 +67,6 @@ const ScheduleSummary = () => {
             <SimpleCard className="border-l-primary" label="Expected Total Sales" value={formatCurrency(summary.expectedSales)} />
             <SimpleCard label="Current Sales" value={formatCurrency(summary.currentSales)} />
             <SimpleCard className="border-l-red" label="Remaining" value={formatCurrency(summary.remainingSales)} />
-          </div>
-          <div className="flex items-end">
-            <Button>Generate Sales Report</Button>
           </div>
         </div>
       </div>
