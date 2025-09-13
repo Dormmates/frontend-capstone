@@ -65,7 +65,9 @@ const CustomerViewShow = () => {
               </Badge>
             ))}
           </div>
-          <p className="mt-3 text-muted-foreground text-sm leading-relaxed max-h-fit overflow-y-auto pr-1 md:max-w-[550px]">{show.description}</p>
+          <p className="mt-3 text-muted-foreground text-sm leading-relaxed max-h-fit overflow-y-auto pr-1 md:max-w-[550px]">
+            {show.description}
+          </p>
         </div>
       </div>
 
@@ -79,7 +81,12 @@ const CustomerViewShow = () => {
               <h1 className="text-xl font-medium">{formatToReadableDate(schedules[0].datetime + "")}</h1>
               <div className="flex gap-2 mt-5">
                 {schedules.map((schedule) => (
-                  <Button key={schedule.scheduleId} className="w-fit p-10 text-lg" variant="outline" onClick={() => handleScheduleClick(schedule)}>
+                  <Button
+                    key={schedule.scheduleId}
+                    className="w-fit p-10 text-lg"
+                    variant="outline"
+                    onClick={() => handleScheduleClick(schedule)}
+                  >
                     {formatToReadableTime(schedule.datetime + "")}
                   </Button>
                 ))}
@@ -87,7 +94,9 @@ const CustomerViewShow = () => {
             </div>
           ))}
 
-          {schedules.length === 0 && <div className="text-muted-foreground text-center w-full text-lg">No Available Show Schedule.</div>}
+          {schedules.length === 0 && (
+            <div className="text-muted-foreground text-center w-full text-lg">No Available Show Schedule.</div>
+          )}
         </div>
       ) : (
         <Outlet context={{ schedule: selectedSchedule }} />
