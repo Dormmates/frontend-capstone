@@ -6,7 +6,7 @@ import type { FlattenedSeat } from "@/types/seat.ts";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext, useParams, Link } from "react-router-dom";
 import InputField from "@/components/InputField";
 import type { InputReservationData, ReservationData } from "@/types/reservation";
 import Modal from "@/components/Modal";
@@ -14,7 +14,9 @@ import Modal from "@/components/Modal";
 const CustomerViewSchedule = () => {
   const context = useOutletContext<{ schedule?: Schedule }>();
   const { showId, scheduleId } = useParams();
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [errorModal, setErrorModal] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState<FlattenedSeat[]>([]);
   const [lockSeats, setLockSeats] = useState(false);
   const [inputReservation, setInputReservation] = useState<InputReservationData>({
@@ -34,9 +36,26 @@ const CustomerViewSchedule = () => {
   };
 
   const handleReservationSubmission = () => {
-    if (selectedSeats.length === 0) {
+    const errors: string[] = [];
+    if (selectedSeats.length < 1) errors.push("Please select atleast 1 seat");
+    if (selectedSeats.length > 0 && !lockSeats) errors.push("Please confirm seat selection");
+    if (!reservationData.firstName.trim()) errors.push("First Name is required");
+    if (!reservationData.lastName.trim()) errors.push("Last Name is required");
+    if (!reservationData.emailAddress.trim()) errors.push("Email Address is required");
+    if (!reservationData.contactNumber.trim()) errors.push("Contact Number is required");
+
+    if (errors.length > 0) {
+      setErrorMessages(errors);
       setErrorModal((prev) => !prev);
+      return;
     }
+
+    setSuccessModal((prev) => !prev);
+  };
+
+  const handleErrorModalClose = () => {
+    setErrorMessages([]);
+    setErrorModal((prev) => !prev);
   };
 
   const {
@@ -77,12 +96,35 @@ const CustomerViewSchedule = () => {
 
       <div className="flex justify-end mt-5">
         <Button onClick={handleReservationSubmission} className="px-10 py-6 text-lg w-[200px]">
-          Sumbit Reservation
+          Confirm Reservation
         </Button>
       </div>
 
-      <Modal title={"Oops! Invalid Input Detected"} isOpen={errorModal} onClose={() => setErrorModal((prev) => !prev)}>
-        <span>Fix your input</span>
+      <Modal
+        title="Input Errors Detected!"
+        description="Fix your inputs"
+        isOpen={errorModal}
+        onClose={() => handleErrorModalClose()}
+      >
+        <div className="flex flex-col gap-2">
+          {errorMessages.map((error, index) => (
+            <span className="text-red text-xl" key={index}>
+              {error}
+            </span>
+          ))}
+        </div>
+      </Modal>
+
+      <Modal
+        title="Reservation Summary"
+        description="Confirm your Reservation Details before submission"
+        isOpen={successModal}
+        onClose={() => setSuccessModal((prev) => !prev)}
+      >
+        <div className="flex flex-col gap-2"></div>
+        <Link className="flex justify-end" to={`/customer`}>
+          <Button>Submit Reservation</Button>
+        </Link>
       </Modal>
     </div>
   );

@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { request } from "../api";
 import type { NewShowPayload, ShowData, ShowType, UpdateShowPayload } from "../../types/show";
 import type { DistributorScheduleTickets } from "../../types/ticket";
+import type { ReservationData } from "@/types/reservation";
 
 export const useCreateShow = () => {
   return useMutation<ShowData, Error, NewShowPayload>({
@@ -52,7 +53,12 @@ export const useUpdateShow = () => {
   });
 };
 
-export const useGetShows = (query: { departmentId?: string; showType?: ShowType; includeMajorProduction?: boolean; excludeArchived?: boolean }) => {
+export const useGetShows = (query: {
+  departmentId?: string;
+  showType?: ShowType;
+  includeMajorProduction?: boolean;
+  excludeArchived?: boolean;
+}) => {
   return useQuery<ShowData[], Error>({
     queryKey: ["shows", query.departmentId, query.showType].filter(Boolean),
     queryFn: async () => {
@@ -108,9 +114,22 @@ export const useGetShowsAndDistributorTickets = (distributorId: string) => {
   return useQuery<DistributorScheduleTickets[], Error>({
     queryKey: ["show and schedules", "distributor", distributorId],
     queryFn: async () => {
-      const res = await request<DistributorScheduleTickets[]>(`/api/show/distributors/${distributorId}/tickets`, {}, "get");
+      const res = await request<DistributorScheduleTickets[]>(
+        `/api/show/distributors/${distributorId}/tickets`,
+        {},
+        "get"
+      );
       return res.data;
     },
     retry: false,
+  });
+};
+
+export const useCreateReservation = () => {
+  return useMutation<string, Error, ReservationData>({
+    mutationFn: async (reservationData) => {
+      const res = await request<{ reservationId: string }>(`api/show/createReservation`, reservationData, "post");
+      return res.data.reservationId;
+    },
   });
 };
