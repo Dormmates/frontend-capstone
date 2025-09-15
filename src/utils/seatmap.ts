@@ -1,23 +1,20 @@
-import type { FlattenedSeat, SeatMap } from "../types/seat";
+import type { FlattenedSeat, SeatMetaData } from "../types/seat";
 
-export const flattenSeatMap = (seatMap: SeatMap): FlattenedSeat[] => {
-  return Object.entries(seatMap).flatMap(([section, rows]) =>
-    Object.entries(rows).flatMap(([row, seats]) =>
-      seats.map((seat) => ({
-        seatNumber: seat.seatNumber,
-        x: seat.x,
-        y: seat.y,
-        row,
-        section,
-        status: seat.status ?? "available",
-        ticketControlNumber: seat.ticketControlNumber ?? 0,
-        ticketPrice: seat.ticketPrice ?? 0,
-        isComplimentary: false,
-      }))
-    )
-  );
+export const flattenSeatMap = (seatMap: SeatMetaData[]): FlattenedSeat[] => {
+  return seatMap.map((seat) => ({
+    ...seat,
+    section: camelCase(seat.section),
+    isComplimentary: false,
+    status: "available",
+    ticketControlNumber: 0,
+    ticketPrice: 0,
+  }));
 };
 
 export const formatSectionName = (sectionName: string) => {
   return sectionName.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
+const camelCase = (text: string) => {
+  return text.toLowerCase().replace(/[_\s]+(.)?/g, (_, chr) => (chr ? chr.toUpperCase() : ""));
 };

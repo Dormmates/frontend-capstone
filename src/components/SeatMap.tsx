@@ -86,7 +86,7 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
             ref={svgRef}
             width={width}
             height={height}
-            viewBox="-50 -50 1105 492"
+            viewBox="0 0 1051 740"
             style={{
               transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
               transformOrigin: "0 0",
@@ -101,7 +101,7 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
               <g key={sectionName} id={sectionName.replace(/\s+/g, "_")}>
                 {Object.entries(rows).map(([rowName, seats]) => {
                   const seatNumbers = seats.map((s) => parseInt(s.seatNumber.match(/\d+/)?.[0] || "0"));
-                  const rowLabel = `${rowName} ${Math.min(...seatNumbers)}-${Math.max(...seatNumbers)}`;
+                  const rowLabel = `${rowName.replace(/[0-9-]/g, "")} ${Math.min(...seatNumbers)}-${Math.max(...seatNumbers)}`;
 
                   return (
                     <g key={`${sectionName}-${rowName}`}>
@@ -111,8 +111,9 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
                         onMouseEnter={!disabled ? () => setHoveredRow(`${sectionName}-${rowName}`) : undefined}
                         onMouseLeave={!disabled ? () => setHoveredRow(null) : undefined}
                         x={seats[0].x - 5}
-                        y={seats[0].y + 12}
+                        y={seats[0].y + 10}
                         fontSize="10"
+                        transform={seats[0].rotation as string}
                         textAnchor="end"
                         fill="black"
                       >
@@ -121,6 +122,7 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
 
                       {seats.map((seat) => (
                         <rect
+                          transform={seat.rotation as string}
                           key={seat.seatNumber}
                           id={seat.seatNumber}
                           x={seat.x}
@@ -165,8 +167,8 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
                             }
                           : undefined
                       }
-                      x={minX}
-                      y={minY - 10}
+                      x={minX + 100 / 2}
+                      y={minY - 50}
                       fontSize="12"
                       fontWeight="bold"
                       fill="black"

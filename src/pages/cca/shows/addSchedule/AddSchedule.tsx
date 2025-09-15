@@ -10,7 +10,6 @@ import SeatingConfigurationSelector from "./components/SeatingConfigurationSelec
 import PricingSection from "./components/PricingSection";
 import { parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 import TicketDetailsSection from "./components/TicketDetailsSection";
-import { seatMap } from "../../../../../seatdata";
 import { flattenSeatMap, formatSectionName } from "@/utils/seatmap.ts";
 import SeatMapSchedule from "./components/SeatMapSchedule";
 import { useAddSchedule, type AddSchedulePayload } from "@/_lib/@react-client-query/schedule.ts";
@@ -21,6 +20,7 @@ import InputField from "@/components/InputField";
 import Modal from "@/components/Modal";
 import { formatTo12Hour, formatToReadableDate } from "@/utils/date";
 import { toast } from "sonner";
+import { seatMetaData } from "../../../../../seatmetedata.ts";
 
 type ControlKey = "orchestraControlNumber" | "balconyControlNumber" | "complimentaryControlNumber";
 
@@ -47,7 +47,7 @@ const AddSchedule = () => {
   const queryClient = useQueryClient();
   const { id } = useParams();
   const { data, isLoading, isError, error } = useGetShow(id as string);
-  const [seatData, setSeatData] = useState(() => flattenSeatMap(seatMap));
+  const [seatData, setSeatData] = useState(() => flattenSeatMap(seatMetaData));
   const [scheduleData, setScheduleData] = useState<ScheduleFormData>({
     dates: [{ date: new Date(), time: "" }],
     ticketType: "ticketed",
@@ -528,8 +528,24 @@ const AddSchedule = () => {
         ) as Required<AddSchedulePayload>["sectionedPrice"];
       }
 
-      if (scheduleData.seatingConfiguration == "controlledSeating") {
+      if (scheduleData.seatingConfiguration === "controlledSeating") {
         payload.seats = seatData;
+
+        // Find duplicates by seatNumber
+        const counts: Record<string, number> = {};
+        for (const seat of seatData) {
+          counts[seat.seatNumber] = (counts[seat.seatNumber] || 0) + 1;
+        }
+
+        const duplicates = Object.entries(counts)
+          .filter(([_, count]) => count > 1)
+          .map(([seatNumber, count]) => ({ seatNumber, count }));
+
+        if (duplicates.length > 0) {
+          console.log("🚨 Duplicate seatNumbers found:", duplicates);
+        } else {
+          console.log("✅ No duplicate seatNumbers");
+        }
       }
     }
 
