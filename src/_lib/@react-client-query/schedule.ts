@@ -313,3 +313,22 @@ export const useUnRemitTicketSales = () => {
     retry: false,
   });
 };
+
+export const useUpdateTallyData = () => {
+  return useMutation<any, Error, { femaleCount: number; maleCount: number; scheduleId: string }>({
+    mutationFn: async (payload: { femaleCount: number; maleCount: number; scheduleId: string }) => {
+      const res = await request<any>("/api/schedule/tallyData", payload, "post");
+      return res.data;
+    },
+  });
+};
+
+export const useGetTallyData = (scheduleId: string) => {
+  return useQuery<{ femaleCount: number; maleCount: number }, Error>({
+    queryKey: ["schedule", "tallyData", scheduleId],
+    queryFn: async () => {
+      const res = await request<{ femaleCount: number; maleCount: number }>(`/api/schedule/tallyData/${scheduleId}`, {}, "get");
+      return res.data;
+    },
+  });
+};

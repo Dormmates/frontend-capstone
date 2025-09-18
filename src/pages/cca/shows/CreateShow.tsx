@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { ContentWrapper } from "@/components/layout/Wrapper";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 const CreateShow = () => {
   const [params] = useSearchParams();
@@ -14,6 +15,18 @@ const CreateShow = () => {
   const createShow = useCreateShow();
   const navigate = useNavigate();
   const { user } = useAuthContext();
+
+  useEffect(() => {
+    const type = params.get("showType");
+
+    if (!type || (type !== "group" && type !== "major")) {
+      navigate("/shows", { replace: true });
+    }
+
+    if (!user?.roles.includes("head") && type === "major") {
+      navigate("/shows", { replace: true });
+    }
+  }, [params, navigate]);
 
   const type = params.get("showType");
 

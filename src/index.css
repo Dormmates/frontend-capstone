@@ -43,6 +43,12 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+@media print {
+  button {
+    display: none !important;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -175,7 +175,7 @@ const ViewShow = () => {
                   onGenerateReport={(scheduleIds) => {
                     const scheduleIdsParam = scheduleIds.join(",");
                     const url = `/salesreport/${id}/${scheduleIdsParam}`;
-                    window.open(url, "SalesReport", "width=1000,height=700,left=200,top=100,resizable,scrollbars=yes");
+                    window.open(url, "SalesReport", "width=1122,height=793,resizable=no,scrollbars=no,location=no,menubar=no,toolbar=no");
                   }}
                 />
                 {((show.showType === "majorProduction" && user?.roles.includes("head")) ||
