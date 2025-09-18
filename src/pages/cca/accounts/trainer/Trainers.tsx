@@ -18,6 +18,7 @@ import DeleteAccount from "../DeleteAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
 import { useAuthContext } from "@/context/AuthContext";
 import { toast } from "sonner";
+import { Users } from "lucide-react";
 
 const Trainers = () => {
   const { user } = useAuthContext();
@@ -89,7 +90,7 @@ const Trainers = () => {
       <h1 className="text-3xl">Trainers</h1>
 
       <div className="flex justify-between mt-10">
-        <SimpleCard label="Total Trainers" value={trainers?.length + ""} />
+        <SimpleCard icon={<Users size={18} />} label="Total Trainers" value={trainers?.length + ""} />
         <div className="flex items-end">
           <Button onClick={() => setIsAddTrainer(true)}>Add New Trainer</Button>
         </div>

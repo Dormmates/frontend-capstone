@@ -14,9 +14,10 @@ interface DataTableProps<T> {
   data: T[];
   emptyMessage?: string;
   itemsPerPage?: number;
+  className?: string;
 }
 
-const PaginatedTable = <T,>({ columns, itemsPerPage = 5, data, emptyMessage }: DataTableProps<T>) => {
+const PaginatedTable = <T,>({ columns, itemsPerPage = 5, data, emptyMessage, className }: DataTableProps<T>) => {
   const [page, setPage] = useState(1);
 
   const paginatedItems = useMemo(() => {
@@ -31,7 +32,7 @@ const PaginatedTable = <T,>({ columns, itemsPerPage = 5, data, emptyMessage }: D
 
   return (
     <>
-      <DataTable<T> columns={columns} data={paginatedItems} emptyMessage={emptyMessage} />
+      <DataTable<T> columns={columns} data={paginatedItems} emptyMessage={emptyMessage} className={className} />
       <Pagination currentPage={page} totalPage={Math.ceil(data.length / itemsPerPage)} onPageChange={(newPage) => setPage(newPage)} />
     </>
   );

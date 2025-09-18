@@ -15,7 +15,8 @@ import Modal from "@/components/Modal";
 import ArchiveShow from "./showActions/ArchiveShow";
 import PaginatedTable from "@/components/PaginatedTable";
 import EditShow from "./showActions/EditShow";
-import InputField from "@/components/InputField";
+import { DramaIcon, SpotlightIcon, TheaterIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const showTypes = [
   { name: "All Show Type", value: "all" },
@@ -72,18 +73,22 @@ const PerformingGroupShows = () => {
     <ContentWrapper>
       <h1 className="text-3xl">{user.department?.name} Shows</h1>
       <div className="flex justify-between">
-        <div className="flex gap-5 mt-10">
-          <SimpleCard label="Total Show" value={filteredShows.length} />
-          <SimpleCard className="border-l-red" label="Major Concert" value={filteredShows.filter((s) => s.showType === "majorConcert").length} />
-          <SimpleCard className="border-l-orange-300" label="Show Case" value={filteredShows.filter((s) => s.showType === "showCase").length} />
+        <div className="flex gap-5 mt-10 flex-wrap">
+          <SimpleCard icon={<TheaterIcon size={18} />} label="Total Show" value={filteredShows.length} />
+          <SimpleCard
+            icon={<DramaIcon size={18} />}
+            label="Major Concert"
+            value={filteredShows.filter((s) => s.showType === "majorConcert").length}
+          />
+          <SimpleCard icon={<SpotlightIcon size={18} />} label="Show Case" value={filteredShows.filter((s) => s.showType === "showCase").length} />
         </div>
         <Link className="self-end" to={"/shows/add?showType=group"}>
           <Button>Add New Show</Button>
         </Link>
       </div>
-      <div className="mt-10 flex flex-col gap-5 mb-5">
-        <InputField
-          className="w-full"
+      <div className="mt-10 flex flex-col gap-5 mb-5 md:flex-row">
+        <Input
+          className="max-w-xl w-full"
           value={filter.search}
           onChange={(e) => setFilter((prev) => ({ ...prev, search: e.target.value }))}
           placeholder="Search Show by Title"
@@ -110,6 +115,7 @@ const PerformingGroupShows = () => {
       </div>
 
       <PaginatedTable
+        className={filteredShows.length != 0 ? "min-w-[1200px]" : ""}
         columns={[
           {
             key: "title",

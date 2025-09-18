@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import Modal from "@/components/Modal";
 import UnArchiveAccount from "../UnArchiveAccount";
 import CreateCCAHead from "./CreateCCAHead";
-import { UserRoundXIcon } from "lucide-react";
+import { UserRoundXIcon, Users } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -63,7 +63,7 @@ const CCAHeads = () => {
       <h1 className="text-3xl">CCA Heads</h1>
 
       <div className="flex justify-between mt-10">
-        <SimpleCard label="Total Trainers" value={data?.length + ""} />
+        <SimpleCard icon={<Users size={18} />} label="Total Trainers" value={data?.length + ""} />
         <div className="flex items-end">
           <Button onClick={() => setIsAddHead(true)}>Add New CCA Head</Button>
         </div>

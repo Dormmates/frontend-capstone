@@ -1,14 +1,6 @@
 import { useMemo, useState } from "react";
 import { NavLink, Outlet, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useGetAllocatedTicketsOfDistributor, useUnAllocateTicket } from "../../../../../../_lib/@react-client-query/schedule";
-import allocated_icon from "../../../../../../assets/icons/allocated_tickets.png";
-import unsold_icon from "../../../../../../assets/icons/unsold_ticket.png";
-import sold_icon from "../../../../../../assets/icons/sold_ticket.png";
-import verified_icon from "../../../../../../assets/icons/verified_remitted.png";
-import pending_icon from "../../../../../../assets/icons/pending_remittance.png";
-import expected_icon from "../../../../../../assets/icons/expected_sales.png";
-import remitted_icon from "../../../../../../assets/icons/remitted.png";
-import balance_due_icon from "../../../../../../assets/icons/balance_due.png";
 import type { ShowData } from "../../../../../../types/show";
 import type { Schedule } from "../../../../../../types/schedule";
 import { useQueryClient } from "@tanstack/react-query";
@@ -22,6 +14,11 @@ import UnallocateTicket from "./distributorActions/UnallocateTicket";
 import RemitTickets from "./distributorActions/RemitTickets";
 import UnRemitTickets from "./distributorActions/UnRemitTickets";
 import { toast } from "sonner";
+import { Label, Pie, PieChart, Sector } from "recharts";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import type { PieSectorDataItem } from "recharts/types/polar/Pie";
+import { Progress } from "@/components/ui/progress";
 
 const links = [
   {
@@ -78,6 +75,34 @@ const ViewDistributorLayout = () => {
     return { totalAllocatedTickets, soldTickets, unsoldTickets, remittedTickets, pendingRemittance, expected, remitted, balanceDue };
   }, [data]);
 
+  const ticketsChartConfig = {
+    sold: {
+      label: "Sold Tickets",
+    },
+    unsold: {
+      label: "Unsold Tickets",
+    },
+  } satisfies ChartConfig;
+
+  const remittanceChartConfig = {
+    verified: {
+      label: "Verified Remittance",
+    },
+    pending: {
+      label: "Pending Remittance",
+    },
+  } satisfies ChartConfig;
+
+  const ticketsChartData = [
+    { name: "sold", value: summary.soldTickets, fill: "hsl(var(--chart-1))" },
+    { name: "unsold", value: summary.unsoldTickets, fill: "hsl(var(--chart-2))" },
+  ];
+
+  const remittanceChartData = [
+    { name: "verified", value: summary.remittedTickets, fill: "hsl(var(--chart-1))" },
+    { name: "pending", value: summary.pendingRemittance, fill: "hsl(var(--chart-2))" },
+  ];
+
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
@@ -110,42 +135,102 @@ const ViewDistributorLayout = () => {
           </Button>
           <Button onClick={() => setIsUnRemitTicket(true)}> Unremit Tickets</Button>
         </div>
-        <div className="flex gap-16">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <img src={allocated_icon} alt="allocted" />
-              <p>Allocated Tickets: {summary.totalAllocatedTickets} tickets</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <img src={unsold_icon} alt="unsold" />
-              <p>Unsold Tickets: {summary.unsoldTickets} tickets</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <img src={sold_icon} alt="sold" />
-              <p>Sold Tickets: {summary.soldTickets} tickets</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <img src={verified_icon} alt="verified" />
-              <p>Verified Remittance: {summary.remittedTickets} tickets</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <img src={pending_icon} alt="pending" />
-              <p>Pending Remittance: {summary.pendingRemittance} tickets</p>
-            </div>
-          </div>
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <img src={expected_icon} alt="expected" />
-              <p>Expected: {formatCurrency(summary.expected)}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <img src={remitted_icon} alt="remitted" />
-              <p>Remitted: {formatCurrency(summary.remitted)} </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <img src={balance_due_icon} alt="balance due" />
-              <p>Balance Due: {formatCurrency(summary.balanceDue)} </p>
-            </div>
+        <div className="flex flex-col gap-5">
+          <Card>
+            <CardHeader>
+              <CardTitle>Sale Progress</CardTitle>
+              <CardDescription>Shows the amount of expected sale and that have been remitted</CardDescription>
+              <CardContent className="p-0">
+                <div className="flex w-fit items-center justify-between gap-2">
+                  <p>Expected: {formatCurrency(summary.expected)}</p>
+                  <p>Remitted: {formatCurrency(summary.remitted)}</p>
+                </div>
+                <Progress value={summary.expected ? (summary.remitted / summary.expected) * 100 : 0} className="h-4 rounded-full w-full mt-2" />
+              </CardContent>
+            </CardHeader>
+          </Card>
+
+          <div className="flex flex-wrap gap-3">
+            <Card>
+              <CardHeader>
+                <CardTitle>Sold & Unsold Tickets</CardTitle>
+                <CardDescription> Visual representation of sold and unsold tickets for this distributor</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={ticketsChartConfig} className="mx-auto aspect-square max-h-[250px]">
+                  <PieChart>
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                    <Pie
+                      data={ticketsChartData}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={60}
+                      strokeWidth={5}
+                      activeIndex={0}
+                      activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => <Sector {...props} outerRadius={outerRadius + 10} />}
+                    >
+                      <Label
+                        content={({ viewBox }) => {
+                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                            return (
+                              <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                                <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                                  {summary.totalAllocatedTickets}
+                                </tspan>
+                                <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
+                                  Total Tickets
+                                </tspan>
+                              </text>
+                            );
+                          }
+                        }}
+                      />
+                    </Pie>
+                  </PieChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Remittance Overview</CardTitle>
+                <CardDescription className="max-w-md">
+                  Shows the number of tickets that have been remitted versus those still pending for this distributor
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={remittanceChartConfig} className="mx-auto aspect-square max-h-[250px]">
+                  <PieChart>
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                    <Pie
+                      data={remittanceChartData}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={60}
+                      strokeWidth={5}
+                      activeIndex={0}
+                      activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => <Sector {...props} outerRadius={outerRadius + 10} />}
+                    >
+                      <Label
+                        content={({ viewBox }) => {
+                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                            return (
+                              <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                                <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                                  {summary.soldTickets}
+                                </tspan>
+                                <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
+                                  Total Sold Tickets
+                                </tspan>
+                              </text>
+                            );
+                          }
+                        }}
+                      />
+                    </Pie>
+                  </PieChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

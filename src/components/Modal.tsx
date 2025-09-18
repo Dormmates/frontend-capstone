@@ -1,6 +1,5 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogOverlay } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ModalProps {
   children: React.ReactNode;
@@ -21,9 +20,9 @@ const Modal = ({ children, title, description, className, isOpen, isTransparent 
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        <ScrollArea className="max-h-[70vh] mt-4">
+        <div className="overflow-x-auto w-full">
           <div className="pl-1 pr-4 pt-1">{children}</div>
-        </ScrollArea>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -48,7 +48,7 @@ const ViewShowScheduleLayout = () => {
             ))}
         </div>
         <div className="flex gap-5">
-          <ShowCard title={show.title} description={show.description} showImage={show.showCover} genres={show.genreNames} />
+          <ShowCard title={show.title} description={""} showImage={show.showCover} genres={show.genreNames} />
           <div className="flex flex-col justify-center text-2xl gap-2 mt-5 mb-10">
             <h1 className="text-center">
               You are viewing "<span className="font-bold">{show.title}</span>"

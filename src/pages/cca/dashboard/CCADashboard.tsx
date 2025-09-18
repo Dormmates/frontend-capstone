@@ -1,14 +1,15 @@
-const CCADashboard = () => {
-  return (
-    <div>
-      <h1>CCADashboard</h1>
+import { ContentWrapper } from "@/components/layout/Wrapper";
+import { useAuthContext } from "@/context/AuthContext";
 
-      <div>
-        {[...Array(100)].map((_, i) => (
-          <p key={i}>This is line {i + 1} of the dashboard content.</p>
-        ))}
-      </div>
-    </div>
+const CCADashboard = () => {
+  const { user } = useAuthContext();
+
+  return (
+    <ContentWrapper>
+      <h1 className="text-3xl">
+        Welcome, {user?.firstName} {user?.lastName}
+      </h1>
+    </ContentWrapper>
   );
 };
 

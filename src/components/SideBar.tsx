@@ -157,17 +157,22 @@ export const SideBar = ({ items }: CCASideBarProps) => {
 
                   <DropdownMenuItem
                     onClick={() => {
-                      logout.mutate(
-                        {},
+                      toast.promise(
+                        logout.mutateAsync(
+                          {},
+                          {
+                            onSuccess: () => {
+                              disconnectSocket();
+                              setUser(null);
+                              navigate("/");
+                            },
+                          }
+                        ),
                         {
-                          onSuccess: () => {
-                            disconnectSocket();
-                            setUser(null);
-                            navigate("/");
-                          },
-                          onError: (err) => {
-                            toast.error(err.message, { position: "top-center" });
-                          },
+                          position: "top-center",
+                          loading: "Logging Out...",
+                          success: "Logout Out",
+                          error: "Failed to logout, please try again",
                         }
                       );
                     }}

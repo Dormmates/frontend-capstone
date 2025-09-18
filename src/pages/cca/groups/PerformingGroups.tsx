@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import AlertModal from "@/components/AlertModal";
 import PaginatedTable from "@/components/PaginatedTable";
 import { toast } from "sonner";
+import { GroupIcon } from "lucide-react";
 
 const PerformingGroups = () => {
   const addDepartment = useAddDepartment();
@@ -135,7 +136,7 @@ const PerformingGroups = () => {
       <h1 className="text-3xl">Performing Groups</h1>
 
       <div className="flex justify-between mt-10">
-        <SimpleCard label="Total Groups" value={departments?.length + ""} />
+        <SimpleCard icon={<GroupIcon size={18} />} label="Total Groups" value={departments?.length + ""} />
 
         <div className="flex items-end">
           <Button onClick={() => setAddGroup(true)}>Add New Group</Button>

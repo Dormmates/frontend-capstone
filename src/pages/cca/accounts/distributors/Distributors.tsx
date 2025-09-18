@@ -17,6 +17,7 @@ import ArchiveAccount from "../ArchiveAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { Users } from "lucide-react";
 
 const Distributors = () => {
   const addDistributor = useNewDistributor();
@@ -75,7 +76,7 @@ const Distributors = () => {
       <h1 className="text-3xl">Distributors</h1>
 
       <div className="flex justify-between mt-10">
-        <SimpleCard label="Total Distributors" value={searchedDistributors.length} />
+        <SimpleCard icon={<Users size={18} />} label="Total Distributors" value={searchedDistributors.length} />
         <div className="self-end flex gap-2">
           <Button>Bulk Creation</Button>
           <Button onClick={() => setIsAddDistributor(true)}>Add New Distributor</Button>

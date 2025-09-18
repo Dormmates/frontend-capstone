@@ -11,12 +11,13 @@ interface DataTableProps<T> {
   columns: Column<T>[];
   data: T[];
   emptyMessage?: string;
+  className?: string;
 }
 
-export function DataTable<T>({ columns, data, emptyMessage = "No data found." }: DataTableProps<T>) {
+export function DataTable<T>({ columns, data, emptyMessage = "No data found.", className }: DataTableProps<T>) {
   return (
-    <div className="overflow-x-auto rounded-lg border">
-      <Table>
+    <div className={`overflow-x-auto rounded-lg border`}>
+      <Table className={className}>
         <TableHeader className="bg-gray">
           <TableRow>
             {columns.map((col) => (

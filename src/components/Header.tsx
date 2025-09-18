@@ -1,3 +1,4 @@
+import DateAndTimeNow from "./DateAndTimeNow";
 import { ContentWrapper } from "./layout/Wrapper";
 import NotificationBell from "./NotificationBell";
 
@@ -16,6 +17,7 @@ const Header = () => {
             <p>Toggle Side Bar</p>
           </TooltipContent>
         </Tooltip>
+        <DateAndTimeNow />
         <NotificationBell />
       </ContentWrapper>
     </header>

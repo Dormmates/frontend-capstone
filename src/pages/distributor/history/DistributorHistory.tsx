@@ -65,8 +65,8 @@ const DistributorHistory = () => {
           value={isOnAllocation ? totalTickets.allocation : totalTickets.remittance}
         />
 
-        <SimpleCard className="border-l-blue-400" label="Total Remittance" value={formatCurrency(totalReceived.remittance)} />
-        <SimpleCard className="border-l-pink-400" label="Total Commision Received" value={formatCurrency(totalReceived.commission)} />
+        <SimpleCard label="Total Remittance" value={formatCurrency(totalReceived.remittance)} />
+        <SimpleCard label="Total Commision Received" value={formatCurrency(totalReceived.commission)} />
       </div>
 
       <div className="my-10 flex gap-5">

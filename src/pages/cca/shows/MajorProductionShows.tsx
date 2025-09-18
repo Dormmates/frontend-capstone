@@ -13,6 +13,7 @@ import ArchiveShow from "./showActions/ArchiveShow";
 import ViewArchivedShows from "./ViewArchivedShows";
 import PaginatedTable from "@/components/PaginatedTable";
 import EditShow from "./showActions/EditShow";
+import { TheaterIcon } from "lucide-react";
 
 const MajorProductionShows = () => {
   const { user } = useAuthContext();
@@ -50,7 +51,7 @@ const MajorProductionShows = () => {
       <div className="flex justify-between ">
         <div className="flex gap-5 mt-10">
           <SimpleCard
-            className="border-l-green"
+            icon={<TheaterIcon size={18} />}
             label="Major Production"
             value={filteredShows.filter((s) => s.showType === "majorProduction").length}
           />
@@ -70,6 +71,7 @@ const MajorProductionShows = () => {
         />
       </div>
       <PaginatedTable
+        className={activeShows.length != 0 ? "min-w-[1200px]" : ""}
         columns={[
           {
             key: "title",
@@ -123,7 +125,7 @@ const MajorProductionShows = () => {
       {isViewArchivedShows && (
         <Modal
           description="Archived shows can be deleted or unarchived"
-          className="max-w-5xl"
+          className="max-w-5xl w-full"
           title="Archived Shows"
           onClose={() => setIsViewArchivedShows(false)}
           isOpen={isViewArchivedShows}
