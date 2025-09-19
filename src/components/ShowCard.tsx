@@ -25,8 +25,8 @@ const ShowCard = ({ genres, title, showImage, description, className }: ShowCard
         </CardDescription>
       </CardHeader>
       <CardContent className="flex gap-5">
-        <img className="w-[100px] h-[120px] object-contain bg-gray" src={showImage} alt="show image" />
-        <p>{description}</p>
+        <img className="w-[100px] h-[120px] object-contain bg-muted" src={showImage} alt="show image" />
+        <p className="flex-1 text-sm text-muted-foreground ">{description}</p>
       </CardContent>
     </Card>
   );

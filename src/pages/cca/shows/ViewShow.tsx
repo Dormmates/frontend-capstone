@@ -158,9 +158,44 @@ const ViewShow = () => {
         items={[{ name: "Show", href: show?.showType == "majorProduction" ? "/majorShows" : "/shows" }, { name: show?.title ?? "Show Not Found." }]}
       />
 
-      <div>
-        {show && <ShowCard title={show.title} description={show.description} genres={show.genreNames} showImage={show.showCover} className="mt-10" />}
-
+      <div className="mt-10">
+        <div className="flex gap-5 flex-col sm:flex-row ">
+          {show && (
+            <ShowCard
+              className="w-full max-w-2xl"
+              title={show.title}
+              description={show.description}
+              genres={show.genreNames}
+              showImage={show.showCover}
+            />
+          )}
+          {/* {showSchedules && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Calender Schedules</CardTitle>
+                <CardDescription></CardDescription>
+                <CardContent className="p-0 ">
+                  <Calendar
+                    disabled={(date) => {
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      return date < today;
+                    }}
+                    selected={undefined}
+                    className="mt-2 rounded-md border bg-background 
+                     [--cell-size:2.75rem] [--cell-font-size:0.95rem] md:[--cell-size:3.25rem] md:[--cell-font-size:1rem]"
+                    modifiers={{
+                      highlighted: showSchedules.map((d) => new Date(d.datetime)),
+                    }}
+                    modifiersClassNames={{
+                      highlighted: "bg-primary text-primary-foreground font-medium rounded-md ",
+                    }}
+                  />
+                </CardContent>
+              </CardHeader>
+            </Card>
+          )} */}
+        </div>
         {show && showSchedules && (
           <div className="mt-10">
             <div className="flex justify-between mb-10">

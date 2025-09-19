@@ -48,35 +48,31 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
 
   return (
     <>
-      <div className="flex flex-col gap-5 -mb-7">
-        <h1>Choose Seats</h1>
+      <div className="flex flex-col gap-5 mb-5">
+        <h1 className="text-xl">Choose Seats</h1>
 
-        <div className="flex justify-between">
-          <div>
-            <p className="text-lg">
-              You have selected: <span className="font-bold">{choosenSeats.length} seats</span>
-            </p>
-          </div>
-
-          <div className="flex gap-3">
-            <div className="flex gap-2 items-center">
-              <div className="w-5 h-5 bg-blue-600 border"></div>
-              <p>Selected Seats</p>
+        <div className="flex flex-col">
+          <div className="flex flex-col items-start gap-3">
+            <div className="flex gap-2 items-center ">
+              <div className="w-4 h-4 bg-blue-600 border"></div>
+              <p>
+                Selected Seats: <span className="font-bold">{choosenSeats.length} seats</span>
+              </p>
             </div>
-            <div className="flex gap-2 items-center">
-              <div className="w-5 h-5 bg-darkGrey border"></div>
+            <div className="flex gap-2 items-center ">
+              <div className="w-4 h-4 bg-darkGrey border"></div>
               <p>Unavailable Seats : {seatAvailabilityCount.unavailable}</p>
             </div>
-            <div className="flex gap-2 items-center">
-              <div className="w-5 h-5 bg-white border"></div>
+            <div className="flex gap-2 items-center ">
+              <div className="w-4 h-4 bg-white border"></div>
               <p>Available Seats: {seatAvailabilityCount.available}</p>
             </div>
-            <div className="flex gap-2 items-center">
-              <div className="w-5 h-5 bg-red border"></div>
+            <div className="flex gap-2 items-center ">
+              <div className="w-4 h-4 bg-red border"></div>
               <p>Reserved Seats : {seatAvailabilityCount.reserved}</p>
             </div>
-            <div className="flex gap-2 items-center">
-              <div className="w-5 h-5 bg-green border"></div>
+            <div className="flex gap-2 items-center ">
+              <div className="w-4 h-4 bg-green border"></div>
               <p>Sold Seats : {seatAvailabilityCount.sold}</p>
             </div>
           </div>

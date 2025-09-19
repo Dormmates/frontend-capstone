@@ -17,6 +17,7 @@ import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { Progress } from "@/components/ui/progress";
 
 type Props = {
   schedule: DistributorScheduleTickets;
@@ -51,6 +52,15 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
 
   const [customerInfo, setCustomerInfo] = useState({ email: "", customerName: "", isIncluded: false });
   const [errors, setErrors] = useState<{ email?: string; customerName?: string }>({});
+
+  const summary = useMemo(() => {
+    const sold = schedule.tickets.filter((t) => t.status == "sold").length;
+    const unsold = schedule.tickets.length - sold;
+    const remitted = schedule.tickets.filter((t) => t.isRemitted).length;
+    const pending = schedule.tickets.filter((t) => !t.isRemitted).length;
+
+    return { sold, unsold, remitted, pending };
+  }, [schedule]);
 
   const filteredTickets = useMemo(() => {
     if (!schedule?.tickets) return [];
@@ -161,7 +171,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
         {schedule.show.title} ({formatToReadableDate(schedule.datetime + "") + " at " + formatToReadableTime(schedule.datetime + "")})
       </p>
 
-      <div className="flex flex-col md:flex-row gap-3 mb-10">
+      <div className="flex flex-col md:flex-row gap-3">
         <InputField
           value={filterOptions.search}
           onChange={(e) => setFilterOptions((prev) => ({ ...prev, search: e.target.value }))}
@@ -181,10 +191,15 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
         </div>
       </div>
 
-      <div className="flex gap-3 mb-5">
+      <div className="my-5">
+        <Label>Sale Progress {(((summary.sold + summary.remitted) / schedule.tickets.length) * 100).toFixed(2)}%</Label>
+        <Progress className="mt-2" value={Number((((summary.sold + summary.remitted) / schedule.tickets.length) * 100).toFixed(2))} />
+      </div>
+
+      <div className="flex  gap-3 mb-5">
         <Button
           onClick={() => setIsSumamry(true)}
-          className="!bg-green"
+          className="bg-green"
           disabled={selectedTickets?.length === 0 || selectedTickets?.some((ticket) => ticket.status === "sold")}
         >
           Mark Selected as Sold
@@ -192,7 +207,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
         <Button
           onClick={() => handleSubmit("unsold")}
           disabled={selectedTickets?.length === 0 || selectedTickets?.some((ticket) => ticket.status === "allocated")}
-          className="!bg-red"
+          className="bg-red"
         >
           Mark Selected as Unsold
         </Button>

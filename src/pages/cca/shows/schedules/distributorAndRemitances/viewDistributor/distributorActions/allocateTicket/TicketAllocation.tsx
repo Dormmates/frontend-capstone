@@ -23,6 +23,7 @@ import Modal from "@/components/Modal";
 import InputField from "@/components/InputField";
 import PaginatedTable from "@/components/PaginatedTable";
 import { toast } from "sonner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const TicketAllocation = () => {
   const { user } = useAuthContext();
@@ -36,7 +37,7 @@ const TicketAllocation = () => {
 
   const [selectedDistributor, setSelectedDistributor] = useState<Distributor | null>(null);
   const [isChooseDistributor, setIsChooseDistributor] = useState(false);
-  const [allocationMethod, setAllocationMethod] = useState<"controlNumber" | "seat">("controlNumber");
+  const [allocationMethod, setAllocationMethod] = useState(schedule?.seatingType === "controlledSeating" ? "seat" : "controlNumber");
   const [controlNumberInput, setControlNumberInput] = useState("");
 
   const [parsedControlNumbers, setParsedControlNumbers] = useState<number[]>();
@@ -168,70 +169,50 @@ const TicketAllocation = () => {
 
         <div className="flex flex-col gap-2">
           <Label>Allocation Method</Label>
-          <div className="flex gap-2">
-            <div className="flex gap-2">
-              <input
-                checked={allocationMethod === "controlNumber"}
-                onChange={(e) => setAllocationMethod(e.target.value as "controlNumber")}
-                type="radio"
-                id="controlNumber"
-                name="allocationMethod"
-                value="controlNumber"
-              />
-              <label htmlFor="controlNumber">By Control Number</label>
-            </div>
-            {schedule.seatingType === "controlledSeating" && (
-              <div className="flex gap-2">
-                <input
-                  checked={allocationMethod === "seat"}
-                  onChange={(e) => setAllocationMethod(e.target.value as "seat")}
-                  type="radio"
-                  id="seat"
-                  name="allocationMethod"
-                  value="seat"
-                />
-                <label htmlFor="seat">By Seat Map</label>
-              </div>
-            )}
-          </div>
+          <Tabs value={allocationMethod} onValueChange={(value) => setAllocationMethod(value)}>
+            <TabsList>
+              {schedule.seatingType === "controlledSeating" && <TabsTrigger value="seat">By Seat Map</TabsTrigger>}
+              <TabsTrigger value="controlNumber">By Control Number</TabsTrigger>
+            </TabsList>
+            <TabsContent value="seat">
+              <>
+                <AllocatedBySeat choosenSeats={choosenSeats} setChoosenSeats={setChoosenSeats} />
+                <Button
+                  disabled={
+                    (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
+                  }
+                  onClick={validate}
+                  className=" max-w-fit mt-5"
+                >
+                  Reserve Seats
+                </Button>
+              </>
+            </TabsContent>
+            <TabsContent value="controlNumber">
+              <>
+                <div className="flex flex-col gap-3">
+                  <AllocateByControlNumber
+                    unAllocatedTickets={unAllocatedTickets}
+                    controlNumber={controlNumberInput}
+                    setControlNumbers={setControlNumberInput}
+                    error={error.controlNumberError}
+                  />
+
+                  <Button
+                    disabled={
+                      (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) ||
+                      allocateTicketByControlNumber.isPending
+                    }
+                    onClick={validate}
+                    className=" max-w-fit"
+                  >
+                    Reserve Tickets
+                  </Button>
+                </div>
+              </>
+            </TabsContent>
+          </Tabs>
         </div>
-
-        {allocationMethod === "controlNumber" && (
-          <>
-            <div className="flex flex-col gap-3">
-              <AllocateByControlNumber
-                unAllocatedTickets={unAllocatedTickets}
-                controlNumber={controlNumberInput}
-                setControlNumbers={setControlNumberInput}
-                error={error.controlNumberError}
-              />
-
-              <Button
-                disabled={
-                  (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
-                }
-                onClick={validate}
-                className="!bg-green max-w-fit"
-              >
-                Reserve Tickets
-              </Button>
-            </div>
-          </>
-        )}
-        {allocationMethod === "seat" && (
-          <>
-            <AllocatedBySeat choosenSeats={choosenSeats} setChoosenSeats={setChoosenSeats} />
-            <Button
-              disabled={
-                (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
-              }
-              onClick={validate}
-              className="!bg-green max-w-fit"
-            >
-              Reserve Seats
-            </Button>
-          </>
-        )}
 
         {isChooseDistributor && (
           <Modal

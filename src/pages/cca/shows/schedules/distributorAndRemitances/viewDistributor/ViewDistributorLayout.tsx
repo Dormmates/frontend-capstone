@@ -96,13 +96,13 @@ const ViewDistributorLayout = () => {
   } satisfies ChartConfig;
 
   const ticketsChartData = [
-    { name: "sold", value: summary.soldTickets, fill: "hsl(var(--chart-1))" },
-    { name: "unsold", value: summary.unsoldTickets, fill: "hsl(var(--chart-2))" },
+    { name: "sold", value: summary.soldTickets, fill: "hsl(var(--chart-4))" },
+    { name: "unsold", value: summary.unsoldTickets, fill: "hsl(var(--chart-1))" },
   ];
 
   const remittanceChartData = [
-    { name: "verified", value: summary.remittedTickets, fill: "hsl(var(--chart-1))" },
-    { name: "pending", value: summary.pendingRemittance, fill: "hsl(var(--chart-2))" },
+    { name: "verified", value: summary.remittedTickets, fill: "hsl(var(--chart-4))" },
+    { name: "pending", value: summary.pendingRemittance, fill: "hsl(var(--chart-1))" },
   ];
 
   if (isLoading) {

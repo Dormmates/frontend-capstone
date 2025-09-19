@@ -200,7 +200,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
 
   return (
     <div className="mt-5 flex flex-col">
-      <div className="w-full bg-gray border border-lightGrey rounded-sm p-2">
+      <div className="w-full bg-muted border border-lightGrey rounded-sm p-2">
         <p>Distributor: {distributorData[0].distributor}</p>
       </div>
 

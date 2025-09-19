@@ -35,7 +35,7 @@ const DateSelector = ({ disabled, date, handleDateSelect, initialValue, error }:
               today.setHours(0, 0, 0, 0);
               return date < today;
             }}
-            className="border mt-2 rounded-md !bg-white"
+            className="border mt-2 rounded-md bg-background"
             required
             mode="single"
             today={initialValue ?? new Date()}

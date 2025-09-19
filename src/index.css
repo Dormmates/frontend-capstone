@@ -97,9 +97,11 @@ input[type="number"] {
     --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
     --tracking-normal: 0em;
     --spacing: 0.25rem;
+    --sidebar-background: 0 0% 98%;
   }
 
   .dark {
+    --sidebar-background: 0, 0%, 9%;
     --background: 0 0% 9.0196%;
     --foreground: 0 0% 89.8039%;
     --card: 0 0% 14.902%;

@@ -6,10 +6,13 @@ import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import type { DistributorScheduleTickets } from "@/types/ticket.ts";
 import ViewAllocatedTickets from "./ViewAllocatedTickets";
 import { formatCurrency } from "@/utils";
-import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/Modal";
 import PaginatedTable from "@/components/PaginatedTable";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
+import { Label, Pie, PieChart, Sector } from "recharts";
+import type { PieSectorDataItem } from "recharts/types/polar/Pie";
 
 const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
   const soldTickets = schedule.tickets.filter((ticket) => ticket.status === "sold");
@@ -36,6 +39,20 @@ const DistributorDashboard = () => {
 
   const [selectedSchedule, setSelectedSchedule] = useState<DistributorScheduleTickets | null>(null);
 
+  const ticketsChartConfig = {
+    sold: {
+      label: "Sold Tickets",
+    },
+    unsold: {
+      label: "Unsold Tickets",
+    },
+  } satisfies ChartConfig;
+
+  const ticketsChartData = [
+    { name: "sold", value: summary.soldTickets, fill: "hsl(122 42.2% 45.8%)" },
+    { name: "unsold", value: summary.unsoldTickets, fill: "hsl(0 54.2% 45.8%)" },
+  ];
+
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
@@ -51,9 +68,45 @@ const DistributorDashboard = () => {
       <div className="flex flex-col mt-10">
         <p className="text-xl">Shows and show schedules that have tickets allocated to you</p>
         <div className="flex gap-3 my-8">
-          <SimpleCard className="!border-l-blue-400" label="Current Allocated Tickets" value={summary.allocatedTickets} />
-          <SimpleCard label="Sold Tickets" value={summary.soldTickets} />
-          <SimpleCard className="!border-l-red" label="Unsold Tickets" value={summary.unsoldTickets} />
+          <Card>
+            <CardHeader>
+              <CardTitle>Overall Ticket Distribution</CardTitle>
+              <CardDescription>achjahvashcjkasncaaaaaaaaaaaaaaajk</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={ticketsChartConfig} className="mx-auto aspect-square max-h-[250px]">
+                <PieChart>
+                  <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                  <Pie
+                    data={ticketsChartData}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={60}
+                    strokeWidth={5}
+                    activeIndex={0}
+                    activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => <Sector {...props} outerRadius={outerRadius + 10} />}
+                  >
+                    <Label
+                      content={({ viewBox }) => {
+                        if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                          return (
+                            <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                              <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                                {summary.allocatedTickets}
+                              </tspan>
+                              <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
+                                Total Tickets
+                              </tspan>
+                            </text>
+                          );
+                        }
+                      }}
+                    />
+                  </Pie>
+                </PieChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
         </div>
 
         <PaginatedTable
@@ -111,7 +164,7 @@ const DistributorDashboard = () => {
       </div>
 
       {selectedSchedule && (
-        <Modal className="w-full max-w-[1000px]" isOpen={!!selectedSchedule} onClose={() => setSelectedSchedule(null)} title="Tickets Allocated">
+        <Modal className="w-[97%] max-w-[1000px] " isOpen={!!selectedSchedule} onClose={() => setSelectedSchedule(null)} title="Tickets Allocated">
           <ViewAllocatedTickets closeModal={() => setSelectedSchedule(null)} schedule={selectedSchedule} />
         </Modal>
       )}

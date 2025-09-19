@@ -57,7 +57,7 @@ const RemittanceSummary = ({
         <LongCardItem label="Discounted Tickets" value={`${discountedTickets.length} ticket(s)`} />
       </LongCard>
 
-      <div className="mt-4 p-3 bg-gray border border-lightGrey rounded-md">
+      <div className="mt-4 p-3 bg-muted border border-lightGrey rounded-md">
         <h2 className="font-medium mb-2">Ticket Price/s</h2>
         {seatingType === "controlledSeating" ? (
           (() => {

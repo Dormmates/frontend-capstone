@@ -1,19 +1,17 @@
 import { Outlet } from "react-router-dom";
 import SideBar from "@/components/SideBar";
-import history from "../../assets/icons/history.png";
-import dashboard from "../../assets/icons/dashboard.png";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import Header from "@/components/Header";
+import { HistoryIcon, LayoutDashboardIcon } from "lucide-react";
 
 const sideBarItems = [
   {
-    icon: dashboard,
+    icon: <LayoutDashboardIcon className="h-4 w-4" />,
     name: "Dashboard",
     path: "/",
   },
   {
-    icon: history,
+    icon: <HistoryIcon className="h-4 w-4" />,
     name: "History",
     path: "/history",
   },
@@ -26,11 +24,11 @@ const DistributorLayout = () => {
 
       <main className="flex flex-col w-full h-screen">
         <Header />
-        <ScrollArea className="flex-1">
+        <div className="w-full overflow-x-auto">
           <div className="p-4">
             <Outlet />
           </div>
-        </ScrollArea>
+        </div>
       </main>
     </SidebarProvider>
   );

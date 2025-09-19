@@ -1,12 +1,9 @@
 import { useOutletContext, useParams } from "react-router-dom";
 import { useGetScheduleTickets } from "@/_lib/@react-client-query/schedule.ts";
 import { useEffect, useMemo, useState } from "react";
-import LongCard from "../../../../../components/LongCard";
-import LongCardItem from "../../../../../components/LongCardItem";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
 import type { Schedule } from "@/types/schedule.ts";
 import { formatTicket } from "@/utils/controlNumber.ts";
-import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import Dropdown from "@/components/Dropdown";
 import Pagination from "@/components/Pagination";
@@ -21,6 +18,10 @@ import {
 import InputField from "@/components/InputField";
 import { DataTable } from "@/components/DataTable";
 import type { Ticket } from "@/types/ticket";
+import { Bar, BarChart, CartesianGrid, Label, Pie, PieChart, Sector, XAxis, YAxis } from "recharts";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import type { PieSectorDataItem } from "recharts/types/polar/Pie";
 
 const statusOptions = [
   { name: "All Status", value: "all" },
@@ -78,7 +79,17 @@ const ScheduleTickets = () => {
   }, [filterValues.section, filterValues.status, debouncedSearch]);
 
   const summary = useMemo(() => {
-    if (!tickets) return null;
+    if (!tickets)
+      return {
+        total: 0,
+        sold: 0,
+        unsold: 0,
+        allocated: 0,
+        notAllocated: 0,
+        orchestra: 0,
+        balcony: 0,
+        complimentary: 0,
+      };
 
     const allocated = tickets.filter((t) => t.distributorId !== null).length;
     const notAllocated = tickets.filter((ticket) => !ticket.isComplimentary).length - allocated;
@@ -102,6 +113,46 @@ const ScheduleTickets = () => {
     };
   }, [tickets]);
 
+  const ticketBarChartData = [
+    { name: "balcony", value: summary.balcony, fill: "hsl(var(--chart-4))" },
+    { name: "orchestra", value: summary.orchestra, fill: "hsl(var(--chart-3))" },
+    { name: "complimentary", value: summary.complimentary, fill: "hsl(var(--chart-2))" },
+  ];
+
+  const ticketBarCharConfig = {
+    balcony: {
+      label: "Balcony",
+    },
+    orchestra: {
+      label: "Orchestra",
+    },
+    complimentary: {
+      label: "Complimentary",
+    },
+  } satisfies ChartConfig;
+
+  const ticketInformationSummaryData = [
+    { name: "allocated", value: summary.allocated, fill: "hsl(var(--chart-1))" },
+    { name: "not", value: summary.notAllocated, fill: "grey" },
+    { name: "sold", value: summary.sold, fill: "green" },
+    { name: "unsold", value: summary.unsold, fill: "red" },
+  ];
+
+  const ticketInformationSummaryConfig = {
+    allocated: {
+      label: "Allocated Tickets",
+    },
+    not: {
+      label: "Not Allocated Tickets",
+    },
+    sold: {
+      label: "Sold Tickets",
+    },
+    unsold: {
+      label: "Unsold Tickets",
+    },
+  } satisfies ChartConfig;
+
   if (loadingTickets) {
     return <h1>Loading...</h1>;
   }
@@ -114,22 +165,82 @@ const ScheduleTickets = () => {
     <>
       <h1 className="text-2xl">Ticket Information</h1>
 
-      <div className="flex gap-2">
-        <SimpleCard className="border-l-blue-400" label="Total Tickets" value={summary.total} />
-        <SimpleCard className="border-l-green" label="Allocated Tickets" value={summary.allocated} />
-        <SimpleCard className="border-l-lime-200" label="Not Allocated Tickets" value={summary.notAllocated} />
-        <SimpleCard className="border-l-purple-400" label="Sold Tickets" value={summary.sold} />
-        <SimpleCard className="border-l-red" label="Unsold Tickets" value={summary.unsold} />
-      </div>
+      <div className="flex flex-col md:flex-row gap-3">
+        <Card>
+          <CardHeader>
+            <CardTitle>Ticket Statuses Breakdown</CardTitle>
+            <CardDescription> Visual representation of ticket statuses breakdown</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={ticketInformationSummaryConfig} className="mx-auto aspect-square max-h-[250px]">
+              <PieChart>
+                <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                <Pie
+                  data={ticketInformationSummaryData}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={60}
+                  strokeWidth={5}
+                  activeIndex={0}
+                  activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => <Sector {...props} outerRadius={outerRadius + 10} />}
+                >
+                  <Label
+                    content={({ viewBox }) => {
+                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                        return (
+                          <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                            <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                              {summary.total}
+                            </tspan>
+                            <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
+                              Total Tickets
+                            </tspan>
+                          </text>
+                        );
+                      }
+                    }}
+                  />
+                </Pie>
+              </PieChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
 
-      <div>
-        <LongCard label="Ticket Breadown">
-          <LongCardItem label="Seating Configuration" value={schedule.seatingType.toUpperCase()} />
-          <LongCardItem label="Orchestra" value={summary.orchestra} />
-          <LongCardItem label="Balcony" value={summary.balcony} />
-          <LongCardItem label="Complimentary" value={summary.complimentary} />
-          <LongCardItem label="Total" value={summary.total} />
-        </LongCard>
+        <Card className="w-full h-fit">
+          <CardHeader>
+            <CardTitle>Ticket Distribution by Section</CardTitle>
+            <CardDescription>Number of tickets per section (Balcony, Orchestra, Complimentary)</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer className="h-36 w-full" config={ticketBarCharConfig}>
+              <BarChart
+                barCategoryGap={30}
+                accessibilityLayer
+                data={ticketBarChartData}
+                layout="vertical"
+                margin={{
+                  left: 40,
+                  right: 20,
+                }}
+              >
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => ticketBarCharConfig[value as keyof typeof ticketBarCharConfig]?.label}
+                />
+
+                <XAxis type="number" axisLine={true} tickLine={true} tick={{ fontSize: 12 }} tickCount={10} />
+
+                <CartesianGrid vertical={false} horizontal={true} strokeDasharray="3 3" />
+                <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                <Bar dataKey="value" layout="vertical" radius={5} barSize={20} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
       </div>
 
       <div>
