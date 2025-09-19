@@ -196,7 +196,6 @@ const SalesReport = () => {
   return (
     <>
       <PageWrapper>
-        {console.log(data)}
         <ContentWrapper className="flex flex-col gap-4 overflow-y-auto max-h-screen px-4">
           <header className="text-center">
             <h1 className="text-3xl font-bold">{data.showTitle}</h1>
