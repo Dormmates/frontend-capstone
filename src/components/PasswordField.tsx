@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, type ReactNode } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { EyeClosedIcon, EyeIcon } from "lucide-react";
 
 interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
+  label?: ReactNode | string;
   error?: string;
   id?: string;
   className?: string;
@@ -30,11 +31,11 @@ const PasswordField = React.forwardRef<HTMLInputElement, PasswordFieldProps>(({ 
         />
         <Button
           type="button"
-          variant="ghost"
+          variant="link"
           onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute inset-y-0 right-2 flex items-center text-sm  "
+          className="absolute inset-y-0 right-2 flex items-center text-sm text-muted-foreground"
         >
-          {showPassword ? "Hide" : "Show"}
+          {showPassword ? <EyeClosedIcon /> : <EyeIcon />}
         </Button>
       </div>
       {error && <p className="text-sm text-red">{error}</p>}

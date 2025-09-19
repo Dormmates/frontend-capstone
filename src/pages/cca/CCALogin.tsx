@@ -1,15 +1,16 @@
 import { PageWrapper, ContentWrapper } from "../../components/layout/Wrapper";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useLogin } from "@/_lib/@react-client-query/auth.ts";
 import { useAuthContext } from "../../context/AuthContext";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
 import PasswordField from "@/components/PasswordField";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { isValidEmail } from "@/utils";
 import { connectSocket } from "@/socket";
 import { toast } from "sonner";
+import { ThemeSwitch } from "@/components/ThemeSwitch";
+import logo from "@/assets/images/cca-logo.png";
 
 const CCALogin = () => {
   const login = useLogin();
@@ -40,7 +41,8 @@ const CCALogin = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const submitForm = () => {
+  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!validate()) return;
 
     toast.promise(
@@ -58,55 +60,68 @@ const CCALogin = () => {
   };
 
   return (
-    <PageWrapper className="min-h-screen flex items-center justify-center w-full">
-      {/* <img src={background} alt="" className="fixed inset-0 w-full h-full object-cover -z-10" /> */}
-      <ContentWrapper className="w-full flex justify-center">
-        {/* <div>
-            <img src={logo} alt="CCA Logo" className="object-cover" />
-          </div> */}
+    <div className="bg-muted">
+      <header className="fixed right-10 top-10"></header>
+      <PageWrapper className="min-h-screen flex items-center justify-center w-full ">
+        <ContentWrapper className="w-full flex justify-center px-3">
+          <Card className="w-full max-w-lg bg-background">
+            <CardHeader>
+              <div className="flex justify-end mb-10">
+                <ThemeSwitch />
+              </div>
+              <div className="flex flex-col gap-1">
+                <img className="w-28" src={logo} alt="logo" />
+                <div className="flex items-center justify-between"></div>
+                <CardTitle className="text-3xl">Sign in</CardTitle>
+                <CardDescription>Log in to access your CCA dashboard and manage shows, tickets, and schedules.</CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={submitForm} className="w-full flex flex-col gap-5">
+                <InputField
+                  className="bg-background"
+                  error={errors.email}
+                  label="Email"
+                  disabled={login.isPending}
+                  name="email"
+                  value={formContent.email}
+                  type="email"
+                  onChange={handleInputChange}
+                  placeholder="(eg. cca@slu.edu.ph)"
+                />
+                <PasswordField
+                  className="bg-background"
+                  error={errors.password}
+                  label="Password"
+                  disabled={login.isPending}
+                  name="password"
+                  value={formContent.password}
+                  onChange={handleInputChange}
+                  placeholder="Password"
+                />
 
-        <Card className="w-full max-w-2xl">
-          <CardHeader>
-            <CardTitle className="text-xl">Welcome CCA Staff</CardTitle>
-            <CardDescription>Log in as a CCA Trainer or CCA Head</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form className="w-full flex flex-col gap-5">
-              <InputField
-                error={errors.email}
-                label="Email"
-                disabled={login.isPending}
-                name="email"
-                value={formContent.email}
-                type="email"
-                onChange={handleInputChange}
-                placeholder="(eg. cca@slu.edu.ph)"
-              />
-              <PasswordField
-                error={errors.password}
-                label="Password"
-                disabled={login.isPending}
-                name="password"
-                value={formContent.password}
-                onChange={handleInputChange}
-                placeholder="Password"
-              />
-            </form>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-3">
-            <Button onClick={() => submitForm()} className="w-full" type="submit" disabled={login.isPending}>
-              Login
-            </Button>
-            {loginError && <h1 className="mx-auto text-red">{loginError}</h1>}
-            <Button className="w-full" variant="outline">
-              <Link className="mx-auto hover:opacity-50 duration-500 ease-linear " to="/distributor/login">
-                Login as Distributor
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-      </ContentWrapper>
-    </PageWrapper>
+                <Button className="w-full mt-3" type="submit" disabled={login.isPending}>
+                  Login
+                </Button>
+                {loginError && <h1 className="mx-auto text-red">{loginError}</h1>}
+              </form>
+            </CardContent>
+            {/* <CardFooter className="flex flex-col gap-3">
+              <div className="flex w-full justify-center gap-2 items-center overflow-hidden my-3">
+                <Separator className="w-full" />
+                <p className="text-sm font-medium text-muted-foreground">Or</p>
+                <Separator className="w-full" />
+              </div>
+              <Button className="w-full" variant="secondary">
+                <Link className="mx-auto hover:opacity-50 duration-500 ease-linear " to="/distributor/login">
+                  Login as Distributor
+                </Link>
+              </Button>
+            </CardFooter> */}
+          </Card>
+        </ContentWrapper>
+      </PageWrapper>
+    </div>
   );
 };
 
