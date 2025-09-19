@@ -9,7 +9,7 @@ interface Column<T> {
 
 interface DataTableProps<T> {
   columns: Column<T>[];
-  data: T[];
+  data: T[] | undefined;
   emptyMessage?: string;
   className?: string;
 }
@@ -28,14 +28,14 @@ export function DataTable<T>({ columns, data, emptyMessage = "No data found.", c
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.length === 0 ? (
+          {data?.length === 0 ? (
             <TableRow>
               <TableCell colSpan={columns.length} className="text-center py-10 text-gray-400">
                 {emptyMessage}
               </TableCell>
             </TableRow>
           ) : (
-            data.map((item, idx) => (
+            data?.map((item, idx) => (
               <TableRow key={idx}>
                 {columns.map((col) => (
                   <TableCell key={col.key}>{col.render ? col.render(item) : (item as any)[col.key]}</TableCell>
