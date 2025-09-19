@@ -25,7 +25,7 @@ import {
 import { useAuthContext } from "@/context/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Account from "./Account";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLogout } from "@/_lib/@react-client-query/auth";
@@ -33,7 +33,7 @@ import { disconnectSocket } from "@/socket";
 import { toast } from "sonner";
 
 interface SideBarItems {
-  icon: string;
+  icon: ReactNode;
   name: string;
   path?: string;
   hidden?: boolean;
@@ -51,9 +51,16 @@ export const SideBar = ({ items }: CCASideBarProps) => {
   const logout = useLogout();
   const [openAccount, setOpenAccount] = useState(false);
 
+  // Helper to check if a menu item is active
+  const isItemActive = (path: string) => {
+    if (path === "/") return location.pathname === "/";
+    return location.pathname.startsWith(path);
+  };
+
   return (
     <>
       <Sidebar variant="floating">
+        {/* ---- HEADER ---- */}
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -72,6 +79,7 @@ export const SideBar = ({ items }: CCASideBarProps) => {
           </SidebarMenu>
         </SidebarHeader>
 
+        {/* ---- MAIN NAVIGATION ---- */}
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel>Application</SidebarGroupLabel>
@@ -81,19 +89,20 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                 .map((item) => (
                   <SidebarMenuItem key={item.name}>
                     {item.path ? (
-                      <SidebarMenuButton className="p-5" asChild isActive={location.pathname === item.path}>
+                      <SidebarMenuButton className="p-5" asChild isActive={isItemActive(item.path) && !item.items?.length}>
                         <Link to={item.path}>
-                          <img src={item.icon} alt={item.name} className="mr-2 h-4 w-4 object-contain" />
+                          <span className="mr-2 h-4 w-4">{item.icon}</span>
                           {item.name}
                         </Link>
                       </SidebarMenuButton>
                     ) : (
                       <SidebarMenuButton className="p-5">
-                        <img src={item.icon} alt={item.name} className="mr-2 h-4 w-4 object-contain" />
+                        <span className="mr-2 h-4 w-4">{item.icon}</span>
                         {item.name}
                       </SidebarMenuButton>
                     )}
 
+                    {/* ---- SUB MENU ---- */}
                     {item.items?.filter((sub) => !sub.hidden).length ? (
                       <SidebarMenuSub>
                         {item.items
@@ -112,40 +121,43 @@ export const SideBar = ({ items }: CCASideBarProps) => {
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
+
+        {/* ---- FOOTER ---- */}
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
-                <DropdownMenuTrigger className="p-5" asChild>
+                <DropdownMenuTrigger asChild>
                   <SidebarMenuButton className="p-5">
                     <div className="flex gap-5 items-center">
-                      <Avatar className="w-10 h-10">
+                      <Avatar className="w-10 h-10 rounded-lg">
                         <AvatarImage src="https://api.dicebear.com/9.x/fun-emoji/svg?seed=Jade" alt="profile" />
-                        <AvatarFallback className="rounded-lg">Prof</AvatarFallback>
+                        <AvatarFallback>Prof</AvatarFallback>
                       </Avatar>
-                      <div className="flex flex-col items-start -gap-2">
-                        <p className="font-semibold ">
+                      <div className="flex flex-col items-start">
+                        <p className="font-semibold">
                           {user?.firstName} {user?.lastName}
                         </p>
-                        <p className="text-lightGrey">
+                        <p className="text-muted-foreground text-sm">
                           {user?.roles.includes("head") ? "CCA Head" : user?.roles.includes("distributor") ? "Distributor" : "CCA Trainer"}
                         </p>
                       </div>
                     </div>
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="min-w-56 rounded-lg" side={"bottom"} align="end" sideOffset={4}>
+
+                <DropdownMenuContent className="min-w-56 rounded-lg" side="bottom" align="end" sideOffset={4}>
                   <DropdownMenuLabel className="p-2">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button onClick={() => setOpenAccount(true)} variant="ghost" className="p-0  w-full flex justify-start">
-                          <div className="flex justify-start items-center gap-2 px-1 py-1.5 text-left text-sm">
+                        <Button onClick={() => setOpenAccount(true)} variant="ghost" className="p-0 w-full flex justify-start">
+                          <div className="flex items-center gap-2 px-1 py-1.5 text-sm">
                             <Avatar className="h-8 w-8 rounded-lg">
                               <AvatarImage src="https://api.dicebear.com/9.x/fun-emoji/svg?seed=Jade" alt="profile" />
-                              <AvatarFallback className="rounded-lg">Prof</AvatarFallback>
+                              <AvatarFallback>Prof</AvatarFallback>
                             </Avatar>
-                            <div className="grid flex-1 text-left text-sm leading-tight">
-                              <span className="text-muted-foreground truncate text-xs">{user?.email}</span>
+                            <div className="flex-1 truncate">
+                              <span className="text-muted-foreground text-xs">{user?.email}</span>
                             </div>
                           </div>
                         </Button>
@@ -153,6 +165,7 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                       <TooltipContent>View Account Information</TooltipContent>
                     </Tooltip>
                   </DropdownMenuLabel>
+
                   <DropdownMenuSeparator />
 
                   <DropdownMenuItem
@@ -171,7 +184,7 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                         {
                           position: "top-center",
                           loading: "Logging Out...",
-                          success: "Logout Out",
+                          success: "Logged Out",
                           error: "Failed to logout, please try again",
                         }
                       );
@@ -187,6 +200,7 @@ export const SideBar = ({ items }: CCASideBarProps) => {
 
         <SidebarRail />
       </Sidebar>
+
       {openAccount && <Account openAccount={openAccount} setOpenAccount={setOpenAccount} />}
     </>
   );

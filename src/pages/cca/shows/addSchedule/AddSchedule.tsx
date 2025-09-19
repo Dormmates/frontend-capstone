@@ -838,7 +838,7 @@ const AddSchedule = () => {
 
         {openScheduleSummary && (
           <Modal
-            className="max-w-6xl"
+            className="max-w-6xl h-[90%]"
             description="Please review the details before you proceed"
             isOpen={openScheduleSummary}
             onClose={() => setOpenScheduleSummary(false)}

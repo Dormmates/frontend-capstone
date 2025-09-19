@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const ControlNumberInputTutorial = ({ className }: { className?: string }) => {
   return (
-    <Card className={`rounded-none bg-gray border-2 shadow-none ${className}`}>
+    <Card className={`rounded bg-muted border-2 shadow-none ${className}`}>
       <CardContent className="text-sm p-6">
         <div>
           <p>How to Input Ticket Control Numbers:</p>

@@ -68,8 +68,10 @@ const ViewDistributorLayout = () => {
     const remittedTickets = data.filter((ticket) => ticket.isRemitted).length;
 
     const pendingRemittance = soldTickets - remittedTickets;
-    const expected = data.reduce<number>((acc, ticket) => acc + Number(ticket.ticketPrice), 0);
-    const remitted = data.filter((ticket) => ticket.isRemitted).reduce<number>((acc, ticket) => acc + Number(ticket.ticketPrice), 0);
+    const expected = data.reduce<number>((acc, ticket) => acc + (Number(ticket.ticketPrice) - schedule.commissionFee), 0);
+    const remitted = data
+      .filter((ticket) => ticket.isRemitted)
+      .reduce<number>((acc, ticket) => acc + (Number(ticket.ticketPrice) - schedule.commissionFee), 0);
     const balanceDue = expected - remitted;
 
     return { totalAllocatedTickets, soldTickets, unsoldTickets, remittedTickets, pendingRemittance, expected, remitted, balanceDue };
@@ -127,10 +129,10 @@ const ViewDistributorLayout = () => {
         <h1 className="text-2xl">{distributorName}</h1>
         <div className="flex gap-3 items-center">
           {/* <Button className="!bg-green">Allocate Ticket</Button> */}
-          <Button onClick={() => setIsUnallocateTicket(true)} className="!bg-red">
+          <Button onClick={() => setIsUnallocateTicket(true)} variant="destructive">
             Unallocate Ticket
           </Button>
-          <Button onClick={() => setIsRemitTicket(true)} className="!bg-primary">
+          <Button onClick={() => setIsRemitTicket(true)} className="bg-primary">
             Remit Tickets
           </Button>
           <Button onClick={() => setIsUnRemitTicket(true)}> Unremit Tickets</Button>

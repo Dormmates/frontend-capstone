@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogOverlay } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 interface ModalProps {
   children: React.ReactNode;
@@ -13,9 +13,8 @@ interface ModalProps {
 
 const Modal = ({ children, title, description, className, isOpen, isTransparent = false, onClose }: ModalProps) => {
   return (
-    <Dialog onOpenChange={onClose} open={isOpen}>
-      <DialogOverlay className={isTransparent ? "bg-transparent" : "bg-white/10"} />
-      <DialogContent className={`max-w-xl w-[95%]  ${className}`}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className={`max-w-xl w-[95%] ${className} ${isTransparent ? "bg-transparent shadow-none" : ""}`}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}

@@ -13,7 +13,7 @@ const DateAndTimeNow = () => {
   }, []);
 
   return (
-    <div className="flex justify-start w-full ml-5 gap-3 ">
+    <div className="flex justify-start w-full gap-3 ">
       <div className="text-sm">{formatToReadableDate(dateNow + "")}</div>
       <div className="text-sm">{formatToReadableTime(dateNow + "")}</div>
     </div>

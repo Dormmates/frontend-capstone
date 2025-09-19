@@ -18,10 +18,10 @@ export function DataTable<T>({ columns, data, emptyMessage = "No data found.", c
   return (
     <div className={`overflow-x-auto rounded-lg border`}>
       <Table className={className}>
-        <TableHeader className="bg-gray">
+        <TableHeader className="bg-muted">
           <TableRow>
             {columns.map((col) => (
-              <TableHead className={col.headerClassName || ""} key={col.key}>
+              <TableHead className={`${col.headerClassName || ""} text-muted-foreground py-5`} key={col.key}>
                 {col.header}
               </TableHead>
             ))}

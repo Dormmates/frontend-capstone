@@ -1,42 +1,38 @@
 import { Outlet } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
-import accounts from "../../assets/icons/accounts.png";
-import dashboard from "../../assets/icons/dashboard.png";
-import groups from "../../assets/icons/performing-groups.png";
-import shows from "../../assets/icons/shows.png";
-import major from "../../assets/icons/major-prod.png";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import SideBar from "@/components/SideBar";
 import Header from "@/components/Header";
 import { useNotificationSocket } from "@/hooks/useNotificationSocket";
+import { DramaIcon, LayoutDashboardIcon, NetworkIcon, TheaterIcon, UsersIcon } from "lucide-react";
 
 const CCALayout = () => {
   const { user } = useAuthContext();
   useNotificationSocket();
   const sideBarItems = [
     {
-      icon: dashboard,
+      icon: <LayoutDashboardIcon className="h-4 w-4" />,
       name: "Dashboard",
       path: "/",
     },
     {
-      icon: shows,
+      icon: <DramaIcon className="h-4 w-4" />,
       name: "Shows",
       path: "/shows",
     },
     {
-      icon: major,
+      icon: <TheaterIcon className="h-4 w-4" />,
       name: "Major Production",
       path: "/majorShows",
     },
     {
-      icon: groups,
+      icon: <NetworkIcon className="h-4 w-4" />,
       name: "Performing Groups",
       path: "/performing-groups",
       hidden: !user?.roles.includes("head"),
     },
     {
-      icon: accounts,
+      icon: <UsersIcon className="h-4 w-4" />,
       name: "Manage Accounts",
       items: [
         { name: "Trainer", path: "/manage/trainers", hidden: !user?.roles.includes("head") },
