@@ -32,9 +32,19 @@ const parseDepartments = (departments: Department[]) => {
 
 const PerformingGroupShows = () => {
   const { user } = useAuthContext();
+
+  if (!user?.department) {
+    return (
+      <ContentWrapper>
+        <h1>You are not currently assigned to any Department</h1>
+      </ContentWrapper>
+    );
+  }
+
   const { data: shows, isLoading: showsLoading } = useGetShows({
-    departmentId: !user?.roles.includes("head") && user?.department ? user.department.departmentId : "",
+    departmentId: !user?.roles.includes("head") && user?.department ? user.department.departmentId : "ascasc",
   });
+
   const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments();
 
   const [filter, setFilter] = useState({ showType: "all", department: "all", search: "" });
@@ -149,7 +159,7 @@ const PerformingGroupShows = () => {
             render: (show: ShowData) => (
               <div className="flex justify-end items-center gap-2">
                 <Link to={`/shows/${show.showId}`}>
-                  <Button variant="outline">Go To Schedules</Button>
+                  <Button>Go To Schedules</Button>
                 </Link>
 
                 <EditShow show={show} />

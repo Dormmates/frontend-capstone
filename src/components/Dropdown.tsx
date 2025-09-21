@@ -18,7 +18,7 @@ interface Props {
 
 const Dropdown = ({ disabled, includeHeader, items, label, placeholder, className, onChange, value, error }: Props) => {
   return (
-    <div className={`flex flex-col gap-3 w-fit `}>
+    <div className={`flex flex-col gap-3 w-fit`}>
       {includeHeader && <Label>{label}</Label>}
       <Select onValueChange={(value) => onChange(value)} value={value}>
         <SelectTrigger disabled={disabled} className={`${className} ${error && "border-red"} `}>
@@ -27,11 +27,18 @@ const Dropdown = ({ disabled, includeHeader, items, label, placeholder, classNam
         <SelectContent>
           <SelectGroup>
             <SelectLabel>{label}</SelectLabel>
-            {items.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
-                {item.name}
+
+            {items.length > 0 ? (
+              items.map((item) => (
+                <SelectItem key={item.value} value={item.value}>
+                  {item.name}
+                </SelectItem>
+              ))
+            ) : (
+              <SelectItem value="empty" disabled>
+                No options available
               </SelectItem>
-            ))}
+            )}
           </SelectGroup>
         </SelectContent>
       </Select>

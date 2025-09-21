@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetShow } from "@/_lib/@react-client-query/show.ts";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import type { FlattenedSeat } from "@/types/seat.ts";
 import type { ErrorKeys, ScheduleFormData, ScheduleFormErrors, SeatPricing } from "@/types/schedule.ts";
@@ -10,7 +10,7 @@ import SeatingConfigurationSelector from "./components/SeatingConfigurationSelec
 import PricingSection from "./components/PricingSection";
 import { parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 import TicketDetailsSection from "./components/TicketDetailsSection";
-import { flattenSeatMap, formatSectionName } from "@/utils/seatmap.ts";
+import { flattenSeatMap } from "@/utils/seatmap.ts";
 import SeatMapSchedule from "./components/SeatMapSchedule";
 import { useAddSchedule, type AddSchedulePayload } from "@/_lib/@react-client-query/schedule.ts";
 import { useQueryClient } from "@tanstack/react-query";
@@ -31,15 +31,6 @@ const formatLabel = (key: string) =>
     .replace("Orchestra", "Orchestra ")
     .replace("Balcony", "Balcony ")
     .trim();
-
-const getRowLabel = (seats: FlattenedSeat[] | undefined) => {
-  if (!seats || seats.length === 0) return "";
-  const rowName = seats[0].row;
-  const seatNumbers = seats.map((s) => parseInt(s.seatNumber.match(/\d+/)?.[0] || "0"));
-  const min = Math.min(...seatNumbers);
-  const max = Math.max(...seatNumbers);
-  return `Row: ${rowName} ${min} - ${max}`;
-};
 
 const AddSchedule = () => {
   const navigate = useNavigate();
@@ -71,18 +62,29 @@ const AddSchedule = () => {
     balconyRight: "",
   });
 
-  const [selectedSeats, setSelectedSeats] = useState<FlattenedSeat[]>();
-  const [rowToggle, setRowToggle] = useState(false);
-  const [sectionToggle, setSectionToggle] = useState(false);
-  const [seatToggle, setSeatToggle] = useState(false);
   const [openScheduleSummary, setOpenScheduleSummary] = useState(false);
-
-  const [ticketInput, setTicketInput] = useState({ controlNumber: "", isComplimentary: false });
   const [assignedControlNumbers, setAssignedControlNumbers] = useState<{
     [section: string]: number[];
   }>({});
 
   const [errors, setErrors] = useState<ScheduleFormErrors>({});
+
+  const [isComplimentaryMode, setComplimentaryMode] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey) setComplimentaryMode(true);
+    };
+    const handleKeyUp = () => setComplimentaryMode(false);
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
 
   if (isLoading) {
     return <h1>Fetching Show information...</h1>;
@@ -95,21 +97,6 @@ const AddSchedule = () => {
   if (!data) {
     return <h1>Error Fetching show</h1>;
   }
-
-  const handleOpenTicketModal = (type: "seat" | "row" | "section") => {
-    if (!validateControlNumbers()) {
-      toast.error("Please enter valid values for ticket control number first", { position: "top-center" });
-      return;
-    }
-
-    const toggles = {
-      seat: setSeatToggle,
-      row: setRowToggle,
-      section: setSectionToggle,
-    };
-
-    toggles[type](true);
-  };
 
   const addAnotherDate = () => {
     setScheduleData((prev) => ({
@@ -366,49 +353,6 @@ const AddSchedule = () => {
     return section.includes("orchestra") ? "orchestra" : section.includes("balcony") ? "balcony" : "complimentary";
   };
 
-  const assignControlNumbers = (numbers: number[], section: string) => {
-    setAssignedControlNumbers((prev) => {
-      const updated = new Set([...(prev[section] || []), ...numbers]);
-      return { ...prev, [section]: Array.from(updated) };
-    });
-  };
-
-  const removeControlNumberAssignment = () => {
-    if (!selectedSeats?.length) return;
-
-    // Build a copy of assignedControlNumbers to update in place
-    const updatedAssigned = { ...assignedControlNumbers };
-
-    // Clear ticket numbers in seatData
-    setSeatData((prev) =>
-      prev.map((seat) => {
-        const match = selectedSeats.find((sel) => sel.seatNumber === seat.seatNumber && sel.section === seat.section);
-        if (match) {
-          // Determine correct section key
-          const sectionKey = getSection(match.isComplimentary ? "complimentary" : match.section);
-
-          // Remove control number from the assigned list for that section
-          updatedAssigned[sectionKey] = (updatedAssigned[sectionKey] || []).filter((num) => num !== match.ticketControlNumber);
-
-          // Return cleared seat
-          return { ...seat, ticketControlNumber: 0, isComplimentary: false };
-        }
-        return seat;
-      })
-    );
-
-    // Update state with new assignedControlNumbers
-    setAssignedControlNumbers(updatedAssigned);
-
-    toast.success("Control number(s) removed", { position: "top-center" });
-
-    // Close modal + reset
-    setSeatToggle(false);
-    setRowToggle(false);
-    setSectionToggle(false);
-    setTicketInput({ controlNumber: "", isComplimentary: false });
-  };
-
   const getRemainingControlNumbers = (section: string): number[] => {
     const controlKey = section.toLowerCase().includes("balcony")
       ? "balconyControlNumber"
@@ -425,87 +369,67 @@ const AddSchedule = () => {
     }
   };
 
-  const validateTicketInput = () => {
-    const section = selectedSeats?.[0]?.section;
-    const isSeat = seatToggle;
-    const isRow = rowToggle;
-    const isSection = sectionToggle;
-    const controlStr = ticketInput.controlNumber.trim();
-    const isComplimentary = ticketInput.isComplimentary;
-
-    if (!section || !controlStr) {
-      toast.error("Missing control number or section", { position: "top-center" });
+  const toggleSeats = (clickedSeats: FlattenedSeat[]) => {
+    if (!validateControlNumbers()) {
+      toast.error("Please enter ticket control numbers first", { position: "top-center" });
       return;
     }
 
-    if (!validateControlInput(controlStr)) {
-      toast.error(`"${controlStr}" control number input contain invalid characters`, { position: "top-center" });
-      return;
-    }
+    setSeatData((prev) => {
+      if (!clickedSeats || clickedSeats.length === 0) return prev;
 
-    let controlNums: number[];
+      const section = isComplimentaryMode ? "complimentary" : getSection(clickedSeats[0].section);
+      let remaining = getRemainingControlNumbers(section).sort((a, b) => a - b);
+      const updated = prev.map((s) => ({ ...s }));
 
-    try {
-      controlNums = parseControlNumbers(controlStr);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast.error(err.message, { position: "top-center" });
-      } else {
-        toast.error("An unexpected error occurred.", { position: "top-center" });
-      }
-      return;
-    }
-
-    const unassigned = getRemainingControlNumbers(getSection(!isComplimentary ? section : "complimentary"));
-
-    // Validate against duplicates
-    for (const num of controlNums) {
-      if (!unassigned.includes(num)) {
-        toast.error(`Control number ${num} is already used or not valid for this section`, { position: "top-center" });
-        return;
-      }
-    }
-    if ((isRow || isSection) && controlNums.length > (selectedSeats?.length || 0)) {
-      toast.error(`Control number count (${controlNums.length}) must not be greater than required (${selectedSeats?.length || 0})`, {
-        position: "top-center",
+      const hasAssigned = clickedSeats.some((clickedSeat) => {
+        const idx = updated.findIndex((s) => s.seatNumber === clickedSeat.seatNumber);
+        return idx !== -1 && updated[idx].ticketControlNumber !== 0;
       });
-      return;
-    }
 
-    if (!selectedSeats?.length) return;
+      if (hasAssigned) {
+        clickedSeats.forEach((clickedSeat) => {
+          const idx = updated.findIndex((s) => s.seatNumber === clickedSeat.seatNumber && s.section === clickedSeat.section);
+          if (idx === -1) return;
+          const seat = updated[idx];
+          if (seat.ticketControlNumber !== 0) {
+            remaining = [...remaining, seat.ticketControlNumber].sort((a, b) => a - b);
+            seat.ticketControlNumber = 0;
+            seat.isComplimentary = false;
+          }
+        });
+      } else {
+        for (const clickedSeat of clickedSeats) {
+          const idx = updated.findIndex((s) => s.seatNumber === clickedSeat.seatNumber && s.section === clickedSeat.section);
+          if (idx === -1) continue;
 
-    if (isSeat && controlNums.length !== 1) {
-      toast.error("Please provide only one control number when assigning an individual seat.", { position: "top-center" });
-      return;
-    }
+          const seat = updated[idx];
 
-    const seatMap = new Map(
-      selectedSeats
-        .filter((seat) => seat.ticketControlNumber === 0)
-        .slice(0, controlNums.length)
-        .map((s, i) => [s.seatNumber, controlNums[i]])
-    );
+          if (remaining.length === 0) {
+            toast.error("No more control numbers available for this section", {
+              position: "top-center",
+            });
+            break;
+          }
 
-    setSeatData((prev) =>
-      prev.map((seat) =>
-        seatMap.has(seat.seatNumber)
-          ? {
-              ...seat,
-              ticketControlNumber: seatMap.get(seat.seatNumber)!,
-              isComplimentary: ticketInput.isComplimentary,
-            }
-          : seat
-      )
-    );
+          const assignNum = remaining.shift()!;
+          seat.ticketControlNumber = assignNum;
+          seat.isComplimentary = isComplimentaryMode;
+        }
+      }
 
-    assignControlNumbers(controlNums, getSection(!isComplimentary ? section : "complimentary"));
-    toast.success("Control number(s) assigned", { position: "top-center" });
+      const newAssigned = updated
+        .filter((s) => (isComplimentaryMode ? "complimentary" : getSection(s.section) === section && s.ticketControlNumber > 0))
+        .map((s) => s.ticketControlNumber!)
+        .sort((a, b) => a - b);
 
-    // Close modal
-    setSeatToggle(false);
-    setRowToggle(false);
-    setSectionToggle(false);
-    setTicketInput({ controlNumber: "", isComplimentary: false });
+      setAssignedControlNumbers((prevAssigned) => ({
+        ...prevAssigned,
+        [section]: newAssigned,
+      }));
+
+      return updated;
+    });
   };
 
   const handleSubmit = () => {
@@ -668,140 +592,15 @@ const AddSchedule = () => {
             <SeatMapSchedule
               seatMap={seatData}
               seatClick={(clickedSeat: FlattenedSeat) => {
-                setSelectedSeats([clickedSeat]);
-                handleOpenTicketModal("seat");
+                toggleSeats([clickedSeat]);
               }}
               rowClick={(clickedSeats: FlattenedSeat[]) => {
-                setSelectedSeats(clickedSeats);
-                handleOpenTicketModal("row");
+                toggleSeats(clickedSeats);
               }}
               sectionClick={(clickedSeats: FlattenedSeat[]) => {
-                setSelectedSeats(clickedSeats);
-                handleOpenTicketModal("section");
+                toggleSeats(clickedSeats);
               }}
             />
-
-            {(seatToggle || rowToggle || sectionToggle) && (
-              <Modal
-                className="flex flex-col max-w-xl"
-                title="Assign Ticket Control Number"
-                description="Input Ticket Control Number to be assigned on the seats"
-                onClose={() => {
-                  setSeatToggle(false);
-                  setRowToggle(false);
-                  setSectionToggle(false);
-                  setTicketInput({ controlNumber: "", isComplimentary: false });
-                }}
-                isOpen={seatToggle || rowToggle || sectionToggle}
-              >
-                <div className=" bg-zinc-100 border border-darkGrey p-2">
-                  <p>Section: {formatSectionName(selectedSeats?.[0]?.section || "")}</p>
-                  {!sectionToggle && (rowToggle ? <p>{getRowLabel(selectedSeats)}</p> : <p>Seat Number: {selectedSeats?.[0]?.seatNumber}</p>)}
-                  <p>PHP {selectedSeats?.[0]?.ticketPrice?.toFixed(2) || "0.00"}</p>
-
-                  {selectedSeats?.some((seat) => seat.ticketControlNumber == 0) && (
-                    <div className="mt-2 text-sm text-gray-700 !max-w-fit">
-                      Unassigned Control Numbers (
-                      <span className="font-medium">
-                        {getRemainingControlNumbers(ticketInput.isComplimentary ? "complimentary" : selectedSeats?.[0]?.section || "").length || " 0"}
-                        tickets{" "}
-                      </span>
-                      ) :
-                      <span className="font-normal text-black">
-                        {getRemainingControlNumbers(ticketInput.isComplimentary ? "complimentary" : selectedSeats?.[0]?.section || "").join(", ") ||
-                          "None"}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {selectedSeats?.some((seat) => seat.ticketControlNumber == 0) ? (
-                  <>
-                    {getRemainingControlNumbers("complimentary").length != 0 ||
-                    getRemainingControlNumbers("orchestra").length != 0 ||
-                    getRemainingControlNumbers("balcony").length != 0 ? (
-                      <>
-                        <div className="flex gap-2 my-5">
-                          <input
-                            type="checkbox"
-                            checked={ticketInput.isComplimentary}
-                            onChange={(e) =>
-                              setTicketInput((prev) => ({
-                                ...prev,
-                                isComplimentary: e.target.checked,
-                              }))
-                            }
-                          />
-                          <p className="text-sm">Is Complimentary Ticket?</p>
-                        </div>
-
-                        {(ticketInput.isComplimentary && getRemainingControlNumbers("complimentary").length !== 0) ||
-                        (!ticketInput.isComplimentary &&
-                          ((getRemainingControlNumbers("orchestra").length !== 0 && selectedSeats[0]?.section.includes("orchestra")) ||
-                            (getRemainingControlNumbers("balcony").length !== 0 && selectedSeats[0]?.section.includes("balcony")))) ? (
-                          <>
-                            <InputField
-                              className="mt-10"
-                              value={ticketInput.controlNumber}
-                              onChange={(e) =>
-                                setTicketInput((prev) => ({
-                                  ...prev,
-                                  controlNumber: e.target.value,
-                                }))
-                              }
-                              label={`Input at least (${
-                                selectedSeats.filter((seat) => seat.ticketControlNumber === 0).length
-                              }) Ticket Control Number to be assigned:`}
-                            />
-
-                            <Button onClick={validateTicketInput} className="self-end mt-4 !bg-green">
-                              Confirm
-                            </Button>
-                          </>
-                        ) : (
-                          <div className="text-center mt-4 text-red">
-                            All control numbers on this section have already been assigned. To reassign them, please remove existing assignments
-                            first.
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div className="text-center mt-4 text-red">
-                        All control numbers have already been assigned. To reassign them, please remove existing assignments first.
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {seatToggle && (
-                      <div className="mt-5 text-sm text-gray-700">
-                        <p>
-                          Ticket Control Number: <span className="font-medium text-black">{selectedSeats?.[0]?.ticketControlNumber}</span>
-                        </p>
-                        <div className="flex mt-5">
-                          <Button className="!bg-red" onClick={removeControlNumberAssignment}>
-                            Clear Ticket Assignement
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                    {(rowToggle || sectionToggle) && (
-                      <div className="mt-5 text-sm text-gray-700">
-                        <p>
-                          Ticket Control Numbers:{" "}
-                          <span className="font-medium text-black">{selectedSeats?.map((seat) => seat.ticketControlNumber).join(", ")}</span>
-                        </p>
-                        <div className="flex mt-5">
-                          <Button className="!bg-red" onClick={removeControlNumberAssignment}>
-                            Clear Ticket Assignements
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
-              </Modal>
-            )}
           </>
         )}
 

@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
-import { useAddDepartment, useDeleteDepartment, useEditDepartment, useGetDepartments } from "@/_lib/@react-client-query/department.ts";
+import {
+  useAddDepartment,
+  useAssingDepartmentTrainer,
+  useDeleteDepartment,
+  useEditDepartment,
+  useGetDepartments,
+  useRemoveDepartmentTrainerByTrainerId,
+} from "@/_lib/@react-client-query/department.ts";
 import type { Department } from "@/types/department.ts";
 import { useQueryClient } from "@tanstack/react-query";
-import deleteIcon from "../../../assets/icons/delete.png";
 import { getFileId } from "@/utils";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
@@ -14,7 +20,11 @@ import { Label } from "@/components/ui/label";
 import AlertModal from "@/components/AlertModal";
 import PaginatedTable from "@/components/PaginatedTable";
 import { toast } from "sonner";
-import { GroupIcon } from "lucide-react";
+import { EditIcon, GroupIcon, Trash2Icon, UserRoundPenIcon } from "lucide-react";
+import { useGetTrainers } from "@/_lib/@react-client-query/accounts";
+import Dropdown from "@/components/Dropdown";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuthContext } from "@/context/AuthContext";
 
 const PerformingGroups = () => {
   const addDepartment = useAddDepartment();
@@ -24,11 +34,14 @@ const PerformingGroups = () => {
   const { data: departments, isLoading: fetchingDepartments, isError: errorLoadingDepartments } = useGetDepartments();
   const [addGroup, setAddGroup] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<Department | null>(null);
+  const { user } = useAuthContext();
 
   const [newGroup, setNewGroup] = useState({ name: "", imagePreview: "", image: null as File | null });
   const [editGroup, setEditGroup] = useState({ name: "", imagePreview: "", image: null as File | null });
 
   const [errors, setErrors] = useState<{ name?: string; logo?: string }>();
+
+  const [isAssignTrainer, setIsAssignTrainer] = useState<Department | null>(null);
 
   useEffect(() => {
     setEditGroup({ name: selectedGroup?.name as string, imagePreview: selectedGroup?.logoUrl as string, image: null as File | null });
@@ -160,8 +173,14 @@ const PerformingGroups = () => {
             {
               key: "trainer",
               header: "Trainer name",
-              render: (department) => department.trainerName ?? "No Trainer",
+              render: (department) => {
+                if (!department.trainerName) return "No Trainer";
+
+                const isYou = department.trainerId === user?.userId;
+                return <span className={isYou ? "font-bold" : ""}>{isYou ? `(You) ${department.trainerName}` : department.trainerName}</span>;
+              },
             },
+
             {
               key: "total",
               header: "Total Shows",
@@ -174,13 +193,21 @@ const PerformingGroups = () => {
               render: (department) => (
                 <div className="flex justify-end items-center gap-2">
                   <Button onClick={() => setSelectedGroup(department)} variant="outline">
-                    Edit Details
+                    <EditIcon />
+                  </Button>
+
+                  <Button
+                    onClick={() => {
+                      setIsAssignTrainer(department);
+                    }}
+                  >
+                    <UserRoundPenIcon />
                   </Button>
 
                   <AlertModal
                     trigger={
-                      <Button disabled={department.totalShows !== 0} variant="ghost">
-                        <img src={deleteIcon} alt="delete" />
+                      <Button disabled={department.totalShows !== 0} variant="destructive">
+                        <Trash2Icon />
                       </Button>
                     }
                     onConfirm={() => handleDelete(department.departmentId)}
@@ -193,6 +220,18 @@ const PerformingGroups = () => {
           ]}
         />
       </div>
+
+      {isAssignTrainer && (
+        <Modal
+          title={`Manage "${isAssignTrainer.name}" trainer`}
+          onClose={() => {
+            setIsAssignTrainer(null);
+          }}
+          isOpen={!!isAssignTrainer}
+        >
+          <AssignTrainer setIsAssignTrainer={setIsAssignTrainer} department={isAssignTrainer} />
+        </Modal>
+      )}
 
       {(addGroup || selectedGroup) && (
         <Modal
@@ -269,6 +308,141 @@ const PerformingGroups = () => {
         </Modal>
       )}
     </ContentWrapper>
+  );
+};
+
+const AssignTrainer = ({
+  department,
+  setIsAssignTrainer,
+}: {
+  department: Department;
+  setIsAssignTrainer: (value: React.SetStateAction<Department | null>) => void;
+}) => {
+  const queryClient = useQueryClient();
+  const assignTrainer = useAssingDepartmentTrainer();
+  const removeTrainer = useRemoveDepartmentTrainerByTrainerId();
+  const { user } = useAuthContext();
+
+  const { data: trainers, isLoading, isError } = useGetTrainers();
+  const [selectedTrainer, setSelectedTrainer] = useState("");
+
+  const [errors, setErrors] = useState<{ choose?: string }>({});
+
+  const trainersDropdown = useMemo(() => {
+    if (!trainers) return [];
+
+    return trainers
+      .filter((t) => !t.department)
+      .map((t) => ({
+        name: t.userId === user?.userId ? `(You) ${t.firstName} ${t.lastName}` : `${t.firstName} ${t.lastName}`,
+        value: t.userId,
+      }));
+  }, [trainers, user]);
+
+  if (isLoading) {
+    return <h1>Loading Trainers...</h1>;
+  }
+
+  if (!trainers || isError) {
+    return <h1>Failed to load list of trainers</h1>;
+  }
+
+  const handleSubmitAssign = () => {
+    const newErrors: typeof errors = {};
+    let isValid = true;
+
+    if (!selectedTrainer) {
+      newErrors.choose = "Please Choose a Trainer to be assigned";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    if (!isValid) return;
+
+    toast.promise(assignTrainer.mutateAsync({ userId: selectedTrainer, departmentId: department.departmentId }), {
+      position: "top-center",
+      loading: "Assigning Trainer...",
+      success: () => {
+        queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
+        queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
+        setIsAssignTrainer(null);
+        return "Trainer Assigned";
+      },
+      error: (err) => err.message || "Failed to Assign Trainer",
+    });
+  };
+
+  const handleRemoveTrainer = () => {
+    toast.promise(removeTrainer.mutateAsync(department.trainerId as string), {
+      position: "top-center",
+      loading: "Removing Trainer...",
+      success: () => {
+        queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
+        queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
+        setIsAssignTrainer(null);
+        return "Trainer Removed";
+      },
+      error: (err) => err.message || "Failed to Remove Trainer",
+    });
+  };
+
+  return (
+    <>
+      {department.trainerId && (
+        <div className="flex gap-2 flex-col">
+          <Label>Current Performing Group Trainer</Label>
+          <div className="p-2 border rounded-md text-sm flex justify-between items-center">
+            {department.trainerName ? (
+              <span>{department.trainerId === user?.userId ? `(You) ${department.trainerName}` : department.trainerName}</span>
+            ) : (
+              "No Trainer Assigned"
+            )}
+            {department.trainerName && (
+              <Button variant="destructive" size="sm" onClick={handleRemoveTrainer}>
+                Remove
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {!department.trainerId && (
+        <div className="flex items-center mt-5">
+          {trainersDropdown.length !== 0 ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Select Trainers</CardTitle>
+                <CardDescription>This only shows trainers that are not assigned to a performing group yet</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Dropdown
+                  error={errors.choose}
+                  className="w-full"
+                  label="Trainers"
+                  includeHeader={true}
+                  placeholder="Select Trainer to be assigned"
+                  value={selectedTrainer}
+                  onChange={(value) => setSelectedTrainer(value)}
+                  items={trainersDropdown}
+                />
+              </CardContent>
+              <CardFooter className="flex justify-end">
+                <Button onClick={handleSubmitAssign}>Assign Trainer</Button>
+              </CardFooter>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>No Available Trainers</CardTitle>
+                <CardDescription>
+                  All trainers are already assigned to performing groups. Please create a new trainer account instead.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 

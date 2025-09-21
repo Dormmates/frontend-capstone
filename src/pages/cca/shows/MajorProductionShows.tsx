@@ -100,7 +100,7 @@ const MajorProductionShows = () => {
             render: (show: ShowData) => (
               <div className="flex justify-end items-center gap-2">
                 <Link to={`/shows/${show.showId}`}>
-                  <Button variant="outline">Go To Schedules</Button>
+                  <Button>Go To Schedules</Button>
                 </Link>
 
                 {user.roles.includes("head") && (

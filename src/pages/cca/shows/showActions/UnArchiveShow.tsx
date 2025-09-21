@@ -3,9 +3,9 @@ import AlertModal from "@/components/AlertModal";
 import { Button } from "@/components/ui/button";
 import type { ShowData } from "@/types/show";
 import { useQueryClient } from "@tanstack/react-query";
-import archiveIcon from "../../../../assets/icons/archive.png";
 import { useAuthContext } from "@/context/AuthContext";
 import { toast } from "sonner";
+import { ArchiveIcon } from "lucide-react";
 
 type UnArchiveShowProps = {
   show: ShowData;
@@ -41,10 +41,9 @@ const UnArchiveShow = ({ show }: UnArchiveShowProps) => {
       onConfirm={handleSubmit}
       title="Unarchive Show"
       description="This action will unarchive this show and move it to the show lists"
-      tooltip="Unarchive Show"
       trigger={
-        <Button variant="ghost" className="p-0" disabled={unarchiveShow.isPending}>
-          <img src={archiveIcon} alt="" className="w-7 h-7" />
+        <Button variant="outline" disabled={unarchiveShow.isPending}>
+          <ArchiveIcon />
         </Button>
       }
     />

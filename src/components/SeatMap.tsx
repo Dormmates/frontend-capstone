@@ -154,8 +154,22 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
                   {(() => {
                     const allSeats = Object.values(rows).flat();
                     if (allSeats.length === 0) return null;
-                    const minX = Math.min(...allSeats.map((seat) => seat.x));
-                    const minY = Math.min(...allSeats.map((seat) => seat.y));
+
+                    // Find the "first row" (smallest y)
+                    const firstRowSeats = Object.values(rows).reduce((minRow, currentRow) => {
+                      const currentMinY = Math.min(...currentRow.map((s) => s.y));
+                      const minRowY = Math.min(...minRow.map((s) => s.y));
+                      return currentMinY < minRowY ? currentRow : minRow;
+                    });
+
+                    // Get midpoint X of the first row
+                    const minX = Math.min(...firstRowSeats.map((s) => s.x));
+                    const maxX = Math.max(...firstRowSeats.map((s) => s.x));
+                    const midX = (minX + maxX) / 2;
+
+                    // Place label above first row
+                    const minY = Math.min(...firstRowSeats.map((s) => s.y));
+
                     return (
                       <text
                         className={`${!disabled ? "hover:underline cursor-pointer" : ""}`}
@@ -164,17 +178,16 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
                         onClick={
                           !disabled
                             ? () => {
-                                const sectionSeats = Object.entries(rows)
-                                  .map(([_, rows]) => rows)
-                                  .flat();
+                                const sectionSeats = Object.values(rows).flat();
                                 sectionClick && sectionClick(sectionSeats);
                               }
                             : undefined
                         }
-                        x={minX + 100 / 2}
-                        y={minY - 50}
+                        x={midX}
+                        y={minY - 20} // adjust gap above row
                         fontSize="12"
                         fontWeight="bold"
+                        textAnchor="middle"
                         fill="currentColor"
                       >
                         {sectionName.replace(/_/g, " ").toUpperCase()}

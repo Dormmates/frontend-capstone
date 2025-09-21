@@ -1,11 +1,11 @@
 import { useDeleteShow } from "@/_lib/@react-client-query/show";
 import { Button } from "@/components/ui/button";
-import deleteIcon from "../../../../assets/icons/delete.png";
 import type { ShowData } from "@/types/show";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/context/AuthContext";
 import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
+import { Trash2Icon } from "lucide-react";
 
 type DeleteShowProps = {
   show: ShowData;
@@ -37,14 +37,13 @@ const DeleteShow = ({ show }: DeleteShowProps) => {
 
   return (
     <AlertModal
-      tooltip="Permanently Delete Show"
       className="max-w-2xl"
       description="This will permanently delete this show"
       title="Delete Show"
       actionText="Delete"
       trigger={
-        <Button disabled={deleteShow.isPending} variant="ghost" className="p-0">
-          <img src={deleteIcon} alt="delete" className="w-7 h-7" />
+        <Button disabled={deleteShow.isPending} variant="destructive">
+          <Trash2Icon />
         </Button>
       }
       onConfirm={handleDelete}

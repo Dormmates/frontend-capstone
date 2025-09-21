@@ -4,7 +4,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import SideBar from "@/components/SideBar";
 import Header from "@/components/Header";
 import { useNotificationSocket } from "@/hooks/useNotificationSocket";
-import { DramaIcon, LayoutDashboardIcon, NetworkIcon, TheaterIcon, UsersIcon } from "lucide-react";
+import { DramaIcon, LayoutDashboardIcon, NetworkIcon, SettingsIcon, TheaterIcon, UsersIcon } from "lucide-react";
 
 const CCALayout = () => {
   const { user } = useAuthContext();
@@ -41,6 +41,12 @@ const CCALayout = () => {
         // { name: "Account Request", path: "/manage/request" },
       ],
       path: !user?.roles.includes("head") ? "/manage/distributors" : "/manage/trainers",
+    },
+    {
+      icon: <SettingsIcon className="h-4 w-4" />,
+      name: "System Settings",
+      path: "/settings",
+      hidden: !user?.roles.includes("head"),
     },
   ];
 
