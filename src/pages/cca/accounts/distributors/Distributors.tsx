@@ -163,7 +163,7 @@ const Distributors = () => {
                     <Button variant="secondary">View Distributor</Button>
                   </Link>
 
-                  {user?.department && !user.roles.includes("head") && (
+                  {(user?.roles.includes("head") || user?.department) && (
                     <>
                       <Button onClick={() => setSelectedDistributor(distributor)} variant="outline">
                         Edit Details

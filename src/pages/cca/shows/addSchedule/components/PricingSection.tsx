@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { ErrorKeys, ScheduleFormData, SeatPricing } from "@/types/schedule.ts";
 import Dropdown from "@/components/Dropdown";
-import InputField from "@/components/InputField";
 import { Label } from "@/components/ui/label";
+import { useGetTicketPrices } from "@/_lib/@react-client-query/ticketpricing";
+import { AlertCircleIcon } from "lucide-react";
+import FixedPrice from "@/components/FixedPrice";
+import SectionedPrice from "@/components/SectionedPrice";
+import type { TicketPricing } from "@/types/ticketpricing";
 
 const pricingOptions = [
   { name: "Fixed", value: "fixed" },
@@ -11,22 +15,33 @@ const pricingOptions = [
 
 interface Props {
   scheduleData: ScheduleFormData;
-  ticketPrice: string;
-  sectionedPrice: {
-    orchestraLeft: string;
-    orchestraMiddle: string;
-    orchestraRight: string;
-    balconyLeft: string;
-    balconyMiddle: string;
-    balconyRight: string;
-  };
+  selectedPrice: TicketPricing | null;
+  setSelectedPrice: React.Dispatch<React.SetStateAction<TicketPricing | null>>;
   handleSeatPricingType: (value: SeatPricing) => void;
-  setTicketPrice: (e: React.ChangeEvent<HTMLInputElement>) => void;
   errors?: Partial<Record<ErrorKeys, string>>;
-  handlePriceChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const PricingSection = ({ scheduleData, ticketPrice, sectionedPrice, handleSeatPricingType, setTicketPrice, errors, handlePriceChange }: Props) => {
+const PricingSection = ({ scheduleData, selectedPrice, setSelectedPrice, handleSeatPricingType, errors }: Props) => {
+  const { data: ticketPrices, isLoading, isError } = useGetTicketPrices();
+
+  const sectionedPrices = useMemo(() => {
+    if (!ticketPrices) return [];
+    return ticketPrices.filter((t) => t.type === "sectioned");
+  }, [ticketPrices]);
+
+  const fixedPrices = useMemo(() => {
+    if (!ticketPrices) return [];
+    return ticketPrices.filter((t) => t.type === "fixed");
+  }, [ticketPrices]);
+
+  if (isLoading) {
+    return <h1>Loading Ticket Prices...</h1>;
+  }
+
+  if (isError || !ticketPrices) {
+    return <h1>Failed to load ticket prices</h1>;
+  }
+
   return (
     <div>
       <Dropdown
@@ -36,93 +51,61 @@ const PricingSection = ({ scheduleData, ticketPrice, sectionedPrice, handleSeatP
         disabled={scheduleData.seatingConfiguration === "freeSeating"}
         value={scheduleData.seatingConfiguration === "freeSeating" ? "fixed" : scheduleData.seatPricing}
         className="mb-5 max-w-[250px]"
-        onChange={(value) => handleSeatPricingType(value as SeatPricing)}
+        onChange={(value) => {
+          setSelectedPrice(null);
+          handleSeatPricingType(value as SeatPricing);
+        }}
       />
+
       <Label>Seating Price</Label>
 
       {scheduleData.seatPricing === "fixed" || scheduleData.seatingConfiguration === "freeSeating" ? (
-        <div className="border border-lightGrey rounded-md max-w-[250px] p-3 mt-3">
-          <InputField
-            placeholder="PHP"
-            onChange={setTicketPrice}
-            label="Ticket Price"
-            className="w-full "
-            type="number"
-            error={errors?.ticketPrice}
-            value={ticketPrice}
-            min={0}
-          />
+        <div className={`border border-lightGrey rounded-md w-full p-3 mt-3 ${errors?.ticketPrice && "border-red"}`}>
+          {fixedPrices.length === 0 ? (
+            <div className="border h-28 my-5 rounded-md shadow-sm flex justify-center items-center font-bold">
+              <p className="flex items-center gap-2 text-red">
+                <AlertCircleIcon /> No Fixed Prices Yet (Contact Admin to add one)
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-3 ">
+              {fixedPrices.map((t) => (
+                <div
+                  key={t.id}
+                  className={`cursor-pointer rounded-md p-1 ${selectedPrice?.id === t.id ? "ring-2 ring-blue-400  shadow-lg shadow-blue-300" : ""}`}
+                  onClick={() => setSelectedPrice(t)}
+                >
+                  <FixedPrice hideAction={true} data={t} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       ) : (
-        <div className="border border-lightGrey rounded-md w-full p-5 mt-3">
-          <div className="w-full flex flex-col gap-5">
-            <div className="flex gap-5 w-full">
-              <InputField
-                onChange={handlePriceChange}
-                label="Orchestra Left"
-                placeholder="PHP"
-                className="w-full min-w-[300px]"
-                name="orchestraLeft"
-                type="number"
-                error={errors?.orchestraLeft}
-                value={sectionedPrice.orchestraLeft}
-              />
-              <InputField
-                onChange={handlePriceChange}
-                label="Orchestra Middle"
-                placeholder="PHP"
-                className="w-full min-w-[300px]"
-                name="orchestraMiddle"
-                type="number"
-                error={errors?.orchestraMiddle}
-                value={sectionedPrice.orchestraMiddle}
-              />
-              <InputField
-                onChange={handlePriceChange}
-                label="Orchestra Right"
-                placeholder="PHP"
-                className="w-full min-w-[300px]"
-                name="orchestraRight"
-                type="number"
-                error={errors?.orchestraRight}
-                value={sectionedPrice.orchestraRight}
-              />
+        <div className={`border border-lightGrey rounded-md w-full p-3 mt-3 ${errors?.ticketPrice && "border-red"}`}>
+          {sectionedPrices.length === 0 ? (
+            <div className="border border-lightGrey rounded-md w-full p-3 mt-3">
+              <p className="flex items-center gap-2 text-red">
+                <AlertCircleIcon /> No Sectioned Prices Yet (Contact Admin to add one)
+              </p>
             </div>
-            <div className="w-full flex  gap-5">
-              <InputField
-                onChange={handlePriceChange}
-                label="Balcony Left"
-                placeholder="PHP"
-                className="w-full min-w-[300px]"
-                name="balconyLeft"
-                type="number"
-                error={errors?.balconyLeft}
-                value={sectionedPrice.balconyLeft}
-              />
-              <InputField
-                onChange={handlePriceChange}
-                label="Balcony Middle"
-                placeholder="PHP"
-                className="w-full min-w-[300px]"
-                name="balconyMiddle"
-                type="number"
-                error={errors?.balconyMiddle}
-                value={sectionedPrice.balconyMiddle}
-              />
-              <InputField
-                onChange={handlePriceChange}
-                label="Balcony Right"
-                placeholder="PHP"
-                className="w-full min-w-[300px]"
-                name="balconyRight"
-                type="number"
-                error={errors?.balconyRight}
-                value={sectionedPrice.balconyRight}
-              />
+          ) : (
+            <div className="flex flex-wrap gap-3 ">
+              {sectionedPrices.map((t) => (
+                <div
+                  key={t.id}
+                  className={`cursor-pointer rounded-md p-1 ${selectedPrice?.id === t.id ? "ring-2 ring-blue-400  shadow-lg shadow-blue-300" : ""}`}
+                  onClick={() => setSelectedPrice(t)}
+                >
+                  <SectionedPrice hideAction={true} data={t} />
+                </div>
+              ))}
             </div>
-          </div>
+          )}
         </div>
       )}
+
+      {errors?.ticketPrice && <p className="text-red text-sm mt-2">{errors.ticketPrice}</p>}
     </div>
   );
 };

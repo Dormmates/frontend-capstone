@@ -16,21 +16,15 @@ import { useAddSchedule, type AddSchedulePayload } from "@/_lib/@react-client-qu
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/BreadCrumbs";
-import InputField from "@/components/InputField";
 import Modal from "@/components/Modal";
 import { formatTo12Hour, formatToReadableDate } from "@/utils/date";
 import { toast } from "sonner";
 import { seatMetaData } from "../../../../../seatmetedata.ts";
+import type { FixedPricing, SectionedPricing, TicketPricing } from "@/types/ticketpricing.ts";
+import FixedPrice from "@/components/FixedPrice.tsx";
+import SectionedPrice from "@/components/SectionedPrice.tsx";
 
 type ControlKey = "orchestraControlNumber" | "balconyControlNumber" | "complimentaryControlNumber";
-
-const formatLabel = (key: string) =>
-  key
-    .replace(/([A-Z])/g, " $1")
-    .replace(/^./, (str) => str.toUpperCase())
-    .replace("Orchestra", "Orchestra ")
-    .replace("Balcony", "Balcony ")
-    .trim();
 
 const AddSchedule = () => {
   const navigate = useNavigate();
@@ -52,15 +46,8 @@ const AddSchedule = () => {
     balconyControlNumber: "",
     complimentaryControlNumber: "",
   });
-  const [ticketPrice, setTicketPrice] = useState("");
-  const [sectionedPrice, setSectionedPrice] = useState({
-    orchestraLeft: "",
-    orchestraMiddle: "",
-    orchestraRight: "",
-    balconyLeft: "",
-    balconyMiddle: "",
-    balconyRight: "",
-  });
+
+  const [selectedPrice, setSelectedPrice] = useState<TicketPricing | null>(null);
 
   const [openScheduleSummary, setOpenScheduleSummary] = useState(false);
   const [assignedControlNumbers, setAssignedControlNumbers] = useState<{
@@ -85,6 +72,24 @@ const AddSchedule = () => {
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
+  useEffect(() => {
+    if (selectedPrice?.type === "sectioned") {
+      setSeatData((prev) =>
+        prev?.map((seat) => {
+          const price = selectedPrice.sectionPrices[seat.section as keyof typeof selectedPrice.sectionPrices];
+          return price !== undefined ? { ...seat, ticketPrice: price } : seat;
+        })
+      );
+    }
+    if (selectedPrice?.type === "fixed") {
+      setSeatData((prev) =>
+        prev?.map((seat) => ({
+          ...seat,
+          ticketPrice: selectedPrice.fixedPrice,
+        }))
+      );
+    }
+  }, [selectedPrice, setSeatData]);
 
   if (isLoading) {
     return <h1>Fetching Show information...</h1>;
@@ -133,53 +138,9 @@ const AddSchedule = () => {
   const handleSeatPricingType = (value: SeatPricing) => {
     setScheduleData((prev) => ({ ...prev, seatPricing: value }));
 
-    //clear errors
-    if (value === "fixed") {
-      setSectionedPrice({
-        orchestraLeft: "",
-        orchestraMiddle: "",
-        orchestraRight: "",
-        balconyLeft: "",
-        balconyMiddle: "",
-        balconyRight: "",
-      });
-
-      setErrors((prev) => ({
-        ...prev,
-        orchestraLeft: "",
-        orchestraMiddle: "",
-        orchestraRight: "",
-        balconyLeft: "",
-        balconyMiddle: "",
-        balconyRight: "",
-      }));
-    } else {
-      setTicketPrice("");
-      setErrors((prev) => ({
-        ...prev,
-        ticketPrice: "",
-      }));
-    }
-
-    //clear pricing
     if (scheduleData.seatingConfiguration === "controlledSeating") {
       setSeatData((prev) => prev?.map((seat) => ({ ...seat, ticketPrice: 0 })));
     }
-  };
-
-  const handleSectionedPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSectionedPrice((prev) => ({ ...prev, [name]: value }));
-
-    //update the price on the seat map
-    setSeatData((prev) => prev?.map((seat) => (seat.section === name ? { ...seat, ticketPrice: parseFloat(value) || 0 } : seat)));
-  };
-
-  const handleFixedPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTicketPrice(e.target.value);
-
-    //update the price on the seat map
-    setSeatData((prev) => prev?.map((seat) => ({ ...seat, ticketPrice: parseFloat(e.target.value) || 0 })));
   };
 
   const validate = () => {
@@ -203,39 +164,9 @@ const AddSchedule = () => {
     }
 
     if (scheduleData.ticketType === "ticketed") {
-      if (scheduleData.seatPricing === "fixed") {
-        if (!ticketPrice || Number(ticketPrice) <= 0) {
-          newErrors.ticketPrice = "Ticket price must be a positive number";
-          isValid = false;
-        }
-      } else if (scheduleData.seatPricing === "sectionedPricing") {
-        const sectionPrices = Object.entries(sectionedPrice);
-        const invalidFields = sectionPrices.filter(([, val]) => !val || isNaN(Number(val)) || Number(val) <= 0);
-
-        if (invalidFields.length > 0) {
-          for (const [key] of invalidFields) {
-            newErrors[key as ErrorKeys] = `Section "${formatLabel(key)}" must have a valid price`;
-          }
-          isValid = false;
-        }
-      }
-      const fee = scheduleData.commissionFee;
-
-      if (fee === undefined || fee === null || fee < 0) {
-        newErrors.commisionFee = "Commission fee must be a non-negative number";
+      if (!selectedPrice || (scheduleData.seatingConfiguration === "freeSeating" && selectedPrice.type == "sectioned")) {
+        newErrors.ticketPrice = "Please Select a ticket price";
         isValid = false;
-      } else {
-        if (scheduleData.seatPricing == "fixed" && fee > Number(ticketPrice)) {
-          newErrors.commisionFee = "Commission must not be greater than ticket price";
-          isValid = false;
-        } else if (scheduleData.seatPricing == "sectionedPricing") {
-          const hasInvalidSection = Object.values(sectionedPrice).some((price) => fee > Number(price));
-
-          if (hasInvalidSection) {
-            newErrors.commisionFee = "Commission must not be greater than any section price";
-            isValid = false;
-          }
-        }
       }
     }
 
@@ -443,62 +374,28 @@ const AddSchedule = () => {
       };
 
       if (scheduleData.seatPricing === "fixed") {
-        payload.ticketPrice = Number(ticketPrice);
+        if (selectedPrice?.type === "fixed") {
+          payload.ticketPrice = selectedPrice.fixedPrice;
+        }
       }
 
       if (scheduleData.seatPricing === "sectionedPricing") {
-        payload.sectionedPrice = Object.fromEntries(
-          Object.entries(sectionedPrice).map(([key, val]) => [key, Number(val)])
-        ) as Required<AddSchedulePayload>["sectionedPrice"];
+        if (selectedPrice?.type === "sectioned") {
+          payload.sectionedPrice = selectedPrice.sectionPrices;
+        }
       }
 
       if (scheduleData.seatingConfiguration === "controlledSeating") {
         payload.seats = seatData;
-
-        // Find duplicates by seatNumber
-        const counts: Record<string, number> = {};
-        for (const seat of seatData) {
-          counts[seat.seatNumber] = (counts[seat.seatNumber] || 0) + 1;
-        }
-
-        const duplicates = Object.entries(counts)
-          .filter(([_, count]) => count > 1)
-          .map(([seatNumber, count]) => ({ seatNumber, count }));
-
-        if (duplicates.length > 0) {
-          console.log("🚨 Duplicate seatNumbers found:", duplicates);
-        } else {
-          console.log("✅ No duplicate seatNumbers");
-        }
       }
+
+      payload.commissionFee = selectedPrice?.commisionFee;
     }
 
     toast.promise(
       addSchedule.mutateAsync(payload).then(() => {
-        setScheduleData({
-          dates: [{ date: new Date(), time: "" }],
-          ticketType: "ticketed",
-          seatingConfiguration: "freeSeating",
-          seatPricing: "fixed",
-          commissionFee: undefined,
-          totalOrchestra: undefined,
-          totalBalcony: undefined,
-          totalComplimentary: undefined,
-          orchestraControlNumber: "",
-          balconyControlNumber: "",
-          complimentaryControlNumber: "",
-        });
-        setTicketPrice("");
-        setSectionedPrice({
-          orchestraLeft: "",
-          orchestraMiddle: "",
-          orchestraRight: "",
-          balconyLeft: "",
-          balconyMiddle: "",
-          balconyRight: "",
-        });
         queryClient.invalidateQueries({ exact: true, queryKey: ["schedules", id] });
-        navigate(`/shows/${id}`);
+        navigate(`/shows/${id}`, { replace: true });
       }),
       {
         position: "top-center",
@@ -551,28 +448,11 @@ const AddSchedule = () => {
         {scheduleData.ticketType == "ticketed" && (
           <PricingSection
             scheduleData={scheduleData}
-            ticketPrice={ticketPrice}
-            sectionedPrice={sectionedPrice}
+            setSelectedPrice={setSelectedPrice}
+            selectedPrice={selectedPrice}
             handleSeatPricingType={handleSeatPricingType}
-            setTicketPrice={handleFixedPriceChange}
             errors={errors}
-            handlePriceChange={handleSectionedPriceChange}
           />
-        )}
-
-        {scheduleData.ticketType == "ticketed" && (
-          <div>
-            <InputField
-              placeholder="PHP"
-              onChange={handleInputChange}
-              label="Commission Fee"
-              className="max-w-[250px]"
-              type="number"
-              name="commissionFee"
-              value={scheduleData.commissionFee + ""}
-              error={errors.commisionFee}
-            />
-          </div>
         )}
 
         {scheduleData.ticketType == "ticketed" && (
@@ -637,76 +517,57 @@ const AddSchedule = () => {
 
         {openScheduleSummary && (
           <Modal
-            className="max-w-6xl h-[90%]"
+            className={` ${scheduleData.seatingConfiguration === "controlledSeating" && "h-[90%] max-w-6xl"}`}
             description="Please review the details before you proceed"
             isOpen={openScheduleSummary}
             onClose={() => setOpenScheduleSummary(false)}
             title="Schedule Summary"
           >
-            <div className="space-y-4">
+            <div className="flex flex-col gap-2">
               {/* Dates */}
               <div>
-                <h3 className="font-semibold text-lg mb-2">Dates ({scheduleData.dates.length})</h3>
-                <ul className="list-disc list-inside space-y-1">
-                  {scheduleData.dates.map((date, index) => (
-                    <li key={index}>
-                      {formatToReadableDate(date.date + "")} at {formatTo12Hour(date.time)}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Ticket & Seating Info */}
-              <div className="grid grid-cols-2 gap-4">
                 <p>
-                  <span className="font-semibold">Ticket Type:</span> {scheduleData.ticketType}
+                  <span className="font-semibold">Dates:</span> ({scheduleData.dates.length})
                 </p>
-                <p>
-                  <span className="font-semibold">Seating Configuration:</span> {scheduleData.seatingConfiguration}
-                </p>
-                <p>
-                  <span className="font-semibold">Seat Pricing:</span> {scheduleData.seatPricing}
-                </p>
-
-                <p>
-                  <span className="font-semibold">Commission Fee:</span> ₱{scheduleData.commissionFee}
-                </p>
-
-                {scheduleData.seatPricing === "fixed" && (
-                  <p>
-                    <span className="font-semibold">Ticket Price:</span> ₱{ticketPrice}
-                  </p>
-                )}
-              </div>
-
-              {/* Sectioned Pricing */}
-              {scheduleData.seatPricing === "sectionedPricing" && (
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Sectioned Pricing</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    <p>Orchestra Left: ₱{sectionedPrice.orchestraLeft}</p>
-                    <p>Orchestra Middle: ₱{sectionedPrice.orchestraMiddle}</p>
-                    <p> Orchestra Right: ₱{sectionedPrice.orchestraRight}</p>
-                    <p>Balcony Left: ₱{sectionedPrice.balconyLeft}</p>
-                    <p>Balcony Middle: ₱{sectionedPrice.balconyMiddle}</p>
-                    <p>Balcony Right: ₱{sectionedPrice.balconyRight}</p>
-                  </div>
+                  {scheduleData.dates.map((date, index) => (
+                    <p key={index}>
+                      {index + 1}: {formatToReadableDate(date.date + "")} at {formatTo12Hour(date.time)}
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <p>
+                <span className="font-semibold">Ticket Type:</span> {scheduleData.ticketType}
+              </p>
+              <p>
+                <span className="font-semibold">Seating Configuration:</span> {scheduleData.seatingConfiguration}
+              </p>
+              {/* Ticket & Seating Info */}
+
+              {scheduleData.ticketType == "ticketed" && (
+                <div className="flex flex-col gap-2">
+                  <p>
+                    <span className="font-semibold">Seat Pricing:</span> {scheduleData.seatPricing}
+                  </p>
+
+                  {scheduleData.seatPricing === "fixed" && <FixedPrice hideAction={true} data={selectedPrice as FixedPricing} />}
+                  {scheduleData.seatPricing === "sectionedPricing" && <SectionedPrice hideAction={true} data={selectedPrice as SectionedPricing} />}
+
+                  {/* Fees & Tickets */}
+
+                  <p>
+                    <span className="font-semibold">Orchestra Tickets:</span> {scheduleData.totalOrchestra} ({scheduleData.orchestraControlNumber})
+                  </p>
+                  <p>
+                    <span className="font-semibold">Balcony Tickets:</span> {scheduleData.totalBalcony} ({scheduleData.balconyControlNumber})
+                  </p>
+                  <p>
+                    <span className="font-semibold">Complimentary Tickets:</span> {scheduleData.totalComplimentary} (
+                    {scheduleData.complimentaryControlNumber})
+                  </p>
                 </div>
               )}
-
-              {/* Fees & Tickets */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                <p>
-                  <span className="font-semibold">Orchestra Tickets:</span> {scheduleData.totalOrchestra} ({scheduleData.orchestraControlNumber})
-                </p>
-                <p>
-                  <span className="font-semibold">Balcony Tickets:</span> {scheduleData.totalBalcony} ({scheduleData.balconyControlNumber})
-                </p>
-                <p>
-                  <span className="font-semibold">Complimentary Tickets:</span> {scheduleData.totalComplimentary} (
-                  {scheduleData.complimentaryControlNumber})
-                </p>
-              </div>
 
               {/* Controlled Seating */}
               {scheduleData.seatingConfiguration === "controlledSeating" && (

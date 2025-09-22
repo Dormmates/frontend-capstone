@@ -33,7 +33,7 @@ const parseDepartments = (departments: Department[]) => {
 const PerformingGroupShows = () => {
   const { user } = useAuthContext();
 
-  if (!user?.department) {
+  if (!user?.department && !user?.roles.includes("head")) {
     return (
       <ContentWrapper>
         <h1>You are not currently assigned to any Department</h1>
@@ -41,8 +41,14 @@ const PerformingGroupShows = () => {
     );
   }
 
+  const departmentId = user?.roles.includes("head")
+    ? undefined // head can see all shows (no filter)
+    : user?.department
+    ? user.department.departmentId // non-head but has department
+    : undefined; // non-head and no department → don't fetch
+
   const { data: shows, isLoading: showsLoading } = useGetShows({
-    departmentId: !user?.roles.includes("head") && user?.department ? user.department.departmentId : "ascasc",
+    departmentId,
   });
 
   const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments();

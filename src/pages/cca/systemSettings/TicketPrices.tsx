@@ -2,18 +2,32 @@ import { useAddNewFixedTicketPricing, useAddNewSectionedTicketPricing, useGetTic
 import DialogPopup from "@/components/DialogPopup";
 import FixedPrice from "@/components/FixedPrice";
 import InputField from "@/components/InputField";
+import SectionedPrice from "@/components/SectionedPrice";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { AlertCircleIcon } from "lucide-react";
+import React, { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 const TicketPrices = () => {
   const { data: ticketPrices, isLoading, isError } = useGetTicketPrices();
   const [isNewPricing, setIsNewPricing] = useState(false);
+
+  const sectionedPrices = useMemo(() => {
+    if (!ticketPrices) return [];
+
+    return ticketPrices.filter((t) => t.type == "sectioned");
+  }, [ticketPrices]);
+
+  const fixedPrices = useMemo(() => {
+    if (!ticketPrices) return [];
+
+    return ticketPrices.filter((t) => t.type == "fixed");
+  }, [ticketPrices]);
 
   if (isLoading) {
     return <h1>Loading</h1>;
@@ -35,17 +49,42 @@ const TicketPrices = () => {
           {ticketPrices.length == 0 ? (
             <div>No Ticket Prices Yet</div>
           ) : (
-            <div className="flex flex-wrap gap-3 my-5">
-              {ticketPrices.map((t, index) => {
-                if (t.type == "fixed") {
-                  return <FixedPrice key={index} data={t} />;
-                }
-
-                if (t.type == "sectioned") {
-                  return <div>Sectioned</div>;
-                }
-              })}
-            </div>
+            <Tabs defaultValue="fixed">
+              <TabsList>
+                <TabsTrigger value="fixed">Fixed Prices</TabsTrigger>
+                <TabsTrigger value="sectioned">Sectioned Prices</TabsTrigger>
+              </TabsList>
+              <TabsContent value="fixed">
+                {fixedPrices.length == 0 ? (
+                  <div className="border h-28 my-5 rounded-md shadow-sm flex justify-center items-center font-bold">
+                    <p className="flex items-center gap-2">
+                      <AlertCircleIcon /> No Fixed Prices Yet
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-3 my-5">
+                    {fixedPrices.map((t, index) => (
+                      <FixedPrice key={index} data={t} />
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+              <TabsContent value="sectioned">
+                {sectionedPrices.length == 0 ? (
+                  <div className="border h-28 my-5 rounded-md shadow-sm flex justify-center items-center font-bold">
+                    <p className="flex items-center gap-2">
+                      <AlertCircleIcon /> No Sectioned Prices Yet
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-3 my-5">
+                    {sectionedPrices.map((t, index) => (
+                      <SectionedPrice key={index} data={t} />
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           )}
         </CardContent>
         <CardFooter className="p-0">
@@ -106,7 +145,7 @@ const NewFixedPricing = ({ closeModal }: { closeModal: () => void }) => {
       isValid = false;
     }
 
-    if (data.fee !== 0 && data.fee < data.price) {
+    if (data.fee !== 0 && data.fee >= data.price) {
       newErrors.fee = "Commission fee should not be greater than Ticket Price";
       isValid = false;
     }
@@ -137,12 +176,37 @@ const NewFixedPricing = ({ closeModal }: { closeModal: () => void }) => {
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <InputField value={data.pricingName} error={errors.pricingName} label="Pricing Name" name="pricingName" onChange={handleInputChange} />
-        <InputField value={data.price} error={errors.price} type="number" label="Ticket Price" name="price" onChange={handleInputChange} />
-        <InputField value={data.fee} error={errors.fee} type="number" label="Commission Fee" name="fee" onChange={handleInputChange} />
+        <InputField
+          disabled={newFixed.isPending}
+          value={data.pricingName}
+          error={errors.pricingName}
+          label="Pricing Name"
+          name="pricingName"
+          onChange={handleInputChange}
+        />
+        <InputField
+          disabled={newFixed.isPending}
+          value={data.price}
+          error={errors.price}
+          type="number"
+          label="Ticket Price"
+          name="price"
+          onChange={handleInputChange}
+        />
+        <InputField
+          disabled={newFixed.isPending}
+          value={data.fee}
+          error={errors.fee}
+          type="number"
+          label="Commission Fee"
+          name="fee"
+          onChange={handleInputChange}
+        />
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button onClick={submit}>Add Pricing</Button>
+        <Button disabled={newFixed.isPending} onClick={submit}>
+          Add Pricing
+        </Button>
       </CardFooter>
     </Card>
   );
@@ -247,6 +311,7 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <InputField
+          disabled={newSectioned.isPending}
           label="Pricing Name"
           value={sectionedPrice.pricingName}
           error={errors.pricingName}
@@ -255,6 +320,7 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
         <div className="w-full flex flex-col gap-5">
           <div className="flex gap-5 w-full">
             <InputField
+              disabled={newSectioned.isPending}
               onChange={handlePriceChange}
               label="Orchestra Left"
               placeholder="PHP"
@@ -265,6 +331,7 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
               value={sectionedPrice.orchestraLeft}
             />
             <InputField
+              disabled={newSectioned.isPending}
               onChange={handlePriceChange}
               label="Orchestra Middle"
               placeholder="PHP"
@@ -275,6 +342,7 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
               value={sectionedPrice.orchestraMiddle}
             />
             <InputField
+              disabled={newSectioned.isPending}
               onChange={handlePriceChange}
               label="Orchestra Right"
               placeholder="PHP"
@@ -287,6 +355,7 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
           </div>
           <div className="w-full flex  gap-5">
             <InputField
+              disabled={newSectioned.isPending}
               onChange={handlePriceChange}
               label="Balcony Left"
               placeholder="PHP"
@@ -297,6 +366,7 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
               value={sectionedPrice.balconyLeft}
             />
             <InputField
+              disabled={newSectioned.isPending}
               onChange={handlePriceChange}
               label="Balcony Middle"
               placeholder="PHP"
@@ -307,6 +377,7 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
               value={sectionedPrice.balconyMiddle}
             />
             <InputField
+              disabled={newSectioned.isPending}
               onChange={handlePriceChange}
               label="Balcony Right"
               placeholder="PHP"
@@ -319,6 +390,7 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
           </div>
         </div>
         <InputField
+          disabled={newSectioned.isPending}
           label="Commission Fee"
           value={sectionedPrice.commissionFee}
           error={errors.commissionFee}
@@ -327,7 +399,9 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
         />
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button onClick={submit}>Add New Sectioned Pricing</Button>
+        <Button disabled={newSectioned.isPending} onClick={submit}>
+          Add New Sectioned Pricing
+        </Button>
       </CardFooter>
     </Card>
   );

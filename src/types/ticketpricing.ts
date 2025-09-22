@@ -1,4 +1,5 @@
 export type FixedPricing = {
+  id: string;
   type: "fixed";
   priceName: string;
   commisionFee: number;
@@ -6,6 +7,7 @@ export type FixedPricing = {
 };
 
 export type SectionedPricing = {
+  id: string;
   type: "sectioned";
   sectionPrices: {
     orchestraLeft: number;
