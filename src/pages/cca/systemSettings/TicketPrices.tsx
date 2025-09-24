@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { useQueryClient } from "@tanstack/react-query";
-import { AlertCircleIcon } from "lucide-react";
+import { AlertCircleIcon, CirclePlusIcon } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -40,14 +40,41 @@ const TicketPrices = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl">Ticket Prices</CardTitle>
+        <CardTitle className="text-xl flex justify-between">
+          <p>Ticket Prices</p>
+          <DialogPopup
+            className="max-w-2xl w-[95%] md:w-full"
+            isOpen={isNewPricing}
+            setIsOpen={setIsNewPricing}
+            title="Create a New Pricing"
+            triggerElement={
+              <Button>
+                <CirclePlusIcon />
+              </Button>
+            }
+            description="Choose a pricing type below. Fixed pricing applies a single price for all seats, while Sectioned pricing allows you to set different prices per seating section."
+          >
+            <Tabs>
+              <TabsList>
+                <TabsTrigger value="fixed">New Fixed Pricing</TabsTrigger>
+                <TabsTrigger value="sectioned">New Sectioned Pricing</TabsTrigger>
+              </TabsList>
+              <TabsContent value="fixed">
+                <NewFixedPricing closeModal={() => setIsNewPricing(false)} />
+              </TabsContent>
+              <TabsContent value="sectioned">
+                <NewSectionedPricing closeModal={() => setIsNewPricing(false)} />
+              </TabsContent>
+            </Tabs>
+          </DialogPopup>
+        </CardTitle>
         <CardDescription>
           Manage your ticket pricing templates here. You can create fixed pricing for shows with a single price, or sectioned pricing for shows with
           multiple seat categories like Orchestra or Balcony. Once created, these pricing templates can be reused when creating new shows.
         </CardDescription>
         <CardContent className="p-0">
           {ticketPrices.length == 0 ? (
-            <div>No Ticket Prices Yet</div>
+            <div className="flex items-center justify-center">No Ticket Prices Yet</div>
           ) : (
             <Tabs defaultValue="fixed">
               <TabsList>
@@ -87,29 +114,6 @@ const TicketPrices = () => {
             </Tabs>
           )}
         </CardContent>
-        <CardFooter className="p-0">
-          <DialogPopup
-            className="max-w-2xl w-[95%] md:w-full"
-            isOpen={isNewPricing}
-            setIsOpen={setIsNewPricing}
-            title="Create a New Pricing"
-            triggerElement={<Button>Create New Pricing</Button>}
-            description="Choose a pricing type below. Fixed pricing applies a single price for all seats, while Sectioned pricing allows you to set different prices per seating section."
-          >
-            <Tabs>
-              <TabsList>
-                <TabsTrigger value="fixed">New Fixed Pricing</TabsTrigger>
-                <TabsTrigger value="sectioned">New Sectioned Pricing</TabsTrigger>
-              </TabsList>
-              <TabsContent value="fixed">
-                <NewFixedPricing closeModal={() => setIsNewPricing(false)} />
-              </TabsContent>
-              <TabsContent value="sectioned">
-                <NewSectionedPricing closeModal={() => setIsNewPricing(false)} />
-              </TabsContent>
-            </Tabs>
-          </DialogPopup>
-        </CardFooter>
       </CardHeader>
     </Card>
   );
