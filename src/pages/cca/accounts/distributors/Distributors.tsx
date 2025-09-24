@@ -99,7 +99,7 @@ const Distributors = () => {
       <div className="flex justify-between mt-10">
         <SimpleCard icon={<Users size={18} />} label="Total Distributors" value={searchedDistributors.length} />
 
-        {user?.department && !user.roles.includes("head") && (
+        {(user?.department || user?.roles.includes("head")) && (
           <div className="self-end flex gap-2">
             <Button>Bulk Creation</Button>
             <Button onClick={() => setIsAddDistributor(true)}>Add New Distributor</Button>

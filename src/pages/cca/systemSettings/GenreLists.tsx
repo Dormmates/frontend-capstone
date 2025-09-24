@@ -28,6 +28,7 @@ const GenreLists = () => {
       <CardHeader>
         <CardTitle className="text-xl flex justify-between items-center">
           <p>Manage List of Genre</p>
+
           <AddNewGenre />
         </CardTitle>
         <CardDescription>
@@ -40,9 +41,9 @@ const GenreLists = () => {
         ) : (
           <>
             <Label>Total Genres: {genres.length}</Label>
-            <div className="flex gap-3 mt-2">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 mt-2 ">
               {genres.map((genre) => (
-                <div className="border rounded-md shadow-sm p-2 w-fit" key={genre.genre}>
+                <div className="border rounded-md shadow-sm p-2 " key={genre.genre}>
                   <p className="text-lg font-medium">{genre.genre}</p>
                   <p className="text-sm text-muted-foreground">Show count using this genre: {genre.showCount}</p>
                   <div className="flex justify-end mt-5 gap-2">
@@ -174,6 +175,7 @@ const AddNewGenre = () => {
       triggerElement={
         <Button>
           <CirclePlusIcon />
+          New Genre
         </Button>
       }
     >

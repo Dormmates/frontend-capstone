@@ -50,6 +50,7 @@ const TicketPrices = () => {
             triggerElement={
               <Button>
                 <CirclePlusIcon />
+                New Pricing
               </Button>
             }
             description="Choose a pricing type below. Fixed pricing applies a single price for all seats, while Sectioned pricing allows you to set different prices per seating section."

@@ -30,7 +30,7 @@ import Account from "./Account";
 import { useLogout } from "@/_lib/@react-client-query/auth";
 import { disconnectSocket } from "@/socket";
 import { toast } from "sonner";
-import { LogOutIcon, UserIcon } from "lucide-react";
+import { ChevronDown, ChevronRight, LogOutIcon, UserIcon } from "lucide-react";
 import logo from "@/assets/images/cca-logo.png";
 
 interface SideBarItems {
@@ -88,38 +88,47 @@ export const SideBar = ({ items }: CCASideBarProps) => {
             <SidebarMenu>
               {items
                 .filter((item) => !item.hidden)
-                .map((item) => (
-                  <SidebarMenuItem key={item.name}>
-                    {item.path ? (
-                      <SidebarMenuButton className="p-5" asChild isActive={isItemActive(item.path) && !item.items?.length}>
-                        <Link to={item.path}>
-                          <span className="mr-2 h-4 w-4">{item.icon}</span>
-                          {item.name}
-                        </Link>
-                      </SidebarMenuButton>
-                    ) : (
-                      <SidebarMenuButton className="p-5">
-                        <span className="mr-2 h-4 w-4">{item.icon}</span>
-                        {item.name}
-                      </SidebarMenuButton>
-                    )}
+                .map((item) => {
+                  const hasSubItems = item.items ? item.items?.filter((sub) => !sub.hidden).length > 0 : null;
+                  const [open, setOpen] = useState(true);
 
-                    {/* ---- SUB MENU ---- */}
-                    {item.items?.filter((sub) => !sub.hidden).length ? (
-                      <SidebarMenuSub>
-                        {item.items
-                          .filter((sub) => !sub.hidden)
-                          .map((sub) => (
-                            <SidebarMenuSubItem key={sub.name}>
-                              <SidebarMenuSubButton className="p-5" asChild isActive={location.pathname === sub.path}>
-                                <Link to={sub.path}>{sub.name}</Link>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          ))}
-                      </SidebarMenuSub>
-                    ) : null}
-                  </SidebarMenuItem>
-                ))}
+                  return (
+                    <SidebarMenuItem key={item.name}>
+                      {item.path && !hasSubItems ? (
+                        // --- Normal link ---
+                        <SidebarMenuButton className="p-5" asChild isActive={isItemActive(item.path)}>
+                          <Link to={item.path}>
+                            <span className="mr-2 h-4 w-4">{item.icon}</span>
+                            {item.name}
+                          </Link>
+                        </SidebarMenuButton>
+                      ) : (
+                        <SidebarMenuButton className="p-5 flex justify-between items-center" onClick={() => setOpen((prev) => !prev)}>
+                          <div className="flex items-center">
+                            <span className="mr-2 h-4 w-4">{item.icon}</span>
+                            {item.name}
+                          </div>
+                          {open ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                        </SidebarMenuButton>
+                      )}
+
+                      {/* ---- SUB MENU ---- */}
+                      {hasSubItems && open && (
+                        <SidebarMenuSub>
+                          {(item.items ?? [])
+                            .filter((sub) => !sub.hidden)
+                            .map((sub) => (
+                              <SidebarMenuSubItem key={sub.name}>
+                                <SidebarMenuSubButton className="p-5" asChild isActive={location.pathname === sub.path}>
+                                  <Link to={sub.path}>{sub.name}</Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                        </SidebarMenuSub>
+                      )}
+                    </SidebarMenuItem>
+                  );
+                })}
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
