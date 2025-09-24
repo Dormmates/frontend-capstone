@@ -7,9 +7,10 @@ import SeatMap from "@/components/SeatMap";
 type Props = {
   choosenSeats: FlattenedSeat[];
   setChoosenSeats: React.Dispatch<React.SetStateAction<FlattenedSeat[]>>;
+  error?: string;
 };
 
-const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
+const AllocatedBySeat = ({ choosenSeats, setChoosenSeats, error }: Props) => {
   const { scheduleId } = useParams();
   const { data, isLoading, isError } = useGetScheduleSeatMap(scheduleId as string);
 
@@ -26,15 +27,14 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
   const handleClick = (seats: FlattenedSeat[]) => {
     setChoosenSeats((prev) => {
       const updated = [...prev];
-      seats.forEach((seat) => {
-        const index = updated.findIndex((s) => s.seatNumber === seat.seatNumber);
-        if (index !== -1) {
-          updated.splice(index, 1);
-        } else {
-          updated.push(seat);
-        }
-      });
-      return updated;
+
+      const alreadySelected = seats.every((seat) => updated.some((s) => s.seatNumber === seat.seatNumber));
+
+      if (alreadySelected) {
+        return updated.filter((s) => !seats.some((seat) => seat.seatNumber === s.seatNumber));
+      } else {
+        return [...updated, ...seats];
+      }
     });
   };
 
@@ -78,32 +78,35 @@ const AllocatedBySeat = ({ choosenSeats, setChoosenSeats }: Props) => {
           </div>
         </div>
       </div>
-      <SeatMap
-        disabled={false}
-        seatMap={data}
-        seatClick={(seat) => {
-          if (seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status === "reserved") return;
-          handleClick([seat]);
-        }}
-        rowClick={(seats) => {
-          const selectableSeats = seats.filter((seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved");
-          if (selectableSeats.length === 0) return;
-          handleClick(selectableSeats);
-        }}
-        sectionClick={(seats) => {
-          const selectableSeats = seats.filter((seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved");
-          if (selectableSeats.length === 0) return;
-          handleClick(selectableSeats);
-        }}
-        recStyle={(seat) => `${
-          seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status == "reserved" || seat.status === "sold"
-            ? "fill-darkGrey !cursor-not-allowed"
-            : "hover:fill-blue-200 cursor-pointer"
-        }
-         ${seat.status === "sold" && "fill-green !cursor-not-allowed"}
+      <div className={`${error && "border border-red p-1 rounded-md"}`}>
+        <SeatMap
+          disabled={false}
+          seatMap={data}
+          seatClick={(seat) => {
+            if (seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status === "reserved") return;
+            handleClick([seat]);
+          }}
+          rowClick={(seats) => {
+            const selectableSeats = seats.filter((seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved");
+            if (selectableSeats.length === 0) return;
+            handleClick(selectableSeats);
+          }}
+          sectionClick={(seats) => {
+            const selectableSeats = seats.filter((seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved");
+            if (selectableSeats.length === 0) return;
+            handleClick(selectableSeats);
+          }}
+          recStyle={(seat) => `${
+            seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status == "reserved" || seat.status === "sold"
+              ? "fill-darkGrey !cursor-not-allowed"
+              : "hover:fill-blue-200 cursor-pointer"
+          }
+        ${seat.status === "sold" && "fill-green !cursor-not-allowed"}
         ${seat.status === "reserved" && "fill-red !cursor-not-allowed"}
         ${choosenSeats.includes(seat) ? "fill-blue-600" : ""}`}
-      />
+        />
+      </div>
+      {error && <p className="text-sm text-red">{error}</p>}
     </>
   );
 };

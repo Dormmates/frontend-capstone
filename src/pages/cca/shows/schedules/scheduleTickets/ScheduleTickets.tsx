@@ -22,6 +22,7 @@ import { Bar, BarChart, CartesianGrid, Label, Pie, PieChart, Sector, XAxis, YAxi
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import type { PieSectorDataItem } from "recharts/types/polar/Pie";
+import { Settings2Icon } from "lucide-react";
 
 const statusOptions = [
   { name: "All Status", value: "all" },
@@ -325,7 +326,9 @@ const ScheduleTickets = () => {
                   <Button>View Ticket</Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline">Ticket Options</Button>
+                      <Button variant="outline">
+                        <Settings2Icon />
+                      </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuLabel>Select Options</DropdownMenuLabel>

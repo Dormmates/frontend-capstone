@@ -24,6 +24,7 @@ import InputField from "@/components/InputField";
 import PaginatedTable from "@/components/PaginatedTable";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { compressSeats } from "@/utils/seatmap";
 
 const TicketAllocation = () => {
   const { user } = useAuthContext();
@@ -176,7 +177,7 @@ const TicketAllocation = () => {
             </TabsList>
             <TabsContent value="seat">
               <>
-                <AllocatedBySeat choosenSeats={choosenSeats} setChoosenSeats={setChoosenSeats} />
+                <AllocatedBySeat error={error.seatError} choosenSeats={choosenSeats} setChoosenSeats={setChoosenSeats} />
                 <Button
                   disabled={
                     (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
@@ -251,7 +252,9 @@ const TicketAllocation = () => {
               />
               <LongCardItem
                 className="!whitespace-normal"
-                value={allocationMethod === "controlNumber" ? controlNumberInput : choosenSeats.map((seat) => seat.seatNumber).join(", ")}
+                value={
+                  allocationMethod === "controlNumber" ? controlNumberInput : compressSeats(choosenSeats.map((seat) => seat.seatNumber)).join(", ")
+                }
                 label={allocationMethod === "controlNumber" ? "Control Numbers" : "Seat Numbers"}
               />
             </LongCard>
@@ -269,11 +272,11 @@ const TicketAllocation = () => {
             )}
 
             <div className="flex justify-end gap-3 mt-5">
-              <Button disabled={allocateTicketByControlNumber.isPending} onClick={submit} className="!bg-green">
-                Confirm
-              </Button>
-              <Button disabled={allocateTicketByControlNumber.isPending} onClick={() => setIsAllocationSummary(false)} className="!bg-red">
+              <Button disabled={allocateTicketByControlNumber.isPending} onClick={() => setIsAllocationSummary(false)} variant="outline">
                 Cancel
+              </Button>
+              <Button disabled={allocateTicketByControlNumber.isPending} onClick={submit}>
+                Confirm
               </Button>
             </div>
           </Modal>

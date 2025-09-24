@@ -141,7 +141,7 @@ const ViewShow = () => {
       {
         position: "top-center",
         loading: "Updating schedule...",
-        success: "Schedule updated successfully ✅",
+        success: "Schedule updated successfully",
         error: (err: any) => err.message || "Failed to update schedule",
       }
     );

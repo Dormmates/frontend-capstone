@@ -13,6 +13,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -24,13 +25,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthContext } from "@/context/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { useState, type ReactNode } from "react";
 import Account from "./Account";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLogout } from "@/_lib/@react-client-query/auth";
 import { disconnectSocket } from "@/socket";
 import { toast } from "sonner";
+import { LogOutIcon, UserIcon } from "lucide-react";
+import logo from "@/assets/images/cca-logo.png";
 
 interface SideBarItems {
   icon: ReactNode;
@@ -66,23 +67,24 @@ export const SideBar = ({ items }: CCASideBarProps) => {
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild>
                 <Link to="/">
-                  <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                    SLU
+                  <div className="w-20">
+                    <img className="object-cover" src={logo} alt="logo" />
                   </div>
                   <div className="flex flex-col gap-0.5 leading-none">
                     <span className="font-medium">SLU CCA</span>
-                    <span className="text-xs text-muted-foreground">Ticketing</span>
+                    <span className="text-xs text-muted-foreground">System</span>
                   </div>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
+          <SidebarSeparator />
         </SidebarHeader>
 
         {/* ---- MAIN NAVIGATION ---- */}
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Application</SidebarGroupLabel>
+            <SidebarGroupLabel>Navigations</SidebarGroupLabel>
             <SidebarMenu>
               {items
                 .filter((item) => !item.hidden)
@@ -148,25 +150,23 @@ export const SideBar = ({ items }: CCASideBarProps) => {
 
                 <DropdownMenuContent className="min-w-56 rounded-lg" side="bottom" align="end" sideOffset={4}>
                   <DropdownMenuLabel className="p-2">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button onClick={() => setOpenAccount(true)} variant="ghost" className="p-0 w-full flex justify-start">
-                          <div className="flex items-center gap-2 px-1 py-1.5 text-sm">
-                            <Avatar className="h-8 w-8 rounded-lg">
-                              <AvatarImage src="https://api.dicebear.com/9.x/fun-emoji/svg?seed=Jade" alt="profile" />
-                              <AvatarFallback>Prof</AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1 truncate">
-                              <span className="text-muted-foreground text-xs">{user?.email}</span>
-                            </div>
-                          </div>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>View Account Information</TooltipContent>
-                    </Tooltip>
+                    <div className="flex items-center gap-2 px-1 py-1.5 text-sm">
+                      <Avatar className="h-8 w-8 rounded-lg">
+                        <AvatarImage src="https://api.dicebear.com/9.x/fun-emoji/svg?seed=Jade" alt="profile" />
+                        <AvatarFallback>Prof</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 truncate">
+                        <span className="text-muted-foreground text-xs">{user?.email}</span>
+                      </div>
+                    </div>
                   </DropdownMenuLabel>
 
                   <DropdownMenuSeparator />
+
+                  <DropdownMenuItem onClick={() => setOpenAccount(true)}>
+                    <UserIcon />
+                    Account
+                  </DropdownMenuItem>
 
                   <DropdownMenuItem
                     onClick={() => {
@@ -190,6 +190,7 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                       );
                     }}
                   >
+                    <LogOutIcon />
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>

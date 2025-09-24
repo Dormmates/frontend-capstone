@@ -73,7 +73,7 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
             <ControlNumberInputTutorial />
             <CardContent>
               <p className="text-sm font-bold my-5 max-w-[450px]">
-                Control Numbers available for unallocation: <span className="font-normal">{controlNumbersAllocated.join(", ")}</span>
+                Control Numbers available for unallocation: <span className="font-normal">{compressControlNumbers(controlNumbersAllocated)}</span>
               </p>
               <InputField
                 error={error}
@@ -94,15 +94,11 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
 
       {controlNumbersAllocated.length != 0 && (
         <div className="flex justify-end gap-3">
-          <Button
-            className="bg-green"
-            disabled={input.length == 0 || !input || disabled || controlNumbersAllocated.length === 0}
-            onClick={handleSubmit}
-          >
-            Unallocate Tickets
-          </Button>
-          <Button disabled={disabled} onClick={close} variant="destructive">
+          <Button disabled={disabled} onClick={close} variant="outline">
             Cancel
+          </Button>
+          <Button disabled={input.length == 0 || !input || disabled || controlNumbersAllocated.length === 0} onClick={handleSubmit}>
+            Unallocate Tickets
           </Button>
         </div>
       )}
@@ -114,7 +110,6 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
           title="Ticket Unallocation Summary"
           description="Please review the summary before proceding"
           className="max-w-2xl"
-          isTransparent={true}
         >
           <LongCard className="w-full" label="Ticket">
             <LongCardItem label="Distributor Name" value={distributorName} />
@@ -122,11 +117,11 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
             <LongCardItem label="Ticket Control Numbers" value={compressControlNumbers(controlNumbers)} />
           </LongCard>
           <div className="flex justify-end gap-3 mt-5">
-            <Button className="!bg-green" disabled={input.length == 0 || !input || disabled} onClick={() => onSubmit(controlNumbers)}>
-              Confirm
-            </Button>
-            <Button disabled={disabled} onClick={() => setOpenSummary(false)} className="!bg-red">
+            <Button disabled={disabled} onClick={() => setOpenSummary(false)} variant="outline">
               Cancel
+            </Button>
+            <Button disabled={input.length == 0 || !input || disabled} onClick={() => onSubmit(controlNumbers)}>
+              Confirm
             </Button>
           </div>
         </Modal>

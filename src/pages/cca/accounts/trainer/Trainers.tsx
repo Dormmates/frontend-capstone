@@ -1,5 +1,4 @@
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
-import unassign from "../../../../assets/icons/unassign.png";
 import { useEditTrainer, useGetTrainers, useNewTrainer } from "@/_lib/@react-client-query/accounts.ts";
 import { useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
@@ -18,7 +17,7 @@ import DeleteAccount from "../DeleteAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
 import { useAuthContext } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { Users } from "lucide-react";
+import { Users, UserX2Icon } from "lucide-react";
 
 const Trainers = () => {
   const { user } = useAuthContext();
@@ -144,10 +143,10 @@ const Trainers = () => {
                         title="Remove Trainer Assignment"
                         description="This will remove the user as a trainer on its performing group"
                         onConfirm={handleRemoveTrainerDepartment}
+                        tooltip="Remove Trainer Assignment"
                         trigger={
                           <Button
-                            variant="ghost"
-                            className="p-0"
+                            variant="outline"
                             onClick={() =>
                               setUnassignTrainer({
                                 userId: trainer.userId,
@@ -156,7 +155,7 @@ const Trainers = () => {
                             }
                             disabled={!trainer.department}
                           >
-                            <img src={unassign} alt="" />
+                            <UserX2Icon />
                           </Button>
                         }
                       />

@@ -68,8 +68,8 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
   }, {});
 
   return (
-    <div className="flex  flex-col gap-5 mt-5">
-      <div className="relative w-full h-[80vh] border border-gray-300 rounded-lg overflow-hidden">
+    <div className="flex  flex-col gap-5">
+      <div className="relative w-full h-[80vh] border border-gray-300 rounded-lg overflow-hidden bg-muted">
         <div className="absolute top-2 left-2 z-10 flex space-x-2">
           <Button variant="outline" onClick={() => setScale((prev) => Math.min(prev + 0.1, 3))}>
             +
@@ -226,7 +226,7 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
           {hoveredSeat && (
             <div
               ref={tooltipRef}
-              className="fixed z-20 bg-white shadow-lg rounded px-2 py-1 text-xs border border-gray-300"
+              className="fixed z-20 bg-background shadow-lg rounded px-2 py-1 text-xs border border-gray-300"
               style={{
                 top: tooltipPos.y,
                 left: tooltipPos.x,

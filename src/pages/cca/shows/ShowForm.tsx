@@ -163,7 +163,11 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                   className="w-full"
                   label="Production Type"
                   placeholder={"Choose Production Type"}
-                  items={user?.roles.includes("head") ? [...productionType, { name: "Major Production", value: "majorProduction" }] : productionType}
+                  items={
+                    user?.roles.includes("head") && formType !== "create"
+                      ? [...productionType, { name: "Major Production", value: "majorProduction" }]
+                      : productionType
+                  }
                   value={showData.productionType}
                   onChange={(value) => setShowData((prev) => ({ ...prev, productionType: value as ShowType }))}
                 />

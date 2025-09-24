@@ -28,7 +28,7 @@ const ScheduleSeats = () => {
         if (seat.isComplimentary) summary.complimentary++;
         if (seat.status === "sold") summary.sold++;
         if (seat.status === "reserved") summary.reserved++;
-        if (seat.status === "available") summary.available++;
+        if (seat.status === "available" && !seat.isComplimentary && seat.ticketControlNumber !== 0) summary.available++;
         if (seat.ticketControlNumber == 0) summary.notAvailable++;
         return summary;
       },
@@ -48,11 +48,7 @@ const ScheduleSeats = () => {
 
   return (
     <div className="flex flex-col gap-5 mt-10">
-      <div className="flex gap-3 justify-end">
-        <div className="flex gap-2 items-center">
-          <div className="w-5 h-5 bg-primary border"></div>
-          <p>VIP Seats: {seatSummary.vip}</p>
-        </div>
+      <div className="flex gap-2 flex-col justify-end">
         <div className="flex gap-2 items-center">
           <div className="w-5 h-5 bg-violet-500 border"></div>
           <p>Complimentary Seats: {seatSummary.complimentary}</p>

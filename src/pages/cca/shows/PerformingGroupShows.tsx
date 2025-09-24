@@ -41,11 +41,7 @@ const PerformingGroupShows = () => {
     );
   }
 
-  const departmentId = user?.roles.includes("head")
-    ? undefined // head can see all shows (no filter)
-    : user?.department
-    ? user.department.departmentId // non-head but has department
-    : undefined; // non-head and no department → don't fetch
+  const departmentId = user?.roles.includes("head") ? undefined : user?.department ? user.department.departmentId : undefined;
 
   const { data: shows, isLoading: showsLoading } = useGetShows({
     departmentId,
@@ -87,7 +83,7 @@ const PerformingGroupShows = () => {
 
   return (
     <ContentWrapper>
-      <h1 className="text-3xl">{user.department?.name} Shows</h1>
+      <h1 className="text-3xl">{!user.roles.includes("head") ? user.department?.name : "Performing Group"} Shows</h1>
       <div className="flex justify-between">
         <div className="flex gap-5 mt-10 flex-wrap">
           <SimpleCard icon={<TheaterIcon size={18} />} label="Total Show" value={filteredShows.length} />

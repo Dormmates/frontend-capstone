@@ -17,7 +17,7 @@ import ArchiveAccount from "../ArchiveAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import { Users } from "lucide-react";
+import { EditIcon, Users } from "lucide-react";
 import { useAuthContext } from "@/context/AuthContext";
 
 const Distributors = () => {
@@ -160,13 +160,13 @@ const Distributors = () => {
               render: (distributor) => (
                 <div className="flex justify-end items-center gap-2">
                   <Link to={`/manage/distributor/${distributor.userId}`}>
-                    <Button variant="secondary">View Distributor</Button>
+                    <Button variant="outline">View Distributor</Button>
                   </Link>
 
                   {(user?.roles.includes("head") || user?.department) && (
                     <>
                       <Button onClick={() => setSelectedDistributor(distributor)} variant="outline">
-                        Edit Details
+                        <EditIcon />
                       </Button>
                       <ArchiveAccount queryKey="distributors" user={distributor as User} />
                       <DeleteAccount queryKey="distributors" user={distributor as User} />
