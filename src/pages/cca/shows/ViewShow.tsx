@@ -270,14 +270,8 @@ const ViewShow = () => {
                     <div className="flex gap-2 justify-end items-center ">
                       <div className="relative group">
                         <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
-                          <Button disabled={!schedule.isOpen}>Go To Schedule</Button>
+                          <Button>Go To Schedule</Button>
                         </Link>
-
-                        {!schedule.isOpen && (
-                          <div className="absolute  -left-28 top-0 hidden group-hover:flex  text-nowrap p-2 bg-zinc-700 text-white text-xs rounded shadow z-10 pointer-events-none">
-                            Schedule is Closed
-                          </div>
-                        )}
                       </div>
 
                       <DropdownMenu>

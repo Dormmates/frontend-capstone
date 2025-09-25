@@ -7,9 +7,7 @@ import { useUnRemitTicketSales } from "@/_lib/@react-client-query/schedule.ts";
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-
 import InputField from "@/components/InputField";
-
 import ControlNumberInputTutorial from "@/components/ControlNumberInputTutorial";
 import Modal from "@/components/Modal";
 import LongCard from "@/components/LongCard";
@@ -18,6 +16,8 @@ import { formatCurrency } from "@/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import { CircleQuestionMarkIcon } from "lucide-react";
 
 type Props = {
   distributorData: AllocatedTicketToDistributor[];
@@ -132,12 +132,23 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
             <p className="text-sm font-medium">{compressControlNumbers(ticketsAvailableToBeRemitted)}</p>
           </div>
 
-          <ControlNumberInputTutorial className="mt-3" />
-          <div className="">
+          <div>
             <div className=" border border-lightGrey p-3 rounded-md mt-3 flex flex-col gap-2">
               <InputField
                 disabled={unremit.isPending}
-                label={"Enter Ticket Control Numbers to be Unremitted"}
+                label={
+                  <div className="flex items-center gap-2">
+                    <p>Enter Ticket Control Numbers to be Unremitted</p>
+                    <HoverCard openDelay={0} closeDelay={200}>
+                      <HoverCardTrigger>
+                        <CircleQuestionMarkIcon className="w-4 text-muted-foreground " />
+                      </HoverCardTrigger>
+                      <HoverCardContent className="p-0">
+                        <ControlNumberInputTutorial className="border bg-background" />
+                      </HoverCardContent>
+                    </HoverCard>
+                  </div>
+                }
                 error={error}
                 value={form}
                 onChange={handleInput}

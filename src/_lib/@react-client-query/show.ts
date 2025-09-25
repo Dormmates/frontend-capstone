@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, type UseQueryOptions } from "@tanstack/react-query";
 import { request } from "../api";
 import type { NewShowPayload, ShowData, ShowType, UpdateShowPayload } from "../../types/show";
 import type { DistributorScheduleTickets } from "../../types/ticket";
@@ -64,7 +64,7 @@ export const useGetShows = (query: { departmentId?: string; showType?: ShowType;
   });
 };
 
-export const useGetShow = (id: string) => {
+export const useGetShow = (id: string, options?: Omit<UseQueryOptions<ShowData, Error>, "queryKey" | "queryFn">) => {
   return useQuery<ShowData, Error>({
     queryKey: ["show", id],
     queryFn: async () => {
@@ -72,6 +72,7 @@ export const useGetShow = (id: string) => {
       return res.data;
     },
     retry: false,
+    ...options,
   });
 };
 

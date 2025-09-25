@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, type UseQueryOptions } from "@tanstack/react-query";
 import { request } from "../api";
 
 import type { ScheduleFormData, Schedule, ScheduleSummary } from "../../types/schedule";
@@ -103,7 +103,7 @@ export const useGetScheduleSummary = (scheduleId: string) => {
     retry: false,
   });
 };
-export const useGetScheduleTickets = (scheduleId: string) => {
+export const useGetScheduleTickets = (scheduleId: string, options?: Omit<UseQueryOptions<Ticket[], Error>, "queryKey" | "queryFn">) => {
   return useQuery<Ticket[], Error>({
     queryKey: ["schedule", "tickets", scheduleId],
     queryFn: async () => {
@@ -111,6 +111,7 @@ export const useGetScheduleTickets = (scheduleId: string) => {
       return res.data;
     },
     retry: false,
+    ...options,
   });
 };
 

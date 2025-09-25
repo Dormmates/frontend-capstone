@@ -47,7 +47,8 @@ const ScheduleSeats = () => {
   }
 
   return (
-    <div className="flex flex-col gap-5 mt-10">
+    <div className="flex flex-col gap-5">
+      <h1 className="text-2xl">Seat Map</h1>
       <div className="flex gap-2 flex-col justify-end">
         <div className="flex gap-2 items-center">
           <div className="w-5 h-5 bg-violet-500 border"></div>

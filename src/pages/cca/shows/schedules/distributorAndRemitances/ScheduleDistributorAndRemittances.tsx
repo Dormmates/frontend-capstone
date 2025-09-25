@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useOutletContext, useParams } from "react-router-dom";
 import { useGetScheduleDistributors } from "@/_lib/@react-client-query/schedule.ts";
 import { useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
@@ -6,9 +6,11 @@ import SimpleCard from "@/components/SimpleCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import PaginatedTable from "@/components/PaginatedTable";
+import type { Schedule } from "@/types/schedule";
 
 const ScheduleDistributorAndRemittances = () => {
   const { scheduleId, showId } = useParams();
+  const { schedule } = useOutletContext<{ schedule: Schedule }>();
   const { data: distributors, isLoading, isError } = useGetScheduleDistributors(scheduleId as string);
 
   const [searchValue, setSearchValue] = useState("");
@@ -45,9 +47,9 @@ const ScheduleDistributorAndRemittances = () => {
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Search Distributor by Name"
           />
-          <Link to={`/shows/${showId}/${scheduleId}/allocation`}>
-            <Button>Allocate Ticket</Button>
-          </Link>
+          <Button disabled={!schedule.isOpen}>
+            <Link to={`/shows/${showId}/${scheduleId}/allocation`}>Allocate Ticket</Link>
+          </Button>
         </div>
 
         <PaginatedTable

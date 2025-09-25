@@ -15,6 +15,10 @@ import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import { CircleQuestionMarkIcon } from "lucide-react";
+
+import ControlNumberInputTutorial from "@/components/ControlNumberInputTutorial";
 
 type Props = {
   distributorData: AllocatedTicketToDistributor[];
@@ -241,7 +245,23 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
             <div className=" border border-lightGrey p-3 rounded-md mt-3 flex flex-col gap-2">
               <InputField
                 disabled={controlFrom === "system" || remit.isPending}
-                label={controlFrom === "system" ? "Marked as Sold (by Distributor)" : "Enter Ticket Control Numbers which are Sold"}
+                label={
+                  controlFrom === "system" ? (
+                    "Marked as Sold (by Distributor)"
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <p>Enter Ticket Control Numbers which are Sold</p>
+                      <HoverCard openDelay={0} closeDelay={200}>
+                        <HoverCardTrigger>
+                          <CircleQuestionMarkIcon className="w-4 text-muted-foreground " />
+                        </HoverCardTrigger>
+                        <HoverCardContent className="p-0">
+                          <ControlNumberInputTutorial className="border bg-background" />
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+                  )
+                }
                 error={error.sold}
                 value={form.sold}
                 onChange={handleInput}

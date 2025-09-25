@@ -8,9 +8,11 @@ import { useState } from "react";
 import { compressControlNumbers, parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import Modal from "@/components/Modal";
 import { toast } from "sonner";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { CircleQuestionMarkIcon } from "lucide-react";
 
 type Props = {
   distributorName: string;
@@ -67,17 +69,25 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
       <Card className="border border-lightGrey rounded-md ">
         {controlNumbersAllocated.length != 0 ? (
           <>
-            <CardHeader>
-              <CardTitle className="text-xl">Unallocate Ticket</CardTitle>
-            </CardHeader>
-            <ControlNumberInputTutorial />
             <CardContent>
               <p className="text-sm font-bold my-5 max-w-[450px]">
                 Control Numbers available for unallocation: <span className="font-normal">{compressControlNumbers(controlNumbersAllocated)}</span>
               </p>
               <InputField
                 error={error}
-                label="Enter Ticket Control Number to be Unallocated"
+                label={
+                  <div className="flex items-center gap-2">
+                    <p>Enter Ticket Control Number to be Unallocated</p>
+                    <HoverCard openDelay={0} closeDelay={200}>
+                      <HoverCardTrigger>
+                        <CircleQuestionMarkIcon className="w-4 text-muted-foreground " />
+                      </HoverCardTrigger>
+                      <HoverCardContent className="p-0">
+                        <ControlNumberInputTutorial className="border-none" />
+                      </HoverCardContent>
+                    </HoverCard>
+                  </div>
+                }
                 disabled={disabled}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
