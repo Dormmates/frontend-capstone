@@ -17,7 +17,7 @@ const ViewShowScheduleLayout = () => {
     { name: "Tickets", path: "tickets" },
     { name: "Seats", path: "seats", hidden: schedule?.seatingType === "freeSeating" },
     { name: "Tally Data", path: "tally" },
-    { name: "Reservations", path: "reservations" },
+    // { name: "Reservations", path: "reservations" },
   ];
 
   if (loadingShow || scheduleLoading) {

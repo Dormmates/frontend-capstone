@@ -37,7 +37,7 @@ const ScheduleDistributorAndRemittances = () => {
     <>
       <h1 className="text-2xl">Manage Distributors</h1>
 
-      <SimpleCard className="w-fit border-l-green" label="Total Distributors" value={distributors.length} />
+      <SimpleCard className="w-fit" label="Total Distributors" value={distributors.length} />
 
       <div className="flex flex-col gap-10">
         <div className="flex justify-between">

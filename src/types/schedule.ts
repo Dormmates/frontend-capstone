@@ -56,16 +56,58 @@ export interface Schedule {
   maleCount: number | null;
 }
 
-export interface ScheduleSummary {
-  expectedSales: number;
-  currentSales: number;
-  remainingSales: number;
-  totalTicket: number;
-  totalOrchestra: number;
-  totalBalcony: number;
-  totalComplimentary: number;
+interface TicketBreakdown {
+  total: number;
   sold: number;
-  notAllocated: number;
-  unsold: number;
+  remaining: number;
+}
+
+interface DistributorSummary {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  totalAllocatedTickets: number;
+  soldTickets: number;
+  unsoldTickets: number;
+  remittedTickets: number;
   pendingRemittance: number;
+  expected: number;
+  remitted: number;
+  balanceDue: number;
+}
+
+export interface ScheduleSummary {
+  ticketsSummary: {
+    total: number;
+    complimentary: number;
+    orchestraTickets: TicketBreakdown;
+    balconyTickets: TicketBreakdown;
+  };
+  distributorSummary: {
+    distributors: DistributorSummary[];
+    distributorsTotal: {
+      allocated: number;
+      sold: number;
+      unsold: number;
+      remitted: number;
+    };
+  };
+  salesSummary: {
+    expected: number;
+    current: number;
+    remaining: number;
+    netAfterCommission: number;
+  };
+  schedulePrices: {
+    ticketPrice?: number;
+    ticketPricesBySection?: {
+      orchestraMiddle: number;
+      orchestraLeft: number;
+      orchestraRight: number;
+      balconyMiddle: number;
+      balconyRight: number;
+      balconyLeft: number;
+    };
+  };
 }
