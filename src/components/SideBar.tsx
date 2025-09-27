@@ -28,7 +28,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, type ReactNode } from "react";
 import Account from "./Account";
 import { useLogout } from "@/_lib/@react-client-query/auth";
-import { disconnectSocket } from "@/socket";
 import { toast } from "sonner";
 import { ChevronDown, ChevronRight, LogOutIcon, UserIcon } from "lucide-react";
 import logo from "@/assets/images/cca-logo.png";
@@ -184,7 +183,6 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                           {},
                           {
                             onSuccess: () => {
-                              disconnectSocket();
                               setUser(null);
                               navigate("/");
                             },
