@@ -38,7 +38,6 @@ const AddSchedule = () => {
     ticketType: "ticketed",
     seatingConfiguration: "freeSeating",
     seatPricing: "fixed",
-    commissionFee: undefined,
     totalOrchestra: undefined,
     totalBalcony: undefined,
     totalComplimentary: undefined,
@@ -72,6 +71,7 @@ const AddSchedule = () => {
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
+
   useEffect(() => {
     if (selectedPrice?.type === "sectioned") {
       setSeatData((prev) =>
@@ -364,7 +364,7 @@ const AddSchedule = () => {
   };
 
   const handleSubmit = () => {
-    const payload: AddSchedulePayload = { ...scheduleData, showId: data.showId };
+    const payload: AddSchedulePayload = { ...scheduleData, showId: data.showId, ticketPricing: selectedPrice as TicketPricing };
 
     if (scheduleData.ticketType === "ticketed") {
       payload.controlNumbers = {
@@ -373,23 +373,9 @@ const AddSchedule = () => {
         orchestra: parseControlNumbers(scheduleData.orchestraControlNumber),
       };
 
-      if (scheduleData.seatPricing === "fixed") {
-        if (selectedPrice?.type === "fixed") {
-          payload.ticketPrice = selectedPrice.fixedPrice;
-        }
-      }
-
-      if (scheduleData.seatPricing === "sectionedPricing") {
-        if (selectedPrice?.type === "sectioned") {
-          payload.sectionedPrice = selectedPrice.sectionPrices;
-        }
-      }
-
       if (scheduleData.seatingConfiguration === "controlledSeating") {
         payload.seats = seatData;
       }
-
-      payload.commissionFee = selectedPrice?.commisionFee;
     }
 
     toast.promise(

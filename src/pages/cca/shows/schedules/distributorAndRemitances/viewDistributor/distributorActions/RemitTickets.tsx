@@ -343,7 +343,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
               lostTickets={distributorData.filter((ticket) => parsed.lostList.includes(ticket.controlNumber))}
               discountedTickets={distributorData.filter((ticket) => parsed.discountedList.includes(ticket.controlNumber))}
               discountPercentage={form.discountPercentage}
-              commissionFee={schedule.commissionFee}
+              commissionFee={schedule.ticketPricing.commisionFee}
             />
           </DialogContent>
         </Dialog>

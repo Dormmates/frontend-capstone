@@ -28,6 +28,8 @@ const ViewShowScheduleLayout = () => {
     return <p>Error loading</p>;
   }
 
+  console.log(schedule);
+
   return (
     <ContentWrapper className="flex flex-col ">
       <div className="flex flex-col gap-5 ">

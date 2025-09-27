@@ -4,20 +4,13 @@ import { request } from "../api";
 import type { ScheduleFormData, Schedule, ScheduleSummary } from "../../types/schedule";
 import type { FlattenedSeat } from "../../types/seat";
 import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket } from "../../types/ticket";
+import type { TicketPricing } from "@/types/ticketpricing";
 
 export interface AddSchedulePayload extends ScheduleFormData {
   showId: string;
   controlNumbers?: { orchestra: number[]; balcony: number[]; complimentary: number[] };
-  ticketPrice?: number;
-  sectionedPrice?: {
-    orchestraLeft: number;
-    orchestraMiddle: number;
-    orchestraRight: number;
-    balconyLeft: number;
-    balconyMiddle: number;
-    balconyRight: number;
-  };
   seats?: FlattenedSeat[];
+  ticketPricing: TicketPricing;
 }
 
 export const useAddSchedule = () => {

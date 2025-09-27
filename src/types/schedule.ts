@@ -1,3 +1,5 @@
+import type { TicketPricing } from "./ticketpricing";
+
 export type TicketType = "ticketed" | "nonTicketed";
 export type SeatingConfiguration = "freeSeating" | "controlledSeating";
 export type SeatPricing = "fixed" | "sectionedPricing";
@@ -12,7 +14,6 @@ export interface ScheduleFormData {
   ticketType: TicketType;
   seatingConfiguration: SeatingConfiguration;
   seatPricing: SeatPricing;
-  commissionFee: number | undefined;
   totalOrchestra: number | undefined;
   totalBalcony: number | undefined;
   totalComplimentary: number | undefined;
@@ -47,13 +48,12 @@ export interface Schedule {
   ticketType: TicketType;
   contactNumber: string | null;
   facebookLink: string | null;
-  commissionFee: number;
   datetime: Date;
   isOpen: boolean;
-  isArchived: boolean;
   isRescheduled: boolean;
   femaleCount: number | null;
   maleCount: number | null;
+  ticketPricing: TicketPricing;
 }
 
 interface TicketBreakdown {

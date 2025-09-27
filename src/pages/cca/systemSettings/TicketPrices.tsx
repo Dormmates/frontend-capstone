@@ -136,22 +136,24 @@ const NewFixedPricing = ({ closeModal }: { closeModal: () => void }) => {
     let isValid = true;
 
     if (!data.pricingName || data.pricingName.length < 5) {
-      newErrors.pricingName = "Pricing name should be greater than 5 characters";
+      newErrors.pricingName = "Pricing name should be at least 5 characters long";
       isValid = false;
     }
 
-    if (data.price <= 0) {
-      newErrors.price = "Ticket Price should be greater than 0 or non-negative value";
+    if (Number(data.price) <= 0) {
+      newErrors.price = "Ticket Price should be greater than 0";
       isValid = false;
     }
 
-    if (data.fee < 0) {
+    if (Number(data.fee) < 0) {
       newErrors.fee = "Commission Fee should be a non-negative value";
       isValid = false;
     }
 
-    if (data.fee !== 0 && data.fee >= data.price) {
-      newErrors.fee = "Commission fee should not be greater than Ticket Price";
+    console.log(data);
+
+    if (Number(data.fee) >= Number(data.price)) {
+      newErrors.fee = "Commission fee should be less than Ticket Price";
       isValid = false;
     }
 

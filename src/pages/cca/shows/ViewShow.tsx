@@ -29,6 +29,10 @@ import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
 import SalesReportDialog from "./SalesReportDialog";
 import { useQueryClient } from "@tanstack/react-query";
+import { CircleQuestionMarkIcon } from "lucide-react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import FixedPrice from "@/components/FixedPrice";
+import SectionedPrice from "@/components/SectionedPrice";
 
 const ViewShow = () => {
   const queryClient = useQueryClient();
@@ -207,10 +211,10 @@ const ViewShow = () => {
                   showSchedules={showSchedules}
                   openSalesReport={openSalesReport}
                   setOpenSalesReport={setOpenSalesReport}
-                  onGenerateReport={(scheduleIds) => {
+                  onGenerateReport={(scheduleIds, options) => {
                     const scheduleIdsParam = scheduleIds.join(",");
-                    const url = `/salesreport/${id}/${scheduleIdsParam}`;
-                    window.open(url, "SalesReport", "width=1122,height=793,resizable=no,scrollbars=no,location=no,menubar=no,toolbar=no");
+                    const url = `/salesreport/${id}/${scheduleIdsParam}?distributors=${options.includeDistributor}`;
+                    window.open(url, "_blank");
                   }}
                 />
                 {((show.showType === "majorProduction" && user?.roles.includes("head")) ||
@@ -240,6 +244,24 @@ const ViewShow = () => {
                   key: "seating",
                   header: "Seating Type",
                   render: (schedule) => schedule.seatingType.toUpperCase(),
+                },
+                {
+                  key: "pricing",
+                  header: "Ticket Price",
+                  render: (schedule) => (
+                    <span className="flex items-center gap-1">
+                      {schedule.ticketPricing.type.toUpperCase()}
+                      <HoverCard closeDelay={100} openDelay={50}>
+                        <HoverCardTrigger>
+                          <CircleQuestionMarkIcon className="w-4 cursor-pointer text-muted-foreground" />
+                        </HoverCardTrigger>
+                        <HoverCardContent className="p-0">
+                          {schedule.ticketPricing.type == "fixed" && <FixedPrice data={schedule.ticketPricing} hideAction={true} />}
+                          {schedule.ticketPricing.type == "sectioned" && <SectionedPrice data={schedule.ticketPricing} hideAction={true} />}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </span>
+                  ),
                 },
                 {
                   key: "ticket",

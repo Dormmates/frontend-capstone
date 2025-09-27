@@ -6,16 +6,18 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
 import type { Schedule } from "@/types/schedule";
 import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
 
 type SalesReportDialogProps = {
   showSchedules: Schedule[];
   openSalesReport: boolean;
   setOpenSalesReport: (open: boolean) => void;
-  onGenerateReport: (selectedScheduleIds: string[]) => void;
+  onGenerateReport: (selectedScheduleIds: string[], options: { includeDistributor: boolean }) => void;
 };
 
 const SalesReportDialog = ({ showSchedules, openSalesReport, setOpenSalesReport, onGenerateReport }: SalesReportDialogProps) => {
   const [selectedSchedules, setSelectedSchedules] = useState<string[]>([]);
+  const [includes, setIncludes] = useState({ distributor: true });
 
   const handleCheckboxChange = (scheduleId: string, checked: boolean) => {
     setSelectedSchedules((prev) => (checked ? [...prev, scheduleId] : prev.filter((id) => id !== scheduleId)));
@@ -30,7 +32,7 @@ const SalesReportDialog = ({ showSchedules, openSalesReport, setOpenSalesReport,
       toast.error("Please select at least one schedule", { position: "top-center" });
       return;
     }
-    onGenerateReport(selectedSchedules);
+    onGenerateReport(selectedSchedules, { includeDistributor: includes.distributor });
     setOpenSalesReport(false);
   };
 
@@ -84,6 +86,15 @@ const SalesReportDialog = ({ showSchedules, openSalesReport, setOpenSalesReport,
             )}
           </TableBody>
         </Table>
+      </div>
+
+      <div className="flex items-center gap-3 mt-5">
+        <Checkbox
+          id="distributor"
+          checked={includes.distributor}
+          onCheckedChange={(checked) => setIncludes((prev) => ({ ...prev, distributor: checked === true }))}
+        />
+        <Label htmlFor="distributor">Include Distributors Breakdown?</Label>
       </div>
     </DialogPopup>
   );

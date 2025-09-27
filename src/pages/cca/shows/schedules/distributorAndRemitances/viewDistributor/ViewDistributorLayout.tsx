@@ -68,10 +68,10 @@ const ViewDistributorLayout = () => {
     const remittedTickets = data.filter((ticket) => ticket.isRemitted).length;
 
     const pendingRemittance = soldTickets - remittedTickets;
-    const expected = data.reduce<number>((acc, ticket) => acc + (Number(ticket.ticketPrice) - schedule.commissionFee), 0);
+    const expected = data.reduce<number>((acc, ticket) => acc + (Number(ticket.ticketPrice) - schedule.ticketPricing.commisionFee), 0);
     const remitted = data
       .filter((ticket) => ticket.isRemitted)
-      .reduce<number>((acc, ticket) => acc + (Number(ticket.ticketPrice) - schedule.commissionFee), 0);
+      .reduce<number>((acc, ticket) => acc + (Number(ticket.ticketPrice) - schedule.ticketPricing.commisionFee), 0);
     const balanceDue = expected - remitted;
 
     return { totalAllocatedTickets, soldTickets, unsoldTickets, remittedTickets, pendingRemittance, expected, remitted, balanceDue };
