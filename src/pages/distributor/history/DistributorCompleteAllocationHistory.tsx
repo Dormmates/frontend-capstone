@@ -1,40 +1,17 @@
-import { useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import type { AllocationHistory } from "@/types/ticket.ts";
-import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
-
-import LongCard from "@/components/LongCard";
-import LongCardItem from "@/components/LongCardItem";
-import { compressControlNumbers } from "@/utils/controlNumber.ts";
-import { Button } from "@/components/ui/button";
-import InputField from "@/components/InputField";
-import Modal from "@/components/Modal";
-import PaginatedTable from "@/components/PaginatedTable";
-
 const DistributorCompleteAllocationHistory = () => {
-  const { allocationHistory } = useOutletContext<{ allocationHistory: AllocationHistory[] }>();
+  // const { allocationHistory } = useOutletContext<{ allocationHistory: AllocationHistory[] }>();
 
-  const [selectedHistory, setSelectedHistory] = useState<AllocationHistory | null>(null);
-  const [selectedShow, setSelectedShow] = useState<AllocationHistory | null>(null);
-  const [scheduleList, setScheduleList] = useState<AllocationHistory[]>([]);
+  // const [selectedHistory, setSelectedHistory] = useState<AllocationHistory | null>(null);
+  // const [selectedShow, setSelectedShow] = useState<AllocationHistory | null>(null);
+  // const [scheduleList, setScheduleList] = useState<AllocationHistory[]>([]);
 
-  // Still an object array
-  const uniqueShows = allocationHistory.reduce<AllocationHistory[]>((accumulated, item) => {
-    if (!accumulated.some((x) => x.showId === item.showId)) {
-      accumulated.push(item);
-    }
-    return accumulated;
-  }, []);
-
-  const handleShowClick = (selectedShow: AllocationHistory) => {
-    setSelectedShow(selectedShow);
-
-    const scheduleList = allocationHistory.filter((show) => {
-      if (show.showId === selectedShow.showId) return show;
-    });
-
-    setScheduleList(scheduleList);
-  };
+  // // Still an object array
+  // const uniqueShows = allocationHistory.reduce<AllocationHistory[]>((accumulated, item) => {
+  //   if (!accumulated.some((x) => x.showId === item.showId)) {
+  //     accumulated.push(item);
+  //   }
+  //   return accumulated;
+  // }, []);
 
   return (
     <>

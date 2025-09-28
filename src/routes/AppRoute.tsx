@@ -39,8 +39,6 @@ import {
   ViewDistributor,
   Settings,
 } from "../pages/cca/index";
-import DistributorCompleteAllocationHistory from "../pages/distributor/history/DistributorCompleteAllocationHistory";
-import DistributorCompleteRemittanceHistory from "../pages/distributor/history/DistributorCompleteRemittanceHistory";
 import DistributorShowHistory from "@/pages/distributor/history/DistributorShowHistory";
 import DistributorHistoryMenu from "@/pages/distributor/history/DistributorHistoryMenu";
 import CustomerHome from "@/pages/customer/CustomerHome";
@@ -123,9 +121,7 @@ const AppRoute = () => {
       {/* Separate login route for distributor */}
       <Route
         path="/distributor/login"
-        element={
-          user ? user.roles.includes("distributor") ? <Navigate to="/" /> : <Navigate to="/" /> : <DistributorLogin />
-        }
+        element={user ? user.roles.includes("distributor") ? <Navigate to="/" /> : <Navigate to="/" /> : <DistributorLogin />}
       />
 
       {/* Customer Routes */}

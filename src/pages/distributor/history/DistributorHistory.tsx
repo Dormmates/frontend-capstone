@@ -1,16 +1,10 @@
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import {
-  useGetAllDistributorAllocationHistory,
-  useGetAllDistributorRemittanceHistory,
-} from "@/_lib/@react-client-query/schedule.ts";
+import { Outlet } from "react-router-dom";
+import { useGetAllDistributorAllocationHistory, useGetAllDistributorRemittanceHistory } from "@/_lib/@react-client-query/schedule.ts";
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
-
 import { useMemo } from "react";
 import { formatCurrency } from "@/utils";
 import SimpleCard from "@/components/SimpleCard";
-
-import type { AllocationHistory } from "@/types/ticket";
 
 // const links = [
 //   { path: "", name: "Allocation History" },
@@ -46,12 +40,8 @@ const DistributorHistory = () => {
   const totalReceived = useMemo(() => {
     if (!remittanceHistory) return { commission: 0, remittance: 0 };
 
-    const commission = remittanceHistory
-      .filter((log) => log.actionType == "remit")
-      .reduce((acc, cur) => (acc += cur.totalCommission), 0);
-    const remittance = remittanceHistory
-      .filter((log) => log.actionType == "remit")
-      .reduce((acc, cur) => (acc += cur.totalRemittance), 0);
+    const commission = remittanceHistory.filter((log) => log.actionType == "remit").reduce((acc, cur) => (acc += cur.totalCommission), 0);
+    const remittance = remittanceHistory.filter((log) => log.actionType == "remit").reduce((acc, cur) => (acc += cur.totalRemittance), 0);
 
     return { commission, remittance };
   }, [remittanceHistory]);
