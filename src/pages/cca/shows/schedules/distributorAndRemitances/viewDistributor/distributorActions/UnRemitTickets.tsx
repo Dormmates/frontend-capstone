@@ -179,7 +179,12 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
             <div className="flex justify-between mt-5">
               <h2 className="font-medium mb-2">Amount to be Unremitted</h2>
               <p className="text-lg font-semibold">
-                {formatCurrency(unremitTickets.reduce((total, t) => total + (t.ticketPrice - schedule.ticketPricing.commisionFee || 0), 0))}
+                {formatCurrency(
+                  unremitTickets.reduce(
+                    (total, t) => total + (t.ticketPrice - (schedule.ticketPricing ? schedule.ticketPricing.commisionFee : 0) || 0),
+                    0
+                  )
+                )}
               </p>
             </div>
 

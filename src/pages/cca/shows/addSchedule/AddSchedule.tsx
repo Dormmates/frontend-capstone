@@ -503,7 +503,7 @@ const AddSchedule = () => {
 
         {openScheduleSummary && (
           <Modal
-            className={` ${scheduleData.seatingConfiguration === "controlledSeating" && "h-[90%] max-w-6xl"}`}
+            className={`${scheduleData.seatingConfiguration === "controlledSeating" && scheduleData.ticketType == "ticketed" && "h-[90%] max-w-6xl"}`}
             description="Please review the details before you proceed"
             isOpen={openScheduleSummary}
             onClose={() => setOpenScheduleSummary(false)}
@@ -526,41 +526,43 @@ const AddSchedule = () => {
               <p>
                 <span className="font-semibold">Ticket Type:</span> {scheduleData.ticketType}
               </p>
-              <p>
-                <span className="font-semibold">Seating Configuration:</span> {scheduleData.seatingConfiguration}
-              </p>
+
               {/* Ticket & Seating Info */}
 
               {scheduleData.ticketType == "ticketed" && (
-                <div className="flex flex-col gap-2">
+                <>
                   <p>
-                    <span className="font-semibold">Seat Pricing:</span> {scheduleData.seatPricing}
+                    <span className="font-semibold">Seating Configuration:</span> {scheduleData.seatingConfiguration}
                   </p>
+                  <div className="flex flex-col gap-2">
+                    <p>
+                      <span className="font-semibold">Seat Pricing:</span> {scheduleData.seatPricing}
+                    </p>
 
-                  {scheduleData.seatPricing === "fixed" && <FixedPrice hideAction={true} data={selectedPrice as FixedPricing} />}
-                  {scheduleData.seatPricing === "sectionedPricing" && <SectionedPrice hideAction={true} data={selectedPrice as SectionedPricing} />}
+                    {scheduleData.seatPricing === "fixed" && <FixedPrice hideAction={true} data={selectedPrice as FixedPricing} />}
+                    {scheduleData.seatPricing === "sectionedPricing" && <SectionedPrice hideAction={true} data={selectedPrice as SectionedPricing} />}
 
-                  {/* Fees & Tickets */}
+                    {/* Fees & Tickets */}
+                    <p>
+                      <span className="font-semibold">Orchestra Tickets:</span> {scheduleData.totalOrchestra} ({scheduleData.orchestraControlNumber})
+                    </p>
+                    <p>
+                      <span className="font-semibold">Balcony Tickets:</span> {scheduleData.totalBalcony} ({scheduleData.balconyControlNumber})
+                    </p>
+                    <p>
+                      <span className="font-semibold">Complimentary Tickets:</span> {scheduleData.totalComplimentary} (
+                      {scheduleData.complimentaryControlNumber})
+                    </p>
+                  </div>
 
-                  <p>
-                    <span className="font-semibold">Orchestra Tickets:</span> {scheduleData.totalOrchestra} ({scheduleData.orchestraControlNumber})
-                  </p>
-                  <p>
-                    <span className="font-semibold">Balcony Tickets:</span> {scheduleData.totalBalcony} ({scheduleData.balconyControlNumber})
-                  </p>
-                  <p>
-                    <span className="font-semibold">Complimentary Tickets:</span> {scheduleData.totalComplimentary} (
-                    {scheduleData.complimentaryControlNumber})
-                  </p>
-                </div>
-              )}
-
-              {/* Controlled Seating */}
-              {scheduleData.seatingConfiguration === "controlledSeating" && (
-                <div className="flex flex-col gap-2">
-                  <SeatMapSchedule disabled={true} seatMap={seatData} />
-                  <p className="text-red-500 text-sm self-end italic">Note: Unassigned Seat will be disabled</p>
-                </div>
+                  {/* Controlled Seating */}
+                  {scheduleData.seatingConfiguration === "controlledSeating" && (
+                    <div className="flex flex-col gap-2">
+                      <SeatMapSchedule disabled={true} seatMap={seatData} />
+                      <p className="text-red-500 text-sm self-end italic">Note: Unassigned Seat will be disabled</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 

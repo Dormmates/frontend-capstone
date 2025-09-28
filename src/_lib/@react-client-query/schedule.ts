@@ -63,6 +63,16 @@ export const useReschedule = () => {
   });
 };
 
+export const useCopySchedule = () => {
+  return useMutation<Schedule, Error, { scheduleId: string; newDateTime: Date }>({
+    mutationFn: async (data: { scheduleId: string; newDateTime: Date }) => {
+      const res = await request<Schedule>("/api/schedule/copy", data, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
 export const useGetShowSchedules = (showId: string, query?: { excludeClosed?: boolean; excludeReservationOff?: boolean }) => {
   return useQuery<Schedule[], Error>({
     queryKey: ["schedules", showId],

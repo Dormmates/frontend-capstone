@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import type { SalesReport, ScheduleReport, SectionReport } from "@/types/salesreport";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
 import { formatCurrency } from "@/utils";
+import type { SectionedPricing } from "@/types/ticketpricing";
 
 interface Props {
   report: SalesReport;
@@ -20,6 +21,7 @@ export const SalesReportTable = ({ report }: Props) => {
           <TableHead className="border border-gray-400 font-bold text-black">Date</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Time</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black ">Section</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-black ">Ticket Price</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black ">Total Tickets</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black ">Sold</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black ">Unsold</TableHead>
@@ -35,6 +37,7 @@ export const SalesReportTable = ({ report }: Props) => {
           const sectionRows = s.schedule.seatingType === "controlledSeating" ? s.salesBySection : [];
           const date = formatToReadableDate(s.schedule.datetime + "");
           const time = formatToReadableTime(s.schedule.datetime + "");
+          const ticketPrice = s.schedule.ticketPricing?.type === "fixed" ? s.schedule.ticketPricing.fixedPrice : 0;
 
           if (s.schedule.seatingType === "freeSeating") {
             return (
@@ -42,6 +45,7 @@ export const SalesReportTable = ({ report }: Props) => {
                 <TableCell className="border border-gray-400">{date}</TableCell>
                 <TableCell className="border border-gray-400">{time}</TableCell>
                 <TableCell className="border border-gray-400">General Seats</TableCell>
+                <TableCell className="border border-gray-400">{formatCurrency(ticketPrice)}</TableCell>
                 <TableCell className="border border-gray-400">{s.totalTickets}</TableCell>
                 <TableCell className="border border-gray-400">{s.soldTickets}</TableCell>
                 <TableCell className="border border-gray-400">{s.unsoldTickets}</TableCell>
@@ -59,6 +63,11 @@ export const SalesReportTable = ({ report }: Props) => {
             renderedDateCell = true;
             const showTimeCell = secIndex === 0;
 
+            const ticketPrice =
+              s.schedule.ticketPricing?.type === "sectioned"
+                ? s.schedule.ticketPricing.sectionPrices[sec.section as keyof SectionedPricing["sectionPrices"]]
+                : s.schedule.ticketPricing?.fixedPrice ?? 0;
+
             return (
               <React.Fragment key={`${s.schedule.scheduleId}-${sec.section}`}>
                 <TableRow className="border border-gray-400">
@@ -73,6 +82,7 @@ export const SalesReportTable = ({ report }: Props) => {
                     </TableCell>
                   )}
                   <TableCell className="border border-gray-400">{formatSectionName(sec.section)}</TableCell>
+                  <TableCell className="border border-gray-400">{formatCurrency(ticketPrice)}</TableCell>
                   <TableCell className="border border-gray-400">{sec.totalTickets}</TableCell>
                   <TableCell className="border border-gray-400">{sec.ticketsSold}</TableCell>
                   <TableCell className="border border-gray-400">{sec.totalTickets - sec.ticketsSold}</TableCell>
@@ -88,6 +98,7 @@ export const SalesReportTable = ({ report }: Props) => {
                 {secIndex === sectionRows.length - 1 && (
                   <TableRow className="bg-gray-100 font-semibold border border-gray-400">
                     <TableCell className="border border-gray-400">Summary</TableCell>
+                    <TableCell className="border border-gray-400">-</TableCell>
                     <TableCell className="border border-gray-400">{s.totalTickets}</TableCell>
                     <TableCell className="border border-gray-400">{s.soldTickets}</TableCell>
                     <TableCell className="border border-gray-400">{s.unsoldTickets}</TableCell>
@@ -103,7 +114,7 @@ export const SalesReportTable = ({ report }: Props) => {
         })}
 
         <TableRow className="font-bold bg-muted border border-gray-400">
-          <TableCell colSpan={3} className="border border-gray-400">
+          <TableCell colSpan={4} className="border border-gray-400">
             Overall Totals
           </TableCell>
           <TableCell className="border border-gray-400">{report.overallTotals.totalTickets}</TableCell>

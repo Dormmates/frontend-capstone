@@ -54,7 +54,12 @@ const DistributorRemittanceHistory = () => {
             key: "amount",
             header: "Amount Remitted",
             render: (log) =>
-              formatCurrency(log.tickets.reduce((acc, cur) => (acc += Number(cur.ticketPrice) - schedule.ticketPricing.commisionFee), 0)),
+              formatCurrency(
+                log.tickets.reduce(
+                  (acc, cur) => (acc += Number(cur.ticketPrice) - (schedule.ticketPricing ? schedule.ticketPricing.commisionFee : 0)),
+                  0
+                )
+              ),
           },
           {
             key: "type",
@@ -92,7 +97,7 @@ const DistributorRemittanceHistory = () => {
               seatingType={schedule.seatingType}
               remarksValue={selectedHistory.remarks}
               discountPercentage={selectedHistory.tickets.find((t) => t.discountPercentage)?.discountPercentage}
-              commissionFee={schedule.ticketPricing.commisionFee}
+              commissionFee={schedule.ticketPricing ? schedule.ticketPricing.commisionFee : 0}
               discountedTickets={selectedHistory.tickets
                 .filter((t) => t.discountPercentage)
                 .map((t) => ({ ticketPrice: t.ticketPrice, controlNumber: t.controlNumber, seatSection: t.seatSection }))}

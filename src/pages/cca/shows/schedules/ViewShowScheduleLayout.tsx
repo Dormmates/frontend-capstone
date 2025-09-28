@@ -4,7 +4,7 @@ import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useGetScheduleInformation } from "@/_lib/@react-client-query/schedule.ts";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import Breadcrumbs from "@/components/BreadCrumbs";
-import { CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon, InfoIcon } from "lucide-react";
 
 const ViewShowScheduleLayout = () => {
   const { showId, scheduleId } = useParams();
@@ -28,8 +28,6 @@ const ViewShowScheduleLayout = () => {
     return <p>Error loading</p>;
   }
 
-  console.log(schedule);
-
   return (
     <ContentWrapper className="flex flex-col ">
       <div className="flex flex-col gap-5 ">
@@ -41,20 +39,22 @@ const ViewShowScheduleLayout = () => {
             { name: `${formatToReadableDate(schedule.datetime + "")} at ${formatToReadableTime(schedule.datetime + "")}` },
           ]}
         />
-        <div className="flex flex-wrap w-full gap-10 my-5">
-          {links
-            .filter((link) => !link.hidden)
-            .map((link) => (
-              <NavLink
-                key={link.path}
-                end={link.path == ""}
-                className={({ isActive }) => (isActive ? "font-semibold" : "font-normal text-lightGrey")}
-                to={`/shows/schedule/${showId}/${scheduleId}/${link.path}`}
-              >
-                {link.name}
-              </NavLink>
-            ))}
-        </div>
+        {schedule.ticketType == "ticketed" && (
+          <div className="flex flex-wrap w-full gap-10 my-5">
+            {links
+              .filter((link) => !link.hidden)
+              .map((link) => (
+                <NavLink
+                  key={link.path}
+                  end={link.path == ""}
+                  className={({ isActive }) => (isActive ? "font-semibold" : "font-normal text-lightGrey")}
+                  to={`/shows/schedule/${showId}/${scheduleId}/${link.path}`}
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+          </div>
+        )}
         {!schedule.isOpen && (
           <div className="flex  flex-col bg-muted border shadow-sm border-l-red border-l-4 rounded-md w-full p-3 gap-1 ">
             <div className="flex items-center gap-2">
@@ -66,19 +66,18 @@ const ViewShowScheduleLayout = () => {
             </p>
           </div>
         )}
-        {/* <div className="flex gap-5">
-          <ShowCard title={show.title} description={""} showImage={show.showCover} genres={show.genreNames} />
-          <div className="flex flex-col justify-center text-2xl gap-2 mt-5 mb-10">
-            <h1 className="text-center">
-              You are viewing "<span className="font-bold">{show.title}</span>"
-            </h1>
-            <p className="text-center">
-              Scheduled on <span className="font-bold">{formatToReadableDate(schedule.datetime + "")}</span> at{" "}
-              <span className="font-bold">{formatToReadableTime(schedule.datetime + "")}</span>
-            </p>
+
+        {schedule.ticketType == "ticketed" ? (
+          <Outlet context={{ show, schedule }} />
+        ) : (
+          <div className="flex flex-col w-full justify-center items-center mt-20">
+            <div className="flex items-center gap-2">
+              <InfoIcon />
+              <h1 className="font-bold text-2xl">No Data Available</h1>
+            </div>
+            <p className="text-muted-foreground">This show schedule is non-ticketed type and does not require any tickets.</p>
           </div>
-        </div> */}
-        <Outlet context={{ show, schedule }} />
+        )}
       </div>
     </ContentWrapper>
   );

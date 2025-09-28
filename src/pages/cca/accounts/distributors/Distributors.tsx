@@ -337,7 +337,7 @@ const Distributors = () => {
         </Modal>
       )}
 
-      {user?.department && !user.roles.includes("head") && (
+      {(user?.department || user?.roles.includes("head")) && (
         <Button onClick={() => setShowArchived(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full ">
           View Archived Distributors
         </Button>

@@ -1,9 +1,15 @@
 import { Link, useParams } from "react-router-dom";
 import { useGetShow } from "@/_lib/@react-client-query/show.ts";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
-import { useCloseSchedule, useDeleteSchedule, useGetShowSchedules, useOpenSchedule, useReschedule } from "@/_lib/@react-client-query/schedule.ts";
+import {
+  useCloseSchedule,
+  useCopySchedule,
+  useDeleteSchedule,
+  useGetShowSchedules,
+  useOpenSchedule,
+  useReschedule,
+} from "@/_lib/@react-client-query/schedule.ts";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
-import deleteIcon from "../../../assets/icons/delete.png";
 import { useShowScheduleContext } from "@/context/ShowSchedulesContext.tsx";
 import { useEffect, useState } from "react";
 import type { Schedule } from "@/types/schedule.ts";
@@ -29,7 +35,7 @@ import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
 import SalesReportDialog from "./SalesReportDialog";
 import { useQueryClient } from "@tanstack/react-query";
-import { CircleQuestionMarkIcon } from "lucide-react";
+import { CircleQuestionMarkIcon, Settings2Icon, Trash2Icon } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import FixedPrice from "@/components/FixedPrice";
 import SectionedPrice from "@/components/SectionedPrice";
@@ -40,6 +46,7 @@ const ViewShow = () => {
   const openSchedule = useOpenSchedule();
   const deleteSchedule = useDeleteSchedule();
   const reschedule = useReschedule();
+  const duplicate = useCopySchedule();
 
   const { setSchedules } = useShowScheduleContext();
   const { id } = useParams();
@@ -48,6 +55,7 @@ const ViewShow = () => {
   const { data: showSchedules, isLoading: isSchedulesLoading } = useGetShowSchedules(id as string);
 
   const [isReschedule, setIsReschedule] = useState<Schedule | null>(null);
+  const [copySchedule, setCopySchedule] = useState<Schedule | null>(null);
   const [newDate, setNewDate] = useState({ date: new Date(), time: "" });
   const [openSalesReport, setOpenSalesReport] = useState(false);
 
@@ -151,6 +159,43 @@ const ViewShow = () => {
     );
   };
 
+  const handleDuplicateSchedule = () => {
+    if (!copySchedule) return;
+
+    if (!newDate.date || !newDate.time) {
+      toast.error("Please provide new Date and Time", { position: "top-center" });
+      return;
+    }
+
+    const combinedNewDate = new Date(newDate.date);
+    const [hours, minutes] = newDate.time.split(":").map(Number);
+    combinedNewDate.setHours(hours || 0, minutes || 0, 0, 0);
+
+    toast.promise(
+      duplicate
+        .mutateAsync({
+          scheduleId: copySchedule.scheduleId,
+          newDateTime: combinedNewDate,
+        })
+        .then((schedule) => {
+          console.log(schedule);
+
+          queryClient.setQueryData<Schedule[]>(["schedules", id], (oldData) => {
+            if (!oldData) return oldData;
+            return [schedule, ...oldData];
+          });
+          setCopySchedule(null);
+          setNewDate({ date: new Date(), time: "" });
+        }),
+      {
+        position: "top-center",
+        loading: "Copying schedule...",
+        success: "Schedule copied successfully",
+        error: (err: any) => err.message || "Failed to copy schedule",
+      }
+    );
+  };
+
   if (isShowLoading || isSchedulesLoading) {
     return <div>Loading...</div>;
   }
@@ -250,14 +295,19 @@ const ViewShow = () => {
                   header: "Ticket Price",
                   render: (schedule) => (
                     <span className="flex items-center gap-1">
-                      {schedule.ticketPricing.type.toUpperCase()}
+                      {schedule.ticketPricing ? schedule.ticketPricing.type.toUpperCase() : "Free"}
                       <HoverCard closeDelay={100} openDelay={50}>
                         <HoverCardTrigger>
                           <CircleQuestionMarkIcon className="w-4 cursor-pointer text-muted-foreground" />
                         </HoverCardTrigger>
                         <HoverCardContent className="p-0">
-                          {schedule.ticketPricing.type == "fixed" && <FixedPrice data={schedule.ticketPricing} hideAction={true} />}
-                          {schedule.ticketPricing.type == "sectioned" && <SectionedPrice data={schedule.ticketPricing} hideAction={true} />}
+                          {schedule.ticketPricing && schedule.ticketPricing.type == "fixed" && (
+                            <FixedPrice data={schedule.ticketPricing} hideAction={true} />
+                          )}
+                          {schedule.ticketPricing && schedule.ticketPricing.type == "sectioned" && (
+                            <SectionedPrice data={schedule.ticketPricing} hideAction={true} />
+                          )}
+                          {!schedule.ticketPricing && <p className="p-5">Schedule is non-ticketed schedule</p>}
                         </HoverCardContent>
                       </HoverCard>
                     </span>
@@ -298,11 +348,15 @@ const ViewShow = () => {
 
                       <DropdownMenu>
                         <DropdownMenuTrigger>
-                          <Button variant="outline">Options</Button>
+                          <Button variant="outline">
+                            <Settings2Icon />
+                          </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuLabel>Select Options</DropdownMenuLabel>
                           <DropdownMenuGroup>
+                            <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setCopySchedule(schedule)}>Duplicate Schedule</DropdownMenuItem>
                             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                               <AlertModal
                                 confirmation={schedule.isOpen ? "Close" : "Open"}
@@ -315,20 +369,18 @@ const ViewShow = () => {
                                 trigger={<p>{schedule.isOpen ? "Close Schedule" : "Open Schedule"}</p>}
                               />
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
                           </DropdownMenuGroup>
                         </DropdownMenuContent>
                       </DropdownMenu>
 
                       <AlertModal
-                        tooltip={!schedule.isOpen ? "Delete" : "Cannot Delete Open Schedule"}
                         confirmation="Delete"
                         actionText="Confirm"
                         onConfirm={() => handleDeleteSchedule(schedule.scheduleId)}
                         title="Delete Schedule"
                         trigger={
-                          <Button variant="ghost" size="icon" disabled={schedule.isOpen}>
-                            <img src={deleteIcon} alt="delete" />
+                          <Button variant="destructive">
+                            <Trash2Icon />
                           </Button>
                         }
                       >
@@ -395,6 +447,43 @@ const ViewShow = () => {
             </Button>
             <Button disabled={reschedule.isPending} onClick={handleReschedule}>
               Reschedule
+            </Button>
+          </div>
+        </Modal>
+      )}
+
+      {copySchedule && (
+        <Modal
+          title="Duplicate Schedule"
+          description="This will create a copy of the selected schedule. You can set a new date and time for the duplicated schedule."
+          isOpen={!!copySchedule}
+          onClose={() => setCopySchedule(null)}
+        >
+          <Card>
+            <CardContent className="p-4 flex flex-col gap-3">
+              <DateSelector
+                disabled={duplicate.isPending}
+                date={newDate.date}
+                handleDateSelect={(date) => setNewDate((prev) => ({ ...prev, date }))}
+              />
+              <InputField
+                disabled={duplicate.isPending}
+                label="Time"
+                type="time"
+                step={60}
+                value={newDate.time?.slice(0, 5)}
+                onChange={(e) => setNewDate((prev) => ({ ...prev, time: e.target.value }))}
+                className="bg-background appearance-none"
+              />
+            </CardContent>
+          </Card>
+
+          <div className="flex mt-5 justify-end gap-3">
+            <Button variant="outline" disabled={duplicate.isPending} onClick={() => setCopySchedule(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleDuplicateSchedule} disabled={duplicate.isPending}>
+              Duplicate
             </Button>
           </div>
         </Modal>

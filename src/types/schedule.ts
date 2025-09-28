@@ -53,7 +53,7 @@ export interface Schedule {
   isRescheduled: boolean;
   femaleCount: number | null;
   maleCount: number | null;
-  ticketPricing: TicketPricing;
+  ticketPricing: TicketPricing | null;
 }
 
 interface TicketBreakdown {
