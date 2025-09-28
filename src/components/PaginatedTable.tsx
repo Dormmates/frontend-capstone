@@ -33,7 +33,11 @@ const PaginatedTable = <T,>({ columns, itemsPerPage = 5, data, emptyMessage, cla
   return (
     <>
       <DataTable<T> columns={columns} data={paginatedItems} emptyMessage={emptyMessage} className={className} />
-      <Pagination currentPage={page} totalPage={Math.ceil(data.length / itemsPerPage)} onPageChange={(newPage) => setPage(newPage)} />
+      <Pagination
+        currentPage={page}
+        totalPage={Math.ceil(data.length / itemsPerPage)}
+        onPageChange={(newPage) => setPage(newPage)}
+      />
     </>
   );
 };

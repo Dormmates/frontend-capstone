@@ -1,5 +1,8 @@
-import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { useGetAllDistributorAllocationHistory, useGetAllDistributorRemittanceHistory } from "@/_lib/@react-client-query/schedule.ts";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import {
+  useGetAllDistributorAllocationHistory,
+  useGetAllDistributorRemittanceHistory,
+} from "@/_lib/@react-client-query/schedule.ts";
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 
@@ -7,14 +10,16 @@ import { useMemo } from "react";
 import { formatCurrency } from "@/utils";
 import SimpleCard from "@/components/SimpleCard";
 
-const links = [
-  { path: "", name: "Allocation History" },
-  { path: "/remittance", name: "Remittance History" },
-];
+import type { AllocationHistory } from "@/types/ticket";
+
+// const links = [
+//   { path: "", name: "Allocation History" },
+//   { path: "/remittance", name: "Remittance History" },
+// ];
 
 const DistributorHistory = () => {
   const { user } = useAuthContext();
-  const location = useLocation();
+  // const location = useLocation();
   const {
     data: allocationHistory,
     isLoading: loadingAllocation,
@@ -27,7 +32,7 @@ const DistributorHistory = () => {
     isError: erroRemittance,
   } = useGetAllDistributorRemittanceHistory(user?.userId as string);
 
-  const isOnAllocation = location.pathname.endsWith("/history");
+  // const isOnAllocation = location.pathname.endsWith("/history");
 
   const totalTickets = useMemo(() => {
     if (!allocationHistory || !remittanceHistory) return { allocation: 0, remittance: 0 };
@@ -41,8 +46,12 @@ const DistributorHistory = () => {
   const totalReceived = useMemo(() => {
     if (!remittanceHistory) return { commission: 0, remittance: 0 };
 
-    const commission = remittanceHistory.filter((log) => log.actionType == "remit").reduce((acc, cur) => (acc += cur.totalCommission), 0);
-    const remittance = remittanceHistory.filter((log) => log.actionType == "remit").reduce((acc, cur) => (acc += cur.totalRemittance), 0);
+    const commission = remittanceHistory
+      .filter((log) => log.actionType == "remit")
+      .reduce((acc, cur) => (acc += cur.totalCommission), 0);
+    const remittance = remittanceHistory
+      .filter((log) => log.actionType == "remit")
+      .reduce((acc, cur) => (acc += cur.totalRemittance), 0);
 
     return { commission, remittance };
   }, [remittanceHistory]);
@@ -58,18 +67,14 @@ const DistributorHistory = () => {
   return (
     <ContentWrapper>
       <h1 className="font-bold text-4xl">Distributor History</h1>
-
       <div className="flex gap-3 mt-10">
-        <SimpleCard
-          label={isOnAllocation ? "Total Tickets Allocated" : "Total Tickets Remitted"}
-          value={isOnAllocation ? totalTickets.allocation : totalTickets.remittance}
-        />
-
+        <SimpleCard label={"Total Tickets Allocated"} value={totalTickets.allocation} />
+        <SimpleCard label={"Total Tickets Remitted"} value={totalTickets.remittance} />
         <SimpleCard label="Total Remittance" value={formatCurrency(totalReceived.remittance)} />
         <SimpleCard label="Total Commision Received" value={formatCurrency(totalReceived.commission)} />
       </div>
 
-      <div className="my-10 flex gap-5">
+      {/* <div className="my-10 flex gap-5">
         {links.map((link, index) => (
           <NavLink
             key={index}
@@ -80,7 +85,7 @@ const DistributorHistory = () => {
             {link.name}
           </NavLink>
         ))}
-      </div>
+      </div> */}
 
       <div>
         <Outlet context={{ allocationHistory, remittanceHistory }} />

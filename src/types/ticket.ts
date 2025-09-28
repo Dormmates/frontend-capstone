@@ -37,6 +37,8 @@ export interface AllocatedTicketToDistributor {
 }
 
 export interface AllocationHistory {
+  showId: string;
+  scheduleId: string;
   actionType: "allocate" | "unallocate";
   showCover: string;
   showTitle: string;
@@ -61,6 +63,8 @@ export interface AllocationHistory {
 }
 
 export interface RemittanceHistory {
+  showId: string;
+  scheduleId: string;
   actionType: "remit" | "unremit";
   remittanceId: string;
   receivedBy: string;
