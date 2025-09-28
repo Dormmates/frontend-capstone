@@ -1,23 +1,16 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, type UseQueryOptions } from "@tanstack/react-query";
 import { request } from "../api";
 
 import type { ScheduleFormData, Schedule, ScheduleSummary } from "../../types/schedule";
 import type { FlattenedSeat } from "../../types/seat";
 import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket } from "../../types/ticket";
+import type { TicketPricing } from "@/types/ticketpricing";
 
 export interface AddSchedulePayload extends ScheduleFormData {
   showId: string;
   controlNumbers?: { orchestra: number[]; balcony: number[]; complimentary: number[] };
-  ticketPrice?: number;
-  sectionedPrice?: {
-    orchestraLeft: number;
-    orchestraMiddle: number;
-    orchestraRight: number;
-    balconyLeft: number;
-    balconyMiddle: number;
-    balconyRight: number;
-  };
   seats?: FlattenedSeat[];
+  ticketPricing: TicketPricing;
 }
 
 export const useAddSchedule = () => {
@@ -103,7 +96,7 @@ export const useGetScheduleSummary = (scheduleId: string) => {
     retry: false,
   });
 };
-export const useGetScheduleTickets = (scheduleId: string) => {
+export const useGetScheduleTickets = (scheduleId: string, options?: Omit<UseQueryOptions<Ticket[], Error>, "queryKey" | "queryFn">) => {
   return useQuery<Ticket[], Error>({
     queryKey: ["schedule", "tickets", scheduleId],
     queryFn: async () => {
@@ -111,6 +104,7 @@ export const useGetScheduleTickets = (scheduleId: string) => {
       return res.data;
     },
     retry: false,
+    ...options,
   });
 };
 

@@ -1,7 +1,9 @@
 import { useGetTallyData, useUpdateTallyData } from "@/_lib/@react-client-query/schedule";
 import InputField from "@/components/InputField";
 import { Button } from "@/components/ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useQueryClient } from "@tanstack/react-query";
+import { CircleQuestionMarkIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -82,36 +84,50 @@ const ScheduleTallyData = () => {
     return <h1>Error loading data</h1>;
   }
 
-  console.log(tallyData);
-
   return (
-    <div className="flex justify-center w-full mt-10">
-      <div className="flex flex-col items-center w-full  gap-4">
-        <InputField
-          disabled={updateTallyData.isPending}
-          type="number"
-          label="Male Count"
-          value={formData.maleCount}
-          onChange={handleInputChange}
-          name="maleCount"
-          error={errors.maleCount}
-          className="w-full"
-        />
-        <InputField
-          disabled={updateTallyData.isPending}
-          type="number"
-          label="Female Count"
-          value={formData.femaleCount}
-          onChange={handleInputChange}
-          name="femaleCount"
-          error={errors.femaleCount}
-          className="w-full"
-        />
-        <Button onClick={handleSubmit} disabled={updateTallyData.isPending} className="self-start">
-          Save
-        </Button>
+    <>
+      <div className="flex items-center gap-2">
+        <h1 className="text-2xl">Tally Data</h1>
+        <HoverCard openDelay={0} closeDelay={100}>
+          <HoverCardTrigger>
+            <CircleQuestionMarkIcon className="w-4 text-muted-foreground" />
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <p className="text-sm text-muted-foreground">
+              Enter the total number of male and female attendees for the show. This information can help you plan the genres and content of future
+              shows.
+            </p>
+          </HoverCardContent>
+        </HoverCard>
       </div>
-    </div>
+      <div className="flex justify-center w-full">
+        <div className="flex flex-col items-center w-full  gap-4 border p-5 rounded-md shadow-sm">
+          <InputField
+            disabled={updateTallyData.isPending}
+            type="number"
+            label="Male Count"
+            value={formData.maleCount}
+            onChange={handleInputChange}
+            name="maleCount"
+            error={errors.maleCount}
+            className="w-full"
+          />
+          <InputField
+            disabled={updateTallyData.isPending}
+            type="number"
+            label="Female Count"
+            value={formData.femaleCount}
+            onChange={handleInputChange}
+            name="femaleCount"
+            error={errors.femaleCount}
+            className="w-full"
+          />
+          <Button onClick={handleSubmit} disabled={updateTallyData.isPending} className="self-start">
+            Save
+          </Button>
+        </div>
+      </div>
+    </>
   );
 };
 

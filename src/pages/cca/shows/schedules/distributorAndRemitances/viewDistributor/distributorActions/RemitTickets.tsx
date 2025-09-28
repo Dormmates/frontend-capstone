@@ -12,6 +12,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { DialogDescription } from "@radix-ui/react-dialog";
 import InputField from "@/components/InputField";
 import { toast } from "sonner";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import { CircleQuestionMarkIcon } from "lucide-react";
+
+import ControlNumberInputTutorial from "@/components/ControlNumberInputTutorial";
 
 type Props = {
   distributorData: AllocatedTicketToDistributor[];
@@ -36,6 +43,8 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
 
   const [controlFrom, setControlFrom] = useState<"system" | "me">("system");
   const [showSummary, setShowSummary] = useState(false);
+
+  const [inludes, setIncludes] = useState({ lost: false, discounted: false });
 
   const distributorTickets = useMemo(() => {
     if (!distributorData) return { soldTickets: [], unsoldTickets: [] };
@@ -222,44 +231,37 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
             <p className="text-sm font-medium">{compressControlNumbers(avaialbleToBeRemitted)}</p>
           </div>
           <div className="mt-5">
-            <div>
+            <RadioGroup value={controlFrom} onValueChange={(value) => setControlFrom(value as "me" | "system")}>
               <div className="flex items-center gap-2">
-                <input
-                  disabled={remit.isPending}
-                  className="cursor-pointer"
-                  id="system"
-                  type="radio"
-                  name="controlFrom"
-                  value="system"
-                  checked={controlFrom === "system"}
-                  onChange={() => setControlFrom("system")}
-                />
-                <label className="cursor-pointer" htmlFor="system">
-                  Use Distributor’s Breakdown (No Changes)
-                </label>
+                <RadioGroupItem value="system" id="system" />
+                <Label htmlFor="system">Use Distributor’s Breakdown (No Changes)</Label>
               </div>
-
               <div className="flex items-center gap-2">
-                <input
-                  disabled={remit.isPending}
-                  className="cursor-pointer"
-                  id="me"
-                  type="radio"
-                  name="controlFrom"
-                  value="system"
-                  checked={controlFrom === "me"}
-                  onChange={() => setControlFrom("me")}
-                />
-                <label className="cursor-pointer" htmlFor="me">
-                  I want to correct the ticket status
-                </label>
+                <RadioGroupItem value="me" id="me" />
+                <Label htmlFor="me">I’ll Input My Own Breakdown</Label>
               </div>
-            </div>
+            </RadioGroup>
 
             <div className=" border border-lightGrey p-3 rounded-md mt-3 flex flex-col gap-2">
               <InputField
                 disabled={controlFrom === "system" || remit.isPending}
-                label={controlFrom === "system" ? "Marked as Sold (by Distributor)" : "Enter Ticket Control Numbers which are Sold"}
+                label={
+                  controlFrom === "system" ? (
+                    "Marked as Sold (by Distributor)"
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <p>Enter Ticket Control Numbers which are Sold</p>
+                      <HoverCard openDelay={0} closeDelay={200}>
+                        <HoverCardTrigger>
+                          <CircleQuestionMarkIcon className="w-4 text-muted-foreground " />
+                        </HoverCardTrigger>
+                        <HoverCardContent className="p-0">
+                          <ControlNumberInputTutorial className="border bg-background" />
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+                  )
+                }
                 error={error.sold}
                 value={form.sold}
                 onChange={handleInput}
@@ -267,40 +269,59 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
               />
             </div>
 
-            <div className="mt-5 flex gap-3 flex-col">
-              <InputField
-                disabled={remit.isPending}
-                error={error.lost}
-                name="lost"
-                value={form.lost}
-                onChange={handleInput}
-                label="Enter any ticket control number lost by Distributor (Optional)"
-              />
-
-              <div className="flex flex-col items-center gap-3 md:flex-row">
-                <InputField
-                  disabled={remit.isPending}
-                  error={error.discounted}
-                  name="discounted"
-                  value={form.discounted}
-                  onChange={handleInput}
-                  label="Ticket control number discounted  (Optional)"
-                />
-                <InputField
-                  disabled={remit.isPending}
-                  type="number"
-                  placeholder="%"
-                  error={error.discountPercentage}
-                  name="discountPercentage"
-                  label="Discount Percentage"
-                  value={form.discountPercentage as number}
-                  onChange={handleInput}
-                />
+            <div className="mt-3 flex gap-3 flex-col">
+              <div className="flex gap-3">
+                <div className="flex items-center gap-2">
+                  <Checkbox checked={inludes.lost} onCheckedChange={(val) => setIncludes((prev) => ({ ...prev, lost: val === true }))} id="lost" />
+                  <Label htmlFor="lost">Have Lost Tickets?</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    checked={inludes.discounted}
+                    onCheckedChange={(val) => setIncludes((prev) => ({ ...prev, discounted: val === true }))}
+                    id="discounted"
+                  />
+                  <Label htmlFor="discounted">Have Discounted Tickets?</Label>
+                </div>
               </div>
+
+              {inludes.lost && (
+                <InputField
+                  disabled={remit.isPending}
+                  error={error.lost}
+                  name="lost"
+                  value={form.lost}
+                  onChange={handleInput}
+                  label="Enter any ticket control number lost by Distributor (Optional)"
+                />
+              )}
+
+              {inludes.discounted && (
+                <div className="flex flex-col items-center gap-3 md:flex-row">
+                  <InputField
+                    disabled={remit.isPending}
+                    error={error.discounted}
+                    name="discounted"
+                    value={form.discounted}
+                    onChange={handleInput}
+                    label="Ticket control number discounted  (Optional)"
+                  />
+                  <InputField
+                    disabled={remit.isPending}
+                    type="number"
+                    placeholder="%"
+                    error={error.discountPercentage}
+                    name="discountPercentage"
+                    label="Discount Percentage"
+                    value={form.discountPercentage as number}
+                    onChange={handleInput}
+                  />
+                </div>
+              )}
             </div>
           </div>
 
-          <Button disabled={remit.isPending} onClick={validate} className="!bg-green self-end mt-5">
+          <Button disabled={remit.isPending} onClick={validate} className=" self-end mt-5">
             Remit Tickets
           </Button>
         </>
@@ -322,7 +343,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
               lostTickets={distributorData.filter((ticket) => parsed.lostList.includes(ticket.controlNumber))}
               discountedTickets={distributorData.filter((ticket) => parsed.discountedList.includes(ticket.controlNumber))}
               discountPercentage={form.discountPercentage}
-              commissionFee={schedule.commissionFee}
+              commissionFee={schedule.ticketPricing.commisionFee}
             />
           </DialogContent>
         </Dialog>

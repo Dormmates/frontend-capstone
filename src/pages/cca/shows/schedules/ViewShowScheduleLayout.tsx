@@ -1,11 +1,10 @@
 import { NavLink, Outlet, useParams } from "react-router-dom";
-
 import { useGetShow } from "@/_lib/@react-client-query/show.ts";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useGetScheduleInformation } from "@/_lib/@react-client-query/schedule.ts";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import Breadcrumbs from "@/components/BreadCrumbs";
-import ShowCard from "@/components/ShowCard";
+import { CircleAlertIcon } from "lucide-react";
 
 const ViewShowScheduleLayout = () => {
   const { showId, scheduleId } = useParams();
@@ -18,7 +17,7 @@ const ViewShowScheduleLayout = () => {
     { name: "Tickets", path: "tickets" },
     { name: "Seats", path: "seats", hidden: schedule?.seatingType === "freeSeating" },
     { name: "Tally Data", path: "tally" },
-    { name: "Reservations", path: "reservations" },
+    // { name: "Reservations", path: "reservations" },
   ];
 
   if (loadingShow || scheduleLoading) {
@@ -29,11 +28,20 @@ const ViewShowScheduleLayout = () => {
     return <p>Error loading</p>;
   }
 
+  console.log(schedule);
+
   return (
-    <ContentWrapper className="lg:!p-16 flex flex-col">
+    <ContentWrapper className="flex flex-col ">
       <div className="flex flex-col gap-5 ">
-        <Breadcrumbs backHref={`/shows/${showId}`} items={[{ name: "Schedules", href: `/shows/${showId}` }, { name: show.title }]} />
-        <div className="flex w-full gap-10 my-5">
+        <Breadcrumbs
+          backHref={`/shows/${showId}`}
+          items={[
+            { name: "Schedules", href: `/shows/${showId}` },
+            { name: show.title },
+            { name: `${formatToReadableDate(schedule.datetime + "")} at ${formatToReadableTime(schedule.datetime + "")}` },
+          ]}
+        />
+        <div className="flex flex-wrap w-full gap-10 my-5">
           {links
             .filter((link) => !link.hidden)
             .map((link) => (
@@ -47,7 +55,18 @@ const ViewShowScheduleLayout = () => {
               </NavLink>
             ))}
         </div>
-        <div className="flex gap-5">
+        {!schedule.isOpen && (
+          <div className="flex  flex-col bg-muted border shadow-sm border-l-red border-l-4 rounded-md w-full p-3 gap-1 ">
+            <div className="flex items-center gap-2">
+              <CircleAlertIcon className="text-red w-4 font-bold" />
+              <p className="font-medium text-sm">Note - Schedule is currently closed</p>
+            </div>
+            <p className="text-sm text-muted-foreground ">
+              Actions such as ticket allocation, remittance, and related tasks are restricted until the schedule is reopened.
+            </p>
+          </div>
+        )}
+        {/* <div className="flex gap-5">
           <ShowCard title={show.title} description={""} showImage={show.showCover} genres={show.genreNames} />
           <div className="flex flex-col justify-center text-2xl gap-2 mt-5 mb-10">
             <h1 className="text-center">
@@ -58,7 +77,7 @@ const ViewShowScheduleLayout = () => {
               <span className="font-bold">{formatToReadableTime(schedule.datetime + "")}</span>
             </p>
           </div>
-        </div>
+        </div> */}
         <Outlet context={{ show, schedule }} />
       </div>
     </ContentWrapper>

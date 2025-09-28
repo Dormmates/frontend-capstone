@@ -23,6 +23,7 @@ interface AlertModalProps {
   confirmation?: string;
   children?: React.ReactNode;
   className?: string;
+  disabled?: boolean;
 }
 
 const AlertModal: React.FC<AlertModalProps> = ({
@@ -36,6 +37,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
   confirmation = "Confirm",
   children,
   className,
+  disabled = false,
 }) => {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
@@ -92,7 +94,9 @@ const AlertModal: React.FC<AlertModalProps> = ({
           >
             {cancelText}
           </Button>
-          <Button onClick={handleConfirm}>{actionText}</Button>
+          <Button disabled={disabled} onClick={handleConfirm}>
+            {actionText}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

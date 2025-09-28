@@ -7,7 +7,6 @@ import InputField from "@/components/InputField";
 import PasswordField from "@/components/PasswordField";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { isValidEmail } from "@/utils";
-import { connectSocket } from "@/socket";
 import { toast } from "sonner";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
 import logo from "@/assets/images/cca-logo.png";
@@ -48,7 +47,6 @@ const CCALogin = () => {
     toast.promise(
       login.mutateAsync({ ...formContent, expectedRole: "cca" }).then((data) => {
         setUser(data);
-        connectSocket(data.userId);
       }),
       {
         position: "top-center",

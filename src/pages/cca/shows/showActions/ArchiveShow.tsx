@@ -1,4 +1,3 @@
-import archiveIcon from "../../../../assets/icons/archive.png";
 import { Button } from "@/components/ui/button";
 import type { ShowData } from "@/types/show";
 import { useQueryClient } from "@tanstack/react-query";
@@ -6,6 +5,7 @@ import { useArchiveShow } from "@/_lib/@react-client-query/show";
 import { useAuthContext } from "@/context/AuthContext";
 import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
+import { ArchiveIcon } from "lucide-react";
 
 type ArchiveShowProps = {
   show: ShowData;
@@ -38,15 +38,14 @@ const ArchiveShow = ({ show }: ArchiveShowProps) => {
 
   return (
     <AlertModal
-      tooltip="Archive Show"
       className="max-w-2xl"
       onConfirm={handleSubmit}
       actionText="Archive"
       title="Archive Show"
       description="This will move this show on the archive list"
       trigger={
-        <Button disabled={archiveShow.isPending} variant="ghost" className="p-0">
-          <img src={archiveIcon} alt="archive" className="w-7 h-7" />
+        <Button disabled={archiveShow.isPending} variant="outline">
+          <ArchiveIcon />
         </Button>
       }
     >

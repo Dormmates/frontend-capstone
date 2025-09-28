@@ -30,8 +30,10 @@ import PerformingGroups from "./groups/PerformingGroups";
 import CCADashboard from "./dashboard/CCADashboard";
 
 import CCALogin from "./CCALogin";
+import Settings from "./systemSettings/Settings";
 
 export {
+  Settings,
   ViewDistributor,
   CCALogin,
   AccountRequests,

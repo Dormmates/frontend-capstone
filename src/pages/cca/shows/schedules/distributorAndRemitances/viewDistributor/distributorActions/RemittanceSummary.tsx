@@ -115,11 +115,11 @@ const RemittanceSummary = ({
 
       {onSubmit && cancelSubmit && (
         <div className="flex self-end gap-3 mt-5">
-          <Button disabled={disabled} onClick={() => onSubmit(remarks)} className="!bg-green">
-            Confirm
-          </Button>
-          <Button onClick={cancelSubmit} disabled={disabled} className="!bg-red">
+          <Button onClick={cancelSubmit} disabled={disabled} variant="outline">
             Cancel
+          </Button>
+          <Button disabled={disabled} onClick={() => onSubmit(remarks)}>
+            Confirm
           </Button>
         </div>
       )}

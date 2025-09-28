@@ -11,7 +11,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 240.114,
     y: 109.385,
     row: "AA1-8",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 240.114 109.385)",
   },
   {
@@ -19,7 +19,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 255.02,
     y: 115.199,
     row: "AA1-8",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 255.02 115.199)",
   },
   {
@@ -27,7 +27,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 269.927,
     y: 121.014,
     row: "AA1-8",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 269.927 121.014)",
   },
   {
@@ -35,7 +35,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 284.833,
     y: 126.828,
     row: "AA1-8",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 284.833 126.828)",
   },
   {
@@ -43,7 +43,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 299.739,
     y: 132.642,
     row: "AA1-8",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 299.739 132.642)",
   },
   {
@@ -51,7 +51,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 314.645,
     y: 138.456,
     row: "AA1-8",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 314.645 138.456)",
   },
   {
@@ -59,7 +59,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 329.551,
     y: 144.27,
     row: "AA1-8",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 329.551 144.27)",
   },
   {
@@ -67,7 +67,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 344.457,
     y: 150.085,
     row: "AA1-8",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 344.457 150.085)",
   },
   {
@@ -75,7 +75,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 218.623,
     y: 121.668,
     row: "BB1-9",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3375 218.623 121.668)",
   },
   {
@@ -83,7 +83,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 233.526,
     y: 127.49,
     row: "BB1-9",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3375 233.526 127.49)",
   },
   {
@@ -91,7 +91,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 248.43,
     y: 133.311,
     row: "BB1-9",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3375 248.43 133.311)",
   },
   {
@@ -99,7 +99,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 263.333,
     y: 139.134,
     row: "BB1-9",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3375 263.333 139.134)",
   },
   {
@@ -107,7 +107,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 278.236,
     y: 144.955,
     row: "BB1-9",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3375 278.236 144.955)",
   },
   {
@@ -115,7 +115,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 293.139,
     y: 150.777,
     row: "BB1-9",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3375 293.139 150.777)",
   },
   {
@@ -123,7 +123,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 308.043,
     y: 156.598,
     row: "BB1-9",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3375 308.043 156.598)",
   },
   {
@@ -131,7 +131,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 322.946,
     y: 162.421,
     row: "BB1-9",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3375 322.946 162.421)",
   },
   {
@@ -139,7 +139,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 337.849,
     y: 168.243,
     row: "BB1-9",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3375 337.849 168.243)",
   },
   {
@@ -147,7 +147,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 191.613,
     y: 148.048,
     row: "A1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.1837 191.613 148.048)",
   },
   {
@@ -155,7 +155,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 206.532,
     y: 153.831,
     row: "A1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.1837 206.532 153.831)",
   },
   {
@@ -163,7 +163,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 221.451,
     y: 159.612,
     row: "A1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.1837 221.451 159.612)",
   },
   {
@@ -171,7 +171,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 236.37,
     y: 165.394,
     row: "A1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.1837 236.37 165.394)",
   },
   {
@@ -179,7 +179,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 251.288,
     y: 171.175,
     row: "A1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.1837 251.288 171.175)",
   },
   {
@@ -187,7 +187,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 266.207,
     y: 176.958,
     row: "A1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.1837 266.207 176.958)",
   },
   {
@@ -195,7 +195,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 281.126,
     y: 182.739,
     row: "A1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.1837 281.126 182.739)",
   },
   {
@@ -203,7 +203,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 296.045,
     y: 188.521,
     row: "A1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.1837 296.045 188.521)",
   },
   {
@@ -211,7 +211,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 310.964,
     y: 194.303,
     row: "A1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.1837 310.964 194.303)",
   },
   {
@@ -219,7 +219,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 325.882,
     y: 200.085,
     row: "A1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.1837 325.882 200.085)",
   },
   {
@@ -227,7 +227,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 175.003,
     y: 161.514,
     row: "B1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 175.003 161.514)",
   },
   {
@@ -235,7 +235,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 189.91,
     y: 167.328,
     row: "B1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 189.91 167.328)",
   },
   {
@@ -243,7 +243,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 204.816,
     y: 173.143,
     row: "B1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 204.816 173.143)",
   },
   {
@@ -251,7 +251,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 219.722,
     y: 178.957,
     row: "B1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 219.722 178.957)",
   },
   {
@@ -259,7 +259,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 234.628,
     y: 184.77,
     row: "B1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 234.628 184.77)",
   },
   {
@@ -267,7 +267,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 249.534,
     y: 190.585,
     row: "B1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 249.534 190.585)",
   },
   {
@@ -275,7 +275,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 264.441,
     y: 196.399,
     row: "B1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 264.441 196.399)",
   },
   {
@@ -283,7 +283,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 279.347,
     y: 202.214,
     row: "B1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 279.347 202.214)",
   },
   {
@@ -291,7 +291,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 294.253,
     y: 208.027,
     row: "B1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 294.253 208.027)",
   },
   {
@@ -299,7 +299,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 309.159,
     y: 213.843,
     row: "B1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 309.159 213.843)",
   },
   {
@@ -307,7 +307,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 175.152,
     y: 182.13,
     row: "C1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 175.152 182.13)",
   },
   {
@@ -315,7 +315,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 190.058,
     y: 187.944,
     row: "C1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 190.058 187.944)",
   },
   {
@@ -323,7 +323,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 204.964,
     y: 193.759,
     row: "C1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 204.964 193.759)",
   },
   {
@@ -331,7 +331,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 219.87,
     y: 199.573,
     row: "C1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 219.87 199.573)",
   },
   {
@@ -339,7 +339,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 234.777,
     y: 205.387,
     row: "C1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 234.777 205.387)",
   },
   {
@@ -347,7 +347,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 249.683,
     y: 211.201,
     row: "C1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 249.683 211.201)",
   },
   {
@@ -355,7 +355,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 264.589,
     y: 217.016,
     row: "C1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 264.589 217.016)",
   },
   {
@@ -363,7 +363,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 279.495,
     y: 222.83,
     row: "C1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 279.495 222.83)",
   },
   {
@@ -371,7 +371,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 294.401,
     y: 228.644,
     row: "C1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 294.401 228.644)",
   },
   {
@@ -379,7 +379,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 309.307,
     y: 234.459,
     row: "C1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 309.307 234.459)",
   },
   {
@@ -387,7 +387,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 160.222,
     y: 197.031,
     row: "D1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 160.222 197.031)",
   },
   {
@@ -395,7 +395,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 175.128,
     y: 202.846,
     row: "D1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 175.128 202.846)",
   },
   {
@@ -403,7 +403,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 190.034,
     y: 208.66,
     row: "D1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 190.034 208.66)",
   },
   {
@@ -411,7 +411,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 204.94,
     y: 214.475,
     row: "D1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 204.94 214.475)",
   },
   {
@@ -419,7 +419,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 219.846,
     y: 220.288,
     row: "D1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 219.846 220.288)",
   },
   {
@@ -427,7 +427,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 234.752,
     y: 226.102,
     row: "D1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 234.752 226.102)",
   },
   {
@@ -435,7 +435,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 249.659,
     y: 231.917,
     row: "D1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 249.659 231.917)",
   },
   {
@@ -443,7 +443,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 264.565,
     y: 237.731,
     row: "D1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 264.565 237.731)",
   },
   {
@@ -451,7 +451,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 279.471,
     y: 243.545,
     row: "D1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 279.471 243.545)",
   },
   {
@@ -459,7 +459,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 294.377,
     y: 249.36,
     row: "D1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 294.377 249.36)",
   },
   {
@@ -467,7 +467,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 159.163,
     y: 218.384,
     row: "E1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 159.163 218.384)",
   },
   {
@@ -475,7 +475,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 174.069,
     y: 224.198,
     row: "E1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 174.069 224.198)",
   },
   {
@@ -483,7 +483,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 188.975,
     y: 230.013,
     row: "E1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 188.975 230.013)",
   },
   {
@@ -491,7 +491,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 203.881,
     y: 235.827,
     row: "E1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 203.881 235.827)",
   },
   {
@@ -499,7 +499,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 218.787,
     y: 241.641,
     row: "E1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 218.787 241.641)",
   },
   {
@@ -507,7 +507,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 233.693,
     y: 247.455,
     row: "E1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 233.693 247.455)",
   },
   {
@@ -515,7 +515,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 248.6,
     y: 253.269,
     row: "E1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 248.6 253.269)",
   },
   {
@@ -523,7 +523,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 263.506,
     y: 259.084,
     row: "E1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 263.506 259.084)",
   },
   {
@@ -531,7 +531,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 278.412,
     y: 264.897,
     row: "E1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 278.412 264.897)",
   },
   {
@@ -539,7 +539,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 293.318,
     y: 270.713,
     row: "E1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 293.318 270.713)",
   },
   {
@@ -547,7 +547,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 153.244,
     y: 238.557,
     row: "F1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 153.244 238.557)",
   },
   {
@@ -555,7 +555,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 168.15,
     y: 244.371,
     row: "F1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 168.15 244.371)",
   },
   {
@@ -563,7 +563,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 183.057,
     y: 250.185,
     row: "F1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 183.057 250.185)",
   },
   {
@@ -571,7 +571,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 197.963,
     y: 256,
     row: "F1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 197.963 256)",
   },
   {
@@ -579,7 +579,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 212.869,
     y: 261.813,
     row: "F1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 212.869 261.813)",
   },
   {
@@ -587,7 +587,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 227.775,
     y: 267.628,
     row: "F1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 227.775 267.628)",
   },
   {
@@ -595,7 +595,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 242.681,
     y: 273.442,
     row: "F1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 242.681 273.442)",
   },
   {
@@ -603,7 +603,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 257.588,
     y: 279.257,
     row: "F1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 257.588 279.257)",
   },
   {
@@ -611,7 +611,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 272.494,
     y: 285.07,
     row: "F1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 272.494 285.07)",
   },
   {
@@ -619,7 +619,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 287.4,
     y: 290.886,
     row: "F1-10",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 287.4 290.886)",
   },
   {
@@ -627,7 +627,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 127.123,
     y: 248.688,
     row: "G1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 127.123 248.688)",
   },
   {
@@ -635,7 +635,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 142.029,
     y: 254.503,
     row: "G1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 142.029 254.503)",
   },
   {
@@ -643,7 +643,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 156.935,
     y: 260.317,
     row: "G1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 156.935 260.317)",
   },
   {
@@ -651,7 +651,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 171.841,
     y: 266.132,
     row: "G1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 171.841 266.132)",
   },
   {
@@ -659,7 +659,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 186.747,
     y: 271.945,
     row: "G1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 186.747 271.945)",
   },
   {
@@ -667,7 +667,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 201.654,
     y: 277.76,
     row: "G1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 201.654 277.76)",
   },
   {
@@ -675,7 +675,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 216.56,
     y: 283.574,
     row: "G1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 216.56 283.574)",
   },
   {
@@ -683,7 +683,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 231.466,
     y: 289.389,
     row: "G1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 231.466 289.389)",
   },
   {
@@ -691,7 +691,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 246.372,
     y: 295.202,
     row: "G1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 246.372 295.202)",
   },
   {
@@ -699,7 +699,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 261.278,
     y: 301.017,
     row: "G1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 261.278 301.017)",
   },
   {
@@ -707,7 +707,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 276.185,
     y: 306.831,
     row: "G1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 276.185 306.831)",
   },
   {
@@ -715,7 +715,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 127.036,
     y: 270.275,
     row: "H1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 127.036 270.275)",
   },
   {
@@ -723,7 +723,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 141.942,
     y: 276.09,
     row: "H1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 141.942 276.09)",
   },
   {
@@ -731,7 +731,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 156.848,
     y: 281.904,
     row: "H1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 156.848 281.904)",
   },
   {
@@ -739,7 +739,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 171.754,
     y: 287.719,
     row: "H1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 171.754 287.719)",
   },
   {
@@ -747,7 +747,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 186.66,
     y: 293.532,
     row: "H1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 186.66 293.532)",
   },
   {
@@ -755,7 +755,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 201.567,
     y: 299.347,
     row: "H1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 201.567 299.347)",
   },
   {
@@ -763,7 +763,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 216.473,
     y: 305.161,
     row: "H1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 216.473 305.161)",
   },
   {
@@ -771,7 +771,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 231.379,
     y: 310.976,
     row: "H1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 231.379 310.976)",
   },
   {
@@ -779,7 +779,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 246.285,
     y: 316.789,
     row: "H1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 246.285 316.789)",
   },
   {
@@ -787,7 +787,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 261.191,
     y: 322.603,
     row: "H1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 261.191 322.603)",
   },
   {
@@ -795,7 +795,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 276.097,
     y: 328.418,
     row: "H1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 276.097 328.418)",
   },
   {
@@ -803,7 +803,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 128.391,
     y: 290.155,
     row: "I1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 128.391 290.155)",
   },
   {
@@ -811,7 +811,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 143.298,
     y: 295.97,
     row: "I1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 143.298 295.97)",
   },
   {
@@ -819,7 +819,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 158.204,
     y: 301.784,
     row: "I1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 158.204 301.784)",
   },
   {
@@ -827,7 +827,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 173.11,
     y: 307.599,
     row: "I1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 173.11 307.599)",
   },
   {
@@ -835,7 +835,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 188.016,
     y: 313.412,
     row: "I1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 188.016 313.412)",
   },
   {
@@ -843,7 +843,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 202.922,
     y: 319.227,
     row: "I1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 202.922 319.227)",
   },
   {
@@ -851,7 +851,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 217.829,
     y: 325.041,
     row: "I1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 217.829 325.041)",
   },
   {
@@ -859,7 +859,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 232.735,
     y: 330.855,
     row: "I1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 232.735 330.855)",
   },
   {
@@ -867,7 +867,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 247.641,
     y: 336.669,
     row: "I1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 247.641 336.669)",
   },
   {
@@ -875,7 +875,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 262.547,
     y: 342.483,
     row: "I1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 262.547 342.483)",
   },
   {
@@ -883,7 +883,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 277.453,
     y: 348.298,
     row: "I1-11",
-    section: "Orchestra Left",
+    section: "orchestraLeft",
     rotation: "rotate(21.3084 277.453 348.298)",
   },
 
@@ -892,7 +892,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 448.5,
     y: 167.5,
     row: "AA9-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -900,7 +900,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 464.5,
     y: 167.5,
     row: "AA9-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -908,7 +908,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 480.5,
     y: 167.5,
     row: "AA9-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -916,7 +916,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 496.5,
     y: 167.5,
     row: "AA9-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -924,7 +924,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 512.5,
     y: 167.5,
     row: "AA9-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -932,7 +932,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 528.5,
     y: 167.5,
     row: "AA9-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -940,7 +940,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 544.5,
     y: 167.5,
     row: "AA9-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -948,7 +948,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 560.5,
     y: 167.5,
     row: "AA9-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -956,7 +956,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 576.5,
     y: 167.5,
     row: "AA9-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -964,7 +964,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 457.5,
     y: 185.5,
     row: "BB10-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -972,7 +972,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 473.5,
     y: 185.5,
     row: "BB10-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -980,7 +980,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 489.5,
     y: 185.5,
     row: "BB10-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -988,7 +988,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 505.5,
     y: 185.5,
     row: "BB10-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -996,7 +996,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 521.5,
     y: 185.5,
     row: "BB10-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1004,7 +1004,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 537.5,
     y: 185.5,
     row: "BB10-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1012,7 +1012,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 553.5,
     y: 185.5,
     row: "BB10-17",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1020,79 +1020,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 569.5,
     y: 185.5,
     row: "BB10-17",
-    section: "Orchestra Middle",
-    rotation: null,
-  },
-  {
-    seatNumber: "CC1",
-    x: 449.5,
-    y: 202.5,
-    row: "CC1-9",
-    section: "Orchestra Middle",
-    rotation: null,
-  },
-  {
-    seatNumber: "CC2",
-    x: 465.5,
-    y: 202.5,
-    row: "CC1-9",
-    section: "Orchestra Middle",
-    rotation: null,
-  },
-  {
-    seatNumber: "CC3",
-    x: 481.5,
-    y: 202.5,
-    row: "CC1-9",
-    section: "Orchestra Middle",
-    rotation: null,
-  },
-  {
-    seatNumber: "CC4",
-    x: 497.5,
-    y: 202.5,
-    row: "CC1-9",
-    section: "Orchestra Middle",
-    rotation: null,
-  },
-  {
-    seatNumber: "CC5",
-    x: 513.5,
-    y: 202.5,
-    row: "CC1-9",
-    section: "Orchestra Middle",
-    rotation: null,
-  },
-  {
-    seatNumber: "CC6",
-    x: 529.5,
-    y: 202.5,
-    row: "CC1-9",
-    section: "Orchestra Middle",
-    rotation: null,
-  },
-  {
-    seatNumber: "CC7",
-    x: 545.5,
-    y: 202.5,
-    row: "CC1-9",
-    section: "Orchestra Middle",
-    rotation: null,
-  },
-  {
-    seatNumber: "CC8",
-    x: 561.5,
-    y: 202.5,
-    row: "CC1-9",
-    section: "Orchestra Middle",
-    rotation: null,
-  },
-  {
-    seatNumber: "CC9",
-    x: 577.5,
-    y: 202.5,
-    row: "CC1-9",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
 
@@ -1101,7 +1029,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 443.5,
     y: 221.5,
     row: "A11-20",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1109,7 +1037,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 459.5,
     y: 221.5,
     row: "A11-20",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1117,7 +1045,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 475.5,
     y: 221.5,
     row: "A11-20",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1125,7 +1053,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 491.5,
     y: 221.5,
     row: "A11-20",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1133,7 +1061,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 507.5,
     y: 221.5,
     row: "A11-20",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1141,7 +1069,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 523.5,
     y: 221.5,
     row: "A11-20",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1149,7 +1077,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 539.5,
     y: 221.5,
     row: "A11-20",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1157,7 +1085,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 555.5,
     y: 221.5,
     row: "A11-20",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1165,7 +1093,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 571.5,
     y: 221.5,
     row: "A11-20",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1173,7 +1101,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 587.5,
     y: 221.5,
     row: "A11-20",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1181,7 +1109,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 432.5,
     y: 240.5,
     row: "B11-21",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1189,7 +1117,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 448.5,
     y: 240.5,
     row: "B11-21",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1197,7 +1125,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 464.5,
     y: 240.5,
     row: "B11-21",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1205,7 +1133,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 480.5,
     y: 240.5,
     row: "B11-21",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1213,7 +1141,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 496.5,
     y: 240.5,
     row: "B11-21",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1221,7 +1149,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 512.5,
     y: 240.5,
     row: "B11-21",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1229,7 +1157,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 528.5,
     y: 240.5,
     row: "B11-21",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1237,7 +1165,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 544.5,
     y: 240.5,
     row: "B11-21",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1245,7 +1173,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 560.5,
     y: 240.5,
     row: "B11-21",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1253,7 +1181,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 576.5,
     y: 240.5,
     row: "B11-21",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1261,7 +1189,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 592.5,
     y: 240.5,
     row: "B11-21",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1269,7 +1197,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 421.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1277,7 +1205,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 437.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1285,7 +1213,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 453.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1293,7 +1221,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 469.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1301,7 +1229,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 485.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1309,7 +1237,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 501.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1317,7 +1245,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 517.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1325,7 +1253,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 533.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1333,7 +1261,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 549.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1341,7 +1269,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 565.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1349,7 +1277,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 581.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1357,7 +1285,79 @@ export const seatMetaData: SeatMetaData[] = [
     x: 597.5,
     y: 259.5,
     row: "C11-22",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
+    rotation: null,
+  },
+  {
+    seatNumber: "CC1",
+    x: 449.5,
+    y: 202.5,
+    row: "CC1-9",
+    section: "orchestraMiddle",
+    rotation: null,
+  },
+  {
+    seatNumber: "CC2",
+    x: 465.5,
+    y: 202.5,
+    row: "CC1-9",
+    section: "orchestraMiddle",
+    rotation: null,
+  },
+  {
+    seatNumber: "CC3",
+    x: 481.5,
+    y: 202.5,
+    row: "CC1-9",
+    section: "orchestraMiddle",
+    rotation: null,
+  },
+  {
+    seatNumber: "CC4",
+    x: 497.5,
+    y: 202.5,
+    row: "CC1-9",
+    section: "orchestraMiddle",
+    rotation: null,
+  },
+  {
+    seatNumber: "CC5",
+    x: 513.5,
+    y: 202.5,
+    row: "CC1-9",
+    section: "orchestraMiddle",
+    rotation: null,
+  },
+  {
+    seatNumber: "CC6",
+    x: 529.5,
+    y: 202.5,
+    row: "CC1-9",
+    section: "orchestraMiddle",
+    rotation: null,
+  },
+  {
+    seatNumber: "CC7",
+    x: 545.5,
+    y: 202.5,
+    row: "CC1-9",
+    section: "orchestraMiddle",
+    rotation: null,
+  },
+  {
+    seatNumber: "CC8",
+    x: 561.5,
+    y: 202.5,
+    row: "CC1-9",
+    section: "orchestraMiddle",
+    rotation: null,
+  },
+  {
+    seatNumber: "CC9",
+    x: 577.5,
+    y: 202.5,
+    row: "CC1-9",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1365,7 +1365,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 415.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1373,7 +1373,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 431.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1381,7 +1381,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 447.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1389,7 +1389,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 463.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1397,7 +1397,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 479.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1405,7 +1405,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 495.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1413,7 +1413,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 511.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1421,7 +1421,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 527.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1429,7 +1429,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 543.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1437,7 +1437,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 559.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1445,7 +1445,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 575.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1453,7 +1453,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 591.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1461,7 +1461,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 607.5,
     y: 278.5,
     row: "D11-23",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1469,7 +1469,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 408.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1477,7 +1477,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 424.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1485,7 +1485,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 440.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1493,7 +1493,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 456.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1501,7 +1501,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 472.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1509,7 +1509,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 488.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1517,7 +1517,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 504.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1525,7 +1525,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 520.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1533,7 +1533,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 536.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1541,7 +1541,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 552.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1549,7 +1549,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 568.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1557,7 +1557,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 584.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1565,7 +1565,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 600.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1573,7 +1573,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 616.5,
     y: 298.5,
     row: "E11-24",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1581,7 +1581,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 399.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1589,7 +1589,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 415.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1597,7 +1597,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 431.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1605,7 +1605,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 447.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1613,7 +1613,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 463.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1621,7 +1621,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 479.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1629,7 +1629,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 495.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1637,7 +1637,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 511.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1645,7 +1645,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 527.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1653,7 +1653,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 543.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1661,7 +1661,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 559.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1669,7 +1669,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 575.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1677,7 +1677,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 591.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1685,7 +1685,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 607.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1693,7 +1693,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 623.5,
     y: 317.5,
     row: "F11-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1701,7 +1701,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 408.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1709,7 +1709,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 424.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1717,7 +1717,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 440.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1725,7 +1725,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 456.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1733,7 +1733,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 472.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1741,7 +1741,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 488.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1749,7 +1749,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 504.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1757,7 +1757,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 520.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1765,7 +1765,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 536.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1773,7 +1773,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 552.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1781,7 +1781,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 568.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1789,7 +1789,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 584.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1797,7 +1797,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 600.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1805,7 +1805,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 616.5,
     y: 336.5,
     row: "G12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1813,7 +1813,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 398.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1821,7 +1821,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 414.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1829,7 +1829,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 430.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1837,7 +1837,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 446.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1845,7 +1845,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 462.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1853,7 +1853,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 478.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1861,7 +1861,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 494.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1869,7 +1869,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 510.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1877,7 +1877,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 526.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1885,7 +1885,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 542.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1893,7 +1893,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 558.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1901,7 +1901,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 574.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1909,7 +1909,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 590.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1917,7 +1917,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 606.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1925,7 +1925,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 622.5,
     y: 355.5,
     row: "H12-26",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1933,7 +1933,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 408.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1941,7 +1941,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 424.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1949,7 +1949,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 440.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1957,7 +1957,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 456.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1965,7 +1965,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 472.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1973,7 +1973,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 488.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1981,7 +1981,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 504.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1989,7 +1989,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 520.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -1997,7 +1997,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 536.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2005,7 +2005,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 552.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2013,7 +2013,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 568.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2021,7 +2021,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 584.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2029,7 +2029,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 600.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2037,7 +2037,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 616.5,
     y: 374.5,
     row: "I12-25",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2045,7 +2045,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 398.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2053,7 +2053,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 414.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2061,7 +2061,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 430.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2069,7 +2069,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 446.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2077,7 +2077,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 462.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2085,7 +2085,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 478.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2093,7 +2093,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 494.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2101,7 +2101,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 510.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2109,7 +2109,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 526.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2117,7 +2117,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 542.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2125,7 +2125,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 558.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2133,7 +2133,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 574.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2141,7 +2141,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 590.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2149,7 +2149,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 606.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2157,7 +2157,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 622.5,
     y: 416.5,
     row: "J1-15",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2165,7 +2165,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 398.5,
     y: 434.5,
     row: "K1-8",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2173,7 +2173,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 414.5,
     y: 434.5,
     row: "K1-8",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2181,7 +2181,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 430.5,
     y: 434.5,
     row: "K1-8",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2189,7 +2189,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 446.5,
     y: 434.5,
     row: "K1-8",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2197,7 +2197,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 462.5,
     y: 434.5,
     row: "K1-8",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2205,7 +2205,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 478.5,
     y: 434.5,
     row: "K1-8",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2213,7 +2213,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 494.5,
     y: 434.5,
     row: "K1-8",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
   {
@@ -2221,7 +2221,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 510.5,
     y: 434.5,
     row: "K1-8",
-    section: "Orchestra Middle",
+    section: "orchestraMiddle",
     rotation: null,
   },
 
@@ -2230,7 +2230,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 694.959,
     y: 207.418,
     row: "A21-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 694.959 207.418)",
   },
   {
@@ -2238,7 +2238,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 709.821,
     y: 201.492,
     row: "A21-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 709.821 201.492)",
   },
   {
@@ -2246,7 +2246,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 724.683,
     y: 195.565,
     row: "A21-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 724.683 195.565)",
   },
   {
@@ -2254,7 +2254,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 739.544,
     y: 189.639,
     row: "A21-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 739.544 189.639)",
   },
   {
@@ -2262,7 +2262,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 754.406,
     y: 183.713,
     row: "A21-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 754.406 183.713)",
   },
   {
@@ -2270,7 +2270,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 769.268,
     y: 177.786,
     row: "A21-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 769.268 177.786)",
   },
   {
@@ -2278,7 +2278,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 784.13,
     y: 171.859,
     row: "A21-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 784.13 171.859)",
   },
   {
@@ -2286,7 +2286,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 798.992,
     y: 165.934,
     row: "A21-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 798.992 165.934)",
   },
   {
@@ -2294,7 +2294,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 813.854,
     y: 160.007,
     row: "A21-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 813.854 160.007)",
   },
   {
@@ -2302,7 +2302,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 828.716,
     y: 154.081,
     row: "A21-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 828.716 154.081)",
   },
   {
@@ -2310,7 +2310,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 680.276,
     y: 153.109,
     row: "AA18-25",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 680.276 153.109)",
   },
   {
@@ -2318,7 +2318,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 695.138,
     y: 147.184,
     row: "AA18-25",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 695.138 147.184)",
   },
   {
@@ -2326,7 +2326,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 710,
     y: 141.257,
     row: "AA18-25",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 710 141.257)",
   },
   {
@@ -2334,7 +2334,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 724.862,
     y: 135.33,
     row: "AA18-25",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 724.862 135.33)",
   },
   {
@@ -2342,7 +2342,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 739.724,
     y: 129.404,
     row: "AA18-25",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 739.724 129.404)",
   },
   {
@@ -2350,7 +2350,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 754.586,
     y: 123.478,
     row: "AA18-25",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 754.586 123.478)",
   },
   {
@@ -2358,7 +2358,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 769.448,
     y: 117.551,
     row: "AA18-25",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 769.448 117.551)",
   },
   {
@@ -2366,7 +2366,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 784.31,
     y: 111.625,
     row: "AA18-25",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 784.31 111.625)",
   },
   {
@@ -2374,7 +2374,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 713.406,
     y: 219.279,
     row: "B22-31",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 713.406 219.279)",
   },
   {
@@ -2382,7 +2382,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 728.268,
     y: 213.354,
     row: "B22-31",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 728.268 213.354)",
   },
   {
@@ -2390,7 +2390,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 743.13,
     y: 207.427,
     row: "B22-31",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 743.13 207.427)",
   },
   {
@@ -2398,7 +2398,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 757.992,
     y: 201.5,
     row: "B22-31",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 757.992 201.5)",
   },
   {
@@ -2406,7 +2406,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 772.854,
     y: 195.574,
     row: "B22-31",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 772.854 195.574)",
   },
   {
@@ -2414,7 +2414,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 787.716,
     y: 189.648,
     row: "B22-31",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 787.716 189.648)",
   },
   {
@@ -2422,7 +2422,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 802.578,
     y: 183.721,
     row: "B22-31",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 802.578 183.721)",
   },
   {
@@ -2430,7 +2430,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 817.44,
     y: 177.795,
     row: "B22-31",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 817.44 177.795)",
   },
   {
@@ -2438,7 +2438,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 832.302,
     y: 171.868,
     row: "B22-31",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 832.302 171.868)",
   },
   {
@@ -2446,7 +2446,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 847.164,
     y: 165.942,
     row: "B22-31",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 847.164 165.942)",
   },
   {
@@ -2454,7 +2454,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 681.089,
     y: 172.754,
     row: "BB18-27",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 681.089 172.754)",
   },
   {
@@ -2462,7 +2462,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 695.951,
     y: 166.828,
     row: "BB18-27",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 695.951 166.828)",
   },
   {
@@ -2470,7 +2470,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 710.813,
     y: 160.901,
     row: "BB18-27",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 710.813 160.901)",
   },
   {
@@ -2478,7 +2478,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 725.675,
     y: 154.975,
     row: "BB18-27",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 725.675 154.975)",
   },
   {
@@ -2486,7 +2486,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 740.537,
     y: 149.049,
     row: "BB18-27",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 740.537 149.049)",
   },
   {
@@ -2494,7 +2494,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 755.399,
     y: 143.122,
     row: "BB18-27",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 755.399 143.122)",
   },
   {
@@ -2502,7 +2502,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 770.261,
     y: 137.195,
     row: "BB18-27",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 770.261 137.195)",
   },
   {
@@ -2510,7 +2510,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 785.123,
     y: 131.27,
     row: "BB18-27",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 785.123 131.27)",
   },
   {
@@ -2518,7 +2518,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 799.985,
     y: 125.343,
     row: "BB18-27",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 799.985 125.343)",
   },
   {
@@ -2526,7 +2526,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 814.847,
     y: 119.417,
     row: "BB18-27",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 814.847 119.417)",
   },
   {
@@ -2534,7 +2534,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 708.34,
     y: 240.144,
     row: "C23-32",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 708.34 240.144)",
   },
   {
@@ -2542,7 +2542,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 723.202,
     y: 234.218,
     row: "C23-32",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 723.202 234.218)",
   },
   {
@@ -2550,7 +2550,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 738.064,
     y: 228.291,
     row: "C23-32",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 738.064 228.291)",
   },
   {
@@ -2558,7 +2558,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 752.926,
     y: 222.364,
     row: "C23-32",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 752.926 222.364)",
   },
   {
@@ -2566,7 +2566,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 767.788,
     y: 216.439,
     row: "C23-32",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 767.788 216.439)",
   },
   {
@@ -2574,7 +2574,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 782.65,
     y: 210.512,
     row: "C23-32",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 782.65 210.512)",
   },
   {
@@ -2582,7 +2582,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 797.512,
     y: 204.585,
     row: "C23-32",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 797.512 204.585)",
   },
   {
@@ -2590,7 +2590,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 812.374,
     y: 198.659,
     row: "C23-32",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 812.374 198.659)",
   },
   {
@@ -2598,7 +2598,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 827.236,
     y: 192.732,
     row: "C23-32",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 827.236 192.732)",
   },
   {
@@ -2606,7 +2606,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 842.098,
     y: 186.807,
     row: "C23-32",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 842.098 186.807)",
   },
   {
@@ -2614,7 +2614,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 694.902,
     y: 186.682,
     row: "CC10-18",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 694.902 186.682)",
   },
   {
@@ -2622,7 +2622,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 709.764,
     y: 180.756,
     row: "CC10-18",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 709.764 180.756)",
   },
   {
@@ -2630,7 +2630,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 724.626,
     y: 174.829,
     row: "CC10-18",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 724.626 174.829)",
   },
   {
@@ -2638,7 +2638,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 739.487,
     y: 168.902,
     row: "CC10-18",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 739.487 168.902)",
   },
   {
@@ -2646,7 +2646,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 754.349,
     y: 162.977,
     row: "CC10-18",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 754.349 162.977)",
   },
   {
@@ -2654,7 +2654,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 769.211,
     y: 157.05,
     row: "CC10-18",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 769.211 157.05)",
   },
   {
@@ -2662,7 +2662,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 784.073,
     y: 151.123,
     row: "CC10-18",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 784.073 151.123)",
   },
   {
@@ -2670,7 +2670,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 798.935,
     y: 145.197,
     row: "CC10-18",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 798.935 145.197)",
   },
   {
@@ -2678,7 +2678,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 813.797,
     y: 139.271,
     row: "CC10-18",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 813.797 139.271)",
   },
   {
@@ -2686,7 +2686,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 727.835,
     y: 252.084,
     row: "D24-33",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-22.2298 727.835 252.084)",
   },
   {
@@ -2694,7 +2694,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 742.646,
     y: 246.031,
     row: "D24-33",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-22.2298 742.646 246.031)",
   },
   {
@@ -2702,7 +2702,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 757.457,
     y: 239.977,
     row: "D24-33",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-22.2298 757.457 239.977)",
   },
   {
@@ -2710,7 +2710,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 772.268,
     y: 233.925,
     row: "D24-33",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-22.2298 772.268 233.925)",
   },
   {
@@ -2718,7 +2718,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 787.079,
     y: 227.872,
     row: "D24-33",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-22.2298 787.079 227.872)",
   },
   {
@@ -2726,7 +2726,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 801.89,
     y: 221.818,
     row: "D24-33",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-22.2298 801.89 221.818)",
   },
   {
@@ -2734,7 +2734,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 816.7,
     y: 215.765,
     row: "D24-33",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-22.2298 816.7 215.765)",
   },
   {
@@ -2742,7 +2742,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 831.511,
     y: 209.712,
     row: "D24-33",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-22.2298 831.511 209.712)",
   },
   {
@@ -2750,7 +2750,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 846.322,
     y: 203.659,
     row: "D24-33",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-22.2298 846.322 203.659)",
   },
   {
@@ -2758,7 +2758,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 861.133,
     y: 197.606,
     row: "D24-33",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-22.2298 861.133 197.606)",
   },
   {
@@ -2766,7 +2766,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 744.816,
     y: 290.907,
     row: "F26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 744.816 290.907)",
   },
   {
@@ -2774,7 +2774,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 759.678,
     y: 284.982,
     row: "F26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 759.678 284.982)",
   },
   {
@@ -2782,7 +2782,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 774.54,
     y: 279.055,
     row: "F26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 774.54 279.055)",
   },
   {
@@ -2790,7 +2790,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 789.402,
     y: 273.128,
     row: "F26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 789.402 273.128)",
   },
   {
@@ -2798,7 +2798,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 804.264,
     y: 267.202,
     row: "F26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 804.264 267.202)",
   },
   {
@@ -2806,7 +2806,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 819.126,
     y: 261.275,
     row: "F26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 819.126 261.275)",
   },
   {
@@ -2814,7 +2814,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 833.987,
     y: 255.349,
     row: "F26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 833.987 255.349)",
   },
   {
@@ -2822,7 +2822,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 848.849,
     y: 249.423,
     row: "F26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 848.849 249.423)",
   },
   {
@@ -2830,7 +2830,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 863.711,
     y: 243.496,
     row: "F26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 863.711 243.496)",
   },
   {
@@ -2838,7 +2838,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 878.573,
     y: 237.569,
     row: "F26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 878.573 237.569)",
   },
   {
@@ -2846,7 +2846,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 893.435,
     y: 231.644,
     row: "F26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 893.435 231.644)",
   },
   {
@@ -2854,7 +2854,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 748.478,
     y: 309.577,
     row: "G26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 748.478 309.577)",
   },
   {
@@ -2862,7 +2862,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 763.34,
     y: 303.651,
     row: "G26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 763.34 303.651)",
   },
   {
@@ -2870,7 +2870,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 778.202,
     y: 297.725,
     row: "G26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 778.202 297.725)",
   },
   {
@@ -2878,7 +2878,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 793.064,
     y: 291.798,
     row: "G26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 793.064 291.798)",
   },
   {
@@ -2886,7 +2886,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 807.926,
     y: 285.872,
     row: "G26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 807.926 285.872)",
   },
   {
@@ -2894,7 +2894,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 822.787,
     y: 279.945,
     row: "G26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 822.787 279.945)",
   },
   {
@@ -2902,7 +2902,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 837.649,
     y: 274.019,
     row: "G26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 837.649 274.019)",
   },
   {
@@ -2910,7 +2910,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 852.511,
     y: 268.093,
     row: "G26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 852.511 268.093)",
   },
   {
@@ -2918,7 +2918,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 867.373,
     y: 262.166,
     row: "G26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 867.373 262.166)",
   },
   {
@@ -2926,7 +2926,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 882.235,
     y: 256.239,
     row: "G26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 882.235 256.239)",
   },
   {
@@ -2934,7 +2934,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 897.097,
     y: 250.314,
     row: "G26-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 897.097 250.314)",
   },
   {
@@ -2942,7 +2942,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 744.625,
     y: 331.168,
     row: "H27-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 744.625 331.168)",
   },
   {
@@ -2950,7 +2950,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 759.487,
     y: 325.242,
     row: "H27-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 759.487 325.242)",
   },
   {
@@ -2958,7 +2958,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 774.349,
     y: 319.315,
     row: "H27-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 774.349 319.315)",
   },
   {
@@ -2966,7 +2966,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 789.211,
     y: 313.389,
     row: "H27-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 789.211 313.389)",
   },
   {
@@ -2974,7 +2974,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 804.073,
     y: 307.463,
     row: "H27-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 804.073 307.463)",
   },
   {
@@ -2982,7 +2982,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 818.935,
     y: 301.536,
     row: "H27-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 818.935 301.536)",
   },
   {
@@ -2990,7 +2990,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 833.797,
     y: 295.609,
     row: "H27-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 833.797 295.609)",
   },
   {
@@ -2998,7 +2998,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 848.659,
     y: 289.684,
     row: "H27-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 848.659 289.684)",
   },
   {
@@ -3006,7 +3006,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 878.382,
     y: 277.83,
     row: "H27-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 878.382 277.83)",
   },
   {
@@ -3014,7 +3014,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 893.245,
     y: 271.904,
     row: "H27-36",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 893.245 271.904)",
   },
   {
@@ -3022,7 +3022,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 744.713,
     y: 352.029,
     row: "I26-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 744.713 352.029)",
   },
   {
@@ -3030,7 +3030,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 759.575,
     y: 346.104,
     row: "I26-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 759.575 346.104)",
   },
   {
@@ -3038,7 +3038,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 774.437,
     y: 340.177,
     row: "I26-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 774.437 340.177)",
   },
   {
@@ -3046,7 +3046,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 789.299,
     y: 334.25,
     row: "I26-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 789.299 334.25)",
   },
   {
@@ -3054,7 +3054,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 804.161,
     y: 328.324,
     row: "I26-30",
-    section: "Orchestra Right",
+    section: "orchestraRight",
     rotation: "rotate(-21.7404 804.161 328.324)",
   },
   {
@@ -3062,7 +3062,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 87.6418,
     y: 475.301,
     row: "L1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(36.5698 87.6418 475.301)",
   },
   {
@@ -3070,7 +3070,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 101.345,
     y: 485.304,
     row: "L1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(35.0592 101.345 485.304)",
   },
   {
@@ -3078,7 +3078,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 115.827,
     y: 494.31,
     row: "L1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(32.4757 115.827 494.31)",
   },
   {
@@ -3086,7 +3086,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 130.285,
     y: 503.317,
     row: "L1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(29.8458 130.285 503.317)",
   },
   {
@@ -3094,7 +3094,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 145.065,
     y: 511.123,
     row: "L1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(25.1149 145.065 511.123)",
   },
   {
@@ -3102,7 +3102,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 160.267,
     y: 518.356,
     row: "L1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(20.535 160.267 518.356)",
   },
   {
@@ -3110,7 +3110,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 176.278,
     y: 524.381,
     row: "L1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(16.1658 176.278 524.381)",
   },
   {
@@ -3118,7 +3118,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 193.103,
     y: 529.413,
     row: "L1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(11.0751 193.103 529.413)",
   },
   {
@@ -3126,7 +3126,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 210.741,
     y: 533.424,
     row: "L1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(9.52725 210.741 533.424)",
   },
   {
@@ -3134,7 +3134,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 227.948,
     y: 536.418,
     row: "L1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(10.4118 227.948 536.418)",
   },
   {
@@ -3142,7 +3142,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 245.598,
     y: 540.429,
     row: "L1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(8.91575 245.598 540.429)",
   },
   {
@@ -3150,7 +3150,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 83.494,
     y: 496.302,
     row: "M1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(35.8133 83.494 496.302)",
   },
   {
@@ -3158,7 +3158,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 97.2954,
     y: 507.304,
     row: "M1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(34.8069 97.2954 507.304)",
   },
   {
@@ -3166,7 +3166,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 111.397,
     y: 517.316,
     row: "M1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(30.3867 111.397 517.316)",
   },
   {
@@ -3174,7 +3174,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 126.622,
     y: 526.329,
     row: "M1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.7113 126.622 526.329)",
   },
   {
@@ -3182,7 +3182,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 143.171,
     y: 535.337,
     row: "M1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(24.6257 143.171 535.337)",
   },
   {
@@ -3190,7 +3190,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 159.355,
     y: 542.354,
     row: "M1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(20.9256 159.355 542.354)",
   },
   {
@@ -3198,7 +3198,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 175.473,
     y: 549.403,
     row: "M1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(12.6692 175.473 549.403)",
   },
   {
@@ -3206,7 +3206,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 193.56,
     y: 554.43,
     row: "M1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(8.75135 193.56 554.43)",
   },
   {
@@ -3214,7 +3214,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 210.416,
     y: 557.434,
     row: "M1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(8.13666 210.416 557.434)",
   },
   {
@@ -3222,7 +3222,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 226.898,
     y: 559.451,
     row: "M1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(5.93176 226.898 559.451)",
   },
   {
@@ -3230,95 +3230,95 @@ export const seatMetaData: SeatMetaData[] = [
     x: 243.741,
     y: 561.456,
     row: "M1-11",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(5.26541 243.741 561.456)",
   },
   {
     seatNumber: "N1",
     x: 81.494,
     y: 517.302,
-    row: "N1-N11",
-    section: "Balcony Left",
+    row: "N1-11",
+    section: "balconyLeft",
     rotation: "rotate(35.8133 81.494 517.302)",
   },
   {
     seatNumber: "N2",
     x: 95.2954,
     y: 528.304,
-    row: "N1-N11",
-    section: "Balcony Left",
+    row: "N1-11",
+    section: "balconyLeft",
     rotation: "rotate(34.8069 95.2954 528.304)",
   },
   {
     seatNumber: "N3",
     x: 109.397,
     y: 538.316,
-    row: "N1-N11",
-    section: "Balcony Left",
+    row: "N1-11",
+    section: "balconyLeft",
     rotation: "rotate(30.3867 109.397 538.316)",
   },
   {
     seatNumber: "N4",
     x: 124.622,
     y: 547.329,
-    row: "N1-N11",
-    section: "Balcony Left",
+    row: "N1-11",
+    section: "balconyLeft",
     rotation: "rotate(26.7113 124.622 547.329)",
   },
   {
     seatNumber: "N5",
     x: 141.171,
     y: 556.337,
-    row: "N1-N11",
-    section: "Balcony Left",
+    row: "N1-11",
+    section: "balconyLeft",
     rotation: "rotate(24.6257 141.171 556.337)",
   },
   {
     seatNumber: "N6",
     x: 157.355,
     y: 563.354,
-    row: "N1-N11",
-    section: "Balcony Left",
+    row: "N1-11",
+    section: "balconyLeft",
     rotation: "rotate(20.9256 157.355 563.354)",
   },
   {
     seatNumber: "N7",
     x: 173.473,
     y: 570.403,
-    row: "N1-N11",
-    section: "Balcony Left",
+    row: "N1-11",
+    section: "balconyLeft",
     rotation: "rotate(12.6692 173.473 570.403)",
   },
   {
     seatNumber: "N8",
     x: 191.56,
     y: 575.43,
-    row: "N1-N11",
-    section: "Balcony Left",
+    row: "N1-11",
+    section: "balconyLeft",
     rotation: "rotate(8.75135 191.56 575.43)",
   },
   {
     seatNumber: "N9",
     x: 208.416,
     y: 578.434,
-    row: "N1-N11",
-    section: "Balcony Left",
+    row: "N1-11",
+    section: "balconyLeft",
     rotation: "rotate(8.13666 208.416 578.434)",
   },
   {
     seatNumber: "N10",
     x: 224.898,
     y: 580.451,
-    row: "N1-N11",
-    section: "Balcony Left",
+    row: "N1-11",
+    section: "balconyLeft",
     rotation: "rotate(5.93176 224.898 580.451)",
   },
   {
     seatNumber: "N11",
     x: 241.741,
     y: 582.456,
-    row: "N1-N11",
-    section: "Balcony Left",
+    row: "N1-11",
+    section: "balconyLeft",
     rotation: "rotate(5.26541 241.741 582.456)",
   },
   {
@@ -3326,7 +3326,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 87.02,
     y: 548.322,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 87.02 548.322)",
   },
   {
@@ -3334,7 +3334,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 102.674,
     y: 557.328,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.9561 102.674 557.328)",
   },
   {
@@ -3342,7 +3342,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 119.548,
     y: 565.33,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.3707 119.548 565.33)",
   },
   {
@@ -3350,7 +3350,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 136.171,
     y: 573.337,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(24.6257 136.171 573.337)",
   },
   {
@@ -3358,7 +3358,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 152.197,
     y: 581.337,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(24.7462 152.197 581.337)",
   },
   {
@@ -3366,7 +3366,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 169.434,
     y: 587.353,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(21.2826 169.434 587.353)",
   },
   {
@@ -3374,7 +3374,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 185.535,
     y: 594.374,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(17.2899 185.535 594.374)",
   },
   {
@@ -3382,7 +3382,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 202.575,
     y: 598.429,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(8.81746 202.575 598.429)",
   },
   {
@@ -3390,7 +3390,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 220.912,
     y: 600.485,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(1.74884 220.912 600.485)",
   },
   {
@@ -3398,7 +3398,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 240.5,
     y: 601.5,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 240.5 601.5)",
   },
   {
@@ -3406,7 +3406,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 312.5,
     y: 601.5,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 312.5 601.5)",
   },
   {
@@ -3414,7 +3414,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 329.5,
     y: 601.5,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 329.5 601.5)",
   },
   {
@@ -3422,7 +3422,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 346.5,
     y: 601.5,
     row: "O1-13",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 346.5 601.5)",
   },
   {
@@ -3430,7 +3430,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 26.9488,
     y: 532.308,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(33.0764 26.9488 532.308)",
   },
   {
@@ -3438,7 +3438,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 41.9699,
     y: 542.308,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(33.1811 41.9699 542.308)",
   },
   {
@@ -3446,7 +3446,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 72.0201,
     y: 561.322,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 72.0201 561.322)",
   },
   {
@@ -3454,7 +3454,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 87.0201,
     y: 570.322,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 87.0201 570.322)",
   },
   {
@@ -3462,7 +3462,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 101.674,
     y: 578.328,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.9561 101.674 578.328)",
   },
   {
@@ -3470,7 +3470,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 118.548,
     y: 587.33,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.3707 118.548 587.33)",
   },
   {
@@ -3478,7 +3478,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 135.171,
     y: 596.337,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(24.6257 135.171 596.337)",
   },
   {
@@ -3486,7 +3486,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 153.197,
     y: 603.337,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(24.7462 153.197 603.337)",
   },
   {
@@ -3494,7 +3494,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 168.434,
     y: 610.353,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(21.2826 168.434 610.353)",
   },
   {
@@ -3502,7 +3502,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 185.535,
     y: 616.374,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(17.2899 185.535 616.374)",
   },
   {
@@ -3510,7 +3510,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 203.575,
     y: 620.429,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(8.81746 203.575 620.429)",
   },
   {
@@ -3518,7 +3518,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 222.912,
     y: 622.485,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(1.74884 222.912 622.485)",
   },
   {
@@ -3526,7 +3526,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 241.5,
     y: 622.5,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 241.5 622.5)",
   },
   {
@@ -3534,7 +3534,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 259.5,
     y: 622.5,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 259.5 622.5)",
   },
   {
@@ -3542,7 +3542,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 277.5,
     y: 622.5,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 277.5 622.5)",
   },
   {
@@ -3550,7 +3550,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 295.5,
     y: 622.5,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 295.5 622.5)",
   },
   {
@@ -3558,7 +3558,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 313.5,
     y: 622.5,
     row: "P1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 313.5 622.5)",
   },
 
@@ -3567,7 +3567,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 58.5064,
     y: 576.314,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(30.9127 58.5064 576.314)",
   },
   {
@@ -3575,7 +3575,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 74.0201,
     y: 586.322,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 74.0201 586.322)",
   },
   {
@@ -3583,7 +3583,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 90.0201,
     y: 595.322,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 90.0201 595.322)",
   },
   {
@@ -3591,7 +3591,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 105.674,
     y: 604.328,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.9561 105.674 604.328)",
   },
   {
@@ -3599,7 +3599,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 121.548,
     y: 612.33,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.3707 121.548 612.33)",
   },
   {
@@ -3607,7 +3607,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 138.171,
     y: 621.337,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(24.6257 138.171 621.337)",
   },
   {
@@ -3615,7 +3615,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 153.741,
     y: 628.369,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(18.196 153.741 628.369)",
   },
   {
@@ -3623,7 +3623,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 170.444,
     y: 634.403,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(12.5458 170.444 634.403)",
   },
   {
@@ -3631,7 +3631,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 187.473,
     y: 638.432,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(8.38096 187.473 638.432)",
   },
   {
@@ -3639,7 +3639,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 205.467,
     y: 640.466,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(4.10281 205.467 640.466)",
   },
   {
@@ -3647,7 +3647,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 223.912,
     y: 641.485,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(1.74884 223.912 641.485)",
   },
   {
@@ -3655,7 +3655,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 241.5,
     y: 641.5,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 241.5 641.5)",
   },
   {
@@ -3663,7 +3663,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 259.5,
     y: 641.5,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 259.5 641.5)",
   },
   {
@@ -3671,7 +3671,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 277.5,
     y: 641.5,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 277.5 641.5)",
   },
   {
@@ -3679,7 +3679,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 295.5,
     y: 641.5,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 295.5 641.5)",
   },
   {
@@ -3687,7 +3687,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 313.5,
     y: 641.5,
     row: "Q1-16",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 313.5 641.5)",
   },
   {
@@ -3695,7 +3695,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 43.5064,
     y: 592.314,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(30.9127 43.5064 592.314)",
   },
   {
@@ -3703,7 +3703,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 59.5064,
     y: 601.314,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(30.9127 59.5064 601.314)",
   },
   {
@@ -3711,7 +3711,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 75.0201,
     y: 610.322,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 75.0201 610.322)",
   },
   {
@@ -3719,7 +3719,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 91.0201,
     y: 619.322,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 91.0201 619.322)",
   },
   {
@@ -3727,7 +3727,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 106.674,
     y: 628.328,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.9561 106.674 628.328)",
   },
   {
@@ -3735,7 +3735,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 122.548,
     y: 636.33,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.3707 122.548 636.33)",
   },
   {
@@ -3743,7 +3743,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 138.171,
     y: 644.337,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(24.6257 138.171 644.337)",
   },
   {
@@ -3751,7 +3751,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 154.741,
     y: 651.369,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(18.196 154.741 651.369)",
   },
   {
@@ -3759,7 +3759,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 172.444,
     y: 657.403,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(12.5458 172.444 657.403)",
   },
   {
@@ -3767,7 +3767,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 189.473,
     y: 660.432,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(8.38096 189.473 660.432)",
   },
   {
@@ -3775,7 +3775,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 207.467,
     y: 661.466,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(4.10281 207.467 661.466)",
   },
   {
@@ -3783,7 +3783,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 224.912,
     y: 662.485,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(1.74884 224.912 662.485)",
   },
   {
@@ -3791,7 +3791,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 242.5,
     y: 662.5,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 242.5 662.5)",
   },
   {
@@ -3799,7 +3799,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 260.5,
     y: 662.5,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 260.5 662.5)",
   },
   {
@@ -3807,7 +3807,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 278.5,
     y: 662.5,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 278.5 662.5)",
   },
   {
@@ -3815,7 +3815,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 296.5,
     y: 662.5,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 296.5 662.5)",
   },
   {
@@ -3823,7 +3823,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 314.5,
     y: 662.5,
     row: "R1-17",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 314.5 662.5)",
   },
   {
@@ -3831,7 +3831,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 24.5064,
     y: 605.314,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(30.9127 24.5064 605.314)",
   },
   {
@@ -3839,7 +3839,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 40.5064,
     y: 614.314,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(30.9127 40.5064 614.314)",
   },
   {
@@ -3847,7 +3847,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 56.5064,
     y: 623.314,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(30.9127 56.5064 623.314)",
   },
   {
@@ -3855,7 +3855,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 72.0201,
     y: 632.322,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 72.0201 632.322)",
   },
   {
@@ -3863,7 +3863,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 88.0201,
     y: 641.322,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 88.0201 641.322)",
   },
   {
@@ -3871,7 +3871,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 103.674,
     y: 650.328,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.9561 103.674 650.328)",
   },
   {
@@ -3879,7 +3879,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 119.548,
     y: 658.33,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.3707 119.548 658.33)",
   },
   {
@@ -3887,7 +3887,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 136.171,
     y: 665.337,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(24.6257 136.171 665.337)",
   },
   {
@@ -3895,7 +3895,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 152.741,
     y: 672.369,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(18.196 152.741 672.369)",
   },
   {
@@ -3903,7 +3903,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 170.444,
     y: 677.403,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(12.5458 170.444 677.403)",
   },
   {
@@ -3911,7 +3911,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 188.473,
     y: 680.432,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(8.38096 188.473 680.432)",
   },
   {
@@ -3919,7 +3919,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 206.467,
     y: 682.466,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(4.10281 206.467 682.466)",
   },
   {
@@ -3927,7 +3927,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 224.912,
     y: 682.485,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(1.74884 224.912 682.485)",
   },
   {
@@ -3935,7 +3935,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 242.5,
     y: 682.5,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 242.5 682.5)",
   },
   {
@@ -3943,7 +3943,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 260.5,
     y: 682.5,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 260.5 682.5)",
   },
   {
@@ -3951,7 +3951,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 278.5,
     y: 682.5,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 278.5 682.5)",
   },
   {
@@ -3959,7 +3959,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 296.5,
     y: 682.5,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 296.5 682.5)",
   },
   {
@@ -3967,7 +3967,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 314.5,
     y: 682.5,
     row: "S1-18",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 314.5 682.5)",
   },
   {
@@ -3975,7 +3975,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 8.50642,
     y: 617.314,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(30.9127 8.50642 617.314)",
   },
   {
@@ -3983,7 +3983,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 24.5064,
     y: 626.314,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(30.9127 24.5064 626.314)",
   },
   {
@@ -3991,7 +3991,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 39.5064,
     y: 636.314,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(30.9127 39.5064 636.314)",
   },
   {
@@ -3999,7 +3999,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 54.5064,
     y: 644.314,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(30.9127 54.5064 644.314)",
   },
   {
@@ -4007,7 +4007,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 70.0201,
     y: 653.322,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 70.0201 653.322)",
   },
   {
@@ -4015,7 +4015,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 87.0201,
     y: 663.322,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 87.0201 663.322)",
   },
   {
@@ -4023,7 +4023,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 102.674,
     y: 672.328,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.9561 102.674 672.328)",
   },
   {
@@ -4031,7 +4031,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 119.548,
     y: 680.33,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.3707 119.548 680.33)",
   },
   {
@@ -4039,7 +4039,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 135.976,
     y: 688.363,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(19.2384 135.976 688.363)",
   },
   {
@@ -4047,7 +4047,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 152.489,
     y: 693.402,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(12.7372 152.489 693.402)",
   },
   {
@@ -4055,7 +4055,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 170.445,
     y: 697.403,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(12.5458 170.445 697.403)",
   },
   {
@@ -4063,7 +4063,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 188.473,
     y: 700.432,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(8.38096 188.473 700.432)",
   },
   {
@@ -4071,7 +4071,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 206.467,
     y: 702.466,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(4.10281 206.467 702.466)",
   },
   {
@@ -4079,7 +4079,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 224.912,
     y: 702.485,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(1.74884 224.912 702.485)",
   },
   {
@@ -4087,7 +4087,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 242.5,
     y: 702.5,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 242.5 702.5)",
   },
   {
@@ -4095,7 +4095,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 260.5,
     y: 702.5,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 260.5 702.5)",
   },
   {
@@ -4103,7 +4103,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 278.5,
     y: 702.5,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 278.5 702.5)",
   },
   {
@@ -4111,7 +4111,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 296.5,
     y: 702.5,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 296.5 702.5)",
   },
   {
@@ -4119,7 +4119,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 314.5,
     y: 702.5,
     row: "T1-19",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 314.5 702.5)",
   },
 
@@ -4128,7 +4128,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 86.0201,
     y: 685.322,
     row: "U1-10",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(28.5844 86.0201 685.322)",
   },
   {
@@ -4136,7 +4136,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 101.674,
     y: 694.328,
     row: "U1-10",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.9561 101.674 694.328)",
   },
   {
@@ -4144,7 +4144,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 118.548,
     y: 702.33,
     row: "U1-10",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(26.3707 118.548 702.33)",
   },
   {
@@ -4152,7 +4152,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 134.976,
     y: 710.363,
     row: "U1-10",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(19.2384 134.976 710.363)",
   },
   {
@@ -4160,7 +4160,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 151.489,
     y: 715.402,
     row: "U1-10",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(12.7372 151.489 715.402)",
   },
   {
@@ -4168,7 +4168,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 169.445,
     y: 719.403,
     row: "U1-10",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(12.5458 169.445 719.403)",
   },
   {
@@ -4176,7 +4176,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 187.473,
     y: 722.432,
     row: "U1-10",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(8.38096 187.473 722.432)",
   },
   {
@@ -4184,7 +4184,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 205.467,
     y: 724.466,
     row: "U1-10",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(4.10281 205.467 724.466)",
   },
   {
@@ -4192,7 +4192,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 223.912,
     y: 724.485,
     row: "U1-10",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(1.74884 223.912 724.485)",
   },
   {
@@ -4200,7 +4200,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 241.5,
     y: 724.5,
     row: "U1-10",
-    section: "Balcony Left",
+    section: "balconyLeft",
     rotation: "rotate(0 241.5 724.5)",
   },
 
@@ -4209,7 +4209,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 429.5,
     y: 544.5,
     row: "L12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4217,7 +4217,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 445.5,
     y: 544.5,
     row: "L12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4225,7 +4225,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 461.5,
     y: 544.5,
     row: "L12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4233,7 +4233,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 477.5,
     y: 544.5,
     row: "L12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4241,7 +4241,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 493.5,
     y: 544.5,
     row: "L12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4249,7 +4249,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 509.5,
     y: 544.5,
     row: "L12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4257,7 +4257,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 525.5,
     y: 544.5,
     row: "L12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4265,7 +4265,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 541.5,
     y: 544.5,
     row: "L12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4273,7 +4273,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 557.5,
     y: 544.5,
     row: "L12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4281,7 +4281,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 573.5,
     y: 544.5,
     row: "L12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4289,7 +4289,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 589.5,
     y: 544.5,
     row: "L12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4297,7 +4297,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 425.5,
     y: 561.5,
     row: "M12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4305,7 +4305,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 441.5,
     y: 561.5,
     row: "M12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4313,7 +4313,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 457.5,
     y: 561.5,
     row: "M12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4321,7 +4321,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 473.5,
     y: 561.5,
     row: "M12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4329,7 +4329,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 489.5,
     y: 561.5,
     row: "M12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4337,7 +4337,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 505.5,
     y: 561.5,
     row: "M12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4345,7 +4345,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 521.5,
     y: 561.5,
     row: "M12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4353,7 +4353,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 537.5,
     y: 561.5,
     row: "M12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4361,7 +4361,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 553.5,
     y: 561.5,
     row: "M12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4369,7 +4369,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 569.5,
     y: 561.5,
     row: "M12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4377,7 +4377,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 585.5,
     y: 561.5,
     row: "M12-22",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4385,7 +4385,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 417.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4393,7 +4393,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 433.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4401,7 +4401,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 449.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4409,7 +4409,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 465.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4417,7 +4417,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 481.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4425,7 +4425,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 497.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4433,7 +4433,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 513.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4441,7 +4441,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 529.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4449,7 +4449,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 545.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4457,7 +4457,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 561.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4465,7 +4465,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 577.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4473,7 +4473,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 593.5,
     y: 581.5,
     row: "N12-23",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4481,7 +4481,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 411.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4489,7 +4489,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 427.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4497,7 +4497,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 443.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4505,7 +4505,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 459.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4513,7 +4513,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 475.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4521,7 +4521,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 491.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4529,7 +4529,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 507.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4537,7 +4537,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 523.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4545,7 +4545,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 539.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4553,7 +4553,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 555.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4561,7 +4561,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 571.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4569,7 +4569,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 587.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4577,7 +4577,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 603.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4585,7 +4585,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 619.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4593,7 +4593,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 635.5,
     y: 601.5,
     row: "O14-28",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4601,7 +4601,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 409.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4609,7 +4609,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 425.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4617,7 +4617,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 441.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4625,7 +4625,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 457.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4633,7 +4633,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 473.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4641,7 +4641,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 489.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4649,7 +4649,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 505.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4657,7 +4657,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 521.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4665,7 +4665,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 537.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4673,7 +4673,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 553.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4681,7 +4681,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 569.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4689,7 +4689,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 585.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4697,7 +4697,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 601.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4705,7 +4705,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 617.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4713,7 +4713,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 633.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4721,7 +4721,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 649.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4729,7 +4729,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 665.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4737,7 +4737,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 681.5,
     y: 621.5,
     row: "P18-35",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4745,7 +4745,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 387.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4753,7 +4753,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 403.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4761,7 +4761,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 419.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4769,7 +4769,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 435.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4777,7 +4777,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 451.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4785,7 +4785,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 467.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4793,7 +4793,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 483.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4801,7 +4801,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 499.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4809,7 +4809,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 515.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4817,7 +4817,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 531.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4825,7 +4825,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 547.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4833,7 +4833,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 563.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4841,7 +4841,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 579.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4849,7 +4849,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 595.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4857,7 +4857,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 611.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4865,7 +4865,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 627.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4873,7 +4873,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 643.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4881,7 +4881,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 659.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4889,7 +4889,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 675.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4897,7 +4897,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 691.5,
     y: 639.5,
     row: "Q17-36",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4905,7 +4905,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 610.5,
     y: 658.499,
     row: "R18-27",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4913,7 +4913,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 626.5,
     y: 658.499,
     row: "R18-27",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4921,7 +4921,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 642.5,
     y: 658.499,
     row: "R18-27",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4929,7 +4929,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 658.5,
     y: 658.499,
     row: "R18-27",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4937,7 +4937,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 674.5,
     y: 658.499,
     row: "R18-27",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4945,7 +4945,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 690.5,
     y: 658.499,
     row: "R18-27",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4953,7 +4953,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 706.5,
     y: 658.499,
     row: "R18-27",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4961,7 +4961,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 722.5,
     y: 658.499,
     row: "R18-27",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4969,7 +4969,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 739.5,
     y: 658.5,
     row: "R18-27",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4977,7 +4977,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 756.939,
     y: 658.11,
     row: "R18-27",
-    section: "Balcony Middle",
+    section: "balconyMiddle",
     rotation: null,
   },
   {
@@ -4985,7 +4985,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 789.407,
     y: 528.332,
     row: "L23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.0598 789.407 528.332)",
   },
   {
@@ -4993,7 +4993,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 806.404,
     y: 524.438,
     row: "L23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.5197 806.404 524.438)",
   },
   {
@@ -5001,7 +5001,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 823.404,
     y: 520.434,
     row: "L23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.5036 823.404 520.434)",
   },
   {
@@ -5009,7 +5009,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 840.41,
     y: 516.228,
     row: "L23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-11.6175 840.41 516.228)",
   },
   {
@@ -5017,7 +5017,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 856.403,
     y: 513.452,
     row: "L23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.5759 856.403 513.452)",
   },
   {
@@ -5025,7 +5025,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 873.4,
     y: 509.547,
     row: "L23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.9898 873.4 509.547)",
   },
   {
@@ -5033,7 +5033,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 889.389,
     y: 505.953,
     row: "L23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-14.7554 889.389 505.953)",
   },
   {
@@ -5041,7 +5041,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 905.372,
     y: 501.605,
     row: "L23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-17.6041 905.372 501.605)",
   },
   {
@@ -5049,7 +5049,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 921.354,
     y: 496.37,
     row: "L23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-20.9908 921.354 496.37)",
   },
   {
@@ -5057,7 +5057,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 936.34,
     y: 490.017,
     row: "L23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-23.9208 936.34 490.017)",
   },
   {
@@ -5065,7 +5065,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 952.336,
     y: 483.226,
     row: "L23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 952.336 483.226)",
   },
   {
@@ -5073,7 +5073,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 793.408,
     y: 545.294,
     row: "M23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-11.8122 793.408 545.294)",
   },
   {
@@ -5081,7 +5081,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 811.572,
     y: 542.148,
     row: "M23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-10.5229 811.572 542.148)",
   },
   {
@@ -5089,7 +5089,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 829.382,
     y: 539.433,
     row: "M23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.5036 829.382 539.433)",
   },
   {
@@ -5097,7 +5097,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 846.388,
     y: 535.227,
     row: "M23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-11.6175 846.388 535.227)",
   },
   {
@@ -5105,7 +5105,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 863.382,
     y: 531.451,
     row: "M23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.5759 863.382 531.451)",
   },
   {
@@ -5113,7 +5113,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 879.379,
     y: 527.546,
     row: "M23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.9898 879.379 527.546)",
   },
   {
@@ -5121,7 +5121,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 896.368,
     y: 522.954,
     row: "M23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-14.7554 896.368 522.954)",
   },
   {
@@ -5129,7 +5129,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 912.351,
     y: 517.605,
     row: "M23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-17.6041 912.351 517.605)",
   },
   {
@@ -5137,7 +5137,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 928.332,
     y: 511.368,
     row: "M23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-20.9908 928.332 511.368)",
   },
   {
@@ -5145,7 +5145,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 943.319,
     y: 505.016,
     row: "M23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-23.9208 943.319 505.016)",
   },
   {
@@ -5153,7 +5153,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 959.314,
     y: 497.226,
     row: "M23-33",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 959.314 497.226)",
   },
   {
@@ -5161,7 +5161,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 797.44,
     y: 564.251,
     row: "N24-34",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-7.43122 797.44 564.251)",
   },
   {
@@ -5169,7 +5169,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 815.422,
     y: 561.803,
     row: "N24-34",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-9.78887 815.422 561.803)",
   },
   {
@@ -5177,7 +5177,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 832.431,
     y: 558.534,
     row: "N24-34",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-8.64109 832.431 558.534)",
   },
   {
@@ -5185,7 +5185,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 849.41,
     y: 554.229,
     row: "N24-34",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-11.6175 849.41 554.229)",
   },
   {
@@ -5193,7 +5193,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 866.403,
     y: 551.451,
     row: "N24-34",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.5759 866.403 551.451)",
   },
   {
@@ -5201,7 +5201,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 883.4,
     y: 547.547,
     row: "N24-34",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.9898 883.4 547.547)",
   },
   {
@@ -5209,7 +5209,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 900.389,
     y: 542.956,
     row: "N24-34",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-14.7554 900.389 542.956)",
   },
   {
@@ -5217,7 +5217,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 915.372,
     y: 538.606,
     row: "N24-34",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-17.6041 915.372 538.606)",
   },
   {
@@ -5225,7 +5225,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 931.354,
     y: 532.37,
     row: "N24-34",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-20.9908 931.354 532.37)",
   },
   {
@@ -5233,7 +5233,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 947.34,
     y: 525.017,
     row: "N24-34",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-23.9208 947.34 525.017)",
   },
   {
@@ -5241,7 +5241,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 963.336,
     y: 517.226,
     row: "N24-34",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 963.336 517.226)",
   },
   {
@@ -5249,7 +5249,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 799.428,
     y: 586.081,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-9.02851 799.428 586.081)",
   },
   {
@@ -5257,7 +5257,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 817.208,
     y: 583.047,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-9.8 817.208 583.047)",
   },
   {
@@ -5265,7 +5265,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 834.961,
     y: 579.934,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-10.3519 834.961 579.934)",
   },
   {
@@ -5273,7 +5273,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 852.953,
     y: 576.228,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-11.6175 852.953 576.228)",
   },
   {
@@ -5281,7 +5281,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 869.946,
     y: 572.452,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.5759 869.946 572.452)",
   },
   {
@@ -5289,7 +5289,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 886.943,
     y: 568.547,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.9898 886.943 568.547)",
   },
   {
@@ -5297,7 +5297,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 903.932,
     y: 563.955,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-14.7554 903.932 563.955)",
   },
   {
@@ -5305,7 +5305,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 920.915,
     y: 558.608,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-17.6041 920.915 558.608)",
   },
   {
@@ -5313,7 +5313,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 936.897,
     y: 552.37,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-20.9908 936.897 552.37)",
   },
   {
@@ -5321,7 +5321,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 952.883,
     y: 545.017,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-23.9208 952.883 545.017)",
   },
   {
@@ -5329,7 +5329,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 968.879,
     y: 537.226,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 968.879 537.226)",
   },
   {
@@ -5337,7 +5337,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 984.879,
     y: 528.227,
     row: "O29-40",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 984.879 528.227)",
   },
   {
@@ -5345,7 +5345,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 801.443,
     y: 606.132,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-6.92774 801.443 606.132)",
   },
   {
@@ -5353,7 +5353,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 818.44,
     y: 604.234,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-7.36384 818.44 604.234)",
   },
   {
@@ -5361,7 +5361,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 835.436,
     y: 602.353,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-7.87333 835.436 602.353)",
   },
   {
@@ -5369,7 +5369,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 852.41,
     y: 599.229,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-11.6175 852.41 599.229)",
   },
   {
@@ -5377,7 +5377,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 869.403,
     y: 595.452,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.5759 869.403 595.452)",
   },
   {
@@ -5385,7 +5385,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 885.4,
     y: 591.547,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.9898 885.4 591.547)",
   },
   {
@@ -5393,7 +5393,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 901.389,
     y: 586.954,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-14.7554 901.389 586.954)",
   },
   {
@@ -5401,7 +5401,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 917.372,
     y: 581.607,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-17.6041 917.372 581.607)",
   },
   {
@@ -5409,7 +5409,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 933.354,
     y: 575.367,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-20.9908 933.354 575.367)",
   },
   {
@@ -5417,7 +5417,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 948.34,
     y: 569.015,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-23.9208 948.34 569.015)",
   },
   {
@@ -5425,7 +5425,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 964.336,
     y: 562.226,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 964.336 562.226)",
   },
   {
@@ -5433,7 +5433,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 980.336,
     y: 554.225,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 980.336 554.225)",
   },
   {
@@ -5441,7 +5441,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 996.336,
     y: 546.226,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 996.336 546.226)",
   },
   {
@@ -5449,7 +5449,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1046.34,
     y: 523.225,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 1046.34 523.225)",
   },
   {
@@ -5457,7 +5457,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1063.34,
     y: 515.226,
     row: "P37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 1063.34 515.226)",
   },
   {
@@ -5465,7 +5465,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 803.452,
     y: 629.87,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-5.8256 803.452 629.87)",
   },
   {
@@ -5473,7 +5473,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 820.435,
     y: 627.394,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-8.05673 820.435 627.394)",
   },
   {
@@ -5481,7 +5481,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 837.422,
     y: 624.813,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-9.84921 837.422 624.813)",
   },
   {
@@ -5489,7 +5489,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 855.407,
     y: 621.314,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.0028 855.407 621.314)",
   },
   {
@@ -5497,7 +5497,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 872.395,
     y: 617.747,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-13.8691 872.395 617.747)",
   },
   {
@@ -5505,7 +5505,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 890.369,
     y: 613.716,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-18.0988 890.369 613.716)",
   },
   {
@@ -5513,7 +5513,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 907.361,
     y: 608.049,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-19.5669 907.361 608.049)",
   },
   {
@@ -5521,7 +5521,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 924.352,
     y: 602.466,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-21.4313 924.352 602.466)",
   },
   {
@@ -5529,7 +5529,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 941.354,
     y: 595.368,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-20.9908 941.354 595.368)",
   },
   {
@@ -5537,7 +5537,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 957.34,
     y: 589.016,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-23.9208 957.34 589.016)",
   },
   {
@@ -5545,7 +5545,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 973.336,
     y: 581.225,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 973.336 581.225)",
   },
   {
@@ -5553,7 +5553,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 989.336,
     y: 573.226,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 989.336 573.226)",
   },
   {
@@ -5561,7 +5561,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1004.34,
     y: 566.227,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 1004.34 566.227)",
   },
   {
@@ -5569,7 +5569,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1019.34,
     y: 559.227,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 1019.34 559.227)",
   },
   {
@@ -5577,7 +5577,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1056.34,
     y: 543.226,
     row: "Q37-51",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 1056.34 543.226)",
   },
   {
@@ -5585,7 +5585,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 799.464,
     y: 652.514,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-4.31608 799.464 652.514)",
   },
   {
@@ -5593,7 +5593,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 816.973,
     y: 650.63,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-6.81946 816.973 650.63)",
   },
   {
@@ -5601,7 +5601,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 834.44,
     y: 648.242,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-7.4111 834.44 648.242)",
   },
   {
@@ -5609,7 +5609,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 851.437,
     y: 645.319,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-7.74433 851.437 645.319)",
   },
   {
@@ -5617,7 +5617,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 868.434,
     y: 642.409,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-8.1163 868.434 642.409)",
   },
   {
@@ -5625,7 +5625,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 885.4,
     y: 639.543,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.9898 885.4 639.543)",
   },
   {
@@ -5633,7 +5633,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 902.389,
     y: 634.951,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-14.7554 902.389 634.951)",
   },
   {
@@ -5641,7 +5641,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 918.372,
     y: 630.603,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-17.6041 918.372 630.603)",
   },
   {
@@ -5649,7 +5649,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 934.354,
     y: 625.368,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-20.9908 934.354 625.368)",
   },
   {
@@ -5657,7 +5657,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 950.34,
     y: 619.016,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-23.9208 950.34 619.016)",
   },
   {
@@ -5665,7 +5665,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 966.336,
     y: 612.225,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 966.336 612.225)",
   },
   {
@@ -5673,7 +5673,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 981.336,
     y: 605.226,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 981.336 605.226)",
   },
   {
@@ -5681,7 +5681,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 996.336,
     y: 598.225,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 996.336 598.225)",
   },
   {
@@ -5689,7 +5689,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1011.34,
     y: 591.226,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 1011.34 591.226)",
   },
   {
@@ -5697,7 +5697,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1026.34,
     y: 584.225,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 1026.34 584.225)",
   },
   {
@@ -5705,7 +5705,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1071.34,
     y: 563.226,
     row: "R28-42",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.8791 1071.34 563.226)",
   },
   {
@@ -5713,7 +5713,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 878.407,
     y: 662.331,
     row: "S19-29",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.0598 878.407 662.331)",
   },
   {
@@ -5721,7 +5721,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 895.404,
     y: 658.439,
     row: "S19-29",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.5197 895.404 658.439)",
   },
   {
@@ -5729,7 +5729,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 911.404,
     y: 654.434,
     row: "S19-29",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.5036 911.404 654.434)",
   },
   {
@@ -5737,7 +5737,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 927.38,
     y: 650.297,
     row: "S19-29",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-16.2505 927.38 650.297)",
   },
   {
@@ -5745,7 +5745,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 943.367,
     y: 644.821,
     row: "S19-29",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-18.5503 943.367 644.821)",
   },
   {
@@ -5753,7 +5753,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 959.354,
     y: 639.354,
     row: "S19-29",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-20.9271 959.354 639.354)",
   },
   {
@@ -5761,7 +5761,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 975.342,
     y: 632.942,
     row: "S19-29",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-23.5831 975.342 632.942)",
   },
   {
@@ -5769,7 +5769,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 990.334,
     y: 625.316,
     row: "S19-29",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-25.3011 990.334 625.316)",
   },
   {
@@ -5777,7 +5777,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1005.33,
     y: 617.781,
     row: "S19-29",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-27.4631 1005.33 617.781)",
   },
   {
@@ -5785,7 +5785,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1021.34,
     y: 609.015,
     row: "S19-29",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-23.9208 1021.34 609.015)",
   },
   {
@@ -5793,7 +5793,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1081.34,
     y: 583.014,
     row: "S19-29",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-23.9208 1081.34 583.014)",
   },
   {
@@ -5801,7 +5801,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 883.407,
     y: 680.897,
     row: "T20-28",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.0598 883.407 680.897)",
   },
   {
@@ -5809,7 +5809,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 900.404,
     y: 677.004,
     row: "T20-28",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-12.5197 900.404 677.004)",
   },
   {
@@ -5817,7 +5817,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 917.385,
     y: 672.682,
     row: "T20-28",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-15.4576 917.385 672.682)",
   },
   {
@@ -5825,7 +5825,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 935.374,
     y: 668.088,
     row: "T20-28",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-17.2342 935.374 668.088)",
   },
   {
@@ -5833,7 +5833,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 952.351,
     y: 663.084,
     row: "T20-28",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-21.6612 952.351 663.084)",
   },
   {
@@ -5841,7 +5841,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 969.337,
     y: 656.754,
     row: "T20-28",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-24.7051 969.337 656.754)",
   },
   {
@@ -5849,7 +5849,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 985.619,
     y: 649.176,
     row: "T20-28",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-25.3419 985.619 649.176)",
   },
   {
@@ -5857,7 +5857,7 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1000.67,
     y: 641.9,
     row: "T20-28",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-28.4033 1000.67 641.9)",
   },
   {
@@ -5865,34 +5865,41 @@ export const seatMetaData: SeatMetaData[] = [
     x: 1015.74,
     y: 633.764,
     row: "T20-28",
-    section: "Balcony Right",
+    section: "balconyRight",
     rotation: "rotate(-32.1707 1015.74 633.764)",
   },
 ];
 
 export const sectionPaths: SectionMeta[] = [
   {
-    id: "BALCONY LEFT",
+    id: "balconyLeft",
     d: "M157.902 493.345C158.146 493.488 158.34 493.687 158.484 493.94C158.636 494.197 158.723 494.475 158.747 494.776C158.777 495.08 158.736 495.375 158.623 495.661C158.481 496.023 158.261 496.315 157.961 496.536C157.664 496.75 157.305 496.873 156.883 496.904C156.47 496.931 156.025 496.851 155.547 496.663L152.885 495.617L155.689 488.481L158.248 489.487C158.733 489.677 159.114 489.921 159.391 490.219C159.67 490.51 159.842 490.826 159.905 491.166C159.968 491.506 159.933 491.846 159.799 492.188C159.633 492.611 159.379 492.917 159.037 493.105C158.704 493.29 158.326 493.37 157.902 493.345ZM155.41 491.929L156.976 492.544C157.413 492.716 157.791 492.746 158.11 492.635C158.43 492.524 158.66 492.288 158.803 491.926C158.945 491.565 158.937 491.234 158.778 490.936C158.62 490.637 158.315 490.399 157.865 490.222L156.319 489.615L155.41 491.929ZM155.767 495.863C156.231 496.045 156.636 496.078 156.981 495.962C157.326 495.845 157.575 495.592 157.728 495.203C157.883 494.807 157.869 494.443 157.684 494.111C157.503 493.771 157.183 493.512 156.726 493.332L155.108 492.697L154.119 495.215L155.767 495.863ZM164.006 498.154L160.893 496.931L159.697 498.293L158.714 497.907L164.081 491.825L165.156 492.248L164.939 500.352L163.956 499.966L164.006 498.154ZM164.037 497.292L164.163 493.181L161.457 496.278L164.037 497.292ZM167.292 500.402L169.791 501.384L169.493 502.141L166.063 500.794L168.866 493.658L169.798 494.024L167.292 500.402ZM171.538 498.82C171.812 498.124 172.214 497.561 172.745 497.132C173.279 496.695 173.877 496.426 174.54 496.324C175.209 496.224 175.875 496.305 176.537 496.565C177.315 496.87 177.92 497.325 178.353 497.928C178.786 498.532 179 499.23 178.995 500.024L177.879 499.586C177.85 499.078 177.694 498.634 177.409 498.255C177.132 497.878 176.734 497.588 176.215 497.384C175.717 497.188 175.224 497.128 174.737 497.205C174.25 497.282 173.809 497.491 173.415 497.832C173.024 498.167 172.715 498.621 172.49 499.194C172.268 499.761 172.185 500.303 172.241 500.822C172.3 501.333 172.482 501.783 172.786 502.171C173.091 502.558 173.493 502.85 173.991 503.046C174.51 503.249 174.998 503.311 175.455 503.231C175.921 503.146 176.338 502.928 176.705 502.575L177.821 503.014C177.286 503.592 176.655 503.954 175.928 504.102C175.203 504.243 174.451 504.16 173.673 503.854C173.011 503.594 172.467 503.203 172.042 502.682C171.626 502.156 171.37 501.555 171.273 500.879C171.176 500.203 171.265 499.516 171.538 498.82ZM181.598 506.98C180.936 506.719 180.392 506.329 179.967 505.807C179.544 505.278 179.281 504.675 179.178 503.996C179.084 503.313 179.173 502.623 179.447 501.927C179.72 501.231 180.123 500.668 180.654 500.238C181.194 499.805 181.798 499.542 182.465 499.449C183.134 499.349 183.8 499.43 184.462 499.69C185.131 499.953 185.677 500.348 186.099 500.877C186.525 501.398 186.786 501.997 186.883 502.674C186.979 503.35 186.89 504.039 186.614 504.742C186.337 505.445 185.934 506.012 185.403 506.441C184.871 506.871 184.271 507.135 183.602 507.235C182.935 507.327 182.267 507.242 181.598 506.98ZM181.916 506.171C182.414 506.366 182.907 506.426 183.394 506.349C183.888 506.276 184.332 506.068 184.726 505.726C185.127 505.388 185.439 504.935 185.661 504.368C185.887 503.795 185.966 503.251 185.901 502.737C185.844 502.218 185.664 501.765 185.359 501.378C185.054 500.99 184.649 500.697 184.144 500.499C183.639 500.3 183.143 500.239 182.656 500.316C182.169 500.392 181.725 500.6 181.324 500.939C180.932 501.274 180.624 501.728 180.399 502.301C180.176 502.868 180.093 503.41 180.15 503.929C180.213 504.45 180.397 504.904 180.701 505.292C181.013 505.682 181.418 505.975 181.916 506.171ZM192.05 511.003L191.119 510.637L189.604 503.482L187.372 509.165L186.44 508.799L189.247 501.652L190.179 502.018L191.698 509.162L193.926 503.49L194.858 503.856L192.05 511.003ZM201.438 506.453L197.369 509.984L196.311 512.676L195.379 512.31L196.437 509.618L195.848 504.257L196.882 504.664L197.223 508.969L200.404 506.047L201.438 506.453ZM203.577 514.656L206.075 515.637L205.777 516.395L202.347 515.048L205.151 507.912L206.082 508.278L203.577 514.656ZM210.204 510.771L209.267 513.157L211.867 514.178L211.566 514.946L208.965 513.925L208 516.382L210.908 517.524L210.606 518.292L206.767 516.784L209.574 509.637L213.413 511.146L213.112 511.914L210.204 510.771ZM218.853 513.294L218.555 514.052L215.453 512.833L214.508 515.239L217.027 516.229L216.729 516.986L214.21 515.997L212.947 519.212L212.016 518.846L214.819 511.71L218.853 513.294ZM224.37 515.462L224.073 516.22L222.128 515.455L219.622 521.834L218.69 521.468L221.196 515.089L219.24 514.321L219.538 513.564L224.37 515.462Z",
   },
   {
-    id: "ORCHESTRA LEFT",
+    id: "orchestraLeft",
     d: "M266.092 107.96C265.43 107.7 264.887 107.309 264.461 106.787C264.039 106.259 263.775 105.655 263.672 104.976C263.578 104.293 263.667 103.604 263.941 102.907C264.214 102.211 264.617 101.648 265.148 101.219C265.689 100.785 266.292 100.522 266.959 100.429C267.628 100.33 268.294 100.41 268.956 100.67C269.625 100.933 270.171 101.329 270.594 101.857C271.019 102.379 271.28 102.978 271.377 103.654C271.474 104.33 271.384 105.02 271.108 105.723C270.832 106.426 270.428 106.992 269.897 107.422C269.366 107.851 268.765 108.116 268.096 108.215C267.429 108.308 266.761 108.223 266.092 107.96ZM266.41 107.151C266.908 107.347 267.401 107.406 267.888 107.33C268.382 107.256 268.826 107.048 269.22 106.707C269.621 106.368 269.933 105.915 270.156 105.349C270.381 104.775 270.46 104.232 270.395 103.717C270.338 103.199 270.158 102.746 269.853 102.358C269.548 101.97 269.143 101.677 268.638 101.479C268.133 101.281 267.637 101.22 267.15 101.296C266.663 101.373 266.219 101.58 265.818 101.919C265.427 102.254 265.118 102.708 264.893 103.281C264.67 103.848 264.587 104.39 264.644 104.909C264.707 105.43 264.891 105.884 265.195 106.272C265.507 106.662 265.912 106.955 266.41 107.151ZM274.691 111.255L274.138 107.67L273.012 107.227L271.866 110.145L270.934 109.779L273.737 102.643L276.041 103.548C276.58 103.76 276.998 104.03 277.294 104.359C277.597 104.691 277.779 105.05 277.84 105.436C277.901 105.823 277.852 106.217 277.694 106.62C277.501 107.112 277.187 107.489 276.753 107.751C276.326 108.017 275.805 108.1 275.19 108L275.807 111.694L274.691 111.255ZM273.306 106.48L274.677 107.019C275.183 107.217 275.61 107.243 275.959 107.097C276.31 106.943 276.568 106.658 276.732 106.242C276.898 105.819 276.9 105.442 276.739 105.11C276.584 104.782 276.251 104.517 275.739 104.316L274.367 103.777L273.306 106.48ZM278.219 108.516C278.492 107.82 278.894 107.257 279.426 106.828C279.959 106.391 280.558 106.122 281.22 106.02C281.89 105.92 282.555 106.001 283.217 106.261C283.995 106.566 284.601 107.021 285.034 107.624C285.466 108.228 285.68 108.926 285.676 109.72L284.56 109.282C284.531 108.774 284.374 108.33 284.09 107.951C283.812 107.574 283.414 107.284 282.896 107.08C282.397 106.884 281.905 106.824 281.418 106.901C280.931 106.978 280.49 107.187 280.096 107.528C279.704 107.863 279.396 108.317 279.171 108.89C278.948 109.457 278.865 109.999 278.921 110.518C278.98 111.029 279.162 111.479 279.467 111.867C279.772 112.254 280.173 112.546 280.671 112.742C281.19 112.945 281.678 113.007 282.135 112.927C282.602 112.842 283.018 112.624 283.385 112.271L284.501 112.71C283.967 113.288 283.336 113.65 282.608 113.798C281.883 113.939 281.132 113.856 280.354 113.55C279.692 113.29 279.148 112.899 278.722 112.378C278.307 111.852 278.05 111.251 277.953 110.575C277.857 109.899 277.945 109.212 278.219 108.516ZM293.373 110.357L290.57 117.493L289.638 117.127L290.909 113.891L287.274 112.464L286.003 115.699L285.072 115.333L287.875 108.197L288.807 108.563L287.576 111.696L291.211 113.124L292.441 109.991L293.373 110.357ZM295.598 112.105L294.661 114.491L297.261 115.512L296.96 116.28L294.359 115.259L293.394 117.716L296.302 118.858L296 119.626L292.161 118.118L294.968 110.971L298.807 112.48L298.506 113.247L295.598 112.105ZM299.644 121.14C299.173 120.955 298.782 120.707 298.471 120.396C298.17 120.08 297.971 119.734 297.874 119.358C297.781 118.974 297.807 118.587 297.953 118.195L298.946 118.585C298.849 118.933 298.874 119.27 299.022 119.596C299.179 119.918 299.49 120.17 299.954 120.352C300.398 120.526 300.789 120.554 301.127 120.435C301.475 120.311 301.717 120.075 301.854 119.727C301.961 119.454 301.973 119.203 301.89 118.973C301.807 118.744 301.67 118.54 301.48 118.363C301.289 118.186 301.023 117.971 300.681 117.718C300.258 117.411 299.928 117.139 299.689 116.903C299.458 116.671 299.291 116.384 299.188 116.045C299.094 115.701 299.135 115.307 299.309 114.863C299.462 114.474 299.696 114.168 300.012 113.946C300.328 113.723 300.696 113.6 301.115 113.575C301.541 113.554 301.986 113.634 302.45 113.816C303.119 114.079 303.6 114.461 303.892 114.961C304.19 115.465 304.258 116.004 304.096 116.578L303.072 116.176C303.145 115.889 303.095 115.594 302.923 115.29C302.754 114.979 302.461 114.742 302.045 114.579C301.656 114.426 301.298 114.403 300.972 114.512C300.648 114.613 300.415 114.845 300.273 115.206C300.171 115.466 300.16 115.706 300.239 115.926C300.325 116.148 300.456 116.346 300.633 116.518C300.819 116.685 301.085 116.9 301.431 117.162C301.851 117.477 302.179 117.755 302.415 117.998C302.653 118.233 302.823 118.524 302.923 118.871C303.026 119.211 302.989 119.606 302.812 120.056C302.675 120.405 302.454 120.696 302.149 120.931C301.844 121.165 301.473 121.307 301.037 121.356C300.6 121.405 300.136 121.333 299.644 121.14ZM310.614 117.13L310.317 117.887L308.371 117.123L305.866 123.502L304.934 123.136L307.44 116.757L305.484 115.989L305.782 115.231L310.614 117.13ZM312.715 126.192L312.162 122.607L311.036 122.164L309.889 125.082L308.958 124.716L311.761 117.58L314.065 118.485C314.604 118.697 315.022 118.967 315.318 119.296C315.621 119.628 315.803 119.987 315.864 120.374C315.925 120.76 315.876 121.155 315.718 121.557C315.525 122.049 315.211 122.426 314.777 122.689C314.35 122.954 313.829 123.037 313.214 122.937L313.831 126.631L312.715 126.192ZM311.329 121.417L312.701 121.956C313.206 122.154 313.633 122.18 313.983 122.034C314.334 121.88 314.592 121.596 314.756 121.179C314.922 120.756 314.924 120.379 314.763 120.047C314.608 119.719 314.275 119.454 313.763 119.253L312.391 118.714L311.329 121.417ZM320.028 127.233L316.916 126.011L315.719 127.372L314.736 126.986L320.104 120.905L321.179 121.327L320.961 129.432L319.978 129.046L320.028 127.233ZM320.06 126.371L320.186 122.26L317.48 125.358L320.06 126.371ZM328.774 131.626L331.272 132.608L330.975 133.365L327.545 132.018L330.348 124.882L331.28 125.248L328.774 131.626ZM335.401 127.741L334.464 130.127L337.065 131.149L336.763 131.916L334.163 130.895L333.197 133.352L336.105 134.494L335.803 135.262L331.964 133.754L334.771 126.608L338.611 128.116L338.309 128.884L335.401 127.741ZM344.05 130.265L343.753 131.022L340.651 129.804L339.705 132.21L342.224 133.199L341.926 133.957L339.408 132.967L338.145 136.182L337.213 135.816L340.017 128.68L344.05 130.265ZM349.568 132.432L349.27 133.19L347.325 132.425L344.819 138.804L343.888 138.438L346.393 132.059L344.438 131.291L344.735 130.534L349.568 132.432Z",
   },
   {
-    id: "BALCONY MIDDLE",
+    id: "balconyMiddle",
     d: "M457.686 521.051C457.965 521.095 458.218 521.209 458.445 521.392C458.68 521.575 458.863 521.803 458.995 522.074C459.134 522.345 459.204 522.635 459.204 522.943C459.204 523.332 459.105 523.684 458.907 523.999C458.709 524.307 458.419 524.553 458.038 524.736C457.664 524.912 457.22 525 456.707 525H453.847V517.333H456.597C457.118 517.333 457.561 517.421 457.928 517.597C458.295 517.766 458.57 517.997 458.753 518.29C458.936 518.583 459.028 518.913 459.028 519.28C459.028 519.735 458.903 520.112 458.654 520.413C458.412 520.706 458.089 520.919 457.686 521.051ZM454.848 520.644H456.531C457 520.644 457.363 520.534 457.62 520.314C457.877 520.094 458.005 519.79 458.005 519.401C458.005 519.012 457.877 518.708 457.62 518.488C457.363 518.268 456.993 518.158 456.509 518.158H454.848V520.644ZM456.619 524.175C457.118 524.175 457.506 524.058 457.785 523.823C458.064 523.588 458.203 523.262 458.203 522.844C458.203 522.419 458.056 522.085 457.763 521.843C457.47 521.594 457.077 521.469 456.586 521.469H454.848V524.175H456.619ZM465.125 523.295H461.781L461.165 525H460.109L462.881 517.377H464.036L466.797 525H465.741L465.125 523.295ZM464.839 522.481L463.453 518.609L462.067 522.481H464.839ZM469.006 524.186H471.69V525H468.005V517.333H469.006V524.186ZM472.379 521.161C472.379 520.413 472.548 519.742 472.885 519.148C473.223 518.547 473.681 518.077 474.26 517.74C474.847 517.403 475.496 517.234 476.207 517.234C477.043 517.234 477.773 517.436 478.396 517.839C479.02 518.242 479.474 518.814 479.76 519.555H478.561C478.349 519.093 478.041 518.737 477.637 518.488C477.241 518.239 476.765 518.114 476.207 518.114C475.672 518.114 475.192 518.239 474.766 518.488C474.341 518.737 474.007 519.093 473.765 519.555C473.523 520.01 473.402 520.545 473.402 521.161C473.402 521.77 473.523 522.305 473.765 522.767C474.007 523.222 474.341 523.574 474.766 523.823C475.192 524.072 475.672 524.197 476.207 524.197C476.765 524.197 477.241 524.076 477.637 523.834C478.041 523.585 478.349 523.229 478.561 522.767H479.76C479.474 523.5 479.02 524.069 478.396 524.472C477.773 524.868 477.043 525.066 476.207 525.066C475.496 525.066 474.847 524.901 474.26 524.571C473.681 524.234 473.223 523.768 472.885 523.174C472.548 522.58 472.379 521.909 472.379 521.161ZM484.726 525.077C484.015 525.077 483.366 524.912 482.779 524.582C482.193 524.245 481.727 523.779 481.382 523.185C481.045 522.584 480.876 521.909 480.876 521.161C480.876 520.413 481.045 519.742 481.382 519.148C481.727 518.547 482.193 518.081 482.779 517.751C483.366 517.414 484.015 517.245 484.726 517.245C485.445 517.245 486.098 517.414 486.684 517.751C487.271 518.081 487.733 518.543 488.07 519.137C488.408 519.731 488.576 520.406 488.576 521.161C488.576 521.916 488.408 522.591 488.07 523.185C487.733 523.779 487.271 524.245 486.684 524.582C486.098 524.912 485.445 525.077 484.726 525.077ZM484.726 524.208C485.262 524.208 485.742 524.083 486.167 523.834C486.6 523.585 486.937 523.229 487.179 522.767C487.429 522.305 487.553 521.77 487.553 521.161C487.553 520.545 487.429 520.01 487.179 519.555C486.937 519.093 486.604 518.737 486.178 518.488C485.753 518.239 485.269 518.114 484.726 518.114C484.184 518.114 483.7 518.239 483.274 518.488C482.849 518.737 482.512 519.093 482.262 519.555C482.02 520.01 481.899 520.545 481.899 521.161C481.899 521.77 482.02 522.305 482.262 522.767C482.512 523.229 482.849 523.585 483.274 523.834C483.707 524.083 484.191 524.208 484.726 524.208ZM495.926 525H494.925L490.899 518.895V525H489.898V517.322H490.899L494.925 523.416V517.322H495.926V525ZM503 517.333L500.503 522.107V525H499.502V522.107L496.994 517.333H498.105L499.997 521.216L501.889 517.333H503ZM514.766 517.388V525H513.765V519.324L511.235 525H510.531L507.99 519.313V525H506.989V517.388H508.067L510.883 523.68L513.699 517.388H514.766ZM517.464 517.333V525H516.463V517.333H517.464ZM521.557 517.333C522.393 517.333 523.116 517.491 523.724 517.806C524.34 518.114 524.81 518.558 525.132 519.137C525.462 519.716 525.627 520.398 525.627 521.183C525.627 521.968 525.462 522.65 525.132 523.229C524.81 523.801 524.34 524.241 523.724 524.549C523.116 524.85 522.393 525 521.557 525H519.17V517.333H521.557ZM521.557 524.175C522.547 524.175 523.303 523.915 523.823 523.394C524.344 522.866 524.604 522.129 524.604 521.183C524.604 520.23 524.34 519.485 523.812 518.95C523.292 518.415 522.54 518.147 521.557 518.147H520.171V524.175H521.557ZM529.335 517.333C530.171 517.333 530.893 517.491 531.502 517.806C532.118 518.114 532.587 518.558 532.91 519.137C533.24 519.716 533.405 520.398 533.405 521.183C533.405 521.968 533.24 522.65 532.91 523.229C532.587 523.801 532.118 524.241 531.502 524.549C530.893 524.85 530.171 525 529.335 525H526.948V517.333H529.335ZM529.335 524.175C530.325 524.175 531.08 523.915 531.601 523.394C532.121 522.866 532.382 522.129 532.382 521.183C532.382 520.23 532.118 519.485 531.59 518.95C531.069 518.415 530.317 518.147 529.335 518.147H527.949V524.175H529.335ZM535.726 524.186H538.41V525H534.725V517.333H535.726V524.186ZM540.474 518.147V520.71H543.268V521.535H540.474V524.175H543.598V525H539.473V517.322H543.598V518.147H540.474Z",
   },
   {
-    id: "ORCHESTRA MIDDLE",
+    id: "orchestraMiddle",
     d: "M466.323 159.077C465.612 159.077 464.963 158.912 464.376 158.582C463.789 158.245 463.324 157.779 462.979 157.185C462.642 156.584 462.473 155.909 462.473 155.161C462.473 154.413 462.642 153.742 462.979 153.148C463.324 152.547 463.789 152.081 464.376 151.751C464.963 151.414 465.612 151.245 466.323 151.245C467.042 151.245 467.694 151.414 468.281 151.751C468.868 152.081 469.33 152.543 469.667 153.137C470.004 153.731 470.173 154.406 470.173 155.161C470.173 155.916 470.004 156.591 469.667 157.185C469.33 157.779 468.868 158.245 468.281 158.582C467.694 158.912 467.042 159.077 466.323 159.077ZM466.323 158.208C466.858 158.208 467.339 158.083 467.764 157.834C468.197 157.585 468.534 157.229 468.776 156.767C469.025 156.305 469.15 155.77 469.15 155.161C469.15 154.545 469.025 154.01 468.776 153.555C468.534 153.093 468.2 152.737 467.775 152.488C467.35 152.239 466.866 152.114 466.323 152.114C465.78 152.114 465.296 152.239 464.871 152.488C464.446 152.737 464.108 153.093 463.859 153.555C463.617 154.01 463.496 154.545 463.496 155.161C463.496 155.77 463.617 156.305 463.859 156.767C464.108 157.229 464.446 157.585 464.871 157.834C465.304 158.083 465.788 158.208 466.323 158.208ZM475.531 159L473.705 155.865H472.495V159H471.494V151.333H473.969C474.549 151.333 475.036 151.432 475.432 151.63C475.836 151.828 476.136 152.096 476.334 152.433C476.532 152.77 476.631 153.155 476.631 153.588C476.631 154.116 476.477 154.582 476.169 154.985C475.869 155.388 475.414 155.656 474.805 155.788L476.73 159H475.531ZM472.495 155.062H473.969C474.512 155.062 474.919 154.93 475.19 154.666C475.462 154.395 475.597 154.035 475.597 153.588C475.597 153.133 475.462 152.781 475.19 152.532C474.926 152.283 474.519 152.158 473.969 152.158H472.495V155.062ZM477.813 155.161C477.813 154.413 477.982 153.742 478.319 153.148C478.656 152.547 479.115 152.077 479.694 151.74C480.281 151.403 480.93 151.234 481.641 151.234C482.477 151.234 483.207 151.436 483.83 151.839C484.453 152.242 484.908 152.814 485.194 153.555H483.995C483.782 153.093 483.474 152.737 483.071 152.488C482.675 152.239 482.198 152.114 481.641 152.114C481.106 152.114 480.625 152.239 480.2 152.488C479.775 152.737 479.441 153.093 479.199 153.555C478.957 154.01 478.836 154.545 478.836 155.161C478.836 155.77 478.957 156.305 479.199 156.767C479.441 157.222 479.775 157.574 480.2 157.823C480.625 158.072 481.106 158.197 481.641 158.197C482.198 158.197 482.675 158.076 483.071 157.834C483.474 157.585 483.782 157.229 483.995 156.767H485.194C484.908 157.5 484.453 158.069 483.83 158.472C483.207 158.868 482.477 159.066 481.641 159.066C480.93 159.066 480.281 158.901 479.694 158.571C479.115 158.234 478.656 157.768 478.319 157.174C477.982 156.58 477.813 155.909 477.813 155.161ZM492.591 151.333V159H491.59V155.524H487.685V159H486.684V151.333H487.685V154.699H491.59V151.333H492.591ZM495.301 152.147V154.71H498.095V155.535H495.301V158.175H498.425V159H494.3V151.322H498.425V152.147H495.301ZM502.371 159.077C501.865 159.077 501.41 158.989 501.007 158.813C500.611 158.63 500.299 158.38 500.072 158.065C499.844 157.742 499.727 157.372 499.72 156.954H500.787C500.823 157.313 500.97 157.618 501.227 157.867C501.491 158.109 501.872 158.23 502.371 158.23C502.847 158.23 503.221 158.113 503.493 157.878C503.771 157.636 503.911 157.328 503.911 156.954C503.911 156.661 503.83 156.422 503.669 156.239C503.507 156.056 503.306 155.916 503.064 155.821C502.822 155.726 502.495 155.623 502.085 155.513C501.579 155.381 501.172 155.249 500.864 155.117C500.563 154.985 500.303 154.78 500.083 154.501C499.87 154.215 499.764 153.834 499.764 153.357C499.764 152.939 499.87 152.569 500.083 152.246C500.295 151.923 500.592 151.674 500.974 151.498C501.362 151.322 501.806 151.234 502.305 151.234C503.023 151.234 503.61 151.414 504.065 151.773C504.527 152.132 504.787 152.609 504.846 153.203H503.746C503.709 152.91 503.555 152.653 503.284 152.433C503.012 152.206 502.653 152.092 502.206 152.092C501.788 152.092 501.447 152.202 501.183 152.422C500.919 152.635 500.787 152.935 500.787 153.324C500.787 153.603 500.864 153.83 501.018 154.006C501.179 154.182 501.373 154.318 501.601 154.413C501.835 154.501 502.162 154.604 502.58 154.721C503.086 154.86 503.493 155 503.801 155.139C504.109 155.271 504.373 155.48 504.593 155.766C504.813 156.045 504.923 156.426 504.923 156.91C504.923 157.284 504.824 157.636 504.626 157.966C504.428 158.296 504.134 158.564 503.746 158.769C503.357 158.974 502.899 159.077 502.371 159.077ZM511.115 151.333V152.147H509.025V159H508.024V152.147H505.923V151.333H511.115ZM516.384 159L514.558 155.865H513.348V159H512.347V151.333H514.822C515.401 151.333 515.889 151.432 516.285 151.63C516.688 151.828 516.989 152.096 517.187 152.433C517.385 152.77 517.484 153.155 517.484 153.588C517.484 154.116 517.33 154.582 517.022 154.985C516.721 155.388 516.267 155.656 515.658 155.788L517.583 159H516.384ZM513.348 155.062H514.822C515.365 155.062 515.772 154.93 516.043 154.666C516.314 154.395 516.45 154.035 516.45 153.588C516.45 153.133 516.314 152.781 516.043 152.532C515.779 152.283 515.372 152.158 514.822 152.158H513.348V155.062ZM523.571 157.295H520.227L519.611 159H518.555L521.327 151.377H522.482L525.243 159H524.187L523.571 157.295ZM523.285 156.481L521.899 152.609L520.513 156.481H523.285ZM537.161 151.388V159H536.16V153.324L533.63 159H532.926L530.385 153.313V159H529.384V151.388H530.462L533.278 157.68L536.094 151.388H537.161ZM539.86 151.333V159H538.859V151.333H539.86ZM543.953 151.333C544.789 151.333 545.511 151.491 546.12 151.806C546.736 152.114 547.205 152.558 547.528 153.137C547.858 153.716 548.023 154.398 548.023 155.183C548.023 155.968 547.858 156.65 547.528 157.229C547.205 157.801 546.736 158.241 546.12 158.549C545.511 158.85 544.789 159 543.953 159H541.566V151.333H543.953ZM543.953 158.175C544.943 158.175 545.698 157.915 546.219 157.394C546.739 156.866 547 156.129 547 155.183C547 154.23 546.736 153.485 546.208 152.95C545.687 152.415 544.935 152.147 543.953 152.147H542.567V158.175H543.953ZM551.73 151.333C552.566 151.333 553.288 151.491 553.897 151.806C554.513 152.114 554.982 152.558 555.305 153.137C555.635 153.716 555.8 154.398 555.8 155.183C555.8 155.968 555.635 156.65 555.305 157.229C554.982 157.801 554.513 158.241 553.897 158.549C553.288 158.85 552.566 159 551.73 159H549.343V151.333H551.73ZM551.73 158.175C552.72 158.175 553.475 157.915 553.996 157.394C554.517 156.866 554.777 156.129 554.777 155.183C554.777 154.23 554.513 153.485 553.985 152.95C553.464 152.415 552.713 152.147 551.73 152.147H550.344V158.175H551.73ZM558.121 158.186H560.805V159H557.12V151.333H558.121V158.186ZM562.869 152.147V154.71H565.663V155.535H562.869V158.175H565.993V159H561.868V151.322H565.993V152.147H562.869Z",
   },
   {
-    id: "BALCONY RIGHT",
+    id: "balconyRight",
     d: "M796.046 502.877C796.327 502.85 796.6 502.897 796.866 503.018C797.139 503.137 797.373 503.311 797.569 503.541C797.771 503.769 797.911 504.032 797.988 504.331C798.085 504.707 798.077 505.073 797.963 505.427C797.848 505.775 797.629 506.085 797.306 506.358C796.987 506.621 796.58 506.817 796.082 506.945L793.313 507.658L791.402 500.233L794.065 499.547C794.569 499.418 795.021 499.392 795.42 499.471C795.817 499.543 796.141 499.699 796.391 499.937C796.642 500.175 796.813 500.472 796.905 500.827C797.018 501.267 796.991 501.664 796.825 502.018C796.663 502.362 796.404 502.648 796.046 502.877ZM793.196 503.19L794.826 502.77C795.281 502.653 795.605 502.456 795.799 502.179C795.992 501.902 796.041 501.576 795.944 501.199C795.847 500.823 795.647 500.56 795.344 500.411C795.04 500.262 794.654 500.248 794.185 500.368L792.577 500.782L793.196 503.19ZM795.792 506.168C796.274 506.044 796.622 505.833 796.833 505.537C797.044 505.24 797.098 504.889 796.994 504.484C796.888 504.072 796.663 503.786 796.318 503.625C795.972 503.456 795.561 503.433 795.085 503.556L793.402 503.989L794.076 506.609L795.792 506.168ZM803.81 503.196L800.571 504.029L800.4 505.834L799.377 506.097L800.162 498.024L801.28 497.736L805.854 504.43L804.831 504.693L803.81 503.196ZM803.33 502.479L801.023 499.074L800.645 503.17L803.33 502.479ZM807.791 503.091L810.39 502.422L810.593 503.211L807.024 504.129L805.113 496.704L806.083 496.455L807.791 503.091ZM810.303 499.321C810.117 498.597 810.113 497.905 810.292 497.246C810.468 496.579 810.795 496.01 811.272 495.539C811.756 495.066 812.343 494.741 813.032 494.564C813.841 494.356 814.598 494.369 815.302 494.604C816.007 494.84 816.589 495.28 817.051 495.926L815.89 496.225C815.569 495.831 815.182 495.563 814.729 495.422C814.283 495.279 813.791 495.277 813.251 495.416C812.733 495.55 812.298 495.79 811.949 496.138C811.599 496.485 811.364 496.913 811.245 497.42C811.124 497.921 811.14 498.47 811.294 499.066C811.446 499.656 811.696 500.144 812.046 500.531C812.393 500.911 812.804 501.169 813.278 501.304C813.752 501.44 814.249 501.441 814.767 501.307C815.307 501.168 815.738 500.932 816.062 500.599C816.39 500.257 816.6 499.836 816.69 499.336L817.852 499.037C817.757 499.818 817.459 500.482 816.956 501.028C816.451 501.567 815.793 501.94 814.984 502.149C814.295 502.326 813.625 502.328 812.975 502.155C812.33 501.972 811.77 501.636 811.295 501.145C810.82 500.653 810.49 500.046 810.303 499.321ZM823.237 500.036C822.548 500.214 821.878 500.215 821.228 500.042C820.576 499.862 820.008 499.527 819.527 499.037C819.05 498.539 818.719 497.928 818.532 497.203C818.346 496.479 818.342 495.787 818.52 495.128C818.704 494.46 819.039 493.892 819.525 493.427C820.009 492.954 820.596 492.629 821.285 492.451C821.981 492.272 822.655 492.273 823.307 492.453C823.957 492.627 824.52 492.959 824.995 493.45C825.469 493.941 825.801 494.553 825.989 495.284C826.177 496.016 826.182 496.711 826.004 497.371C825.825 498.03 825.494 498.596 825.01 499.069C824.524 499.535 823.933 499.857 823.237 500.036ZM823.02 499.195C823.539 499.061 823.973 498.821 824.322 498.473C824.679 498.124 824.917 497.695 825.037 497.188C825.163 496.678 825.15 496.129 824.998 495.539C824.845 494.943 824.591 494.455 824.236 494.077C823.886 493.69 823.475 493.429 823.001 493.293C822.527 493.158 822.027 493.158 821.501 493.293C820.976 493.428 820.538 493.67 820.188 494.017C819.839 494.365 819.6 494.793 819.474 495.303C819.353 495.803 819.369 496.352 819.523 496.948C819.675 497.538 819.925 498.026 820.275 498.413C820.631 498.799 821.047 499.059 821.521 499.194C822.002 499.328 822.502 499.328 823.02 499.195ZM834.064 497.17L833.094 497.42L827.674 492.511L829.195 498.423L828.226 498.673L826.312 491.237L827.282 490.988L832.699 495.886L831.18 489.984L832.15 489.735L834.064 497.17ZM839.004 487.982L837.775 493.228L838.496 496.03L837.527 496.279L836.806 493.477L833.187 489.479L834.263 489.202L837.063 492.491L837.928 488.259L839.004 487.982ZM848.687 493.407L846.137 490.826L844.965 491.128L845.747 494.164L844.777 494.413L842.866 486.988L845.263 486.371C845.824 486.227 846.321 486.201 846.754 486.294C847.194 486.385 847.552 486.57 847.828 486.847C848.104 487.124 848.295 487.473 848.403 487.892C848.535 488.403 848.502 488.892 848.304 489.36C848.113 489.825 847.74 490.198 847.183 490.477L849.848 493.108L848.687 493.407ZM844.765 490.35L846.193 489.983C846.718 489.847 847.079 489.618 847.276 489.295C847.472 488.964 847.513 488.583 847.402 488.149C847.289 487.709 847.069 487.402 846.745 487.228C846.427 487.052 846.002 487.033 845.469 487.17L844.041 487.538L844.765 490.35ZM850.317 485.071L852.228 492.496L851.258 492.745L849.348 485.32L850.317 485.071ZM858.148 485.35C857.83 484.97 857.446 484.712 856.995 484.579C856.542 484.438 856.057 484.434 855.538 484.567C855.02 484.701 854.582 484.942 854.225 485.291C853.874 485.632 853.635 486.057 853.508 486.566C853.387 487.067 853.402 487.608 853.552 488.191C853.702 488.773 853.95 489.254 854.298 489.634C854.653 490.013 855.067 490.269 855.541 490.405C856.021 490.531 856.52 490.528 857.038 490.394C857.762 490.208 858.303 489.838 858.66 489.284C859.018 488.73 859.14 488.074 859.028 487.315L856.067 488.077L855.864 487.289L859.859 486.261L860.051 487.007C860.151 487.632 860.104 488.242 859.909 488.838C859.712 489.426 859.385 489.938 858.929 490.373C858.472 490.802 857.916 491.1 857.263 491.268C856.574 491.445 855.904 491.447 855.254 491.274C854.602 491.093 854.035 490.759 853.553 490.269C853.078 489.778 852.747 489.17 852.561 488.446C852.375 487.721 852.371 487.03 852.549 486.37C852.733 485.702 853.068 485.135 853.554 484.669C854.038 484.196 854.625 483.871 855.314 483.694C856.102 483.491 856.848 483.507 857.552 483.742C858.264 483.976 858.849 484.412 859.309 485.051L858.148 485.35ZM865.981 481.039L867.892 488.464L866.923 488.714L866.056 485.348L862.274 486.321L863.141 489.687L862.171 489.937L860.26 482.512L861.23 482.262L862.069 485.522L865.851 484.549L865.012 481.289L865.981 481.039ZM872.206 479.437L872.409 480.225L870.385 480.746L872.093 487.383L871.124 487.633L869.416 480.996L867.381 481.52L867.178 480.731L872.206 479.437Z",
   },
   {
-    id: "ORCHESTRA RIGHT",
+    id: "orchestraRight",
     d: "M686.645 139.029C685.981 139.283 685.316 139.362 684.65 139.264C683.981 139.159 683.38 138.891 682.845 138.46C682.315 138.019 681.916 137.449 681.648 136.751C681.38 136.053 681.297 135.366 681.399 134.69C681.506 134.005 681.774 133.404 682.204 132.886C682.631 132.361 683.176 131.971 683.84 131.716C684.511 131.459 685.181 131.382 685.85 131.487C686.516 131.585 687.112 131.851 687.64 132.285C688.168 132.719 688.567 133.288 688.837 133.994C689.108 134.699 689.192 135.389 689.09 136.065C688.987 136.74 688.723 137.34 688.296 137.865C687.866 138.383 687.316 138.771 686.645 139.029ZM686.334 138.217C686.834 138.026 687.237 137.737 687.545 137.352C687.86 136.964 688.048 136.511 688.108 135.993C688.175 135.473 688.1 134.928 687.882 134.36C687.662 133.785 687.353 133.33 686.958 132.994C686.566 132.65 686.127 132.437 685.641 132.357C685.155 132.276 684.658 132.333 684.151 132.527C683.645 132.722 683.238 133.011 682.93 133.397C682.622 133.782 682.434 134.235 682.367 134.755C682.304 135.266 682.382 135.81 682.603 136.385C682.821 136.953 683.126 137.409 683.517 137.754C683.915 138.096 684.358 138.308 684.844 138.388C685.337 138.466 685.834 138.409 686.334 138.217ZM695.215 135.659L692.388 133.386L691.258 133.819L692.38 136.746L691.446 137.105L688.7 129.946L691.011 129.06C691.552 128.852 692.043 128.77 692.483 128.813C692.931 128.854 693.308 128.996 693.613 129.24C693.919 129.484 694.149 129.808 694.304 130.212C694.493 130.705 694.516 131.195 694.373 131.682C694.237 132.166 693.908 132.579 693.387 132.92L696.335 135.23L695.215 135.659ZM690.97 133.069L692.346 132.542C692.853 132.347 693.186 132.078 693.345 131.735C693.501 131.384 693.499 131 693.339 130.582C693.176 130.158 692.923 129.878 692.581 129.742C692.245 129.604 691.82 129.633 691.307 129.83L689.93 130.358L690.97 133.069ZM695.97 131.258C695.703 130.559 695.62 129.872 695.722 129.197C695.822 128.515 696.082 127.912 696.502 127.39C696.929 126.865 697.474 126.475 698.138 126.22C698.919 125.921 699.672 125.848 700.399 126.001C701.125 126.155 701.755 126.526 702.287 127.115L701.167 127.544C700.803 127.189 700.388 126.967 699.923 126.879C699.464 126.788 698.974 126.842 698.453 127.042C697.954 127.234 697.55 127.522 697.242 127.907C696.934 128.292 696.75 128.744 696.689 129.262C696.626 129.773 696.705 130.316 696.926 130.891C697.144 131.46 697.448 131.916 697.84 132.261C698.228 132.599 698.666 132.808 699.152 132.888C699.639 132.969 700.132 132.913 700.632 132.722C701.152 132.522 701.554 132.238 701.837 131.871C702.124 131.493 702.284 131.051 702.318 130.543L703.437 130.114C703.433 130.901 703.212 131.595 702.774 132.194C702.334 132.787 701.724 133.234 700.943 133.533C700.279 133.788 699.614 133.866 698.948 133.768C698.286 133.661 697.691 133.39 697.164 132.956C696.636 132.522 696.238 131.956 695.97 131.258ZM708.398 122.392L711.143 129.55L710.209 129.909L708.964 126.663L705.318 128.061L706.563 131.307L705.628 131.665L702.882 124.507L703.817 124.148L705.022 127.291L708.668 125.893L707.463 122.75L708.398 122.392ZM711.22 122.181L712.137 124.574L714.746 123.574L715.042 124.344L712.433 125.344L713.378 127.809L716.295 126.691L716.591 127.461L712.739 128.938L709.99 121.769L713.841 120.292L714.136 121.062L711.22 122.181ZM720.302 126.12C719.83 126.301 719.374 126.382 718.934 126.362C718.499 126.332 718.118 126.211 717.793 125.998C717.465 125.778 717.223 125.475 717.067 125.087L718.063 124.705C718.226 125.027 718.472 125.259 718.801 125.4C719.134 125.531 719.533 125.508 719.999 125.329C720.444 125.158 720.751 124.915 720.92 124.598C721.094 124.273 721.114 123.935 720.98 123.586C720.875 123.312 720.714 123.119 720.498 123.005C720.281 122.892 720.043 122.834 719.783 122.832C719.523 122.829 719.182 122.85 718.759 122.895C718.239 122.952 717.812 122.975 717.477 122.962C717.149 122.946 716.832 122.848 716.527 122.667C716.226 122.476 715.99 122.158 715.82 121.713C715.67 121.322 715.637 120.939 715.72 120.561C715.803 120.184 715.991 119.845 716.284 119.544C716.584 119.24 716.966 118.999 717.432 118.821C718.103 118.563 718.715 118.521 719.268 118.694C719.828 118.864 720.242 119.215 720.509 119.749L719.482 120.143C719.343 119.882 719.107 119.698 718.775 119.589C718.441 119.474 718.064 119.497 717.647 119.657C717.256 119.807 716.977 120.032 716.81 120.332C716.639 120.625 716.624 120.953 716.763 121.316C716.863 121.576 717.016 121.76 717.223 121.87C717.437 121.976 717.667 122.033 717.913 122.041C718.164 122.039 718.505 122.018 718.937 121.978C719.46 121.927 719.89 121.911 720.227 121.931C720.562 121.944 720.883 122.044 721.191 122.233C721.496 122.414 721.735 122.731 721.909 123.183C722.043 123.532 722.076 123.896 722.01 124.275C721.943 124.654 721.765 125.009 721.476 125.34C721.186 125.671 720.795 125.931 720.302 126.12ZM725.693 115.758L725.985 116.518L724.033 117.267L726.487 123.665L725.553 124.023L723.099 117.625L721.137 118.377L720.845 117.617L725.693 115.758ZM733.358 121.03L730.531 118.756L729.401 119.19L730.524 122.117L729.589 122.475L726.844 115.317L729.154 114.431C729.695 114.223 730.186 114.141 730.627 114.184C731.074 114.224 731.451 114.367 731.756 114.611C732.062 114.855 732.292 115.179 732.447 115.583C732.636 116.076 732.659 116.566 732.516 117.052C732.38 117.537 732.051 117.949 731.53 118.291L734.478 120.6L733.358 121.03ZM729.114 118.44L730.49 117.912C730.996 117.718 731.329 117.449 731.488 117.105C731.644 116.755 731.642 116.371 731.482 115.953C731.319 115.528 731.066 115.248 730.724 115.113C730.388 114.974 729.963 115.004 729.45 115.201L728.074 115.729L729.114 118.44ZM739.459 116.864L736.336 118.061L736.372 119.874L735.386 120.252L735.244 112.142L736.323 111.728L741.63 117.857L740.644 118.235L739.459 116.864ZM738.9 116.206L736.219 113.087L736.312 117.199L738.9 116.206ZM752.004 113.878L749.176 111.605L748.046 112.039L749.169 114.966L748.234 115.324L745.489 108.166L747.8 107.279C748.341 107.072 748.831 106.99 749.272 107.033C749.72 107.073 750.096 107.215 750.402 107.459C750.708 107.703 750.938 108.027 751.093 108.431C751.282 108.924 751.305 109.414 751.162 109.901C751.025 110.386 750.697 110.798 750.176 111.139L753.123 113.449L752.004 113.878ZM747.759 111.289L749.135 110.761C749.642 110.567 749.975 110.298 750.133 109.954C750.29 109.603 750.288 109.219 750.127 108.802C749.965 108.377 749.712 108.097 749.369 107.962C749.033 107.823 748.609 107.853 748.095 108.05L746.719 108.577L747.759 111.289ZM752.672 105.411L755.418 112.569L754.483 112.928L751.737 105.769L752.672 105.411ZM760.484 104.794C760.125 104.453 759.714 104.241 759.251 104.16C758.785 104.072 758.302 104.123 757.802 104.315C757.302 104.507 756.895 104.796 756.58 105.184C756.27 105.562 756.081 106.012 756.013 106.532C755.95 107.044 756.026 107.58 756.242 108.141C756.457 108.703 756.759 109.152 757.148 109.49C757.544 109.826 757.985 110.033 758.471 110.114C758.962 110.185 759.457 110.125 759.957 109.933C760.655 109.665 761.15 109.236 761.442 108.645C761.734 108.054 761.78 107.388 761.583 106.647L758.727 107.742L758.436 106.982L762.287 105.505L762.563 106.223C762.734 106.833 762.757 107.445 762.631 108.059C762.502 108.666 762.237 109.212 761.833 109.696C761.427 110.174 760.91 110.533 760.28 110.775C759.616 111.03 758.95 111.108 758.285 111.01C757.616 110.905 757.014 110.637 756.48 110.206C755.952 109.772 755.554 109.206 755.287 108.508C755.019 107.809 754.936 107.122 755.038 106.447C755.145 105.762 755.413 105.161 755.842 104.642C756.269 104.117 756.815 103.727 757.479 103.473C758.239 103.181 758.982 103.112 759.709 103.266C760.442 103.416 761.073 103.783 761.603 104.365L760.484 104.794ZM767.774 99.6184L770.52 106.777L769.585 107.135L768.34 103.89L764.694 105.288L765.939 108.534L765.004 108.892L762.259 101.734L763.193 101.375L764.399 104.518L768.045 103.12L766.839 99.9769L767.774 99.6184ZM773.776 97.3164L774.067 98.0765L772.116 98.8249L774.57 105.223L773.635 105.582L771.181 99.1834L769.22 99.9357L768.928 99.1757L773.776 97.3164Z",
   },
 ];
+
+// <path id="orchestraLeft" d="M266.092 107.96C265.43 107.7 264.887 107.309 264.461 106.787C264.039 106.259 263.775 105.655 263.672 104.976C263.578 104.293 263.667 103.604 263.941 102.907C264.214 102.211 264.617 101.648 265.148 101.219C265.689 100.785 266.292 100.522 266.959 100.429C267.628 100.33 268.294 100.41 268.956 100.67C269.625 100.933 270.171 101.329 270.594 101.857C271.019 102.379 271.28 102.978 271.377 103.654C271.474 104.33 271.384 105.02 271.108 105.723C270.832 106.426 270.428 106.992 269.897 107.422C269.366 107.851 268.765 108.116 268.096 108.215C267.429 108.308 266.761 108.223 266.092 107.96ZM266.41 107.151C266.908 107.347 267.401 107.406 267.888 107.33C268.382 107.256 268.826 107.048 269.22 106.707C269.621 106.368 269.933 105.915 270.156 105.349C270.381 104.775 270.46 104.232 270.395 103.717C270.338 103.199 270.158 102.746 269.853 102.358C269.548 101.97 269.143 101.677 268.638 101.479C268.133 101.281 267.637 101.22 267.15 101.296C266.663 101.373 266.219 101.58 265.818 101.919C265.427 102.254 265.118 102.708 264.893 103.281C264.67 103.848 264.587 104.39 264.644 104.909C264.707 105.43 264.891 105.884 265.195 106.272C265.507 106.662 265.912 106.955 266.41 107.151ZM274.691 111.255L274.138 107.67L273.012 107.227L271.866 110.145L270.934 109.779L273.737 102.643L276.041 103.548C276.58 103.76 276.998 104.03 277.294 104.359C277.597 104.691 277.779 105.05 277.84 105.436C277.901 105.823 277.852 106.217 277.694 106.62C277.501 107.112 277.187 107.489 276.753 107.751C276.326 108.017 275.805 108.1 275.19 108L275.807 111.694L274.691 111.255ZM273.306 106.48L274.677 107.019C275.183 107.217 275.61 107.243 275.959 107.097C276.31 106.943 276.568 106.658 276.732 106.242C276.898 105.819 276.9 105.442 276.739 105.11C276.584 104.782 276.251 104.517 275.739 104.316L274.367 103.777L273.306 106.48ZM278.219 108.516C278.492 107.82 278.894 107.257 279.426 106.828C279.959 106.391 280.558 106.122 281.22 106.02C281.89 105.92 282.555 106.001 283.217 106.261C283.995 106.566 284.601 107.021 285.034 107.624C285.466 108.228 285.68 108.926 285.676 109.72L284.56 109.282C284.531 108.774 284.374 108.33 284.09 107.951C283.812 107.574 283.414 107.284 282.896 107.08C282.397 106.884 281.905 106.824 281.418 106.901C280.931 106.978 280.49 107.187 280.096 107.528C279.704 107.863 279.396 108.317 279.171 108.89C278.948 109.457 278.865 109.999 278.921 110.518C278.98 111.029 279.162 111.479 279.467 111.867C279.772 112.254 280.173 112.546 280.671 112.742C281.19 112.945 281.678 113.007 282.135 112.927C282.602 112.842 283.018 112.624 283.385 112.271L284.501 112.71C283.967 113.288 283.336 113.65 282.608 113.798C281.883 113.939 281.132 113.856 280.354 113.55C279.692 113.29 279.148 112.899 278.722 112.378C278.307 111.852 278.05 111.251 277.953 110.575C277.857 109.899 277.945 109.212 278.219 108.516ZM293.373 110.357L290.57 117.493L289.638 117.127L290.909 113.891L287.274 112.464L286.003 115.699L285.072 115.333L287.875 108.197L288.807 108.563L287.576 111.696L291.211 113.124L292.441 109.991L293.373 110.357ZM295.598 112.105L294.661 114.491L297.261 115.512L296.96 116.28L294.359 115.259L293.394 117.716L296.302 118.858L296 119.626L292.161 118.118L294.968 110.971L298.807 112.48L298.506 113.247L295.598 112.105ZM299.644 121.14C299.173 120.955 298.782 120.707 298.471 120.396C298.17 120.08 297.971 119.734 297.874 119.358C297.781 118.974 297.807 118.587 297.953 118.195L298.946 118.585C298.849 118.933 298.874 119.27 299.022 119.596C299.179 119.918 299.49 120.17 299.954 120.352C300.398 120.526 300.789 120.554 301.127 120.435C301.475 120.311 301.717 120.075 301.854 119.727C301.961 119.454 301.973 119.203 301.89 118.973C301.807 118.744 301.67 118.54 301.48 118.363C301.289 118.186 301.023 117.971 300.681 117.718C300.258 117.411 299.928 117.139 299.689 116.903C299.458 116.671 299.291 116.384 299.188 116.045C299.094 115.701 299.135 115.307 299.309 114.863C299.462 114.474 299.696 114.168 300.012 113.946C300.328 113.723 300.696 113.6 301.115 113.575C301.541 113.554 301.986 113.634 302.45 113.816C303.119 114.079 303.6 114.461 303.892 114.961C304.19 115.465 304.258 116.004 304.096 116.578L303.072 116.176C303.145 115.889 303.095 115.594 302.923 115.29C302.754 114.979 302.461 114.742 302.045 114.579C301.656 114.426 301.298 114.403 300.972 114.512C300.648 114.613 300.415 114.845 300.273 115.206C300.171 115.466 300.16 115.706 300.239 115.926C300.325 116.148 300.456 116.346 300.633 116.518C300.819 116.685 301.085 116.9 301.431 117.162C301.851 117.477 302.179 117.755 302.415 117.998C302.653 118.233 302.823 118.524 302.923 118.871C303.026 119.211 302.989 119.606 302.812 120.056C302.675 120.405 302.454 120.696 302.149 120.931C301.844 121.165 301.473 121.307 301.037 121.356C300.6 121.405 300.136 121.333 299.644 121.14ZM310.614 117.13L310.317 117.887L308.371 117.123L305.866 123.502L304.934 123.136L307.44 116.757L305.484 115.989L305.782 115.231L310.614 117.13ZM312.715 126.192L312.162 122.607L311.036 122.164L309.889 125.082L308.958 124.716L311.761 117.58L314.065 118.485C314.604 118.697 315.022 118.967 315.318 119.296C315.621 119.628 315.803 119.987 315.864 120.374C315.925 120.76 315.876 121.155 315.718 121.557C315.525 122.049 315.211 122.426 314.777 122.689C314.35 122.954 313.829 123.037 313.214 122.937L313.831 126.631L312.715 126.192ZM311.329 121.417L312.701 121.956C313.206 122.154 313.633 122.18 313.983 122.034C314.334 121.88 314.592 121.596 314.756 121.179C314.922 120.756 314.924 120.379 314.763 120.047C314.608 119.719 314.275 119.454 313.763 119.253L312.391 118.714L311.329 121.417ZM320.028 127.233L316.916 126.011L315.719 127.372L314.736 126.986L320.104 120.905L321.179 121.327L320.961 129.432L319.978 129.046L320.028 127.233ZM320.06 126.371L320.186 122.26L317.48 125.358L320.06 126.371ZM328.774 131.626L331.272 132.608L330.975 133.365L327.545 132.018L330.348 124.882L331.28 125.248L328.774 131.626ZM335.401 127.741L334.464 130.127L337.065 131.149L336.763 131.916L334.163 130.895L333.197 133.352L336.105 134.494L335.803 135.262L331.964 133.754L334.771 126.608L338.611 128.116L338.309 128.884L335.401 127.741ZM344.05 130.265L343.753 131.022L340.651 129.804L339.705 132.21L342.224 133.199L341.926 133.957L339.408 132.967L338.145 136.182L337.213 135.816L340.017 128.68L344.05 130.265ZM349.568 132.432L349.27 133.19L347.325 132.425L344.819 138.804L343.888 138.438L346.393 132.059L344.438 131.291L344.735 130.534L349.568 132.432Z" fill="black"/>
+// <path id="balconyLeft" d="M151.902 483.345C152.146 483.488 152.34 483.687 152.484 483.94C152.636 484.197 152.723 484.475 152.747 484.776C152.777 485.08 152.736 485.375 152.623 485.661C152.481 486.023 152.261 486.315 151.961 486.536C151.664 486.75 151.305 486.873 150.883 486.904C150.47 486.931 150.025 486.851 149.547 486.663L146.885 485.617L149.689 478.481L152.248 479.487C152.733 479.677 153.114 479.921 153.391 480.219C153.67 480.51 153.842 480.826 153.905 481.166C153.968 481.506 153.933 481.846 153.799 482.188C153.633 482.611 153.379 482.917 153.037 483.105C152.704 483.29 152.326 483.37 151.902 483.345ZM149.41 481.929L150.976 482.544C151.413 482.716 151.791 482.746 152.11 482.635C152.43 482.524 152.66 482.288 152.803 481.926C152.945 481.565 152.937 481.234 152.778 480.936C152.62 480.637 152.315 480.399 151.865 480.222L150.319 479.615L149.41 481.929ZM149.767 485.863C150.231 486.045 150.636 486.078 150.981 485.962C151.326 485.845 151.575 485.592 151.728 485.203C151.883 484.807 151.869 484.443 151.684 484.111C151.503 483.771 151.183 483.512 150.726 483.332L149.108 482.697L148.119 485.215L149.767 485.863ZM158.006 488.154L154.893 486.931L153.697 488.293L152.714 487.907L158.081 481.825L159.156 482.248L158.939 490.352L157.956 489.966L158.006 488.154ZM158.037 487.292L158.163 483.181L155.457 486.278L158.037 487.292ZM161.292 490.402L163.791 491.384L163.493 492.141L160.063 490.794L162.866 483.658L163.798 484.024L161.292 490.402ZM165.538 488.82C165.812 488.124 166.214 487.561 166.745 487.132C167.279 486.695 167.877 486.426 168.54 486.324C169.209 486.224 169.875 486.305 170.537 486.565C171.315 486.87 171.92 487.325 172.353 487.928C172.786 488.532 173 489.23 172.995 490.024L171.879 489.586C171.85 489.078 171.694 488.634 171.409 488.255C171.132 487.878 170.734 487.588 170.215 487.384C169.717 487.188 169.224 487.128 168.737 487.205C168.25 487.282 167.809 487.491 167.415 487.832C167.024 488.167 166.715 488.621 166.49 489.194C166.268 489.761 166.185 490.303 166.241 490.822C166.3 491.333 166.482 491.783 166.786 492.171C167.091 492.558 167.493 492.85 167.991 493.046C168.51 493.249 168.998 493.311 169.455 493.231C169.921 493.146 170.338 492.928 170.705 492.575L171.821 493.014C171.286 493.592 170.655 493.954 169.928 494.102C169.203 494.243 168.451 494.16 167.673 493.854C167.011 493.594 166.467 493.203 166.042 492.682C165.626 492.156 165.37 491.555 165.273 490.879C165.176 490.203 165.265 489.516 165.538 488.82ZM175.598 496.98C174.936 496.719 174.392 496.329 173.967 495.807C173.544 495.278 173.281 494.675 173.178 493.996C173.084 493.313 173.173 492.623 173.447 491.927C173.72 491.231 174.123 490.668 174.654 490.238C175.194 489.805 175.798 489.542 176.465 489.449C177.134 489.349 177.8 489.43 178.462 489.69C179.131 489.953 179.677 490.348 180.099 490.877C180.525 491.398 180.786 491.997 180.883 492.674C180.979 493.35 180.89 494.039 180.614 494.742C180.337 495.445 179.934 496.012 179.403 496.441C178.871 496.871 178.271 497.135 177.602 497.235C176.935 497.327 176.267 497.242 175.598 496.98ZM175.916 496.171C176.414 496.366 176.907 496.426 177.394 496.349C177.888 496.276 178.332 496.068 178.726 495.726C179.127 495.388 179.439 494.935 179.661 494.368C179.887 493.795 179.966 493.251 179.901 492.737C179.844 492.218 179.664 491.765 179.359 491.378C179.054 490.99 178.649 490.697 178.144 490.499C177.639 490.3 177.143 490.239 176.656 490.316C176.169 490.392 175.725 490.6 175.324 490.939C174.932 491.274 174.624 491.728 174.399 492.301C174.176 492.868 174.093 493.41 174.15 493.929C174.213 494.45 174.397 494.904 174.701 495.292C175.013 495.682 175.418 495.975 175.916 496.171ZM186.05 501.003L185.119 500.637L183.604 493.482L181.372 499.165L180.44 498.799L183.247 491.652L184.179 492.018L185.698 499.162L187.926 493.49L188.858 493.856L186.05 501.003ZM195.438 496.453L191.369 499.984L190.311 502.676L189.379 502.31L190.437 499.618L189.848 494.257L190.882 494.664L191.223 498.969L194.404 496.047L195.438 496.453ZM197.577 504.656L200.075 505.637L199.777 506.395L196.347 505.048L199.151 497.912L200.082 498.278L197.577 504.656ZM204.204 500.771L203.267 503.157L205.867 504.178L205.566 504.946L202.965 503.925L202 506.382L204.908 507.524L204.606 508.292L200.767 506.784L203.574 499.637L207.413 501.146L207.112 501.914L204.204 500.771ZM212.853 503.294L212.555 504.052L209.453 502.833L208.508 505.239L211.027 506.229L210.729 506.986L208.21 505.997L206.947 509.212L206.016 508.846L208.819 501.71L212.853 503.294ZM218.37 505.462L218.073 506.22L216.128 505.455L213.622 511.834L212.69 511.468L215.196 505.089L213.24 504.321L213.538 503.564L218.37 505.462Z" fill="black"/>
+// <path id="orchestraMiddle" d="M466.323 159.077C465.612 159.077 464.963 158.912 464.376 158.582C463.789 158.245 463.324 157.779 462.979 157.185C462.642 156.584 462.473 155.909 462.473 155.161C462.473 154.413 462.642 153.742 462.979 153.148C463.324 152.547 463.789 152.081 464.376 151.751C464.963 151.414 465.612 151.245 466.323 151.245C467.042 151.245 467.694 151.414 468.281 151.751C468.868 152.081 469.33 152.543 469.667 153.137C470.004 153.731 470.173 154.406 470.173 155.161C470.173 155.916 470.004 156.591 469.667 157.185C469.33 157.779 468.868 158.245 468.281 158.582C467.694 158.912 467.042 159.077 466.323 159.077ZM466.323 158.208C466.858 158.208 467.339 158.083 467.764 157.834C468.197 157.585 468.534 157.229 468.776 156.767C469.025 156.305 469.15 155.77 469.15 155.161C469.15 154.545 469.025 154.01 468.776 153.555C468.534 153.093 468.2 152.737 467.775 152.488C467.35 152.239 466.866 152.114 466.323 152.114C465.78 152.114 465.296 152.239 464.871 152.488C464.446 152.737 464.108 153.093 463.859 153.555C463.617 154.01 463.496 154.545 463.496 155.161C463.496 155.77 463.617 156.305 463.859 156.767C464.108 157.229 464.446 157.585 464.871 157.834C465.304 158.083 465.788 158.208 466.323 158.208ZM475.531 159L473.705 155.865H472.495V159H471.494V151.333H473.969C474.549 151.333 475.036 151.432 475.432 151.63C475.836 151.828 476.136 152.096 476.334 152.433C476.532 152.77 476.631 153.155 476.631 153.588C476.631 154.116 476.477 154.582 476.169 154.985C475.869 155.388 475.414 155.656 474.805 155.788L476.73 159H475.531ZM472.495 155.062H473.969C474.512 155.062 474.919 154.93 475.19 154.666C475.462 154.395 475.597 154.035 475.597 153.588C475.597 153.133 475.462 152.781 475.19 152.532C474.926 152.283 474.519 152.158 473.969 152.158H472.495V155.062ZM477.813 155.161C477.813 154.413 477.982 153.742 478.319 153.148C478.656 152.547 479.115 152.077 479.694 151.74C480.281 151.403 480.93 151.234 481.641 151.234C482.477 151.234 483.207 151.436 483.83 151.839C484.453 152.242 484.908 152.814 485.194 153.555H483.995C483.782 153.093 483.474 152.737 483.071 152.488C482.675 152.239 482.198 152.114 481.641 152.114C481.106 152.114 480.625 152.239 480.2 152.488C479.775 152.737 479.441 153.093 479.199 153.555C478.957 154.01 478.836 154.545 478.836 155.161C478.836 155.77 478.957 156.305 479.199 156.767C479.441 157.222 479.775 157.574 480.2 157.823C480.625 158.072 481.106 158.197 481.641 158.197C482.198 158.197 482.675 158.076 483.071 157.834C483.474 157.585 483.782 157.229 483.995 156.767H485.194C484.908 157.5 484.453 158.069 483.83 158.472C483.207 158.868 482.477 159.066 481.641 159.066C480.93 159.066 480.281 158.901 479.694 158.571C479.115 158.234 478.656 157.768 478.319 157.174C477.982 156.58 477.813 155.909 477.813 155.161ZM492.591 151.333V159H491.59V155.524H487.685V159H486.684V151.333H487.685V154.699H491.59V151.333H492.591ZM495.301 152.147V154.71H498.095V155.535H495.301V158.175H498.425V159H494.3V151.322H498.425V152.147H495.301ZM502.371 159.077C501.865 159.077 501.41 158.989 501.007 158.813C500.611 158.63 500.299 158.38 500.072 158.065C499.844 157.742 499.727 157.372 499.72 156.954H500.787C500.823 157.313 500.97 157.618 501.227 157.867C501.491 158.109 501.872 158.23 502.371 158.23C502.847 158.23 503.221 158.113 503.493 157.878C503.771 157.636 503.911 157.328 503.911 156.954C503.911 156.661 503.83 156.422 503.669 156.239C503.507 156.056 503.306 155.916 503.064 155.821C502.822 155.726 502.495 155.623 502.085 155.513C501.579 155.381 501.172 155.249 500.864 155.117C500.563 154.985 500.303 154.78 500.083 154.501C499.87 154.215 499.764 153.834 499.764 153.357C499.764 152.939 499.87 152.569 500.083 152.246C500.295 151.923 500.592 151.674 500.974 151.498C501.362 151.322 501.806 151.234 502.305 151.234C503.023 151.234 503.61 151.414 504.065 151.773C504.527 152.132 504.787 152.609 504.846 153.203H503.746C503.709 152.91 503.555 152.653 503.284 152.433C503.012 152.206 502.653 152.092 502.206 152.092C501.788 152.092 501.447 152.202 501.183 152.422C500.919 152.635 500.787 152.935 500.787 153.324C500.787 153.603 500.864 153.83 501.018 154.006C501.179 154.182 501.373 154.318 501.601 154.413C501.835 154.501 502.162 154.604 502.58 154.721C503.086 154.86 503.493 155 503.801 155.139C504.109 155.271 504.373 155.48 504.593 155.766C504.813 156.045 504.923 156.426 504.923 156.91C504.923 157.284 504.824 157.636 504.626 157.966C504.428 158.296 504.134 158.564 503.746 158.769C503.357 158.974 502.899 159.077 502.371 159.077ZM511.115 151.333V152.147H509.025V159H508.024V152.147H505.923V151.333H511.115ZM516.384 159L514.558 155.865H513.348V159H512.347V151.333H514.822C515.401 151.333 515.889 151.432 516.285 151.63C516.688 151.828 516.989 152.096 517.187 152.433C517.385 152.77 517.484 153.155 517.484 153.588C517.484 154.116 517.33 154.582 517.022 154.985C516.721 155.388 516.267 155.656 515.658 155.788L517.583 159H516.384ZM513.348 155.062H514.822C515.365 155.062 515.772 154.93 516.043 154.666C516.314 154.395 516.45 154.035 516.45 153.588C516.45 153.133 516.314 152.781 516.043 152.532C515.779 152.283 515.372 152.158 514.822 152.158H513.348V155.062ZM523.571 157.295H520.227L519.611 159H518.555L521.327 151.377H522.482L525.243 159H524.187L523.571 157.295ZM523.285 156.481L521.899 152.609L520.513 156.481H523.285ZM537.161 151.388V159H536.16V153.324L533.63 159H532.926L530.385 153.313V159H529.384V151.388H530.462L533.278 157.68L536.094 151.388H537.161ZM539.86 151.333V159H538.859V151.333H539.86ZM543.953 151.333C544.789 151.333 545.511 151.491 546.12 151.806C546.736 152.114 547.205 152.558 547.528 153.137C547.858 153.716 548.023 154.398 548.023 155.183C548.023 155.968 547.858 156.65 547.528 157.229C547.205 157.801 546.736 158.241 546.12 158.549C545.511 158.85 544.789 159 543.953 159H541.566V151.333H543.953ZM543.953 158.175C544.943 158.175 545.698 157.915 546.219 157.394C546.739 156.866 547 156.129 547 155.183C547 154.23 546.736 153.485 546.208 152.95C545.687 152.415 544.935 152.147 543.953 152.147H542.567V158.175H543.953ZM551.73 151.333C552.566 151.333 553.288 151.491 553.897 151.806C554.513 152.114 554.982 152.558 555.305 153.137C555.635 153.716 555.8 154.398 555.8 155.183C555.8 155.968 555.635 156.65 555.305 157.229C554.982 157.801 554.513 158.241 553.897 158.549C553.288 158.85 552.566 159 551.73 159H549.343V151.333H551.73ZM551.73 158.175C552.72 158.175 553.475 157.915 553.996 157.394C554.517 156.866 554.777 156.129 554.777 155.183C554.777 154.23 554.513 153.485 553.985 152.95C553.464 152.415 552.713 152.147 551.73 152.147H550.344V158.175H551.73ZM558.121 158.186H560.805V159H557.12V151.333H558.121V158.186ZM562.869 152.147V154.71H565.663V155.535H562.869V158.175H565.993V159H561.868V151.322H565.993V152.147H562.869Z" fill="black"/>
+// <path id="balconyMiddle" d="M469.686 524.051C469.965 524.095 470.218 524.209 470.445 524.392C470.68 524.575 470.863 524.803 470.995 525.074C471.134 525.345 471.204 525.635 471.204 525.943C471.204 526.332 471.105 526.684 470.907 526.999C470.709 527.307 470.419 527.553 470.038 527.736C469.664 527.912 469.22 528 468.707 528H465.847V520.333H468.597C469.118 520.333 469.561 520.421 469.928 520.597C470.295 520.766 470.57 520.997 470.753 521.29C470.936 521.583 471.028 521.913 471.028 522.28C471.028 522.735 470.903 523.112 470.654 523.413C470.412 523.706 470.089 523.919 469.686 524.051ZM466.848 523.644H468.531C469 523.644 469.363 523.534 469.62 523.314C469.877 523.094 470.005 522.79 470.005 522.401C470.005 522.012 469.877 521.708 469.62 521.488C469.363 521.268 468.993 521.158 468.509 521.158H466.848V523.644ZM468.619 527.175C469.118 527.175 469.506 527.058 469.785 526.823C470.064 526.588 470.203 526.262 470.203 525.844C470.203 525.419 470.056 525.085 469.763 524.843C469.47 524.594 469.077 524.469 468.586 524.469H466.848V527.175H468.619ZM477.125 526.295H473.781L473.165 528H472.109L474.881 520.377H476.036L478.797 528H477.741L477.125 526.295ZM476.839 525.481L475.453 521.609L474.067 525.481H476.839ZM481.006 527.186H483.69V528H480.005V520.333H481.006V527.186ZM484.379 524.161C484.379 523.413 484.548 522.742 484.885 522.148C485.223 521.547 485.681 521.077 486.26 520.74C486.847 520.403 487.496 520.234 488.207 520.234C489.043 520.234 489.773 520.436 490.396 520.839C491.02 521.242 491.474 521.814 491.76 522.555H490.561C490.349 522.093 490.041 521.737 489.637 521.488C489.241 521.239 488.765 521.114 488.207 521.114C487.672 521.114 487.192 521.239 486.766 521.488C486.341 521.737 486.007 522.093 485.765 522.555C485.523 523.01 485.402 523.545 485.402 524.161C485.402 524.77 485.523 525.305 485.765 525.767C486.007 526.222 486.341 526.574 486.766 526.823C487.192 527.072 487.672 527.197 488.207 527.197C488.765 527.197 489.241 527.076 489.637 526.834C490.041 526.585 490.349 526.229 490.561 525.767H491.76C491.474 526.5 491.02 527.069 490.396 527.472C489.773 527.868 489.043 528.066 488.207 528.066C487.496 528.066 486.847 527.901 486.26 527.571C485.681 527.234 485.223 526.768 484.885 526.174C484.548 525.58 484.379 524.909 484.379 524.161ZM496.726 528.077C496.015 528.077 495.366 527.912 494.779 527.582C494.193 527.245 493.727 526.779 493.382 526.185C493.045 525.584 492.876 524.909 492.876 524.161C492.876 523.413 493.045 522.742 493.382 522.148C493.727 521.547 494.193 521.081 494.779 520.751C495.366 520.414 496.015 520.245 496.726 520.245C497.445 520.245 498.098 520.414 498.684 520.751C499.271 521.081 499.733 521.543 500.07 522.137C500.408 522.731 500.576 523.406 500.576 524.161C500.576 524.916 500.408 525.591 500.07 526.185C499.733 526.779 499.271 527.245 498.684 527.582C498.098 527.912 497.445 528.077 496.726 528.077ZM496.726 527.208C497.262 527.208 497.742 527.083 498.167 526.834C498.6 526.585 498.937 526.229 499.179 525.767C499.429 525.305 499.553 524.77 499.553 524.161C499.553 523.545 499.429 523.01 499.179 522.555C498.937 522.093 498.604 521.737 498.178 521.488C497.753 521.239 497.269 521.114 496.726 521.114C496.184 521.114 495.7 521.239 495.274 521.488C494.849 521.737 494.512 522.093 494.262 522.555C494.02 523.01 493.899 523.545 493.899 524.161C493.899 524.77 494.02 525.305 494.262 525.767C494.512 526.229 494.849 526.585 495.274 526.834C495.707 527.083 496.191 527.208 496.726 527.208ZM507.926 528H506.925L502.899 521.895V528H501.898V520.322H502.899L506.925 526.416V520.322H507.926V528ZM515 520.333L512.503 525.107V528H511.502V525.107L508.994 520.333H510.105L511.997 524.216L513.889 520.333H515ZM526.766 520.388V528H525.765V522.324L523.235 528H522.531L519.99 522.313V528H518.989V520.388H520.067L522.883 526.68L525.699 520.388H526.766ZM529.464 520.333V528H528.463V520.333H529.464ZM533.557 520.333C534.393 520.333 535.116 520.491 535.724 520.806C536.34 521.114 536.81 521.558 537.132 522.137C537.462 522.716 537.627 523.398 537.627 524.183C537.627 524.968 537.462 525.65 537.132 526.229C536.81 526.801 536.34 527.241 535.724 527.549C535.116 527.85 534.393 528 533.557 528H531.17V520.333H533.557ZM533.557 527.175C534.547 527.175 535.303 526.915 535.823 526.394C536.344 525.866 536.604 525.129 536.604 524.183C536.604 523.23 536.34 522.485 535.812 521.95C535.292 521.415 534.54 521.147 533.557 521.147H532.171V527.175H533.557ZM541.335 520.333C542.171 520.333 542.893 520.491 543.502 520.806C544.118 521.114 544.587 521.558 544.91 522.137C545.24 522.716 545.405 523.398 545.405 524.183C545.405 524.968 545.24 525.65 544.91 526.229C544.587 526.801 544.118 527.241 543.502 527.549C542.893 527.85 542.171 528 541.335 528H538.948V520.333H541.335ZM541.335 527.175C542.325 527.175 543.08 526.915 543.601 526.394C544.121 525.866 544.382 525.129 544.382 524.183C544.382 523.23 544.118 522.485 543.59 521.95C543.069 521.415 542.317 521.147 541.335 521.147H539.949V527.175H541.335ZM547.726 527.186H550.41V528H546.725V520.333H547.726V527.186ZM552.474 521.147V523.71H555.268V524.535H552.474V527.175H555.598V528H551.473V520.322H555.598V521.147H552.474Z" fill="black"/>
+// <path id="orchestraRight" d="M686.645 139.029C685.981 139.283 685.316 139.362 684.65 139.264C683.981 139.159 683.38 138.891 682.845 138.46C682.315 138.019 681.916 137.449 681.648 136.751C681.38 136.053 681.297 135.366 681.399 134.69C681.506 134.005 681.774 133.404 682.204 132.886C682.631 132.361 683.176 131.971 683.84 131.716C684.511 131.459 685.181 131.382 685.85 131.487C686.516 131.585 687.112 131.851 687.64 132.285C688.168 132.719 688.567 133.288 688.837 133.994C689.108 134.699 689.192 135.389 689.09 136.065C688.987 136.74 688.723 137.34 688.296 137.865C687.866 138.383 687.316 138.771 686.645 139.029ZM686.334 138.217C686.834 138.026 687.237 137.737 687.545 137.352C687.86 136.964 688.048 136.511 688.108 135.993C688.175 135.473 688.1 134.928 687.882 134.36C687.662 133.785 687.353 133.33 686.958 132.994C686.566 132.65 686.127 132.437 685.641 132.357C685.155 132.276 684.658 132.333 684.151 132.527C683.645 132.722 683.238 133.011 682.93 133.397C682.622 133.782 682.434 134.235 682.367 134.755C682.304 135.266 682.382 135.81 682.603 136.385C682.821 136.953 683.126 137.409 683.517 137.754C683.915 138.096 684.358 138.308 684.844 138.388C685.337 138.466 685.834 138.409 686.334 138.217ZM695.215 135.659L692.388 133.386L691.258 133.819L692.38 136.746L691.446 137.105L688.7 129.946L691.011 129.06C691.552 128.852 692.043 128.77 692.483 128.813C692.931 128.854 693.308 128.996 693.613 129.24C693.919 129.484 694.149 129.808 694.304 130.212C694.493 130.705 694.516 131.195 694.373 131.682C694.237 132.166 693.908 132.579 693.387 132.92L696.335 135.23L695.215 135.659ZM690.97 133.069L692.346 132.542C692.853 132.347 693.186 132.078 693.345 131.735C693.501 131.384 693.499 131 693.339 130.582C693.176 130.158 692.923 129.878 692.581 129.742C692.245 129.604 691.82 129.633 691.307 129.83L689.93 130.358L690.97 133.069ZM695.97 131.258C695.703 130.559 695.62 129.872 695.722 129.197C695.822 128.515 696.082 127.912 696.502 127.39C696.929 126.865 697.474 126.475 698.138 126.22C698.919 125.921 699.672 125.848 700.399 126.001C701.125 126.155 701.755 126.526 702.287 127.115L701.167 127.544C700.803 127.189 700.388 126.967 699.923 126.879C699.464 126.788 698.974 126.842 698.453 127.042C697.954 127.234 697.55 127.522 697.242 127.907C696.934 128.292 696.75 128.744 696.689 129.262C696.626 129.773 696.705 130.316 696.926 130.891C697.144 131.46 697.448 131.916 697.84 132.261C698.228 132.599 698.666 132.808 699.152 132.888C699.639 132.969 700.132 132.913 700.632 132.722C701.152 132.522 701.554 132.238 701.837 131.871C702.124 131.493 702.284 131.051 702.318 130.543L703.437 130.114C703.433 130.901 703.212 131.595 702.774 132.194C702.334 132.787 701.724 133.234 700.943 133.533C700.279 133.788 699.614 133.866 698.948 133.768C698.286 133.661 697.691 133.39 697.164 132.956C696.636 132.522 696.238 131.956 695.97 131.258ZM708.398 122.392L711.143 129.55L710.209 129.909L708.964 126.663L705.318 128.061L706.563 131.307L705.628 131.665L702.882 124.507L703.817 124.148L705.022 127.291L708.668 125.893L707.463 122.75L708.398 122.392ZM711.22 122.181L712.137 124.574L714.746 123.574L715.042 124.344L712.433 125.344L713.378 127.809L716.295 126.691L716.591 127.461L712.739 128.938L709.99 121.769L713.841 120.292L714.136 121.062L711.22 122.181ZM720.302 126.12C719.83 126.301 719.374 126.382 718.934 126.362C718.499 126.332 718.118 126.211 717.793 125.998C717.465 125.778 717.223 125.475 717.067 125.087L718.063 124.705C718.226 125.027 718.472 125.259 718.801 125.4C719.134 125.531 719.533 125.508 719.999 125.329C720.444 125.158 720.751 124.915 720.92 124.598C721.094 124.273 721.114 123.935 720.98 123.586C720.875 123.312 720.714 123.119 720.498 123.005C720.281 122.892 720.043 122.834 719.783 122.832C719.523 122.829 719.182 122.85 718.759 122.895C718.239 122.952 717.812 122.975 717.477 122.962C717.149 122.946 716.832 122.848 716.527 122.667C716.226 122.476 715.99 122.158 715.82 121.713C715.67 121.322 715.637 120.939 715.72 120.561C715.803 120.184 715.991 119.845 716.284 119.544C716.584 119.24 716.966 118.999 717.432 118.821C718.103 118.563 718.715 118.521 719.268 118.694C719.828 118.864 720.242 119.215 720.509 119.749L719.482 120.143C719.343 119.882 719.107 119.698 718.775 119.589C718.441 119.474 718.064 119.497 717.647 119.657C717.256 119.807 716.977 120.032 716.81 120.332C716.639 120.625 716.624 120.953 716.763 121.316C716.863 121.576 717.016 121.76 717.223 121.87C717.437 121.976 717.667 122.033 717.913 122.041C718.164 122.039 718.505 122.018 718.937 121.978C719.46 121.927 719.89 121.911 720.227 121.931C720.562 121.944 720.883 122.044 721.191 122.233C721.496 122.414 721.735 122.731 721.909 123.183C722.043 123.532 722.076 123.896 722.01 124.275C721.943 124.654 721.765 125.009 721.476 125.34C721.186 125.671 720.795 125.931 720.302 126.12ZM725.693 115.758L725.985 116.518L724.033 117.267L726.487 123.665L725.553 124.023L723.099 117.625L721.137 118.377L720.845 117.617L725.693 115.758ZM733.358 121.03L730.531 118.756L729.401 119.19L730.524 122.117L729.589 122.475L726.844 115.317L729.154 114.431C729.695 114.223 730.186 114.141 730.627 114.184C731.074 114.224 731.451 114.367 731.756 114.611C732.062 114.855 732.292 115.179 732.447 115.583C732.636 116.076 732.659 116.566 732.516 117.052C732.38 117.537 732.051 117.949 731.53 118.291L734.478 120.6L733.358 121.03ZM729.114 118.44L730.49 117.912C730.996 117.718 731.329 117.449 731.488 117.105C731.644 116.755 731.642 116.371 731.482 115.953C731.319 115.528 731.066 115.248 730.724 115.113C730.388 114.974 729.963 115.004 729.45 115.201L728.074 115.729L729.114 118.44ZM739.459 116.864L736.336 118.061L736.372 119.874L735.386 120.252L735.244 112.142L736.323 111.728L741.63 117.857L740.644 118.235L739.459 116.864ZM738.9 116.206L736.219 113.087L736.312 117.199L738.9 116.206ZM752.004 113.878L749.176 111.605L748.046 112.039L749.169 114.966L748.234 115.324L745.489 108.166L747.8 107.279C748.341 107.072 748.831 106.99 749.272 107.033C749.72 107.073 750.096 107.215 750.402 107.459C750.708 107.703 750.938 108.027 751.093 108.431C751.282 108.924 751.305 109.414 751.162 109.901C751.025 110.386 750.697 110.798 750.176 111.139L753.123 113.449L752.004 113.878ZM747.759 111.289L749.135 110.761C749.642 110.567 749.975 110.298 750.133 109.954C750.29 109.603 750.288 109.219 750.127 108.802C749.965 108.377 749.712 108.097 749.369 107.962C749.033 107.823 748.609 107.853 748.095 108.05L746.719 108.577L747.759 111.289ZM752.672 105.411L755.418 112.569L754.483 112.928L751.737 105.769L752.672 105.411ZM760.484 104.794C760.125 104.453 759.714 104.241 759.251 104.16C758.785 104.072 758.302 104.123 757.802 104.315C757.302 104.507 756.895 104.796 756.58 105.184C756.27 105.562 756.081 106.012 756.013 106.532C755.95 107.044 756.026 107.58 756.242 108.141C756.457 108.703 756.759 109.152 757.148 109.49C757.544 109.826 757.985 110.033 758.471 110.114C758.962 110.185 759.457 110.125 759.957 109.933C760.655 109.665 761.15 109.236 761.442 108.645C761.734 108.054 761.78 107.388 761.583 106.647L758.727 107.742L758.436 106.982L762.287 105.505L762.563 106.223C762.734 106.833 762.757 107.445 762.631 108.059C762.502 108.666 762.237 109.212 761.833 109.696C761.427 110.174 760.91 110.533 760.28 110.775C759.616 111.03 758.95 111.108 758.285 111.01C757.616 110.905 757.014 110.637 756.48 110.206C755.952 109.772 755.554 109.206 755.287 108.508C755.019 107.809 754.936 107.122 755.038 106.447C755.145 105.762 755.413 105.161 755.842 104.642C756.269 104.117 756.815 103.727 757.479 103.473C758.239 103.181 758.982 103.112 759.709 103.266C760.442 103.416 761.073 103.783 761.603 104.365L760.484 104.794ZM767.774 99.6184L770.52 106.777L769.585 107.135L768.34 103.89L764.694 105.288L765.939 108.534L765.004 108.892L762.259 101.734L763.193 101.375L764.399 104.518L768.045 103.12L766.839 99.9769L767.774 99.6184ZM773.776 97.3164L774.067 98.0765L772.116 98.8249L774.57 105.223L773.635 105.582L771.181 99.1834L769.22 99.9357L768.928 99.1757L773.776 97.3164Z" fill="black"/>
+// <path id="balconyRight" d="M834.542 497.484C834.818 497.426 835.095 497.441 835.373 497.531C835.658 497.618 835.91 497.765 836.131 497.971C836.358 498.174 836.527 498.42 836.637 498.707C836.776 499.07 836.81 499.434 836.738 499.8C836.663 500.158 836.481 500.491 836.19 500.799C835.904 501.097 835.521 501.338 835.042 501.522L832.372 502.546L829.626 495.388L832.194 494.403C832.68 494.216 833.126 494.14 833.531 494.173C833.934 494.199 834.273 494.316 834.55 494.524C834.826 494.733 835.03 495.008 835.161 495.35C835.324 495.775 835.343 496.172 835.217 496.542C835.097 496.903 834.871 497.217 834.542 497.484ZM831.747 498.121L833.318 497.518C833.756 497.35 834.056 497.117 834.217 496.82C834.377 496.523 834.388 496.192 834.249 495.83C834.11 495.467 833.881 495.228 833.563 495.115C833.244 495.001 832.859 495.031 832.407 495.205L830.856 495.799L831.747 498.121ZM834.665 500.783C835.13 500.605 835.451 500.356 835.627 500.037C835.803 499.718 835.817 499.364 835.667 498.973C835.515 498.576 835.258 498.317 834.898 498.196C834.534 498.068 834.124 498.093 833.665 498.269L832.042 498.891L833.011 501.417L834.665 500.783ZM842.291 496.916L839.169 498.113L839.205 499.926L838.219 500.304L838.077 492.194L839.155 491.78L844.463 497.909L843.477 498.287L842.291 496.916ZM841.733 496.258L839.052 493.139L839.145 497.251L841.733 496.258ZM846.234 496.358L848.74 495.396L849.032 496.156L845.591 497.476L842.846 490.318L843.78 489.959L846.234 496.358ZM848.3 492.325C848.032 491.627 847.95 490.94 848.052 490.265C848.152 489.582 848.411 488.98 848.832 488.458C849.258 487.933 849.804 487.543 850.468 487.288C851.249 486.989 852.002 486.916 852.729 487.069C853.455 487.222 854.084 487.594 854.617 488.183L853.497 488.612C853.133 488.257 852.718 488.035 852.252 487.947C851.793 487.856 851.304 487.91 850.783 488.11C850.283 488.301 849.88 488.59 849.572 488.975C849.264 489.36 849.08 489.811 849.019 490.33C848.956 490.841 849.035 491.384 849.255 491.959C849.473 492.527 849.778 492.984 850.17 493.328C850.558 493.666 850.996 493.876 851.482 493.956C851.969 494.036 852.462 493.981 852.962 493.789C853.482 493.59 853.884 493.306 854.167 492.938C854.454 492.561 854.614 492.119 854.647 491.611L855.767 491.182C855.763 491.969 855.542 492.662 855.104 493.262C854.664 493.855 854.053 494.301 853.273 494.601C852.609 494.855 851.944 494.934 851.278 494.836C850.616 494.728 850.021 494.457 849.494 494.024C848.966 493.59 848.568 493.024 848.3 492.325ZM861.231 491.56C860.567 491.815 859.902 491.893 859.236 491.795C858.567 491.69 857.966 491.422 857.431 490.991C856.901 490.55 856.502 489.981 856.234 489.283C855.966 488.584 855.883 487.897 855.985 487.222C856.092 486.537 856.36 485.935 856.79 485.417C857.217 484.892 857.762 484.502 858.426 484.248C859.097 483.99 859.767 483.914 860.436 484.019C861.102 484.117 861.698 484.383 862.226 484.817C862.754 485.25 863.153 485.82 863.423 486.525C863.694 487.23 863.778 487.921 863.676 488.596C863.573 489.271 863.309 489.872 862.882 490.397C862.452 490.915 861.902 491.303 861.231 491.56ZM860.92 490.749C861.42 490.557 861.823 490.269 862.131 489.884C862.446 489.496 862.633 489.043 862.694 488.525C862.761 488.004 862.686 487.46 862.468 486.891C862.247 486.316 861.939 485.861 861.544 485.526C861.152 485.181 860.713 484.969 860.227 484.888C859.741 484.808 859.244 484.865 858.737 485.059C858.231 485.253 857.823 485.543 857.516 485.928C857.208 486.313 857.02 486.766 856.953 487.287C856.89 487.798 856.968 488.341 857.189 488.916C857.407 489.484 857.712 489.941 858.103 490.286C858.501 490.628 858.944 490.839 859.43 490.92C859.923 490.997 860.42 490.94 860.92 490.749ZM871.66 487.478L870.725 487.836L864.78 483.578L866.966 489.278L866.032 489.636L863.282 482.467L864.217 482.109L870.158 486.357L867.976 480.667L868.911 480.309L871.66 487.478ZM875.52 477.786L874.898 483.137L875.934 485.838L874.999 486.197L873.963 483.496L869.912 479.937L870.949 479.539L874.106 482.487L874.482 478.184L875.52 477.786ZM888.497 481.02L885.669 478.747L884.539 479.18L885.662 482.107L884.727 482.466L881.982 475.307L884.293 474.421C884.834 474.214 885.324 474.131 885.765 474.174C886.212 474.215 886.589 474.357 886.895 474.601C887.2 474.845 887.431 475.169 887.586 475.573C887.775 476.066 887.798 476.556 887.655 477.043C887.518 477.527 887.19 477.94 886.669 478.281L889.616 480.591L888.497 481.02ZM884.252 478.431L885.628 477.903C886.135 477.708 886.467 477.439 886.626 477.096C886.782 476.745 886.78 476.361 886.62 475.943C886.457 475.519 886.205 475.239 885.862 475.103C885.526 474.965 885.102 474.994 884.588 475.191L883.212 475.719L884.252 478.431ZM889.165 472.552L891.911 479.711L890.976 480.069L888.23 472.911L889.165 472.552ZM896.976 471.936C896.618 471.595 896.207 471.383 895.743 471.302C895.277 471.213 894.795 471.265 894.295 471.457C893.795 471.648 893.388 471.938 893.073 472.326C892.763 472.704 892.574 473.153 892.506 473.674C892.443 474.185 892.519 474.722 892.735 475.283C892.95 475.845 893.252 476.294 893.641 476.632C894.036 476.967 894.477 477.175 894.964 477.256C895.454 477.327 895.95 477.266 896.45 477.075C897.148 476.807 897.643 476.377 897.935 475.786C898.226 475.195 898.273 474.529 898.076 473.788L895.22 474.883L894.929 474.123L898.78 472.646L899.056 473.365C899.227 473.975 899.25 474.587 899.124 475.201C898.995 475.808 898.729 476.353 898.326 476.838C897.92 477.315 897.402 477.675 896.773 477.917C896.108 478.171 895.443 478.25 894.777 478.152C894.109 478.047 893.507 477.779 892.973 477.348C892.445 476.914 892.047 476.348 891.779 475.649C891.512 474.951 891.429 474.264 891.531 473.589C891.638 472.904 891.906 472.302 892.335 471.784C892.762 471.259 893.308 470.869 893.972 470.614C894.732 470.323 895.475 470.254 896.201 470.407C896.935 470.558 897.566 470.924 898.096 471.507L896.976 471.936ZM904.267 466.76L907.012 473.919L906.078 474.277L904.833 471.032L901.187 472.43L902.432 475.675L901.497 476.034L898.752 468.875L899.686 468.517L900.892 471.66L904.538 470.261L903.332 467.119L904.267 466.76ZM910.269 464.458L910.56 465.218L908.609 465.967L911.063 472.365L910.128 472.724L907.674 466.325L905.713 467.077L905.421 466.317L910.269 464.458Z" fill="black"/>

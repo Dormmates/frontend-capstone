@@ -65,3 +65,21 @@ export const useRemoveDepartmentTrainerByTrainerId = () => {
     },
   });
 };
+
+export const useAssingDepartmentTrainer = () => {
+  return useMutation<any, Error, { userId: string; departmentId: string }>({
+    mutationFn: async (payload: { userId: string; departmentId: string }) => {
+      const res = await request<any>(`/api/department/assign`, payload, "post");
+      return res.data;
+    },
+  });
+};
+
+export const useCreateTrainerAndAssign = () => {
+  return useMutation<any, Error, { firstName: string; lastName: string; email: string; departmentId: string }>({
+    mutationFn: async (payload: { firstName: string; lastName: string; email: string; departmentId: string }) => {
+      const res = await request<any>(`/api/department/createTrainerAndAssign`, payload, "post");
+      return res.data;
+    },
+  });
+};

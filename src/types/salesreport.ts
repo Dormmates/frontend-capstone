@@ -1,3 +1,5 @@
+import type { Schedule } from "./schedule";
+
 export type SalesReport = {
   showId: string;
   showTitle: string;
@@ -6,8 +8,7 @@ export type SalesReport = {
 };
 
 export type ScheduleReport = {
-  scheduleId: string;
-  datetime: string; // ISO string
+  schedule: Schedule;
   totalTickets: number;
   soldTickets: number;
   unsoldTickets: number;
@@ -21,17 +22,16 @@ export type ScheduleReport = {
 
 export type SectionReport = {
   section: string;
-  ticketPrice: number | string; // can be string or number depending on DB
+  totalTickets: number;
   ticketsSold: number;
   totalSales: number;
+  totalCommission: number;
   totalDiscount: number;
-  discountBreakdown: Record<
-    string,
-    {
-      count: number;
-      totalAmount: number;
-    }
-  >;
+  discountBreakdown: {
+    ticketControlNumbers: string[];
+    discountPercentage: number;
+    totalAmount: number;
+  };
 };
 
 export type DistributorReport = {
@@ -50,11 +50,4 @@ export type OverallTotals = {
   ticketSales: number;
   totalCommission: number;
   netSales: number;
-  discountBreakdown: Record<
-    string,
-    {
-      count: number;
-      totalAmount: number;
-    }
-  >;
 };

@@ -37,6 +37,7 @@ import {
   MajorProductionShows,
   PerformingGroupShows,
   ViewDistributor,
+  Settings,
 } from "../pages/cca/index";
 import DistributorCompleteAllocationHistory from "../pages/distributor/history/DistributorCompleteAllocationHistory";
 import DistributorCompleteRemittanceHistory from "../pages/distributor/history/DistributorCompleteRemittanceHistory";
@@ -112,6 +113,7 @@ const AppRoute = () => {
                 <Route path="performing-groups" element={<PerformingGroups />} />
                 <Route path="manage/trainers" element={<Trainers />} />
                 <Route path="manage/cca-head" element={<CCAHeads />} />
+                <Route path="settings" element={<Settings />} />
               </>
             )}
           </>

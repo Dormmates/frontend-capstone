@@ -7,6 +7,7 @@ import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
+import { EditIcon } from "lucide-react";
 
 type EditShowProps = {
   show: ShowData;
@@ -21,7 +22,11 @@ const EditShow = ({ show }: EditShowProps) => {
     <DialogPopup
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      triggerElement={<Button>Edit Show Details</Button>}
+      triggerElement={
+        <Button variant="outline">
+          <EditIcon />
+        </Button>
+      }
       description="Edit show information and click save"
       title="Edit Show"
       className="w-full max-w-4xl"

@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGetShow } from "@/_lib/@react-client-query/show.ts";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import LongCard from "@/components/LongCard";
 import LongCardItem from "@/components/LongCardItem";
@@ -24,22 +24,28 @@ import InputField from "@/components/InputField";
 import PaginatedTable from "@/components/PaginatedTable";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { compressSeats } from "@/utils/seatmap";
 
 const TicketAllocation = () => {
   const { user } = useAuthContext();
   const { scheduleId, showId } = useParams();
-  const { data: showData, isLoading: loadingShow, isError: showError } = useGetShow(showId as string);
+  const navigate = useNavigate();
+
   const { data: schedule, isLoading: loadingSchedule, isError: errorSchedule } = useGetScheduleInformation(scheduleId as string);
-  const { data: tickets, isLoading: loadingTickets, isError: ticketsError } = useGetScheduleTickets(scheduleId as string);
+  const { data: showData, isLoading: loadingShow, isError: showError } = useGetShow(showId as string, { enabled: schedule?.isOpen });
+  const {
+    data: tickets,
+    isLoading: loadingTickets,
+    isError: ticketsError,
+  } = useGetScheduleTickets(scheduleId as string, { enabled: schedule?.isOpen });
 
   const allocateTicketByControlNumber = useAllocateTicketByControlNumber();
   const queryClient = useQueryClient();
 
   const [selectedDistributor, setSelectedDistributor] = useState<Distributor | null>(null);
   const [isChooseDistributor, setIsChooseDistributor] = useState(false);
-  const [allocationMethod, setAllocationMethod] = useState(schedule?.seatingType === "controlledSeating" ? "seat" : "controlNumber");
+  const [allocationMethod, setAllocationMethod] = useState("controlNumber");
   const [controlNumberInput, setControlNumberInput] = useState("");
-
   const [parsedControlNumbers, setParsedControlNumbers] = useState<number[]>();
   const [choosenSeats, setChoosenSeats] = useState<FlattenedSeat[]>([]);
 
@@ -54,6 +60,20 @@ const TicketAllocation = () => {
 
     return { orchestra, balcony };
   }, [tickets]);
+
+  useEffect(() => {
+    if (!loadingSchedule && schedule && !schedule.isOpen) {
+      navigate(`/shows/schedule/${showId}/${scheduleId}/d&r`, { replace: true });
+    }
+  }, [loadingSchedule, schedule, navigate, showId, scheduleId]);
+
+  useEffect(() => {
+    if (schedule?.seatingType === "controlledSeating") {
+      setAllocationMethod("seat");
+    } else if (schedule?.seatingType) {
+      setAllocationMethod("controlNumber");
+    }
+  }, [schedule?.seatingType]);
 
   const validate = () => {
     let isValid = true;
@@ -135,7 +155,7 @@ const TicketAllocation = () => {
   }
 
   return (
-    <ContentWrapper className="lg:!p-16 flex flex-col">
+    <ContentWrapper className="flex flex-col">
       <Breadcrumbs items={[{ name: "Return to Distributor List", href: "" }]} backHref={`/shows/schedule/${showId}/${scheduleId}/d&r`} />
 
       <div className="flex flex-col gap-8 mt-10">
@@ -176,7 +196,7 @@ const TicketAllocation = () => {
             </TabsList>
             <TabsContent value="seat">
               <>
-                <AllocatedBySeat choosenSeats={choosenSeats} setChoosenSeats={setChoosenSeats} />
+                <AllocatedBySeat error={error.seatError} choosenSeats={choosenSeats} setChoosenSeats={setChoosenSeats} />
                 <Button
                   disabled={
                     (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
@@ -251,7 +271,9 @@ const TicketAllocation = () => {
               />
               <LongCardItem
                 className="!whitespace-normal"
-                value={allocationMethod === "controlNumber" ? controlNumberInput : choosenSeats.map((seat) => seat.seatNumber).join(", ")}
+                value={
+                  allocationMethod === "controlNumber" ? controlNumberInput : compressSeats(choosenSeats.map((seat) => seat.seatNumber)).join(", ")
+                }
                 label={allocationMethod === "controlNumber" ? "Control Numbers" : "Seat Numbers"}
               />
             </LongCard>
@@ -269,11 +291,11 @@ const TicketAllocation = () => {
             )}
 
             <div className="flex justify-end gap-3 mt-5">
-              <Button disabled={allocateTicketByControlNumber.isPending} onClick={submit} className="!bg-green">
-                Confirm
-              </Button>
-              <Button disabled={allocateTicketByControlNumber.isPending} onClick={() => setIsAllocationSummary(false)} className="!bg-red">
+              <Button disabled={allocateTicketByControlNumber.isPending} onClick={() => setIsAllocationSummary(false)} variant="outline">
                 Cancel
+              </Button>
+              <Button disabled={allocateTicketByControlNumber.isPending} onClick={submit}>
+                Confirm
               </Button>
             </div>
           </Modal>

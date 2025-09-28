@@ -17,9 +17,11 @@ import ArchiveAccount from "../ArchiveAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import { Users } from "lucide-react";
+import { EditIcon, Users } from "lucide-react";
+import { useAuthContext } from "@/context/AuthContext";
 
 const Distributors = () => {
+  const { user } = useAuthContext();
   const addDistributor = useNewDistributor();
   const editDistributor = useEditDistributor();
   const queryClient = useQueryClient();
@@ -34,7 +36,27 @@ const Distributors = () => {
   const [type, setType] = useState("all");
 
   const distributorTypeOptions = (distributorTypes ?? []).map((type) => ({ name: type.name, value: String(type.id) }));
-  const groupOptions = (departments ?? []).map((department) => ({ name: department.name, value: department.departmentId }));
+  const groupOptions = useMemo(() => {
+    if (!departments || !user) return [];
+
+    if (user.roles.includes("head")) {
+      return departments.map((department) => ({
+        name: department.name,
+        value: department.departmentId,
+      }));
+    }
+
+    if (user.department) {
+      return [
+        {
+          name: user.department.name,
+          value: user.department.departmentId,
+        },
+      ];
+    }
+
+    return [];
+  }, [departments, user]);
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue);
@@ -52,7 +74,6 @@ const Distributors = () => {
   const searchedDistributors = useMemo(() => {
     if (!activeDistributors) return [];
     return activeDistributors
-      .filter((distributor) => !distributor.isArchived)
       .filter((distributor) => {
         const l = distributor.lastName.toLocaleLowerCase().trim();
         const f = distributor.firstName.toLocaleLowerCase().trim();
@@ -77,10 +98,13 @@ const Distributors = () => {
 
       <div className="flex justify-between mt-10">
         <SimpleCard icon={<Users size={18} />} label="Total Distributors" value={searchedDistributors.length} />
-        <div className="self-end flex gap-2">
-          <Button>Bulk Creation</Button>
-          <Button onClick={() => setIsAddDistributor(true)}>Add New Distributor</Button>
-        </div>
+
+        {(user?.department || user?.roles.includes("head")) && (
+          <div className="self-end flex gap-2">
+            <Button>Bulk Creation</Button>
+            <Button onClick={() => setIsAddDistributor(true)}>Add New Distributor</Button>
+          </div>
+        )}
       </div>
 
       <div className="mt-10 flex flex-col gap-10">
@@ -102,7 +126,7 @@ const Distributors = () => {
         </div>
 
         <PaginatedTable
-          data={activeDistributors}
+          data={searchedDistributors}
           columns={[
             {
               key: "name",
@@ -136,13 +160,18 @@ const Distributors = () => {
               render: (distributor) => (
                 <div className="flex justify-end items-center gap-2">
                   <Link to={`/manage/distributor/${distributor.userId}`}>
-                    <Button variant="secondary">View Distributor</Button>
+                    <Button variant="outline">View Distributor</Button>
                   </Link>
-                  <Button onClick={() => setSelectedDistributor(distributor)} variant="outline">
-                    Edit Details
-                  </Button>
-                  <ArchiveAccount queryKey="distributors" user={distributor as User} />
-                  <DeleteAccount queryKey="distributors" user={distributor as User} />
+
+                  {(user?.roles.includes("head") || user?.department) && (
+                    <>
+                      <Button onClick={() => setSelectedDistributor(distributor)} variant="outline">
+                        <EditIcon />
+                      </Button>
+                      <ArchiveAccount queryKey="distributors" user={distributor as User} />
+                      <DeleteAccount queryKey="distributors" user={distributor as User} />
+                    </>
+                  )}
                 </div>
               ),
             },
@@ -308,9 +337,11 @@ const Distributors = () => {
         </Modal>
       )}
 
-      <Button onClick={() => setShowArchived(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full ">
-        View Archived Distributors
-      </Button>
+      {user?.department && !user.roles.includes("head") && (
+        <Button onClick={() => setShowArchived(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full ">
+          View Archived Distributors
+        </Button>
+      )}
     </ContentWrapper>
   );
 };

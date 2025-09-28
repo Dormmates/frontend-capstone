@@ -6,7 +6,7 @@ export interface SeatMetaData {
   x: number;
   y: number;
   row: string;
-  section: string;
+  section: SeatSection;
   rotation: string | null;
 }
 export interface FlattenedSeat extends SeatMetaData {

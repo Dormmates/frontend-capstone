@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
-import archiveIcon from "@/assets/icons/archive.png";
 import type { User } from "@/types/user";
 import { useUnArchiveAccount } from "@/_lib/@react-client-query/accounts";
 import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
+import { ArchiveIcon } from "lucide-react";
 
 type ArchiveAccountProps = {
   user: User;
@@ -33,8 +33,8 @@ const UnArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
       actionText="Unarchive Account"
       onConfirm={handleSubmit}
       trigger={
-        <Button className="p-0" variant="ghost">
-          <img src={archiveIcon} alt="" className="w-7 h-7" />
+        <Button variant="outline">
+          <ArchiveIcon />
         </Button>
       }
       title="Archive User"

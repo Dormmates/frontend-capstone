@@ -8,9 +8,11 @@ import { useState } from "react";
 import { compressControlNumbers, parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import Modal from "@/components/Modal";
 import { toast } from "sonner";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { CircleQuestionMarkIcon } from "lucide-react";
 
 type Props = {
   distributorName: string;
@@ -67,17 +69,25 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
       <Card className="border border-lightGrey rounded-md ">
         {controlNumbersAllocated.length != 0 ? (
           <>
-            <CardHeader>
-              <CardTitle className="text-xl">Unallocate Ticket</CardTitle>
-            </CardHeader>
-            <ControlNumberInputTutorial />
             <CardContent>
               <p className="text-sm font-bold my-5 max-w-[450px]">
-                Control Numbers available for unallocation: <span className="font-normal">{controlNumbersAllocated.join(", ")}</span>
+                Control Numbers available for unallocation: <span className="font-normal">{compressControlNumbers(controlNumbersAllocated)}</span>
               </p>
               <InputField
                 error={error}
-                label="Enter Ticket Control Number to be Unallocated"
+                label={
+                  <div className="flex items-center gap-2">
+                    <p>Enter Ticket Control Number to be Unallocated</p>
+                    <HoverCard openDelay={0} closeDelay={200}>
+                      <HoverCardTrigger>
+                        <CircleQuestionMarkIcon className="w-4 text-muted-foreground " />
+                      </HoverCardTrigger>
+                      <HoverCardContent className="p-0">
+                        <ControlNumberInputTutorial className="border-none" />
+                      </HoverCardContent>
+                    </HoverCard>
+                  </div>
+                }
                 disabled={disabled}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -94,15 +104,11 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
 
       {controlNumbersAllocated.length != 0 && (
         <div className="flex justify-end gap-3">
-          <Button
-            className="bg-green"
-            disabled={input.length == 0 || !input || disabled || controlNumbersAllocated.length === 0}
-            onClick={handleSubmit}
-          >
-            Unallocate Tickets
-          </Button>
-          <Button disabled={disabled} onClick={close} variant="destructive">
+          <Button disabled={disabled} onClick={close} variant="outline">
             Cancel
+          </Button>
+          <Button disabled={input.length == 0 || !input || disabled || controlNumbersAllocated.length === 0} onClick={handleSubmit}>
+            Unallocate Tickets
           </Button>
         </div>
       )}
@@ -114,7 +120,6 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
           title="Ticket Unallocation Summary"
           description="Please review the summary before proceding"
           className="max-w-2xl"
-          isTransparent={true}
         >
           <LongCard className="w-full" label="Ticket">
             <LongCardItem label="Distributor Name" value={distributorName} />
@@ -122,11 +127,11 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
             <LongCardItem label="Ticket Control Numbers" value={compressControlNumbers(controlNumbers)} />
           </LongCard>
           <div className="flex justify-end gap-3 mt-5">
-            <Button className="!bg-green" disabled={input.length == 0 || !input || disabled} onClick={() => onSubmit(controlNumbers)}>
-              Confirm
-            </Button>
-            <Button disabled={disabled} onClick={() => setOpenSummary(false)} className="!bg-red">
+            <Button disabled={disabled} onClick={() => setOpenSummary(false)} variant="outline">
               Cancel
+            </Button>
+            <Button disabled={input.length == 0 || !input || disabled} onClick={() => onSubmit(controlNumbers)}>
+              Confirm
             </Button>
           </div>
         </Modal>

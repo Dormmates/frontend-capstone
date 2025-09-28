@@ -32,9 +32,21 @@ const parseDepartments = (departments: Department[]) => {
 
 const PerformingGroupShows = () => {
   const { user } = useAuthContext();
+
+  if (!user?.department && !user?.roles.includes("head")) {
+    return (
+      <ContentWrapper>
+        <h1>You are not currently assigned to any Department</h1>
+      </ContentWrapper>
+    );
+  }
+
+  const departmentId = user?.roles.includes("head") ? undefined : user?.department ? user.department.departmentId : undefined;
+
   const { data: shows, isLoading: showsLoading } = useGetShows({
-    departmentId: !user?.roles.includes("head") && user?.department ? user.department.departmentId : "",
+    departmentId,
   });
+
   const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments();
 
   const [filter, setFilter] = useState({ showType: "all", department: "all", search: "" });
@@ -71,7 +83,7 @@ const PerformingGroupShows = () => {
 
   return (
     <ContentWrapper>
-      <h1 className="text-3xl">{user.department?.name} Shows</h1>
+      <h1 className="text-3xl">{!user.roles.includes("head") ? user.department?.name : "Performing Group"} Shows</h1>
       <div className="flex justify-between">
         <div className="flex gap-5 mt-10 flex-wrap">
           <SimpleCard icon={<TheaterIcon size={18} />} label="Total Show" value={filteredShows.length} />
@@ -149,7 +161,7 @@ const PerformingGroupShows = () => {
             render: (show: ShowData) => (
               <div className="flex justify-end items-center gap-2">
                 <Link to={`/shows/${show.showId}`}>
-                  <Button variant="outline">Go To Schedules</Button>
+                  <Button>Go To Schedules</Button>
                 </Link>
 
                 <EditShow show={show} />
