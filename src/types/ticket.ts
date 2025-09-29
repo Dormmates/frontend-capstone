@@ -90,7 +90,7 @@ export interface DistributorScheduleTickets {
   scheduleId: string;
   datetime: Date;
   commissionFee: number;
-  seatingType: string;
+  seatingType: SeatingConfiguration;
   show: {
     showCover: string;
     showId: string;
