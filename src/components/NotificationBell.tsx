@@ -159,6 +159,12 @@ const NotificationContent = () => {
                       <Button>View Show</Button>
                     </Link>
                   )}
+
+                  {(notification.type === "soldTicket" || notification.type === "unsoldTicket") && notification.metaData?.scheduleId && (
+                    <Link to={`/shows/schedule/${notification.metaData.showId}/${notification.metaData.scheduleId}/#logs`}>
+                      <Button>View Detailed Log</Button>
+                    </Link>
+                  )}
                 </div>
               </PopoverContent>
             </Popover>

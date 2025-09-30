@@ -1,7 +1,7 @@
 import { useMutation, useQuery, type UseQueryOptions } from "@tanstack/react-query";
 import { request } from "../api";
 
-import type { ScheduleFormData, Schedule, ScheduleSummary } from "../../types/schedule";
+import type { ScheduleFormData, Schedule, ScheduleSummary, DistributorTicketActivities } from "../../types/schedule";
 import type { FlattenedSeat } from "../../types/seat";
 import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket } from "../../types/ticket";
 import type { TicketPricing } from "@/types/ticketpricing";
@@ -334,5 +334,16 @@ export const useGetTallyData = (scheduleId: string) => {
       const res = await request<{ femaleCount: number; maleCount: number }>(`/api/schedule/tallyData/${scheduleId}`, {}, "get");
       return res.data;
     },
+  });
+};
+
+export const useGetDistributorTicketActivities = (scheduleId: string) => {
+  return useQuery<DistributorTicketActivities[], Error>({
+    queryKey: ["schedule", "logs", "distributorActivites", scheduleId],
+    queryFn: async () => {
+      const res = await request<DistributorTicketActivities[]>(`/api/schedule/logs/distributorActivites/${scheduleId}`, {}, "get");
+      return res.data;
+    },
+    retry: false,
   });
 };

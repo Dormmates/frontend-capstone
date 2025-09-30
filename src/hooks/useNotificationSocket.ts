@@ -36,7 +36,6 @@ export const useNotificationSocket = () => {
       });
 
       queryClient.setQueryData<number>(["notification", "unread", user.userId], (oldCount) => (oldCount ?? 0) + 1);
-
       queryClient.setQueryData<Notification[]>(["notification", user.userId], (oldData) => (oldData ? [notif, ...oldData] : [notif]));
 
       switch (notif.type) {
@@ -47,6 +46,11 @@ export const useNotificationSocket = () => {
         case "createShow": {
           queryClient.invalidateQueries({ queryKey: ["shows"] });
           queryClient.invalidateQueries({ queryKey: ["shows", "majorProduction"] });
+          break;
+        }
+        case "soldTicket":
+        case "unsoldTicket": {
+          queryClient.invalidateQueries({ queryKey: ["schedule", "logs", "distributorActivites", notif.metaData?.scheduleId as string] });
           break;
         }
       }

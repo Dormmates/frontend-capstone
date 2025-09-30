@@ -111,3 +111,30 @@ export interface ScheduleSummary {
     };
   };
 }
+
+export type SoldTicketActivity = {
+  ticketId: string;
+  controlNumber: string;
+  customerName?: string;
+  customerEmail?: string;
+};
+
+export type UnsoldActivity = {
+  actionByDistributorId: string;
+  controlNumber: string;
+  previousCustomerEmail?: string;
+  previousCustomerName?: string;
+  ticketId: string;
+};
+
+export interface DistributorTicketActivities {
+  actionDate: string;
+  actionLogId: string;
+  actionType: "soldTicket" | "unsoldTicket";
+  distributor: {
+    firstName: string;
+    lastName: string;
+    userId: string;
+  };
+  metaData: SoldTicketActivity[] | UnsoldActivity[];
+}

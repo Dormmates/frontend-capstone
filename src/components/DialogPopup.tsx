@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,8 +21,8 @@ type DialogPopupProps = {
   description?: string;
   className?: string;
   tooltip?: string;
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
+  isOpen?: boolean;
+  setIsOpen?: (open: boolean) => void;
 };
 
 const DialogPopup = ({
@@ -33,11 +34,18 @@ const DialogPopup = ({
   saveTitle = "Save",
   children,
   tooltip,
-  isOpen,
-  setIsOpen,
+  isOpen: controlledIsOpen,
+  setIsOpen: controlledSetIsOpen,
 }: DialogPopupProps) => {
+  // Internal state if not controlled
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledIsOpen !== undefined && controlledSetIsOpen !== undefined;
+
+  const open = isControlled ? controlledIsOpen : internalOpen;
+  const setOpen = isControlled ? controlledSetIsOpen : setInternalOpen;
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       {tooltip ? (
         <Tooltip>
           <TooltipTrigger asChild>

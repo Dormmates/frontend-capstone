@@ -1,5 +1,5 @@
-import { Link, useParams } from "react-router-dom";
-import { useGetScheduleSummary } from "@/_lib/@react-client-query/schedule.ts";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { useGetDistributorTicketActivities, useGetScheduleSummary } from "@/_lib/@react-client-query/schedule.ts";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LabelList, Pie, PieChart } from "recharts";
@@ -10,11 +10,27 @@ import { Label } from "@/components/ui/label";
 import { formatCurrency } from "@/utils";
 import PaginatedTable from "@/components/PaginatedTable";
 import { Button } from "@/components/ui/button";
+import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
+import type { SoldTicketActivity, UnsoldActivity } from "@/types/schedule";
+import DialogPopup from "@/components/DialogPopup";
+import { compressControlNumbers } from "@/utils/controlNumber";
+import { useEffect } from "react";
 
 const ScheduleSummary = () => {
   const { scheduleId, showId } = useParams();
   // const { show, schedule } = useOutletContext<{ show: ShowData; schedule: Schedule }>();
   const { data: summary, isLoading: loadingSummary, isError: summaryError } = useGetScheduleSummary(scheduleId as string);
+
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const element = document.getElementById(hash.replace("#", ""));
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [hash]);
 
   if (loadingSummary) {
     return <h1>Loading...</h1>;
@@ -49,8 +65,6 @@ const ScheduleSummary = () => {
     { ticket: "orchestra", sold: summary.ticketsSummary.orchestraTickets.sold, unsold: summary.ticketsSummary.orchestraTickets.remaining },
     { ticket: "balcony", sold: summary.ticketsSummary.balconyTickets.sold, unsold: summary.ticketsSummary.balconyTickets.remaining },
   ];
-
-  console.log(summary);
 
   return (
     <>
@@ -124,6 +138,8 @@ const ScheduleSummary = () => {
           </CardContent>
         </CardHeader>
       </Card>
+
+      <DistributorActivities scheduleId={scheduleId as string} />
 
       <div className="grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-2 gap-6 w-full">
         {/*Tickets Overview */}
@@ -269,6 +285,198 @@ const ScheduleSummary = () => {
         </Card>
       </div>
     </>
+  );
+};
+
+type DistributorActivitiesProps = {
+  scheduleId: string;
+};
+
+const DistributorActivities = ({ scheduleId }: DistributorActivitiesProps) => {
+  const { data, isLoading, isError } = useGetDistributorTicketActivities(scheduleId);
+
+  if (isLoading) {
+    return <h1>Loading Activities</h1>;
+  }
+
+  if (!data || isError) {
+    return <h1>Failed to fetch distributor activities</h1>;
+  }
+
+  return (
+    <Card id="logs">
+      <CardHeader>
+        <CardTitle>Distributor Ticket Activities</CardTitle>
+        <CardDescription>A detailed overview of ticket sales and unsold activities performed by distributors.</CardDescription>
+      </CardHeader>
+
+      <CardContent>
+        <PaginatedTable
+          itemsPerPage={10}
+          data={data}
+          columns={[
+            {
+              key: "name",
+              header: "Distributor Name",
+              render: (activity) => activity.distributor.firstName + " " + activity.distributor.lastName,
+            },
+            {
+              key: "date",
+              header: "Activity Date",
+              render: (activity) => <span>{formatToReadableDate(activity.actionDate)}</span>,
+            },
+            {
+              key: "time",
+              header: "Activity Time",
+              render: (activity) => <span>{formatToReadableTime(activity.actionDate)}</span>,
+            },
+            {
+              key: "type",
+              header: "Activity Type",
+              render: (activity) =>
+                activity.actionType === "soldTicket" ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green"></div>
+                    <p>Sold a Ticket</p>
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red"></div>
+                    <p>Unsold a ticket</p>
+                  </span>
+                ),
+            },
+            {
+              key: "message",
+              header: "Activity Description",
+              render: (activity) => {
+                const metaData = activity.metaData;
+
+                if (activity.actionType === "soldTicket") {
+                  const customerNames = Array.from(new Set((metaData as SoldTicketActivity[]).map((t) => t.customerName).filter(Boolean)));
+                  const totalTickets = metaData.length;
+
+                  if (customerNames.length === 1 && customerNames[0]) {
+                    return `Distributor sold ${totalTickets} ticket(s) to ${customerNames[0]}`;
+                  } else {
+                    return `Distributor sold ${totalTickets} ticket(s) without customer information`;
+                  }
+                } else {
+                  const customers = Array.from(new Set((metaData as UnsoldActivity[]).map((t) => t.previousCustomerName).filter(Boolean)));
+                  const totalTickets = metaData.length;
+
+                  if (customers.length === 1) {
+                    return `Distributor marked ${totalTickets} ticket(s) as unsold from ${customers[0]}`;
+                  } else if (customers.length > 1) {
+                    return `Distributor marked ${totalTickets} ticket(s) as unsold from multiple customers`;
+                  } else {
+                    return `Distributor marked ${totalTickets} ticket(s) as unsold`;
+                  }
+                }
+              },
+            },
+            {
+              key: "action",
+              header: "Action",
+              render: (activity) => {
+                function isSoldTicket(metaData: any[]): metaData is SoldTicketActivity[] {
+                  return metaData.length === 0 || "customerName" in metaData[0];
+                }
+
+                function isUnsoldTicket(metaData: any[]): metaData is UnsoldActivity[] {
+                  return metaData.length === 0 || "previousCustomerName" in metaData[0];
+                }
+
+                const isSold = activity.actionType === "soldTicket";
+                const metaData = activity.metaData;
+
+                let groupedTickets: Record<string, string[]> = {};
+
+                if (isSold && isSoldTicket(metaData)) {
+                  groupedTickets = metaData.reduce((acc, ticket) => {
+                    const key = ticket.customerName || "No Customer Info";
+                    if (!acc[key]) acc[key] = [];
+                    acc[key].push(ticket.controlNumber);
+                    return acc;
+                  }, {} as Record<string, string[]>);
+                } else if (!isSold && isUnsoldTicket(metaData)) {
+                  groupedTickets = metaData.reduce((acc, ticket) => {
+                    const key = ticket.previousCustomerName || "No Customer Info";
+                    if (!acc[key]) acc[key] = [];
+                    acc[key].push(ticket.controlNumber);
+                    return acc;
+                  }, {} as Record<string, string[]>);
+                }
+
+                return (
+                  <DialogPopup
+                    triggerElement={
+                      <Button className="self-end" variant="outline">
+                        View Details
+                      </Button>
+                    }
+                    title="Activity Details"
+                  >
+                    <div className="space-y-1">
+                      <p className="flex gap-2">
+                        <strong>Action:</strong>
+                        {isSold ? (
+                          <span className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-green"></div>
+                            <p>Sold a Ticket</p>
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-red"></div>
+                            <p>Unsold a ticket</p>
+                          </span>
+                        )}
+                      </p>
+                      <p>
+                        <strong>Distributor:</strong> {activity.distributor.firstName} {activity.distributor.lastName}
+                      </p>
+                      <p>
+                        <strong>Date:</strong> {formatToReadableDate(activity.actionDate)}
+                      </p>
+                      <p>
+                        <strong>Time:</strong> {formatToReadableTime(activity.actionDate)}
+                      </p>
+
+                      <hr />
+
+                      <p>
+                        <strong>Tickets:</strong>
+                      </p>
+                      <ul className="list-disc pl-5">
+                        {Object.entries(groupedTickets).map(([customer, controlNumbers], idx) => (
+                          <li key={idx}>
+                            {compressControlNumbers(controlNumbers.map((c) => Number(c)))} — {customer}
+                            {isSold &&
+                              isSoldTicket(metaData) &&
+                              customer !== "No Customer Info" &&
+                              (() => {
+                                const firstTicket = metaData.find((t) => t.customerName === customer);
+                                return firstTicket?.customerEmail ? `, Email: ${firstTicket.customerEmail}` : "";
+                              })()}
+                            {!isSold &&
+                              isUnsoldTicket(metaData) &&
+                              customer !== "No Customer Info" &&
+                              (() => {
+                                const firstTicket = metaData.find((t) => t.previousCustomerName === customer);
+                                return firstTicket?.previousCustomerEmail ? `, Email: ${firstTicket.previousCustomerEmail}` : "";
+                              })()}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </DialogPopup>
+                );
+              },
+            },
+          ]}
+        />
+      </CardContent>
+    </Card>
   );
 };
 
