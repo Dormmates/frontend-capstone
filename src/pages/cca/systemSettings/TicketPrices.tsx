@@ -164,7 +164,7 @@ const NewFixedPricing = ({ closeModal }: { closeModal: () => void }) => {
   const submit = () => {
     if (!validate()) return;
 
-    toast.promise(newFixed.mutateAsync({ priceName: data.pricingName, fixedPrice: data.price, commisionFee: data.fee, type: "fixed" }), {
+    toast.promise(newFixed.mutateAsync({ priceName: data.pricingName, fixedPrice: data.price, commissionFee: data.fee, type: "fixed" }), {
       position: "top-center",
       success: () => {
         queryClient.invalidateQueries({ queryKey: ["pricings"] });
@@ -285,7 +285,7 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
 
     toast.promise(
       newSectioned.mutateAsync({
-        commisionFee: sectionedPrice.commissionFee,
+        commissionFee: sectionedPrice.commissionFee,
         priceName: sectionedPrice.pricingName,
         type: "sectioned",
         sectionPrices: {

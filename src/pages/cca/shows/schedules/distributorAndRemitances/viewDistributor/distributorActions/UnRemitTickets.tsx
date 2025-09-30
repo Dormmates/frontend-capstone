@@ -181,7 +181,7 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
               <p className="text-lg font-semibold">
                 {formatCurrency(
                   unremitTickets.reduce(
-                    (total, t) => total + (t.ticketPrice - (schedule.ticketPricing ? schedule.ticketPricing.commisionFee : 0) || 0),
+                    (total, t) => total + (t.ticketPrice - (schedule.ticketPricing ? schedule.ticketPricing.commissionFee : 0) || 0),
                     0
                   )
                 )}

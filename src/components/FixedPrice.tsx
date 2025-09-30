@@ -26,7 +26,7 @@ const FixedPrice = ({ data, hideAction = false }: { data: FixedPricing; hideActi
           <span className="text-4xl">{data.fixedPrice}</span>
           pesos
         </p>
-        <p className="text-muted-foreground">Commission Fee: {data.commisionFee}</p>
+        <p className="text-muted-foreground">Commission Fee: {data.commissionFee}</p>
       </CardContent>
       <CardFooter className="p-2 flex justify-end gap-2 items-end">
         {/* <Button variant="outline">

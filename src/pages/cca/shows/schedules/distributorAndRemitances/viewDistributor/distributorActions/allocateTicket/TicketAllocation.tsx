@@ -264,7 +264,7 @@ const TicketAllocation = () => {
           >
             <LongCard className="w-full" label="Ticket">
               <LongCardItem value={selectedDistributor?.firstName + " " + selectedDistributor?.lastName} label="Distributor Name" />
-              <LongCardItem value={selectedDistributor?.distributor.distributortypes.name + ""} label="Type" />
+              <LongCardItem value={selectedDistributor?.distributor.distributorType.name + ""} label="Type" />
               <LongCardItem
                 value={allocationMethod === "controlNumber" ? parsedControlNumbers?.length + "" : choosenSeats.length}
                 label={allocationMethod === "controlNumber" ? "Total Tickets" : "Total Seats"}
@@ -362,7 +362,7 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
             {
               key: "type",
               header: "Type",
-              render: (dist) => dist.distributor.distributortypes.name,
+              render: (dist) => dist.distributor.distributorType.name,
             },
             {
               key: "group",

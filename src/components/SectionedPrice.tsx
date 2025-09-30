@@ -54,7 +54,7 @@ const SectionedPrice = ({ data, hideAction = false }: { data: SectionedPricing; 
           </div>
         </div>
 
-        <p className="text-muted-foreground">Commission Fee: {data.commisionFee}</p>
+        <p className="text-muted-foreground">Commission Fee: {data.commissionFee}</p>
       </CardContent>
 
       <CardFooter className="p-2 flex justify-end gap-2">

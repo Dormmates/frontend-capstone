@@ -2,7 +2,7 @@ export type FixedPricing = {
   id: string;
   type: "fixed";
   priceName: string;
-  commisionFee: number;
+  commissionFee: number;
   fixedPrice: number;
 };
 
@@ -18,7 +18,7 @@ export type SectionedPricing = {
     balconyRight: number;
   };
   priceName: string;
-  commisionFee: number;
+  commissionFee: number;
 };
 
 export type TicketPricing = FixedPricing | SectionedPricing;

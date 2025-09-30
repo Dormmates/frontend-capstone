@@ -81,7 +81,7 @@ const Distributors = () => {
 
         return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
       })
-      .filter((distributor) => !type || type === "all" || Number(type) === distributor.distributor.distributortypes.id);
+      .filter((distributor) => !type || type === "all" || Number(type) === distributor.distributor.distributorType.id);
   }, [debouncedSearch, activeDistributors, type]);
 
   if (loadingDistributors || loadingTypes || loadingDepartments) {
@@ -146,7 +146,7 @@ const Distributors = () => {
             {
               key: "type",
               header: "Distributor Type",
-              render: (distributor) => distributor.distributor.distributortypes.name,
+              render: (distributor) => distributor.distributor.distributorType.name,
             },
             {
               key: "group",
@@ -238,7 +238,7 @@ const Distributors = () => {
               lastName: selectedDistributor.lastName,
               email: selectedDistributor.email,
               contactNumber: selectedDistributor.distributor.contactNumber,
-              type: String(selectedDistributor.distributor.distributortypes.id),
+              type: String(selectedDistributor.distributor.distributorType.id),
               department: selectedDistributor.distributor.department?.departmentId || "",
             }}
             distributorTypeOptions={distributorTypeOptions}
@@ -249,7 +249,7 @@ const Distributors = () => {
                 payload.lastName.trim() !== selectedDistributor.lastName.trim() ||
                 payload.email.trim() !== selectedDistributor.email.trim() ||
                 payload.contactNumber.trim() !== selectedDistributor.distributor.contactNumber.trim() ||
-                payload.type !== String(selectedDistributor.distributor.distributortypes.id) ||
+                payload.type !== String(selectedDistributor.distributor.distributorType.id) ||
                 (payload.department || null) !== (selectedDistributor.distributor.department?.departmentId || null);
 
               if (!hasChanges) {
@@ -313,7 +313,7 @@ const Distributors = () => {
                 {
                   key: "type",
                   header: "Distributor Type",
-                  render: (distributor) => distributor.distributor.distributortypes.name,
+                  render: (distributor) => distributor.distributor.distributorType.name,
                 },
                 {
                   key: "group",

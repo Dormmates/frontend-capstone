@@ -29,6 +29,6 @@ export interface Distributor extends User {
       departmentId: string;
       name: string;
     };
-    distributortypes: DistributorTypes;
+    distributorType: DistributorTypes;
   };
 }

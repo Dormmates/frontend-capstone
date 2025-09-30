@@ -331,7 +331,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
         <Dialog open={showSummary} onOpenChange={() => setShowSummary(false)}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Remittanec Summary</DialogTitle>
+              <DialogTitle>Remittance Summary</DialogTitle>
               <DialogDescription>Please review the summary before proceding</DialogDescription>
             </DialogHeader>
             <RemittanceSummary
@@ -343,7 +343,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
               lostTickets={distributorData.filter((ticket) => parsed.lostList.includes(ticket.controlNumber))}
               discountedTickets={distributorData.filter((ticket) => parsed.discountedList.includes(ticket.controlNumber))}
               discountPercentage={form.discountPercentage}
-              commissionFee={schedule.ticketPricing ? schedule.ticketPricing.commisionFee : 0}
+              commissionFee={schedule.ticketPricing ? schedule.ticketPricing.commissionFee : 0}
             />
           </DialogContent>
         </Dialog>

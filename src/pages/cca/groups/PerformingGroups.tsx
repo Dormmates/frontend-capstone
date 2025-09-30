@@ -40,7 +40,6 @@ const PerformingGroups = () => {
   const [editGroup, setEditGroup] = useState({ name: "", imagePreview: "", image: null as File | null });
 
   const [errors, setErrors] = useState<{ name?: string; logo?: string }>();
-
   const [isAssignTrainer, setIsAssignTrainer] = useState<Department | null>(null);
 
   useEffect(() => {
@@ -143,6 +142,8 @@ const PerformingGroups = () => {
   if (errorLoadingDepartments || !departments) {
     return <h1>Error Loading</h1>;
   }
+
+  console.log(departments);
 
   return (
     <ContentWrapper>
