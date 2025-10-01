@@ -28,7 +28,7 @@ const TicketSeatLocation = ({ controlNumber, scheduleId }: TicketSeatLocationPro
   }
 
   return (
-    <div className=" flex  justify-center min-h-screen flex-col p-10">
+    <div className=" flex justify-center min-h-screen flex-col ">
       <div className="flex justify-start flex-col font-bold">
         <h1>Control Number: {resolvedControlNumber}</h1>
         <p>Seat Number: {data.filter((seat) => seat.ticketControlNumber === resolvedControlNumber).map((seat) => seat.seatNumber)}</p>

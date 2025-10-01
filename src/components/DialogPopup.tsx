@@ -63,7 +63,7 @@ const DialogPopup = ({
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 
-        <div>{children}</div>
+        <div className="overflow-y-auto">{children}</div>
 
         {submitAction && (
           <DialogFooter className="flex gap-3 flex-col-reverse md:flex-row md:gap-0">

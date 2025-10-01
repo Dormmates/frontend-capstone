@@ -16,10 +16,11 @@ import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { SeatingConfiguration } from "@/types/schedule";
-import { Link } from "react-router-dom";
 import InputField from "@/components/InputField";
 import LongCardItem from "@/components/LongCardItem";
 import LongCard from "@/components/LongCard";
+import DialogPopup from "@/components/DialogPopup";
+import TicketSeatLocation from "@/components/TicketSeatLocation";
 
 type Props = {
   schedule: DistributorScheduleTickets;
@@ -376,9 +377,13 @@ const TicketTableData = ({ data, type, seatingType, scheduleId, selectedTickets,
                   </TableCell>
                   {seatingType === "controlledSeating" && (
                     <TableCell className="flex justify-end">
-                      <Link to={`seatLocation/${ticket.controlNumber}/${scheduleId}`} target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline">View Seat Location</Button>
-                      </Link>
+                      <DialogPopup
+                        className="max-w-screen-2xl h-[98%] w-[98%]"
+                        title="Seat Location"
+                        triggerElement={<Button variant="outline">View Seat Location</Button>}
+                      >
+                        <TicketSeatLocation controlNumber={ticket.controlNumber} scheduleId={scheduleId} />
+                      </DialogPopup>
                     </TableCell>
                   )}
                 </TableRow>
