@@ -16,7 +16,7 @@ export interface User {
   roles: UserRole[];
   createdAt: Date;
   isArchived: boolean;
-  isLocked: boolean;
+  isDefaultPassword: boolean;
   department?: Department;
 }
 

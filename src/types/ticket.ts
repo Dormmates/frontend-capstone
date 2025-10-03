@@ -16,6 +16,17 @@ export interface Ticket {
   seatNumber: string | null;
   distributorId: string | null;
   isRemitted: boolean;
+  ticketTransferMetaData: {
+    oldControlNumber: number;
+    oldShowId: string;
+    oldShowTitle: string;
+    oldScheduleId: string;
+    oldScheduleDate: string;
+    newShowId: string;
+    newShowTitle: string;
+    newScheduleId: string;
+    newScheduleDate: string;
+  } | null;
 }
 
 export interface AllocatedTicketToDistributor {

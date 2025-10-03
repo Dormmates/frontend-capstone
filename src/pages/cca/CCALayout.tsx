@@ -5,10 +5,23 @@ import SideBar from "@/components/SideBar";
 import Header from "@/components/Header";
 import { useNotificationSocket } from "@/hooks/useNotificationSocket";
 import { DramaIcon, LayoutDashboardIcon, NetworkIcon, SettingsIcon, TheaterIcon, UsersIcon } from "lucide-react";
+import Modal from "@/components/Modal";
+import { toast } from "sonner";
+import UpdatePassword from "../UpdatePassword";
+import { useEffect, useState } from "react";
 
 const CCALayout = () => {
   const { user } = useAuthContext();
   useNotificationSocket();
+
+  const [openDefaultPasswordModal, setOpenDefaultPasswordModal] = useState(false);
+
+  useEffect(() => {
+    if (user && user.isDefaultPassword) {
+      setOpenDefaultPasswordModal(true);
+    }
+  }, [user]);
+
   const sideBarItems = [
     {
       icon: <LayoutDashboardIcon className="h-4 w-4" />,
@@ -63,6 +76,20 @@ const CCALayout = () => {
           </div>
         </div>
       </main>
+
+      {openDefaultPasswordModal && (
+        <Modal
+          description="Your account was either using the default password or your password has been reset by the CCA Head/Trainer. 
+    For security reasons, you are required to update your password before continuing."
+          title="Update Password"
+          isOpen={openDefaultPasswordModal}
+          onClose={() => {
+            toast.error("Please change your password first", { position: "top-center" });
+          }}
+        >
+          <UpdatePassword closeModal={() => setOpenDefaultPasswordModal(false)} />
+        </Modal>
+      )}
     </SidebarProvider>
   );
 };

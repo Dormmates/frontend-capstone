@@ -3,6 +3,11 @@ import SideBar from "@/components/SideBar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Header from "@/components/Header";
 import { HistoryIcon, LayoutDashboardIcon } from "lucide-react";
+import { useAuthContext } from "@/context/AuthContext";
+import { useEffect, useState } from "react";
+import Modal from "@/components/Modal";
+import { toast } from "sonner";
+import UpdatePassword from "../UpdatePassword";
 
 const sideBarItems = [
   {
@@ -18,6 +23,15 @@ const sideBarItems = [
 ];
 
 const DistributorLayout = () => {
+  const { user } = useAuthContext();
+  const [openDefaultPasswordModal, setOpenDefaultPasswordModal] = useState(false);
+
+  useEffect(() => {
+    if (user && user.isDefaultPassword) {
+      setOpenDefaultPasswordModal(true);
+    }
+  }, [user]);
+
   return (
     <SidebarProvider>
       <SideBar items={sideBarItems} />
@@ -30,6 +44,20 @@ const DistributorLayout = () => {
           </div>
         </div>
       </main>
+
+      {openDefaultPasswordModal && (
+        <Modal
+          description="Your account was either using the default password or your password has been reset by the CCA Head/Trainer. 
+    For security reasons, you are required to update your password before continuing."
+          title="Update Password"
+          isOpen={openDefaultPasswordModal}
+          onClose={() => {
+            toast.error("Please change your password first", { position: "top-center" });
+          }}
+        >
+          <UpdatePassword closeModal={() => setOpenDefaultPasswordModal(false)} />
+        </Modal>
+      )}
     </SidebarProvider>
   );
 };

@@ -1,13 +1,10 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
-
 import CCALayout from "../pages/cca/CCALayout";
 import DistributorLayout from "../pages/distributor/DistributorLayout";
-
 import ProtectedRoute from "./ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
 import NotFound from "../pages/NotFound";
-
 import DistributorDashboard from "../pages/distributor/dashboard/DistributorDashboard";
 import DistributorHistory from "../pages/distributor/history/DistributorHistory";
 import DistributorLogin from "../pages/distributor/DistributorLogin";
@@ -104,7 +101,6 @@ const AppRoute = () => {
             <Route path="manage/distributors" element={<Distributors />} />
             <Route path="manage/distributor/:distributorId" element={<ViewDistributor />} />
             {/* <Route path="manage/request" element={<AccountRequests />} /> */}
-
             <Route path="shows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
 
             {user?.roles.includes("head") && (

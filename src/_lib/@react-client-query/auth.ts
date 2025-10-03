@@ -13,6 +13,16 @@ export const useLogin = () => {
   });
 };
 
+export const useUpdatePassword = () => {
+  return useMutation<any, Error, { userId: string; newPassword: string }>({
+    mutationFn: async (data: { userId: string; newPassword: string }) => {
+      const res = await request<User>("/api/auth/updatePassword", data, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
 export const useLogout = () => {
   return useMutation<any, Error, any>({
     mutationFn: async () => {
