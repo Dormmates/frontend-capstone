@@ -297,8 +297,8 @@ const ViewPerformingGroups = () => {
               type: selectedDistributor.distributor.distributorType,
               department: selectedDistributor.distributor.department?.departmentId || "",
             }}
-            distributorTypeOptions={distributorTypeOptions}
-            groupOptions={groupOptions}
+            distributorTypeOptions={distributorTypeOptions.filter((t) => t.value === "cca")}
+            groupOptions={groupOptions.filter((g) => g.value === groupId)}
             onSubmit={(payload) => {
               const hasChanges =
                 payload.firstName.trim() !== selectedDistributor.firstName.trim() ||
