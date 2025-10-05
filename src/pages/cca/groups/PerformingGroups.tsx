@@ -208,28 +208,33 @@ const PerformingGroups = () => {
                       <Link to={`/performing-groups/${department.departmentId}`}>
                         <Button variant="secondary">Manage Members</Button>
                       </Link>
-                      <Button onClick={() => setSelectedGroup(department)} variant="outline">
-                        <EditIcon />
-                      </Button>
 
-                      <Button
-                        onClick={() => {
-                          setIsAssignTrainer(department);
-                        }}
-                      >
-                        <UserRoundPenIcon />
-                      </Button>
-
-                      <AlertModal
-                        trigger={
-                          <Button disabled={department.totalShows !== 0 || department.totalMembers !== 0} variant="destructive">
-                            <Trash2Icon />
+                      {user.roles.includes("head") && (
+                        <>
+                          <Button onClick={() => setSelectedGroup(department)} variant="outline">
+                            <EditIcon />
                           </Button>
-                        }
-                        onConfirm={() => handleDelete(department.departmentId)}
-                        title="Delete Performing Group"
-                        description="This action cannot be undone. This will permanently delete the selected performing group."
-                      />
+
+                          <Button
+                            onClick={() => {
+                              setIsAssignTrainer(department);
+                            }}
+                          >
+                            <UserRoundPenIcon />
+                          </Button>
+
+                          <AlertModal
+                            trigger={
+                              <Button disabled={department.totalShows !== 0 || department.totalMembers !== 0} variant="destructive">
+                                <Trash2Icon />
+                              </Button>
+                            }
+                            onConfirm={() => handleDelete(department.departmentId)}
+                            title="Delete Performing Group"
+                            description="This action cannot be undone. This will permanently delete the selected performing group."
+                          />
+                        </>
+                      )}
                     </div>
                   ),
                 },

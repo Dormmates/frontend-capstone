@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import CCALayout from "../pages/cca/CCALayout";
 import DistributorLayout from "../pages/distributor/DistributorLayout";
@@ -7,7 +7,6 @@ import Unauthorized from "../pages/Unauthorized";
 import NotFound from "../pages/NotFound";
 import DistributorDashboard from "../pages/distributor/dashboard/DistributorDashboard";
 import DistributorHistory from "../pages/distributor/history/DistributorHistory";
-import DistributorLogin from "../pages/distributor/DistributorLogin";
 
 import {
   CCAHeads,
@@ -81,30 +80,35 @@ const AppRoute = () => {
         ) : (
           <>
             <Route index element={<CCADashboard />} />
-            <Route path="shows" element={<PerformingGroupShows />} />
-            <Route path="majorShows" element={<MajorProductionShows />} />
-            <Route path="shows/add" element={<CreateShow />} />
-            <Route path="shows/add/schedule/:id" element={<AddSchedule />} />
-            <Route path="shows/schedule/:showId/:scheduleId" element={<ViewShowScheduleLayout />}>
-              <Route index element={<ScheduleSummary />} />
-              <Route path="d&r" element={<ScheduleDistributorAndRemittances />} />
-              <Route path="seats" element={<ScheduleSeats />} />
-              <Route path="tickets" element={<ScheduleTickets />} />
-              <Route path="tally" element={<ScheduleTallyData />} />
-              <Route path="reservations" element={<ScheduleReservations />} />
-              <Route path="d&r/:distributorId" element={<ViewDistributorLayout />}>
-                <Route index element={<DistributorTicketsAllocated />} />
-                <Route path="allocation/history" element={<DistributorAllocationHistory />} />
-                <Route path="remittance/history" element={<DistributorRemittanceHistory />} />
-              </Route>
-            </Route>
-            <Route path="shows/:id" element={<ViewShow />} />
-            <Route path="manage/distributors/:distributorId" element={<ViewDistributor />} />
-            <Route path="manage/distributors" element={<Distributors />} />
-            {/* <Route path="manage/request" element={<AccountRequests />} /> */}
-            <Route path="shows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
-            <Route path="performing-groups" element={<PerformingGroups />} />
-            <Route path="performing-groups/:groupId" element={<ViewPerformingGroups />} />
+
+            {/* Just render if trainer has a department */}
+            {(user?.roles.includes("head") || user?.department) && (
+              <>
+                <Route path="shows" element={<PerformingGroupShows />} />
+                <Route path="majorShows" element={<MajorProductionShows />} />
+                <Route path="shows/add" element={<CreateShow />} />
+                <Route path="shows/add/schedule/:id" element={<AddSchedule />} />
+                <Route path="shows/schedule/:showId/:scheduleId" element={<ViewShowScheduleLayout />}>
+                  <Route index element={<ScheduleSummary />} />
+                  <Route path="d&r" element={<ScheduleDistributorAndRemittances />} />
+                  <Route path="seats" element={<ScheduleSeats />} />
+                  <Route path="tickets" element={<ScheduleTickets />} />
+                  <Route path="tally" element={<ScheduleTallyData />} />
+                  <Route path="reservations" element={<ScheduleReservations />} />
+                  <Route path="d&r/:distributorId" element={<ViewDistributorLayout />}>
+                    <Route index element={<DistributorTicketsAllocated />} />
+                    <Route path="allocation/history" element={<DistributorAllocationHistory />} />
+                    <Route path="remittance/history" element={<DistributorRemittanceHistory />} />
+                  </Route>
+                </Route>
+                <Route path="shows/:id" element={<ViewShow />} />
+                <Route path="manage/distributors/:distributorId" element={<ViewDistributor />} />
+                <Route path="manage/distributors" element={<Distributors />} />
+                <Route path="shows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
+                <Route path="performing-groups" element={<PerformingGroups />} />
+                <Route path="performing-groups/:groupId" element={<ViewPerformingGroups />} />
+              </>
+            )}
 
             {user?.roles.includes("head") && (
               <>
@@ -116,12 +120,6 @@ const AppRoute = () => {
           </>
         )}
       </Route>
-
-      {/* Separate login route for distributor */}
-      <Route
-        path="/distributor/login"
-        element={user ? user.roles.includes("distributor") ? <Navigate to="/" /> : <Navigate to="/" /> : <DistributorLogin />}
-      />
 
       {/* Customer Routes */}
       <Route path="/customer" element={<CustomerLayout />}>

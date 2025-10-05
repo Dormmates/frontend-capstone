@@ -38,9 +38,9 @@ export const useGetTrainers = () => {
   });
 };
 
-export const useGetDistributors = (query?: { departmentId?: string; excludeCCA?: boolean }) => {
+export const useGetDistributors = (query?: { departmentId?: string; excludeCCA?: boolean; includeOtherTypes?: boolean }) => {
   return useQuery<Distributor[], Error>({
-    queryKey: ["distributors"],
+    queryKey: ["distributors", query?.departmentId].filter(Boolean),
     queryFn: async () => {
       const res = await request<Distributor[]>("/api/accounts/distributors", query, "get");
       return res.data;

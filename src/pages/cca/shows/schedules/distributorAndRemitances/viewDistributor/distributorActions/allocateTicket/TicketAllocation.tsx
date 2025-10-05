@@ -323,18 +323,23 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
     data: distributors,
     isLoading: loadingDistributors,
     isError: distributorsError,
-  } = useGetDistributors({ departmentId: show.showType !== "majorProduction" ? show.department?.departmentId : "" });
+  } = useGetDistributors({ departmentId: show.showType !== "majorProduction" ? show.department?.departmentId : "", includeOtherTypes: true });
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue);
 
-  const searchedDistributors = useMemo(() => {
+  const activeDistributors = useMemo(() => {
     if (!distributors) return [];
+    return distributors.filter((d) => !d.isArchived);
+  }, [distributors]);
 
-    return distributors.filter((dist) => {
+  const searchedDistributors = useMemo(() => {
+    if (!activeDistributors) return [];
+
+    return activeDistributors.filter((dist) => {
       const fullName = dist.firstName + " " + dist.lastName;
       return fullName.trim().includes(searchValue.trim());
     });
-  }, [debouncedSearch, distributors]);
+  }, [debouncedSearch, activeDistributors]);
 
   if (loadingDistributors) {
     return <h1>Loading...</h1>;
@@ -349,7 +354,7 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
       <InputField placeholder="Search Distributor by Name" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
       <div>
         <p className="mb-3 text-sm">
-          Total Distributors: <span className="font-bold">{distributors.length}</span>
+          Total Distributors: <span className="font-bold">{activeDistributors.length}</span>
         </p>
 
         <PaginatedTable

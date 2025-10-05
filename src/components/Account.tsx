@@ -57,18 +57,38 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
           <Card className="mt-5">
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
-              <CardDescription>Edit your personal information</CardDescription>
+              <CardDescription>To update your personal informations, please contact CCA Head</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col gap-5 ">
                 <div className="flex flex-col md:flex-row gap-5">
-                  <InputField label="First Name" value={userForm.firstName} onChange={handleInputChange} name="firstName" />
-                  <InputField label="Last Name" value={userForm.lastName} onChange={handleInputChange} name="lastName" />
+                  <InputField
+                    disabled={!user?.roles.includes("head")}
+                    label="First Name"
+                    value={userForm.firstName}
+                    onChange={handleInputChange}
+                    name="firstName"
+                  />
+                  <InputField
+                    disabled={!user?.roles.includes("head")}
+                    label="Last Name"
+                    value={userForm.lastName}
+                    onChange={handleInputChange}
+                    name="lastName"
+                  />
                 </div>
-                <InputField label="Email" type="email" value={userForm.email} onChange={handleInputChange} name="email" />
+                <InputField
+                  disabled={!user?.roles.includes("head")}
+                  label="Email"
+                  type="email"
+                  value={userForm.email}
+                  onChange={handleInputChange}
+                  name="email"
+                />
                 <div className="flex gap-5">
                   {user?.roles.includes("distributor") && (
                     <InputField
+                      disabled={!user.roles.includes("head")}
                       label="Contact Number"
                       type="number"
                       value={userForm.contactNumber + ""}
@@ -77,7 +97,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                     />
                   )}
 
-                  {user?.department?.name && <InputField disabled={true} value={user.department.name} onChange={() => {}} />}
+                  {user?.department?.name && <InputField label="Trainer of" disabled={true} value={user.department.name} onChange={() => {}} />}
                 </div>
 
                 {user?.roles.includes("distributor") && (
@@ -101,9 +121,6 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                 )}
               </div>
             </CardContent>
-            <CardFooter className="flex justify-end -mt-5">
-              <Button>Save Changes</Button>
-            </CardFooter>
           </Card>
 
           <Card className="mt-5">

@@ -4,7 +4,7 @@ import type { Department } from "../../types/department";
 
 export const useGetDepartments = (trainerId?: string | null) => {
   return useQuery<Department[], Error>({
-    queryKey: ["departments"],
+    queryKey: ["departments", trainerId].filter(Boolean),
     queryFn: async () => {
       const res = await request<Department[]>("/api/department", { trainerId }, "get");
       return res.data;

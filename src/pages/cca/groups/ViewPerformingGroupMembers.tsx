@@ -266,7 +266,7 @@ const ViewPerformingGroups = () => {
                   position: "top-center",
                   loading: "Adding distributor...",
                   success: () => {
-                    queryClient.invalidateQueries({ queryKey: ["distributors"], exact: true });
+                    queryClient.invalidateQueries({ queryKey: ["distributors", groupId], exact: true });
                     setIsAddDistributor(false);
                     return "Distributor Added";
                   },
@@ -327,7 +327,7 @@ const ViewPerformingGroups = () => {
                 position: "top-center",
                 loading: "Updating distributor...",
                 success: () => {
-                  queryClient.invalidateQueries({ queryKey: ["distributors"], exact: true });
+                  queryClient.invalidateQueries({ queryKey: ["distributors", groupId], exact: true });
                   setSelectedDistributor(null);
                   return "Distributor updated";
                 },
