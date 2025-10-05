@@ -35,7 +35,7 @@ import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
 import SalesReportDialog from "./SalesReportDialog";
 import { useQueryClient } from "@tanstack/react-query";
-import { CircleQuestionMarkIcon, Settings2Icon, Trash2Icon } from "lucide-react";
+import { CircleAlertIcon, CircleQuestionMarkIcon, Settings2Icon, Trash2Icon } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import FixedPrice from "@/components/FixedPrice";
 import SectionedPrice from "@/components/SectionedPrice";
@@ -218,33 +218,19 @@ const ViewShow = () => {
               showImage={show.showCover}
             />
           )}
-          {/* {showSchedules && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Calender Schedules</CardTitle>
-                <CardDescription></CardDescription>
-                <CardContent className="p-0 ">
-                  <Calendar
-                    disabled={(date) => {
-                      const today = new Date();
-                      today.setHours(0, 0, 0, 0);
-                      return date < today;
-                    }}
-                    selected={undefined}
-                    className="mt-2 rounded-md border bg-background 
-                     [--cell-size:2.75rem] [--cell-font-size:0.95rem] md:[--cell-size:3.25rem] md:[--cell-font-size:1rem]"
-                    modifiers={{
-                      highlighted: showSchedules.map((d) => new Date(d.datetime)),
-                    }}
-                    modifiersClassNames={{
-                      highlighted: "bg-primary text-primary-foreground font-medium rounded-md ",
-                    }}
-                  />
-                </CardContent>
-              </CardHeader>
-            </Card>
-          )} */}
         </div>
+
+        {show && show.isArchived && (
+          <div className="flex  flex-col bg-muted border shadow-sm border-l-red border-l-4 rounded-md w-full p-3 gap-1 mt-5">
+            <div className="flex items-center gap-2">
+              <CircleAlertIcon className="text-red w-4 font-bold" />
+              <p className="font-medium text-sm">Note - This Show is currently Archived</p>
+            </div>
+            <p className="text-sm text-muted-foreground ">
+              Actions such as ticket allocation, remittance, and related tasks are restricted until the show is unarchived.
+            </p>
+          </div>
+        )}
         {show && showSchedules && (
           <div className="mt-10">
             <div className="flex justify-between mb-10">
@@ -264,9 +250,11 @@ const ViewShow = () => {
                 />
                 {((show.showType === "majorProduction" && user?.roles.includes("head")) ||
                   (show.showType !== "majorProduction" && (user?.roles.includes("head") || user?.roles.includes("trainer")))) && (
-                  <Link className="self-end" to={`/shows/add/schedule/${id}`}>
-                    <Button>Add New Schedule</Button>
-                  </Link>
+                  <Button disabled={show.isArchived}>
+                    <Link className="self-end" to={`/shows/add/schedule/${id}`}>
+                      Add New Schedule
+                    </Link>
+                  </Button>
                 )}
               </div>
             </div>
@@ -347,8 +335,8 @@ const ViewShow = () => {
                       </div>
 
                       <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <Button variant="outline">
+                        <DropdownMenuTrigger disabled={show.isArchived}>
+                          <Button disabled={show.isArchived} variant="outline">
                             <Settings2Icon />
                           </Button>
                         </DropdownMenuTrigger>
@@ -356,7 +344,7 @@ const ViewShow = () => {
                           <DropdownMenuLabel>Select Options</DropdownMenuLabel>
                           <DropdownMenuGroup>
                             <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setCopySchedule(schedule)}>Duplicate Schedule</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setCopySchedule(schedule)}>Copy Schedule</DropdownMenuItem>
                             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                               <AlertModal
                                 confirmation={schedule.isOpen ? "Close" : "Open"}
@@ -379,7 +367,7 @@ const ViewShow = () => {
                         onConfirm={() => handleDeleteSchedule(schedule.scheduleId)}
                         title="Delete Schedule"
                         trigger={
-                          <Button variant="destructive">
+                          <Button disabled={show.isArchived} variant="destructive">
                             <Trash2Icon />
                           </Button>
                         }
@@ -454,8 +442,8 @@ const ViewShow = () => {
 
       {copySchedule && (
         <Modal
-          title="Duplicate Schedule"
-          description="This will create a copy of the selected schedule. You can set a new date and time for the duplicated schedule."
+          title="Copy Schedule"
+          description="This will create a copy of all the  details of the selected schedule. You can set a new date and time for the copied schedule."
           isOpen={!!copySchedule}
           onClose={() => setCopySchedule(null)}
         >
@@ -483,7 +471,7 @@ const ViewShow = () => {
               Cancel
             </Button>
             <Button onClick={handleDuplicateSchedule} disabled={duplicate.isPending}>
-              Duplicate
+              Copy
             </Button>
           </div>
         </Modal>

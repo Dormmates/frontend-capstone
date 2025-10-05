@@ -4,6 +4,8 @@ import { DataTable } from "@/components/DataTable.tsx";
 import DeleteShow from "./showActions/DeleteShow";
 import UnArchiveShow from "./showActions/UnArchiveShow";
 import { TheaterIcon } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   archivedShows: ShowData[];
@@ -43,6 +45,9 @@ const ViewArchivedShows = ({ archivedShows }: Props) => {
               headerClassName: "text-right",
               render: (showData) => (
                 <div className="flex justify-end items-center gap-2">
+                  <Link to={`/shows/${showData.showId}`}>
+                    <Button>Go To Schedules</Button>
+                  </Link>
                   <UnArchiveShow show={showData} />
                   <DeleteShow show={showData} />
                 </div>

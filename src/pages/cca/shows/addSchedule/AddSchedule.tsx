@@ -46,6 +46,12 @@ const AddSchedule = () => {
     complimentaryControlNumber: "",
   });
 
+  useEffect(() => {
+    if (data && data.isArchived) {
+      navigate(`/shows/${data.showId}`, { replace: true });
+    }
+  }, [navigate, data]);
+
   const [selectedPrice, setSelectedPrice] = useState<TicketPricing | null>(null);
 
   const [openScheduleSummary, setOpenScheduleSummary] = useState(false);

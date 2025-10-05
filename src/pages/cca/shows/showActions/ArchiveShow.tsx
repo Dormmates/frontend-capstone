@@ -53,7 +53,8 @@ const ArchiveShow = ({ show }: ArchiveShowProps) => {
         <h1 className="font-semibold mb-2">Archiving this show will permanently:</h1>
         <ul className="list-disc ml-6 space-y-1">
           <li>Remove the show from the active and archived shows list.</li>
-          <li>
+          <li>Cannot perform any operations on the schedule.</li>
+          {/* <li>
             Delete <strong>all schedules</strong> associated with this show.
           </li>
           <li>
@@ -67,11 +68,11 @@ const ArchiveShow = ({ show }: ArchiveShowProps) => {
           </li>
           <li>
             Delete <strong>all logs and history</strong> related to this show.
-          </li>
+          </li> */}
         </ul>
-        <div className="border-red border  bg-gray p-2 rounded-sm mt-5">
+        {/* <div className="border-red border  bg-gray p-2 rounded-sm mt-5">
           <p className=" font-medium">This action will erase all data related to this show and cannot be undone.</p>
-        </div>
+        </div> */}
       </div>
     </AlertModal>
   );
