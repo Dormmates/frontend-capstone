@@ -18,7 +18,7 @@ type DialogPopupProps = {
   title: string;
   submitAction?: () => void;
   saveTitle?: string;
-  description?: string;
+  description?: string | React.ReactNode;
   className?: string;
   tooltip?: string;
   isOpen?: boolean;
@@ -57,12 +57,11 @@ const DialogPopup = ({
         <DialogTrigger asChild>{triggerElement}</DialogTrigger>
       )}
 
-      <DialogContent className={className}>
+      <DialogContent className={`overflow-y-auto ${className}`}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-
         <div className="overflow-y-auto">{children}</div>
 
         {submitAction && (

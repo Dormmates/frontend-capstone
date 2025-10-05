@@ -85,11 +85,11 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                     <InputField
                       label="Distributor Type (Cannot Edit)"
                       disabled={true}
-                      value={(user as Distributor).distributor.distributorType.name + ""}
+                      value={(user as Distributor).distributor.distributorType + ""}
                       onChange={() => {}}
                     />
 
-                    {(user as Distributor).distributor.distributorType.id === 2 && (
+                    {(user as Distributor).distributor.distributorType === "cca" && (
                       <InputField
                         label="Performing Group (Cannot Edit)"
                         disabled={true}

@@ -14,7 +14,7 @@ interface NewDistributorPayload {
   lastName: string;
   email: string;
   password?: string;
-  distributorType: number;
+  distributorType: DistributorTypes;
   contactNumber: string;
   departmentId: string;
 }
@@ -38,22 +38,11 @@ export const useGetTrainers = () => {
   });
 };
 
-export const useGetDistributors = (departmentId?: string) => {
+export const useGetDistributors = (query?: { departmentId?: string; excludeCCA?: boolean }) => {
   return useQuery<Distributor[], Error>({
     queryKey: ["distributors"],
     queryFn: async () => {
-      const res = await request<Distributor[]>("/api/accounts/distributors", { departmentId }, "get");
-      return res.data;
-    },
-    retry: false,
-  });
-};
-
-export const useGetDistributorTypes = () => {
-  return useQuery<DistributorTypes[], Error>({
-    queryKey: ["distributor", "types"],
-    queryFn: async () => {
-      const res = await request<DistributorTypes[]>("/api/accounts/distributorTypes", {}, "get");
+      const res = await request<Distributor[]>("/api/accounts/distributors", query, "get");
       return res.data;
     },
     retry: false,
@@ -168,5 +157,37 @@ export const useRemoveCCAHeadRole = () => {
       const res = await request<any>("/api/accounts/role/delete/head", { userId }, "post");
       return res.data;
     },
+  });
+};
+
+export const useGetEmails = () => {
+  return useQuery<string[], Error>({
+    queryKey: ["emails"],
+    queryFn: async () => {
+      const res = await request<string[]>("/api/accounts/emails", {}, "get");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useCreateBulkDistributors = () => {
+  return useMutation<
+    { message: string; summary: { name: string; email: string; status: string }[] },
+    Error,
+    { distributors: { firstName: string; lastName: string; email: string; contactNumber: string }[]; performingGroup: string }
+  >({
+    mutationFn: async (payload: {
+      distributors: { firstName: string; lastName: string; email: string; contactNumber: string }[];
+      performingGroup: string;
+    }) => {
+      const res = await request<{ message: string; summary: { name: string; email: string; status: string }[] }>(
+        "/api/accounts/bulk/distributor",
+        payload,
+        "post"
+      );
+      return res.data;
+    },
+    retry: false,
   });
 };

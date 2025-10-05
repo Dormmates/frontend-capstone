@@ -42,14 +42,13 @@ const CCALayout = () => {
       icon: <NetworkIcon className="h-4 w-4" />,
       name: "Performing Groups",
       path: "/performing-groups",
-      hidden: !user?.roles.includes("head"),
     },
     {
       icon: <UsersIcon className="h-4 w-4" />,
       name: "Manage Accounts",
       items: [
         { name: "Trainer", path: "/manage/trainers", hidden: !user?.roles.includes("head") },
-        { name: "Distributor", path: "/manage/distributors" },
+        { name: "External Distributor", path: "/manage/distributors" },
         { name: "CCA Head", path: "/manage/cca-head", hidden: !user?.roles.includes("head") },
         // { name: "Account Request", path: "/manage/request" },
       ],

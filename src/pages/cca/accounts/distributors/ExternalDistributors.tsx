@@ -1,10 +1,9 @@
 import { useMemo, useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
-import { useEditDistributor, useGetDistributors, useGetDistributorTypes, useNewDistributor } from "@/_lib/@react-client-query/accounts.ts";
-import type { Distributor, User } from "@/types/user.ts";
+import { useEditDistributor, useGetDistributors, useNewDistributor } from "@/_lib/@react-client-query/accounts.ts";
+import { distributorTypeOptions, type Distributor, type DistributorTypes, type User } from "@/types/user.ts";
 import DistributorForm from "./DistributorForm";
-import { useGetDepartments } from "@/_lib/@react-client-query/department.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
@@ -26,37 +25,13 @@ const Distributors = () => {
   const editDistributor = useEditDistributor();
   const queryClient = useQueryClient();
 
-  const { data: distributors, isLoading: loadingDistributors, isError: errorDistributor } = useGetDistributors();
-  const { data: distributorTypes, isLoading: loadingTypes, isError: errorTypes } = useGetDistributorTypes();
-  const { data: departments, isLoading: loadingDepartments, isError: errorDeparments } = useGetDepartments();
+  const { data: distributors, isLoading: loadingDistributors, isError: errorDistributor } = useGetDistributors({ excludeCCA: true });
 
   const [isAddDistributor, setIsAddDistributor] = useState(false);
   const [selectedDistributor, setSelectedDistributor] = useState<Distributor | null>(null);
+  const [selectedDistributors, setSelectedDistributors] = useState<Distributor[]>([]);
   const [showArchived, setShowArchived] = useState(false);
   const [type, setType] = useState("all");
-
-  const distributorTypeOptions = (distributorTypes ?? []).map((type) => ({ name: type.name, value: String(type.id) }));
-  const groupOptions = useMemo(() => {
-    if (!departments || !user) return [];
-
-    if (user.roles.includes("head")) {
-      return departments.map((department) => ({
-        name: department.name,
-        value: department.departmentId,
-      }));
-    }
-
-    if (user.department) {
-      return [
-        {
-          name: user.department.name,
-          value: user.department.departmentId,
-        },
-      ];
-    }
-
-    return [];
-  }, [departments, user]);
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue);
@@ -73,22 +48,20 @@ const Distributors = () => {
 
   const searchedDistributors = useMemo(() => {
     if (!activeDistributors) return [];
-    return activeDistributors
-      .filter((distributor) => {
-        const l = distributor.lastName.toLocaleLowerCase().trim();
-        const f = distributor.firstName.toLocaleLowerCase().trim();
-        const s = searchValue.toLocaleLowerCase().trim();
+    return activeDistributors.filter((distributor) => {
+      const l = distributor.lastName.toLocaleLowerCase().trim();
+      const f = distributor.firstName.toLocaleLowerCase().trim();
+      const s = searchValue.toLocaleLowerCase().trim();
 
-        return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
-      })
-      .filter((distributor) => !type || type === "all" || Number(type) === distributor.distributor.distributorType.id);
+      return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
+    });
   }, [debouncedSearch, activeDistributors, type]);
 
-  if (loadingDistributors || loadingTypes || loadingDepartments) {
+  if (loadingDistributors) {
     return <h1>Loaddingg..</h1>;
   }
 
-  if (errorDistributor || !distributors || !distributorTypes || errorDeparments || errorTypes) {
+  if (errorDistributor || !distributors) {
     return <h1>Error </h1>;
   }
 
@@ -101,13 +74,12 @@ const Distributors = () => {
 
         {(user?.department || user?.roles.includes("head")) && (
           <div className="self-end flex gap-2">
-            <Button>Bulk Creation</Button>
             <Button onClick={() => setIsAddDistributor(true)}>Add New Distributor</Button>
           </div>
         )}
       </div>
 
-      <div className="mt-10 flex flex-col gap-10">
+      <div className="mt-10 flex flex-col gap-5">
         <div className="flex gap-3">
           <InputField
             className="w-full"
@@ -125,7 +97,25 @@ const Distributors = () => {
           />
         </div>
 
+        {selectedDistributors.length !== 0 && (
+          <div className="flex flex-col gap-2 m-0">
+            <p className="text-sm font-medium">Selected Distributors: {selectedDistributors.length}</p>
+            <div className="flex gap-2">
+              <Button variant="secondary" onClick={() => toast.info("This feature will come soon", { position: "top-center" })}>
+                Archive Selected Distributors
+              </Button>
+              <Button variant="secondary" onClick={() => toast.info("This feature will come soon", { position: "top-center" })}>
+                Delete Selected Distributors
+              </Button>
+            </div>
+          </div>
+        )}
+
         <PaginatedTable
+          selectable
+          onSelectionChange={(selectedDistributors) => {
+            setSelectedDistributors(selectedDistributors);
+          }}
           data={searchedDistributors}
           columns={[
             {
@@ -146,12 +136,7 @@ const Distributors = () => {
             {
               key: "type",
               header: "Distributor Type",
-              render: (distributor) => distributor.distributor.distributorType.name,
-            },
-            {
-              key: "group",
-              header: "Performing Group",
-              render: (distributor) => distributor.distributor.department?.name ?? "No Department",
+              render: (distributor) => distributor.distributor.distributorType,
             },
             {
               key: "action",
@@ -159,7 +144,7 @@ const Distributors = () => {
               headerClassName: "text-right",
               render: (distributor) => (
                 <div className="flex justify-end items-center gap-2">
-                  <Link to={`/manage/distributor/${distributor.userId}`}>
+                  <Link to={`/manage/distributors/${distributor.userId}`}>
                     <Button variant="outline">View Distributor</Button>
                   </Link>
 
@@ -193,17 +178,17 @@ const Distributors = () => {
               lastName: "",
               email: "",
               contactNumber: "",
-              type: "",
+              type: "" as DistributorTypes,
               department: "",
             }}
-            distributorTypeOptions={distributorTypeOptions}
-            groupOptions={groupOptions}
+            distributorTypeOptions={distributorTypeOptions.filter((t) => t.value !== "cca")}
+            groupOptions={[]}
             isSubmitting={addDistributor.isPending}
             onSubmit={(payload) => {
               toast.promise(
                 addDistributor.mutateAsync({
                   ...payload,
-                  distributorType: Number(payload.type),
+                  distributorType: payload.type,
                   departmentId: payload.department,
                 }),
                 {
@@ -238,18 +223,18 @@ const Distributors = () => {
               lastName: selectedDistributor.lastName,
               email: selectedDistributor.email,
               contactNumber: selectedDistributor.distributor.contactNumber,
-              type: String(selectedDistributor.distributor.distributorType.id),
+              type: selectedDistributor.distributor.distributorType,
               department: selectedDistributor.distributor.department?.departmentId || "",
             }}
-            distributorTypeOptions={distributorTypeOptions}
-            groupOptions={groupOptions}
+            distributorTypeOptions={distributorTypeOptions.filter((t) => t.value !== "cca")}
+            groupOptions={[]}
             onSubmit={(payload) => {
               const hasChanges =
                 payload.firstName.trim() !== selectedDistributor.firstName.trim() ||
                 payload.lastName.trim() !== selectedDistributor.lastName.trim() ||
                 payload.email.trim() !== selectedDistributor.email.trim() ||
                 payload.contactNumber.trim() !== selectedDistributor.distributor.contactNumber.trim() ||
-                payload.type !== String(selectedDistributor.distributor.distributorType.id) ||
+                payload.type !== String(selectedDistributor.distributor.distributorType) ||
                 (payload.department || null) !== (selectedDistributor.distributor.department?.departmentId || null);
 
               if (!hasChanges) {
@@ -261,7 +246,7 @@ const Distributors = () => {
                 firstName: payload.firstName.trim(),
                 lastName: payload.lastName.trim(),
                 email: payload.email.trim(),
-                distributorType: Number(payload.type),
+                distributorType: payload.type,
                 contactNumber: payload.contactNumber.trim(),
                 departmentId: payload.department,
                 userId: selectedDistributor.userId,
@@ -293,6 +278,7 @@ const Distributors = () => {
         >
           <div>
             <PaginatedTable
+              selectable
               data={archivedDistributors}
               columns={[
                 {
@@ -313,12 +299,7 @@ const Distributors = () => {
                 {
                   key: "type",
                   header: "Distributor Type",
-                  render: (distributor) => distributor.distributor.distributorType.name,
-                },
-                {
-                  key: "group",
-                  header: "Performing Group",
-                  render: (distributor) => distributor.distributor.department?.name ?? "No Department",
+                  render: (distributor) => distributor.distributor.distributorType,
                 },
                 {
                   key: "action",

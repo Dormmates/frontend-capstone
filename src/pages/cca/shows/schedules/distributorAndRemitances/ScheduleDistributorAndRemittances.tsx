@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import PaginatedTable from "@/components/PaginatedTable";
 import type { Schedule } from "@/types/schedule";
+import type { ShowData } from "@/types/show";
 
 const ScheduleDistributorAndRemittances = () => {
   const { scheduleId, showId } = useParams();
-  const { schedule } = useOutletContext<{ schedule: Schedule }>();
+  const { schedule, show } = useOutletContext<{ schedule: Schedule; show: ShowData }>();
   const { data: distributors, isLoading, isError } = useGetScheduleDistributors(scheduleId as string);
 
   const [searchValue, setSearchValue] = useState("");
@@ -47,7 +48,7 @@ const ScheduleDistributorAndRemittances = () => {
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Search Distributor by Name"
           />
-          <Button disabled={!schedule.isOpen}>
+          <Button disabled={!schedule.isOpen || show.isArchived}>
             <Link to={`/shows/${showId}/${scheduleId}/allocation`}>Allocate Ticket</Link>
           </Button>
         </div>

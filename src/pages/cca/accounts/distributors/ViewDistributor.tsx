@@ -38,10 +38,7 @@ const ViewDistributor = () => {
       <h1 className="text-3xl">Distributor Informations</h1>
 
       <div className="my-10">
-        <Breadcrumbs
-          backHref="/manage/distributors"
-          items={[{ name: "Distributors", href: "/manage/distributors" }, { name: distributor.firstName + " " + distributor.lastName }]}
-        />
+        <Breadcrumbs items={[{ name: "Distributors" }, { name: distributor.firstName + " " + distributor.lastName }]} />
       </div>
 
       <div className="mb-10">

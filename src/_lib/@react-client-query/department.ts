@@ -2,11 +2,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { request } from "../api";
 import type { Department } from "../../types/department";
 
-export const useGetDepartments = () => {
+export const useGetDepartments = (trainerId?: string | null) => {
   return useQuery<Department[], Error>({
     queryKey: ["departments"],
     queryFn: async () => {
-      const res = await request<Department[]>("/api/department", {}, "get");
+      const res = await request<Department[]>("/api/department", { trainerId }, "get");
       return res.data;
     },
     retry: false,

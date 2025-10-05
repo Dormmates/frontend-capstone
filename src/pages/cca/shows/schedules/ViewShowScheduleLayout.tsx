@@ -41,7 +41,6 @@ const ViewShowScheduleLayout = () => {
           <NotFound title="Schedule Not Found" description="This Schedule does not exist or have been deleted already" />
         ) : (
           <>
-            {" "}
             {schedule.ticketType == "ticketed" && (
               <div className="flex flex-wrap w-full gap-10 my-5">
                 {links
@@ -66,6 +65,17 @@ const ViewShowScheduleLayout = () => {
                 </div>
                 <p className="text-sm text-muted-foreground ">
                   Actions such as ticket allocation, remittance, and related tasks are restricted until the schedule is reopened.
+                </p>
+              </div>
+            )}
+            {show.isArchived && (
+              <div className="flex  flex-col bg-muted border shadow-sm border-l-red border-l-4 rounded-md w-full p-3 gap-1 ">
+                <div className="flex items-center gap-2">
+                  <CircleAlertIcon className="text-red w-4 font-bold" />
+                  <p className="font-medium text-sm">Note - This Show Schedule is currently Archived</p>
+                </div>
+                <p className="text-sm text-muted-foreground ">
+                  Actions such as ticket allocation, remittance, and related tasks are restricted until the show is unarchived.
                 </p>
               </div>
             )}

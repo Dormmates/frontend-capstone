@@ -1,6 +1,6 @@
 import AccountRequests from "./accounts/AccountRequests";
 import CCAHeads from "./accounts/heads/CCAHeads";
-import Distributors from "./accounts/distributors/Distributors";
+import Distributors from "./accounts/distributors/ExternalDistributors";
 import ViewDistributor from "./accounts/distributors/ViewDistributor";
 import Trainers from "./accounts/trainer/Trainers";
 
@@ -9,6 +9,7 @@ import AddSchedule from "./shows/addSchedule/AddSchedule";
 
 import MajorProductionShows from "./shows/MajorProductionShows";
 import PerformingGroupShows from "./shows/PerformingGroupShows";
+import ViewPerformingGroups from "./groups/ViewPerformingGroupMembers";
 import ViewShow from "./shows/ViewShow";
 
 import ViewShowScheduleLayout from "./shows/schedules/ViewShowScheduleLayout";
@@ -33,6 +34,7 @@ import CCALogin from "./CCALogin";
 import Settings from "./systemSettings/Settings";
 
 export {
+  ViewPerformingGroups,
   Settings,
   ViewDistributor,
   CCALogin,

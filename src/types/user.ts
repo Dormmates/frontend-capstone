@@ -2,11 +2,7 @@ import type { Department } from "./department";
 
 export type UserRole = "distributor" | "head" | "trainer";
 
-export interface DistributorTypes {
-  name: string;
-  id: number;
-  haveCommision: boolean;
-}
+export type DistributorTypes = "cca" | "FOH" | "faculty" | "visitor";
 
 export interface User {
   userId: string;
@@ -32,3 +28,10 @@ export interface Distributor extends User {
     distributorType: DistributorTypes;
   };
 }
+
+export const distributorTypeOptions: { name: string; value: DistributorTypes }[] = [
+  { name: "CCA Member", value: "cca" },
+  { name: "Front of House", value: "FOH" },
+  { name: "Faculty", value: "faculty" },
+  { name: "Visitor", value: "visitor" },
+];

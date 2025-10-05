@@ -3,13 +3,14 @@ import { isValidEmail } from "@/utils";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
 import Dropdown from "@/components/Dropdown";
+import type { DistributorTypes } from "@/types/user";
 
 type DistributorFormValues = {
   firstName: string;
   lastName: string;
   email: string;
   contactNumber: string;
-  type: string;
+  type: DistributorTypes;
   department: string;
 };
 
@@ -62,7 +63,7 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
       newErrors.type = "Please Choose Distributor Type";
       isValid = false;
     }
-    if (formData.type === "2" && !formData.department) {
+    if (formData.type === "cca" && !formData.department) {
       newErrors.department = "Please Choose Performing Group";
       isValid = false;
     }
@@ -113,9 +114,9 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
               disabled={isSubmitting}
               error={errors.email}
               type="email"
-              placeholder={formData.type === "2" ? "eg. member@slu.edu.ph" : "eg. distributor@gmail.com"}
+              placeholder={formData.type === "cca" ? "eg. member@slu.edu.ph" : "eg. distributor@gmail.com"}
               name="email"
-              label="SLU Email"
+              label={formData.type === "cca" ? "SLU Email" : "Email"}
               value={formData.email}
               onChange={handleInputChange}
             />
@@ -137,13 +138,13 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
               className="w-full"
               placeholder="Select Distributor Type"
               label="Distributor Type"
-              onChange={(value) => setFormData((prev) => ({ ...prev, type: value }))}
+              onChange={(value) => setFormData((prev) => ({ ...prev, type: value as DistributorTypes }))}
               value={formData.type}
               items={distributorTypeOptions}
               includeHeader={true}
             />
 
-            {formData.type === "2" && (
+            {formData.type === "cca" && (
               <Dropdown
                 includeHeader={true}
                 disabled={isSubmitting}

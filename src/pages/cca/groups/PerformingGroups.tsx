@@ -25,16 +25,20 @@ import { useGetTrainers } from "@/_lib/@react-client-query/accounts";
 import Dropdown from "@/components/Dropdown";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuthContext } from "@/context/AuthContext";
+import { Link } from "react-router-dom";
 
 const PerformingGroups = () => {
+  const { user } = useAuthContext();
   const addDepartment = useAddDepartment();
   const deleteDepartment = useDeleteDepartment();
   const editDepartment = useEditDepartment();
   const queryClient = useQueryClient();
-  const { data: departments, isLoading: fetchingDepartments, isError: errorLoadingDepartments } = useGetDepartments();
+  const userId = !user?.roles.includes("head") ? user?.userId : "";
+
+  const { data: departments, isLoading: fetchingDepartments, isError: errorLoadingDepartments } = useGetDepartments(userId);
+
   const [addGroup, setAddGroup] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<Department | null>(null);
-  const { user } = useAuthContext();
 
   const [newGroup, setNewGroup] = useState({ name: "", imagePreview: "", image: null as File | null });
   const [editGroup, setEditGroup] = useState({ name: "", imagePreview: "", image: null as File | null });
@@ -143,84 +147,97 @@ const PerformingGroups = () => {
     return <h1>Error Loading</h1>;
   }
 
-  console.log(departments);
-
   return (
     <ContentWrapper>
       <h1 className="text-3xl">Performing Groups</h1>
 
-      <div className="flex justify-between mt-10">
-        <SimpleCard icon={<GroupIcon size={18} />} label="Total Groups" value={departments?.length + ""} />
+      {!user?.roles.includes("head") && !user?.department ? (
+        <div>You are not currently assigned to any departmnet</div>
+      ) : (
+        <>
+          <div className="flex justify-between mt-10">
+            <SimpleCard icon={<GroupIcon size={18} />} label="Total Groups" value={departments?.length + ""} />
 
-        <div className="flex items-end">
-          <Button onClick={() => setAddGroup(true)}>Add New Group</Button>
-        </div>
-      </div>
+            {user?.roles.includes("head") && (
+              <div className="flex items-end">
+                <Button onClick={() => setAddGroup(true)}>Add New Group</Button>
+              </div>
+            )}
+          </div>
+          <div className="mt-10">
+            <PaginatedTable
+              data={departments}
+              columns={[
+                {
+                  key: "name",
+                  header: "Group Name",
+                  render: (department) => (
+                    <div className="flex items-center w-fit">
+                      <img className="w-10 h-10" src={department.logoUrl} alt="logo" />
+                      <p>{department.name}</p>
+                    </div>
+                  ),
+                },
+                {
+                  key: "trainer",
+                  header: "Trainer name",
+                  render: (department) => {
+                    if (!department.trainerName) return "No Trainer";
 
-      <div className="mt-10">
-        <PaginatedTable
-          data={departments}
-          columns={[
-            {
-              key: "name",
-              header: "Group Name",
-              render: (department) => (
-                <div className="flex items-center w-fit">
-                  <img className="w-10 h-10" src={department.logoUrl} alt="logo" />
-                  <p>{department.name}</p>
-                </div>
-              ),
-            },
-            {
-              key: "trainer",
-              header: "Trainer name",
-              render: (department) => {
-                if (!department.trainerName) return "No Trainer";
+                    const isYou = department.trainerId === user?.userId;
+                    return <span className={isYou ? "font-bold" : ""}>{isYou ? `(You) ${department.trainerName}` : department.trainerName}</span>;
+                  },
+                },
 
-                const isYou = department.trainerId === user?.userId;
-                return <span className={isYou ? "font-bold" : ""}>{isYou ? `(You) ${department.trainerName}` : department.trainerName}</span>;
-              },
-            },
-
-            {
-              key: "total",
-              header: "Total Shows",
-              render: (department) => department.totalShows,
-            },
-            {
-              key: "action",
-              header: "Actions",
-              headerClassName: "text-right",
-              render: (department) => (
-                <div className="flex justify-end items-center gap-2">
-                  <Button onClick={() => setSelectedGroup(department)} variant="outline">
-                    <EditIcon />
-                  </Button>
-
-                  <Button
-                    onClick={() => {
-                      setIsAssignTrainer(department);
-                    }}
-                  >
-                    <UserRoundPenIcon />
-                  </Button>
-
-                  <AlertModal
-                    trigger={
-                      <Button disabled={department.totalShows !== 0} variant="destructive">
-                        <Trash2Icon />
+                {
+                  key: "total",
+                  header: "Total Shows",
+                  render: (department) => department.totalShows,
+                },
+                {
+                  key: "members",
+                  header: "Total Members",
+                  render: (department) => department.totalMembers,
+                },
+                {
+                  key: "action",
+                  header: "Actions",
+                  headerClassName: "text-right",
+                  render: (department) => (
+                    <div className="flex justify-end items-center gap-2">
+                      <Link to={`/performing-groups/${department.departmentId}`}>
+                        <Button variant="secondary">Manage Members</Button>
+                      </Link>
+                      <Button onClick={() => setSelectedGroup(department)} variant="outline">
+                        <EditIcon />
                       </Button>
-                    }
-                    onConfirm={() => handleDelete(department.departmentId)}
-                    title="Delete Performing Group"
-                    description="This action cannot be undone. This will permanently delete the selected performing group."
-                  />
-                </div>
-              ),
-            },
-          ]}
-        />
-      </div>
+
+                      <Button
+                        onClick={() => {
+                          setIsAssignTrainer(department);
+                        }}
+                      >
+                        <UserRoundPenIcon />
+                      </Button>
+
+                      <AlertModal
+                        trigger={
+                          <Button disabled={department.totalShows !== 0 || department.totalMembers !== 0} variant="destructive">
+                            <Trash2Icon />
+                          </Button>
+                        }
+                        onConfirm={() => handleDelete(department.departmentId)}
+                        title="Delete Performing Group"
+                        description="This action cannot be undone. This will permanently delete the selected performing group."
+                      />
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>{" "}
+        </>
+      )}
 
       {isAssignTrainer && (
         <Modal

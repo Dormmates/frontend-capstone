@@ -35,6 +35,7 @@ import {
   PerformingGroupShows,
   ViewDistributor,
   Settings,
+  ViewPerformingGroups,
 } from "../pages/cca/index";
 import DistributorShowHistory from "@/pages/distributor/history/DistributorShowHistory";
 import DistributorHistoryMenu from "@/pages/distributor/history/DistributorHistoryMenu";
@@ -98,14 +99,15 @@ const AppRoute = () => {
               </Route>
             </Route>
             <Route path="shows/:id" element={<ViewShow />} />
+            <Route path="manage/distributors/:distributorId" element={<ViewDistributor />} />
             <Route path="manage/distributors" element={<Distributors />} />
-            <Route path="manage/distributor/:distributorId" element={<ViewDistributor />} />
             {/* <Route path="manage/request" element={<AccountRequests />} /> */}
             <Route path="shows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
+            <Route path="performing-groups" element={<PerformingGroups />} />
+            <Route path="performing-groups/:groupId" element={<ViewPerformingGroups />} />
 
             {user?.roles.includes("head") && (
               <>
-                <Route path="performing-groups" element={<PerformingGroups />} />
                 <Route path="manage/trainers" element={<Trainers />} />
                 <Route path="manage/cca-head" element={<CCAHeads />} />
                 <Route path="settings" element={<Settings />} />

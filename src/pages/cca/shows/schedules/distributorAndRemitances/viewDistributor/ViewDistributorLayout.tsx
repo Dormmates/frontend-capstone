@@ -132,13 +132,13 @@ const ViewDistributorLayout = () => {
         <h1 className="text-2xl">{distributorName}</h1>
         <div className="flex gap-3 items-center">
           {/* <Button className="!bg-green">Allocate Ticket</Button> */}
-          <Button disabled={!schedule.isOpen} onClick={() => setIsUnallocateTicket(true)} variant="destructive">
+          <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnallocateTicket(true)} variant="destructive">
             Unallocate Ticket
           </Button>
-          <Button disabled={!schedule.isOpen} onClick={() => setIsRemitTicket(true)} className="bg-primary">
+          <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsRemitTicket(true)} className="bg-primary">
             Remit Tickets
           </Button>
-          <Button disabled={!schedule.isOpen} onClick={() => setIsUnRemitTicket(true)}>
+          <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnRemitTicket(true)}>
             Unremit Tickets
           </Button>
         </div>

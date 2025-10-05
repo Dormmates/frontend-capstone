@@ -15,9 +15,22 @@ interface DataTableProps<T> {
   emptyMessage?: string;
   itemsPerPage?: number;
   className?: string;
+
+  selectable?: boolean;
+  getRowId?: (item: T, index?: number) => string | number;
+  onSelectionChange?: (selectedItems: T[]) => void;
 }
 
-const PaginatedTable = <T,>({ columns, itemsPerPage = 5, data, emptyMessage, className }: DataTableProps<T>) => {
+const PaginatedTable = <T,>({
+  columns,
+  itemsPerPage = 5,
+  data,
+  emptyMessage,
+  className,
+  selectable = false,
+  getRowId,
+  onSelectionChange,
+}: DataTableProps<T>) => {
   const [page, setPage] = useState(1);
 
   const paginatedItems = useMemo(() => {
@@ -32,12 +45,16 @@ const PaginatedTable = <T,>({ columns, itemsPerPage = 5, data, emptyMessage, cla
 
   return (
     <>
-      <DataTable<T> columns={columns} data={paginatedItems} emptyMessage={emptyMessage} className={className} />
-      <Pagination
-        currentPage={page}
-        totalPage={Math.ceil(data.length / itemsPerPage)}
-        onPageChange={(newPage) => setPage(newPage)}
+      <DataTable<T>
+        selectable={selectable}
+        getRowId={getRowId}
+        onSelectionChange={onSelectionChange}
+        columns={columns}
+        data={paginatedItems}
+        emptyMessage={emptyMessage}
+        className={className}
       />
+      <Pagination currentPage={page} totalPage={Math.ceil(data.length / itemsPerPage)} onPageChange={(newPage) => setPage(newPage)} />
     </>
   );
 };

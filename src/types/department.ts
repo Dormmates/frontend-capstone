@@ -5,4 +5,5 @@ export interface Department {
   trainerId?: string;
   trainerName?: string;
   totalShows: number;
+  totalMembers: number;
 }

@@ -25,6 +25,7 @@ import PaginatedTable from "@/components/PaginatedTable";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { compressSeats } from "@/utils/seatmap";
+import NotFound from "@/components/NotFound";
 
 const TicketAllocation = () => {
   const { user } = useAuthContext();
@@ -62,7 +63,7 @@ const TicketAllocation = () => {
   }, [tickets]);
 
   useEffect(() => {
-    if (!loadingSchedule && schedule && !schedule.isOpen) {
+    if ((!loadingSchedule && schedule && !schedule.isOpen) || showData?.isArchived) {
       navigate(`/shows/schedule/${showId}/${scheduleId}/d&r`, { replace: true });
     }
   }, [loadingSchedule, schedule, navigate, showId, scheduleId]);
@@ -150,157 +151,162 @@ const TicketAllocation = () => {
     return <h1>Loadingg....</h1>;
   }
 
-  if (!showData || showError || errorSchedule || !schedule || ticketsError || !tickets) {
-    return <h1>Error</h1>;
-  }
-
   return (
     <ContentWrapper className="flex flex-col">
       <Breadcrumbs items={[{ name: "Return to Distributor List", href: "" }]} backHref={`/shows/schedule/${showId}/${scheduleId}/d&r`} />
 
-      <div className="flex flex-col gap-8 mt-10">
-        <h1 className="text-3xl">Allocate Ticket To a Distributor</h1>
+      {!showData || showError || errorSchedule || !schedule || ticketsError || !tickets ? (
+        <NotFound title="Schedule Not Found" description="This Schedule does not exist or have been deleted already" />
+      ) : (
+        <div className="flex flex-col gap-8 mt-10">
+          <h1 className="text-3xl">Allocate Ticket To a Distributor</h1>
 
-        <div>
-          <LongCard className="w-fit" labelStyle="!text-xl" label="Show Details">
-            <LongCardItem label="Show Title" value={showData.title} />
-            <LongCardItem label="Date" value={formatToReadableDate(schedule.datetime + "")} />
-            <LongCardItem label="Time" value={formatToReadableTime(schedule.datetime + "")} />
-          </LongCard>
-        </div>
+          <div>
+            <LongCard className="w-fit" labelStyle="!text-xl" label="Show Details">
+              <LongCardItem label="Show Title" value={showData.title} />
+              <LongCardItem label="Date" value={formatToReadableDate(schedule.datetime + "")} />
+              <LongCardItem label="Time" value={formatToReadableTime(schedule.datetime + "")} />
+            </LongCard>
+          </div>
 
-        <div className="flex gap-2 flex-col">
-          <Label>Choose Distributor</Label>
-          <Button
-            disabled={
-              (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
-            }
-            onClick={() => setIsChooseDistributor(true)}
-            className={`w-fit ${error.distributorError && "border-red"}`}
-            variant="outline"
-          >
-            <div className="flex gap-12">
-              {selectedDistributor ? <h1>{selectedDistributor.firstName + " " + selectedDistributor.lastName}</h1> : <h1>No Selected Distributor</h1>}
-              <p className="text-lightGrey font-normal">click to choose distributor</p>
-            </div>
-          </Button>
-          {error.distributorError && <p className="text-red text-sm">{error.distributorError}</p>}
-        </div>
+          <div className="flex gap-2 flex-col">
+            <Label>Choose Distributor</Label>
+            <Button
+              disabled={
+                (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
+              }
+              onClick={() => setIsChooseDistributor(true)}
+              className={`w-fit ${error.distributorError && "border-red"}`}
+              variant="outline"
+            >
+              <div className="flex gap-12">
+                {selectedDistributor ? (
+                  <h1>{selectedDistributor.firstName + " " + selectedDistributor.lastName}</h1>
+                ) : (
+                  <h1>No Selected Distributor</h1>
+                )}
+                <p className="text-lightGrey font-normal">click to choose distributor</p>
+              </div>
+            </Button>
+            {error.distributorError && <p className="text-red text-sm">{error.distributorError}</p>}
+          </div>
 
-        <div className="flex flex-col gap-2">
-          <Label>Allocation Method</Label>
-          <Tabs value={allocationMethod} onValueChange={(value) => setAllocationMethod(value)}>
-            <TabsList>
-              {schedule.seatingType === "controlledSeating" && <TabsTrigger value="seat">By Seat Map</TabsTrigger>}
-              <TabsTrigger value="controlNumber">By Control Number</TabsTrigger>
-            </TabsList>
-            <TabsContent value="seat">
-              <>
-                <AllocatedBySeat error={error.seatError} choosenSeats={choosenSeats} setChoosenSeats={setChoosenSeats} />
-                <Button
-                  disabled={
-                    (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicketByControlNumber.isPending
-                  }
-                  onClick={validate}
-                  className=" max-w-fit mt-5"
-                >
-                  Reserve Seats
-                </Button>
-              </>
-            </TabsContent>
-            <TabsContent value="controlNumber">
-              <>
-                <div className="flex flex-col gap-3">
-                  <AllocateByControlNumber
-                    unAllocatedTickets={unAllocatedTickets}
-                    controlNumber={controlNumberInput}
-                    setControlNumbers={setControlNumberInput}
-                    error={error.controlNumberError}
-                  />
-
+          <div className="flex flex-col gap-2">
+            <Label>Allocation Method</Label>
+            <Tabs value={allocationMethod} onValueChange={(value) => setAllocationMethod(value)}>
+              <TabsList>
+                {schedule.seatingType === "controlledSeating" && <TabsTrigger value="seat">By Seat Map</TabsTrigger>}
+                <TabsTrigger value="controlNumber">By Control Number</TabsTrigger>
+              </TabsList>
+              <TabsContent value="seat">
+                <>
+                  <AllocatedBySeat error={error.seatError} choosenSeats={choosenSeats} setChoosenSeats={setChoosenSeats} />
                   <Button
                     disabled={
                       (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) ||
                       allocateTicketByControlNumber.isPending
                     }
                     onClick={validate}
-                    className=" max-w-fit"
+                    className=" max-w-fit mt-5"
                   >
-                    Reserve Tickets
+                    Reserve Seats
                   </Button>
+                </>
+              </TabsContent>
+              <TabsContent value="controlNumber">
+                <>
+                  <div className="flex flex-col gap-3">
+                    <AllocateByControlNumber
+                      unAllocatedTickets={unAllocatedTickets}
+                      controlNumber={controlNumberInput}
+                      setControlNumbers={setControlNumberInput}
+                      error={error.controlNumberError}
+                    />
+
+                    <Button
+                      disabled={
+                        (unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) ||
+                        allocateTicketByControlNumber.isPending
+                      }
+                      onClick={validate}
+                      className=" max-w-fit"
+                    >
+                      Reserve Tickets
+                    </Button>
+                  </div>
+                </>
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          {isChooseDistributor && (
+            <Modal
+              description="Select a distributor whom the ticket will be allocated"
+              className="max-w-4xl"
+              title="Select Distributor"
+              isOpen={isChooseDistributor}
+              onClose={() => setIsChooseDistributor(false)}
+            >
+              <ChooseDistributor
+                closeModal={() => setIsChooseDistributor(false)}
+                selectedDistributor={selectedDistributor}
+                show={showData}
+                onChoose={(dist) => {
+                  setSelectedDistributor(dist);
+                  setError((prev) => ({ ...prev, distributorError: "" }));
+                }}
+              />
+            </Modal>
+          )}
+
+          {isAllocationSummary && (
+            <Modal
+              className="max-w-2xl"
+              title="Allocation Summary"
+              description="Please review the allocation summary first"
+              isOpen={isAllocationSummary}
+              onClose={() => setIsAllocationSummary(false)}
+            >
+              <LongCard className="w-full" label="Ticket">
+                <LongCardItem value={selectedDistributor?.firstName + " " + selectedDistributor?.lastName} label="Distributor Name" />
+                <LongCardItem value={selectedDistributor?.distributor.distributorType + ""} label="Type" />
+                <LongCardItem
+                  value={allocationMethod === "controlNumber" ? parsedControlNumbers?.length + "" : choosenSeats.length}
+                  label={allocationMethod === "controlNumber" ? "Total Tickets" : "Total Seats"}
+                />
+                <LongCardItem
+                  className="!whitespace-normal"
+                  value={
+                    allocationMethod === "controlNumber" ? controlNumberInput : compressSeats(choosenSeats.map((seat) => seat.seatNumber)).join(", ")
+                  }
+                  label={allocationMethod === "controlNumber" ? "Control Numbers" : "Seat Numbers"}
+                />
+              </LongCard>
+
+              {allocationMethod == "seat" && (
+                <div className="mt-3">
+                  <p>
+                    Please provide <span className="font-bold">{choosenSeats.length} tickets </span> to the distributor
+                  </p>
+                  <p>
+                    Ticket Control Numbers to be given:{" "}
+                    <span className="font-bold">{compressControlNumbers(choosenSeats.map((seat) => seat.ticketControlNumber))} control numbers</span>
+                  </p>
                 </div>
-              </>
-            </TabsContent>
-          </Tabs>
-        </div>
+              )}
 
-        {isChooseDistributor && (
-          <Modal
-            description="Select a distributor whom the ticket will be allocated"
-            className="max-w-4xl"
-            title="Select Distributor"
-            isOpen={isChooseDistributor}
-            onClose={() => setIsChooseDistributor(false)}
-          >
-            <ChooseDistributor
-              closeModal={() => setIsChooseDistributor(false)}
-              selectedDistributor={selectedDistributor}
-              show={showData}
-              onChoose={(dist) => {
-                setSelectedDistributor(dist);
-                setError((prev) => ({ ...prev, distributorError: "" }));
-              }}
-            />
-          </Modal>
-        )}
-
-        {isAllocationSummary && (
-          <Modal
-            className="max-w-2xl"
-            title="Allocation Summary"
-            description="Please review the allocation summary first"
-            isOpen={isAllocationSummary}
-            onClose={() => setIsAllocationSummary(false)}
-          >
-            <LongCard className="w-full" label="Ticket">
-              <LongCardItem value={selectedDistributor?.firstName + " " + selectedDistributor?.lastName} label="Distributor Name" />
-              <LongCardItem value={selectedDistributor?.distributor.distributorType.name + ""} label="Type" />
-              <LongCardItem
-                value={allocationMethod === "controlNumber" ? parsedControlNumbers?.length + "" : choosenSeats.length}
-                label={allocationMethod === "controlNumber" ? "Total Tickets" : "Total Seats"}
-              />
-              <LongCardItem
-                className="!whitespace-normal"
-                value={
-                  allocationMethod === "controlNumber" ? controlNumberInput : compressSeats(choosenSeats.map((seat) => seat.seatNumber)).join(", ")
-                }
-                label={allocationMethod === "controlNumber" ? "Control Numbers" : "Seat Numbers"}
-              />
-            </LongCard>
-
-            {allocationMethod == "seat" && (
-              <div className="mt-3">
-                <p>
-                  Please provide <span className="font-bold">{choosenSeats.length} tickets </span> to the distributor
-                </p>
-                <p>
-                  Ticket Control Numbers to be given:{" "}
-                  <span className="font-bold">{compressControlNumbers(choosenSeats.map((seat) => seat.ticketControlNumber))} control numbers</span>
-                </p>
+              <div className="flex justify-end gap-3 mt-5">
+                <Button disabled={allocateTicketByControlNumber.isPending} onClick={() => setIsAllocationSummary(false)} variant="outline">
+                  Cancel
+                </Button>
+                <Button disabled={allocateTicketByControlNumber.isPending} onClick={submit}>
+                  Confirm
+                </Button>
               </div>
-            )}
-
-            <div className="flex justify-end gap-3 mt-5">
-              <Button disabled={allocateTicketByControlNumber.isPending} onClick={() => setIsAllocationSummary(false)} variant="outline">
-                Cancel
-              </Button>
-              <Button disabled={allocateTicketByControlNumber.isPending} onClick={submit}>
-                Confirm
-              </Button>
-            </div>
-          </Modal>
-        )}
-      </div>
+            </Modal>
+          )}
+        </div>
+      )}
     </ContentWrapper>
   );
 };
@@ -317,7 +323,7 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
     data: distributors,
     isLoading: loadingDistributors,
     isError: distributorsError,
-  } = useGetDistributors(show.showType !== "majorProduction" ? show.department?.departmentId : "");
+  } = useGetDistributors({ departmentId: show.showType !== "majorProduction" ? show.department?.departmentId : "" });
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue);
 
@@ -362,7 +368,7 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
             {
               key: "type",
               header: "Type",
-              render: (dist) => dist.distributor.distributorType.name,
+              render: (dist) => dist.distributor.distributorType,
             },
             {
               key: "group",
