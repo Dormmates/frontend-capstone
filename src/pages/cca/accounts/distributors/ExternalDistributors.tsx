@@ -308,7 +308,7 @@ const Distributors = () => {
                   render: (distributor) => (
                     <div className="flex justify-end items-center gap-2">
                       <UnArchiveAccount queryKey="distributors" user={distributor as User} />
-                      <DeleteAccount queryKey="distributors" user={distributor as User} />
+                      {/* <DeleteAccount queryKey="distributors" user={distributor as User} /> */}
                     </div>
                   ),
                 },

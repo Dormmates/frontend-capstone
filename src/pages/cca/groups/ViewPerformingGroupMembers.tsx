@@ -223,7 +223,7 @@ const ViewPerformingGroups = () => {
                             <EditIcon />
                           </Button>
                           <ArchiveAccount queryKey="distributors" user={distributor as User} />
-                          <DeleteAccount queryKey="distributors" user={distributor as User} />
+                          {/* <DeleteAccount queryKey="distributors" user={distributor as User} /> */}
                         </>
                       )}
                     </div>

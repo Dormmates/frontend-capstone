@@ -23,6 +23,16 @@ export const useUpdatePassword = () => {
   });
 };
 
+export const useChangePassword = () => {
+  return useMutation<any, Error, { userId: string; currentPassword: string; newPassword: string }>({
+    mutationFn: async (data: { userId: string; currentPassword: string; newPassword: string }) => {
+      const res = await request<User>("/api/auth/changePassword", data, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
 export const useLogout = () => {
   return useMutation<any, Error, any>({
     mutationFn: async () => {
