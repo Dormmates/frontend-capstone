@@ -11,7 +11,6 @@ import Dropdown from "@/components/Dropdown";
 import InputField from "@/components/InputField";
 import Modal from "@/components/Modal";
 import PaginatedTable from "@/components/PaginatedTable";
-import DeleteAccount from "../DeleteAccount";
 import ArchiveAccount from "../ArchiveAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
 import { Link } from "react-router-dom";
@@ -154,7 +153,7 @@ const Distributors = () => {
                         <EditIcon />
                       </Button>
                       <ArchiveAccount queryKey="distributors" user={distributor as User} />
-                      <DeleteAccount queryKey="distributors" user={distributor as User} />
+                      {/* <DeleteAccount queryKey="distributors" user={distributor as User} /> */}
                     </>
                   )}
                 </div>

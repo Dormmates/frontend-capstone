@@ -13,7 +13,6 @@ import Modal from "@/components/Modal";
 import AlertModal from "@/components/AlertModal";
 import PaginatedTable from "@/components/PaginatedTable";
 import ArchiveAccount from "../ArchiveAccount";
-import DeleteAccount from "../DeleteAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
 import { useAuthContext } from "@/context/AuthContext";
 import { toast } from "sonner";
@@ -160,7 +159,7 @@ const Trainers = () => {
                         }
                       />
                       <ArchiveAccount user={trainer as User} queryKey="trainers" />
-                      <DeleteAccount user={trainer as User} queryKey="trainers" />
+                      {/* <DeleteAccount user={trainer as User} queryKey="trainers" /> */}
                     </div>
                   </div>
                 ),
@@ -290,7 +289,7 @@ const Trainers = () => {
                   render: (trainer) => (
                     <div className="flex justify-end items-center gap-2">
                       <UnArchiveAccount user={trainer as User} queryKey="trainers" />
-                      <DeleteAccount user={trainer as User} queryKey="trainers" />
+                      {/* <DeleteAccount user={trainer as User} queryKey="trainers" /> */}
                     </div>
                   ),
                 },

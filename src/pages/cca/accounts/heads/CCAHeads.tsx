@@ -7,7 +7,6 @@ import { useAuthContext } from "@/context/AuthContext";
 import { useDebounce } from "@/hooks/useDeabounce";
 import { useMemo, useState } from "react";
 import ArchiveAccount from "../ArchiveAccount";
-import DeleteAccount from "../DeleteAccount";
 import type { User } from "@/types/user";
 import SimpleCard from "@/components/SimpleCard";
 import { Input } from "@/components/ui/input";
@@ -179,7 +178,7 @@ const CCAHeads = () => {
                   render: (trainer) => (
                     <div className="flex justify-end items-center gap-2">
                       <UnArchiveAccount user={trainer as User} queryKey="heads" />
-                      <DeleteAccount user={trainer as User} queryKey="heads" />
+                      {/* <DeleteAccount user={trainer as User} queryKey="heads" /> */}
                     </div>
                   ),
                 },

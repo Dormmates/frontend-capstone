@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 interface Column<T> {
   key: string;
   header: string;
-  render?: (item: T) => React.ReactNode;
+  render?: (item: T, index: number) => React.ReactNode;
   headerClassName?: string;
 }
 
@@ -91,7 +91,7 @@ export function DataTable<T>({
                     </TableCell>
                   )}
                   {columns.map((col) => (
-                    <TableCell key={col.key}>{col.render ? col.render(item) : (item as any)[col.key]}</TableCell>
+                    <TableCell key={col.key}>{col.render ? col.render(item, idx) : (item as any)[col.key]}</TableCell>
                   ))}
                 </TableRow>
               );

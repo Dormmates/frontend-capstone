@@ -11,11 +11,9 @@ import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
 import BulkDistributorCreation from "./BulkDistributorCreation";
 import InputField from "@/components/InputField";
-
 import { toast } from "sonner";
 import PaginatedTable from "@/components/PaginatedTable";
 import ArchiveAccount from "../accounts/ArchiveAccount";
-import DeleteAccount from "../accounts/DeleteAccount";
 import Modal from "@/components/Modal";
 import DistributorForm from "../accounts/distributors/DistributorForm";
 import SimpleCard from "@/components/SimpleCard";
@@ -384,7 +382,7 @@ const ViewPerformingGroups = () => {
                   render: (distributor) => (
                     <div className="flex justify-end items-center gap-2">
                       <UnArchiveAccount queryKey="distributors" user={distributor as User} />
-                      <DeleteAccount queryKey="distributors" user={distributor as User} />
+                      {/* <DeleteAccount queryKey="distributors" user={distributor as User} /> */}
                     </div>
                   ),
                 },

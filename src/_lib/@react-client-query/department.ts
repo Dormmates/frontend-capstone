@@ -1,8 +1,8 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, type UseQueryOptions } from "@tanstack/react-query";
 import { request } from "../api";
 import type { Department } from "../../types/department";
 
-export const useGetDepartments = (trainerId?: string | null) => {
+export const useGetDepartments = (trainerId?: string | null, options?: Omit<UseQueryOptions<Department[], Error>, "queryKey" | "queryFn">) => {
   return useQuery<Department[], Error>({
     queryKey: ["departments", trainerId].filter(Boolean),
     queryFn: async () => {
@@ -10,6 +10,7 @@ export const useGetDepartments = (trainerId?: string | null) => {
       return res.data;
     },
     retry: false,
+    ...options,
   });
 };
 
