@@ -1,6 +1,6 @@
 import { useGetTopDistributors } from "@/_lib/@react-client-query/dashboard";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthContext } from "@/context/AuthContext";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -8,6 +8,7 @@ import { DataTable } from "@/components/DataTable";
 import { formatCurrency } from "@/utils";
 import top1Icon from "@/assets/icons/top1.png";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
+import { Link } from "react-router-dom";
 
 type TopDistributorsProps = {
   isHead: boolean;
@@ -44,7 +45,7 @@ const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) =
   }
 
   return (
-    <Card className="max-w-2xl">
+    <Card>
       <CardHeader>
         <CardTitle>
           <div className="flex justify-between items-center">
@@ -63,7 +64,21 @@ const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) =
               {
                 key: "rank",
                 header: "Rank",
-                render: (_, index) => index + 1,
+                render: (_, index) => (
+                  <span
+                    className={`font-semibold ${
+                      index === 0
+                        ? "text-primary font-bold text-2xl"
+                        : index === 1
+                        ? "text-orange-400 font-medium text-xl"
+                        : index === 2
+                        ? "text-amber-700 text-lg"
+                        : ""
+                    }`}
+                  >
+                    {index + 1}
+                  </span>
+                ),
               },
               {
                 key: "name",
@@ -160,9 +175,17 @@ const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) =
                                     <p className="font-medium">{formatCurrency(sched.commission)}</p>
                                   </div>
 
-                                  <div className="col-span-2">
+                                  <div>
                                     <p className="text-muted-foreground">Sales</p>
                                     <p className="font-medium">{formatCurrency(sched.net)}</p>
+                                  </div>
+
+                                  <div className="">
+                                    <Link to={`/shows/schedule/${show.showId}/${sched.scheduleId}/d&r/${distributor.userId}`}>
+                                      <Button size="sm" variant="secondary">
+                                        Open
+                                      </Button>
+                                    </Link>
                                   </div>
                                 </div>
                               ))}
@@ -178,6 +201,16 @@ const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) =
           />
         )}
       </CardContent>
+      <CardFooter>
+        {topDistributors && topDistributors.length > 0 ? (
+          <p className="text-sm text-muted-foreground">
+            <strong>{topDistributors[0].fullName}</strong> currently leads with {formatCurrency(topDistributors[0].totalNetRevenue)} in total net
+            revenue.
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground">No distributor performance data available.</p>
+        )}
+      </CardFooter>
     </Card>
   );
 };

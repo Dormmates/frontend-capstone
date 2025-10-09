@@ -9,6 +9,8 @@ import { useGetDepartments } from "@/_lib/@react-client-query/department";
 import Dropdown from "@/components/Dropdown";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import KPISummary from "./KPISummary";
+import UpcomingShows from "./UpcomingShows";
 
 const CCADashboard = () => {
   const { user } = useAuthContext();
@@ -30,38 +32,54 @@ const CCADashboard = () => {
 
   return (
     <ContentWrapper>
-      <h1 className="text-3xl">
-        Welcome, {user?.firstName} {user?.lastName}
-      </h1>
-      {isHead && !errorDepartments && (
-        <Dropdown onChange={(value) => setSelectedDepartment(value)} value={selectedDepartment} items={departmentOptions} />
-      )}
+      <div className="flex items-center justify-between mb-10">
+        <h1 className="text-3xl">
+          Welcome, {user?.firstName} {user?.lastName}
+        </h1>
+        {isHead && !errorDepartments && (
+          <Dropdown onChange={(value) => setSelectedDepartment(value)} value={selectedDepartment} items={departmentOptions} />
+        )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <p>{!isHead && user?.department && user.department.name} Top Shows </p>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="tickets">
-            <TabsList>
-              <TabsTrigger value="tickets">By Sold Tickets</TabsTrigger>
-              <TabsTrigger value="revenue">By Total Revenue</TabsTrigger>
-            </TabsList>
-            <TabsContent value="tickets">
-              <TopShowsByTicketsSold isHead={isHead} selectedDepartment={selectedDepartment} />
-            </TabsContent>
-            <TabsContent value="revenue">
-              <TopShowsByTotalRevenue isHead={isHead} selectedDepartment={selectedDepartment} />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+        {!isHead && <div className="font-bold">{user?.department?.name}</div>}
+      </div>
 
-      <TopDistributors isHead={isHead} selectedDepartment={selectedDepartment} />
+      <div className="flex gap-5 flex-col">
+        <section className="space-y-2">
+          <h2 className="text-xl font-semibold">Performance Overview</h2>
+          <p className="text-sm text-muted-foreground">Overview of active shows, schedules, and department performance.</p>
+          <KPISummary isHead={isHead} selectedDepartment={selectedDepartment} />
+        </section>
 
-      <TopShowsByGenre />
+        <UpcomingShows isHead={isHead} selectedDepartment={selectedDepartment} />
+
+        <div className="grid gap-5 lg:grid-cols-2">
+          <TopDistributors isHead={isHead} selectedDepartment={selectedDepartment} />
+
+          <Card className="h-fit">
+            <CardHeader>
+              <CardTitle>
+                <p>{!isHead && user?.department && user.department.name} Top Shows </p>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="tickets">
+                <TabsList>
+                  <TabsTrigger value="tickets">By Sold Tickets</TabsTrigger>
+                  <TabsTrigger value="revenue">By Total Revenue</TabsTrigger>
+                </TabsList>
+                <TabsContent value="tickets">
+                  <TopShowsByTicketsSold isHead={isHead} selectedDepartment={selectedDepartment} />
+                </TabsContent>
+                <TabsContent value="revenue">
+                  <TopShowsByTotalRevenue isHead={isHead} selectedDepartment={selectedDepartment} />
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </div>
+
+        <TopShowsByGenre isHead={isHead} selectedDepartment={selectedDepartment} />
+      </div>
     </ContentWrapper>
   );
 };

@@ -45,6 +45,41 @@ interface TopShowByTotalRevenue {
   totalTickets: number;
 }
 
+export interface TopGenres {
+  genre: string;
+  shows: {
+    department: string;
+    showId: string;
+    title: string;
+    totalCommission: number;
+    totalRevenue: number;
+    totalTickets: number;
+    showType: ShowType;
+  }[];
+  totalCommission: number;
+  totalRevenue: number;
+  totalTickets: number;
+}
+
+interface KPISummary {
+  closedSchedules: number;
+  openSchedules: number;
+  totalDepartments: number;
+  totalDistributors: number;
+  totalShows: number;
+  upcomingShows: number;
+}
+
+interface UpcomingShows {
+  department: string;
+  earliestSchedule: string;
+  genres: string[];
+  showId: string;
+  showType: ShowType;
+  title: string;
+  totalUpcomingSchedules: number;
+}
+
 export const useGetTopShowsByTicketsSold = (query?: { departmentId?: string }) => {
   return useQuery<TopShowByTicketsSold[], Error>({
     queryKey: ["dashboard", "ticketsSold", query?.departmentId].filter(Boolean),
@@ -68,10 +103,10 @@ export const useGetTopShowsByTotalRevenue = (query?: { departmentId?: string }) 
 };
 
 export const useGetTopGenres = (query?: { departmentId?: string }) => {
-  return useQuery<any, Error>({
+  return useQuery<TopGenres[], Error>({
     queryKey: ["dashboard", "genre", query?.departmentId].filter(Boolean),
     queryFn: async () => {
-      const res = await request<any>("/api/dashboard/top-shows/genre", query, "get");
+      const res = await request<TopGenres[]>("/api/dashboard/top-shows/genre", query, "get");
       return res.data;
     },
     retry: false,
@@ -83,6 +118,28 @@ export const useGetTopDistributors = (query?: { departmentId?: string }) => {
     queryKey: ["dashboard", "distributors", query?.departmentId].filter(Boolean),
     queryFn: async () => {
       const res = await request<TopDistributors[]>("/api/dashboard/top-distributors", query, "get");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useGetKPISummary = (query?: { departmentId?: string }) => {
+  return useQuery<KPISummary, Error>({
+    queryKey: ["dashboard", "kpi", query?.departmentId].filter(Boolean),
+    queryFn: async () => {
+      const res = await request<KPISummary>("/api/dashboard/kpi", query, "get");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useGetUpcomingShows = (query?: { departmentId?: string; daysAhead: number }) => {
+  return useQuery<UpcomingShows[], Error>({
+    queryKey: ["dashboard", "upcoming", "shows", query?.departmentId, query?.daysAhead].filter(Boolean),
+    queryFn: async () => {
+      const res = await request<UpcomingShows[]>("/api/dashboard/upcoming/shows", query, "get");
       return res.data;
     },
     retry: false,

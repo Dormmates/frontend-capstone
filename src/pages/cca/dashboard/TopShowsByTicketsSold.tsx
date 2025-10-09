@@ -1,5 +1,5 @@
 import { useGetTopShowsByTicketsSold } from "@/_lib/@react-client-query/dashboard";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -97,6 +97,13 @@ const TopShowsByTicketsSold = ({ isHead, selectedDepartment }: TopShowsByTickets
           </ChartContainer>
         )}
       </CardContent>
+      <CardFooter>
+        {topShows && topShows.length > 0 && (
+          <p className="text-sm text-muted-foreground mt-2">
+            <strong>{topShows[0].showTitle}</strong> leads with {topShows[0].soldTickets.toLocaleString()} tickets sold.
+          </p>
+        )}
+      </CardFooter>
     </Card>
   );
 };
