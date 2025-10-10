@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDebounce } from "@/hooks/useDeabounce";
 import { ContentWrapper } from "@/components/layout/Wrapper";
-import { EditIcon, Users } from "lucide-react";
+import { EditIcon, MailIcon, NavigationIcon, PhoneIcon, Users } from "lucide-react";
 import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
 import BulkDistributorCreation from "./BulkDistributorCreation";
@@ -42,6 +42,7 @@ const ViewPerformingGroups = () => {
   const [isAddDistributor, setIsAddDistributor] = useState(false);
   const [selectedDistributor, setSelectedDistributor] = useState<Distributor | null>(null);
   const [selectedDistributors, setSelectedDistributors] = useState<Distributor[]>([]);
+  const [selectedLetter, setSelectedLetter] = useState("All");
   const [showArchived, setShowArchived] = useState(false);
 
   const [searchValue, setSearchValue] = useState("");
@@ -57,16 +58,26 @@ const ViewPerformingGroups = () => {
     return distributors.filter((distributor) => distributor.isArchived);
   }, [distributors]);
 
+  const letters = useMemo(() => {
+    if (!distributors) return [];
+    return [...new Set(activeDistributors.map((d) => d.lastName.charAt(0).toUpperCase()))].sort();
+  }, [activeDistributors]);
+
+  const filteredDistributors = useMemo(() => {
+    if (selectedLetter == "All") return activeDistributors;
+    return activeDistributors.filter((d) => d.lastName.charAt(0) == selectedLetter);
+  }, [selectedLetter, activeDistributors]);
+
   const searchedDistributors = useMemo(() => {
-    if (!activeDistributors) return [];
-    return activeDistributors.filter((distributor) => {
+    if (!filteredDistributors) return [];
+    return filteredDistributors.filter((distributor) => {
       const l = distributor.lastName.toLocaleLowerCase().trim();
       const f = distributor.firstName.toLocaleLowerCase().trim();
       const s = searchValue.toLocaleLowerCase().trim();
 
       return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
     });
-  }, [debouncedSearch, activeDistributors]);
+  }, [debouncedSearch, filteredDistributors]);
 
   const groupOptions = useMemo(() => {
     if (!departments || !user) return [];
@@ -89,6 +100,17 @@ const ViewPerformingGroups = () => {
 
     return [];
   }, [departments, user]);
+
+  const handleSelect = (distributor: Distributor) => {
+    setSelectedDistributors((prev) => {
+      const isSelected = prev.some((d) => d.userId === distributor.userId);
+      if (isSelected) {
+        return prev.filter((d) => d.userId !== distributor.userId);
+      } else {
+        return [...prev, distributor];
+      }
+    });
+  };
 
   if (loadingDistributors || loadingDepartments) {
     return <h1>Loaddingg..</h1>;
@@ -113,7 +135,7 @@ const ViewPerformingGroups = () => {
       ) : (
         <>
           <div className="flex justify-between mt-10">
-            <SimpleCard icon={<Users size={18} />} label="Total Members" value={searchedDistributors.length} />
+            <SimpleCard icon={<Users size={18} />} label="Total Members" value={activeDistributors.length} />
 
             {(user?.department || user?.roles.includes("head")) && (
               <div className="self-end flex gap-2">
@@ -158,6 +180,19 @@ const ViewPerformingGroups = () => {
               <InputField className="w-full" onChange={(e) => setSearchValue(e.target.value)} value={searchValue} placeholder="Search by  Name" />
             </div>
 
+            <div className="flex gap-2 flex-wrap">
+              <Button variant={selectedLetter === "All" ? "default" : "outline"} size="sm" onClick={() => setSelectedLetter("All")}>
+                All
+              </Button>
+
+              {letters.map((letter) => (
+                <Button key={letter} variant={selectedLetter === letter ? "default" : "outline"} size="sm" onClick={() => setSelectedLetter(letter)}>
+                  {letter}
+                </Button>
+              ))}
+            </div>
+
+            <p className="text-sm">Total : {searchedDistributors.length}</p>
             {selectedDistributors.length !== 0 && (
               <div className="flex flex-col gap-2 m-0">
                 <p className="text-sm font-medium">Selected Member: {selectedDistributors.length}</p>
@@ -165,14 +200,71 @@ const ViewPerformingGroups = () => {
                   <Button variant="secondary" onClick={() => toast.info("This feature will come soon", { position: "top-center" })}>
                     Archive Selected Member
                   </Button>
-                  <Button variant="secondary" onClick={() => toast.info("This feature will come soon", { position: "top-center" })}>
+                  {/* <Button variant="secondary" onClick={() => toast.info("This feature will come soon", { position: "top-center" })}>
                     Delete Selected Member
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             )}
 
-            <PaginatedTable
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+              {searchedDistributors.map((distributor) => {
+                const isChecked = selectedDistributors.some((d) => d.userId === distributor.userId);
+
+                return (
+                  <div
+                    onClick={() => handleSelect(distributor)}
+                    className={`p-5 border rounded-md shadow-sm font-medium cursor-pointer hover:shadow-xl ${
+                      isChecked ? "border-primary shadow-primary shadow-lg" : ""
+                    }`}
+                    key={distributor.userId}
+                  >
+                    <div className="flex justify-between items-center">
+                      <p className="text-2xl mb-2 break-words">
+                        {distributor.lastName}, {distributor.firstName}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-1 text-muted-foreground font-semibold text-sm">
+                      <MailIcon className="w-4 h-4" />
+                      <p>{distributor.email}</p>
+                    </div>
+                    <div className="flex items-center gap-1 text-muted-foreground font-semibold text-sm">
+                      <PhoneIcon className="w-4 h-4" />
+                      <p>{distributor.distributor.contactNumber}</p>
+                    </div>
+
+                    <div className="flex justify-start items-center gap-2 mt-5 flex-wrap">
+                      {(user?.roles.includes("head") || user?.department) && (
+                        <>
+                          <Button
+                            variant="secondary"
+                            onClick={(e) => {
+                              e.stopPropagation(); // 👈 prevents parent click
+                              setSelectedDistributor(distributor);
+                            }}
+                          >
+                            <EditIcon />
+                          </Button>
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <ArchiveAccount queryKey="distributors" user={distributor as User} />
+                          </div>
+                        </>
+                      )}
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <Link to={`/manage/distributors/${distributor.userId}`}>
+                          <Button variant="outline">
+                            <NavigationIcon />
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* <PaginatedTable
               itemsPerPage={10}
               selectable
               onSelectionChange={(selectedDistributors) => {
@@ -183,7 +275,7 @@ const ViewPerformingGroups = () => {
                 {
                   key: "name",
                   header: "Full Name",
-                  render: (distributor) => distributor.firstName + " " + distributor.lastName,
+                  render: (distributor) => distributor.lastName + ", " + distributor.firstName,
                 },
                 {
                   key: "email",
@@ -221,14 +313,14 @@ const ViewPerformingGroups = () => {
                             <EditIcon />
                           </Button>
                           <ArchiveAccount queryKey="distributors" user={distributor as User} />
-                          {/* <DeleteAccount queryKey="distributors" user={distributor as User} /> */}
+                          <DeleteAccount queryKey="distributors" user={distributor as User} />
                         </>
                       )}
                     </div>
                   ),
                 },
               ]}
-            />
+            /> */}
           </div>
         </>
       )}
