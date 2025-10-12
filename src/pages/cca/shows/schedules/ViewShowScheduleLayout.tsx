@@ -6,11 +6,16 @@ import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import { CircleAlertIcon, InfoIcon } from "lucide-react";
 import NotFound from "@/components/NotFound";
+import { useEffect } from "react";
 
 const ViewShowScheduleLayout = () => {
   const { showId, scheduleId } = useParams();
   const { data: show, isLoading: loadingShow, isError: errorShow } = useGetShow(showId as string);
   const { data: schedule, isLoading: scheduleLoading, isError: errorSchedule } = useGetScheduleInformation(scheduleId as string);
+
+  useEffect(() => {
+    document.title = `${show?.title} - ${formatToReadableDate(schedule?.datetime + "")}`;
+  }, [schedule, show]);
 
   const links = [
     { name: "Summary", path: "" },

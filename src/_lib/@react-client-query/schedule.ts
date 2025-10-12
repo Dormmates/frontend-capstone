@@ -3,7 +3,7 @@ import { request } from "../api";
 
 import type { ScheduleFormData, Schedule, ScheduleSummary, DistributorTicketActivities } from "../../types/schedule";
 import type { FlattenedSeat } from "../../types/seat";
-import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket } from "../../types/ticket";
+import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket, TicketStatuses } from "../../types/ticket";
 import type { TicketPricing } from "@/types/ticketpricing";
 
 export interface AddSchedulePayload extends ScheduleFormData {
@@ -144,6 +144,36 @@ export const useGetScheduleDistributors = (scheduleId: string) => {
           distributorType: string;
         }[]
       >(`/api/schedule/distributors/${scheduleId}`, {}, "get");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useGetDistributorsForAllocation = (scheduleId: string, departmentId: string) => {
+  return useQuery<
+    {
+      userId: string;
+      firstName: string;
+      lastName: string;
+      department: string;
+      distributorType: string;
+      tickets: { controlNumber: number; status: TicketStatuses }[];
+    }[],
+    Error
+  >({
+    queryKey: ["schedule", "distributors", "allocation"],
+    queryFn: async () => {
+      const res = await request<
+        {
+          userId: string;
+          firstName: string;
+          lastName: string;
+          department: string;
+          distributorType: string;
+          tickets: { controlNumber: number; status: TicketStatuses }[];
+        }[]
+      >(`/api/schedule/distributors/${scheduleId}/allocation`, { departmentId }, "get");
       return res.data;
     },
     retry: false,

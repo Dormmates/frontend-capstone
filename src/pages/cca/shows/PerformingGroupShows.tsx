@@ -1,7 +1,7 @@
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { Link } from "react-router-dom";
 import { useGetShows } from "@/_lib/@react-client-query/show.ts";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGetDepartments } from "@/_lib/@react-client-query/department.ts";
 import type { Department } from "@/types/department.ts";
 import { useAuthContext } from "@/context/AuthContext.tsx";
@@ -46,6 +46,10 @@ const PerformingGroupShows = () => {
   const { data: shows, isLoading: showsLoading } = useGetShows({
     departmentId,
   });
+
+  useEffect(() => {
+    document.title = `${!user.roles.includes("head") ? user.department?.name : "Performing Group"} Shows`;
+  }, []);
 
   const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments();
 

@@ -65,6 +65,10 @@ const ViewShow = () => {
     setSchedules(showSchedules);
   }, [showSchedules]);
 
+  useEffect(() => {
+    document.title = `${show?.title}`;
+  }, [show]);
+
   const handleCloseSchedule = (scheduleId: string) => {
     toast.promise(
       closeSchedule.mutateAsync(scheduleId).then(() => {

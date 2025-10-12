@@ -4,13 +4,14 @@ import TopShowsByTicketsSold from "./TopShowsByTicketsSold";
 import TopShowsByTotalRevenue from "./TopShowsByTotalRevenue";
 import TopShowsByGenre from "./TopShowsByGenre";
 import TopDistributors from "./TopDistributors";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGetDepartments } from "@/_lib/@react-client-query/department";
 import Dropdown from "@/components/Dropdown";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KPISummary from "./KPISummary";
 import UpcomingShows from "./UpcomingShows";
+import noData from "@/assets/images/no-data.png";
 
 const CCADashboard = () => {
   const { user } = useAuthContext();
@@ -26,8 +27,32 @@ const CCADashboard = () => {
     return [{ name: "All Departments", value: "all" }, ...options];
   }, [departments]);
 
+  useEffect(() => {
+    document.title = `SLU CCA - Dashboard | ${user?.firstName} ${user?.lastName}`;
+  }, []);
+
   if (loadingDepartments) {
     return <h1>Loading..</h1>;
+  }
+
+  if (!user?.roles.includes("head") && !user?.department) {
+    return (
+      <ContentWrapper>
+        <h1 className="text-3xl">
+          Welcome, {user?.firstName} {user?.lastName}
+        </h1>
+
+        <div className="flex flex-col mt-10 items-center">
+          <div className="mb-6 text-2xl text-muted-foreground text-center max-w-[700px]">
+            It looks like you don’t have a performing group assigned yet. If you think this is an error, please contact your CCA Head to get assigned.
+          </div>
+
+          <div className="flex justify-center">
+            <img className="max-w-[450px] w-full" src={noData} alt="No performing group assigned" />
+          </div>
+        </div>
+      </ContentWrapper>
+    );
   }
 
   return (

@@ -20,7 +20,7 @@ const UnArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
       position: "top-center",
       loading: "Unarchiving user...",
       success: () => {
-        queryClient.invalidateQueries({ queryKey: [queryKey], exact: true });
+        queryClient.invalidateQueries({ queryKey: [queryKey] });
         close();
         return "User Unarchived";
       },
@@ -37,7 +37,7 @@ const UnArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
           <ArchiveIcon />
         </Button>
       }
-      title="Archive User"
+      title="Unarchive User"
       description="This will unarchive the user and move the user from the main list"
     >
       <div>{user.firstName + " " + user.lastName}</div>

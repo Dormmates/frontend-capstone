@@ -15,6 +15,7 @@ import { Label } from "./ui/label";
 import { Link } from "react-router-dom";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import type { Notification } from "@/types/notification";
+import { formatCurrency } from "@/utils";
 
 const iconMap: Record<string, JSX.Element> = {
   createShow: <PlusCircle size={24} />,
@@ -136,9 +137,9 @@ const NotificationContent = () => {
                 <Button variant="link" className="w-full p-3 text-left flex flex-col items-start mt-4" onClick={() => handleRead(notification)}>
                   <div className="flex justify-between items-start w-full">
                     <div className="flex flex-col">
-                      <p className={`${textColor} font-semibold flex gap-2 items-center`}>
+                      <p className={`${textColor} font-semibold flex gap-2 items-center `}>
                         {iconMap[notification.type]}
-                        {notification.title}
+                        <p className={`break-words truncate max-w-[250px]`}>{notification.title}</p>
                       </p>
                       <p className={`${textColor} text-sm`}>
                         {formatToReadableDate(notification.sentAt)} {formatToReadableTime(notification.sentAt)}
@@ -164,6 +165,34 @@ const NotificationContent = () => {
                     <Link to={`/shows/schedule/${notification.metaData.showId}/${notification.metaData.scheduleId}/#logs`}>
                       <Button>View Detailed Log</Button>
                     </Link>
+                  )}
+
+                  {notification.type === "remitTicket" && notification.metaData?.amountRemitted && notification.metaData?.totalCommission && (
+                    <div className="flex flex-col text-sm text-foreground">
+                      <p>Total Remitted: {formatCurrency(Number(notification.metaData.amountRemitted))}</p>
+                      <p>Total Commission: {formatCurrency(Number(notification.metaData.totalCommission))}</p>
+                      {notification.metaData?.remarks && (
+                        <p className="break-words flex flex-col">
+                          <span>Remarks:</span>
+                          <span>
+                            "<span className="font-medium">{notification.metaData.remarks}</span>"
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {notification.type === "unremitTicket" && (
+                    <div className="flex flex-col text-sm text-foreground">
+                      {notification.metaData?.remarks && (
+                        <p className="break-words flex flex-col">
+                          <span>Remarks:</span>
+                          <span>
+                            "<span className="font-medium">{notification.metaData.remarks}</span>"
+                          </span>
+                        </p>
+                      )}
+                    </div>
                   )}
                 </div>
               </PopoverContent>

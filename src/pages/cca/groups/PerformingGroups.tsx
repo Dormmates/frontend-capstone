@@ -50,6 +50,10 @@ const PerformingGroups = () => {
     setEditGroup({ name: selectedGroup?.name as string, imagePreview: selectedGroup?.logoUrl as string, image: null as File | null });
   }, [selectedGroup]);
 
+  useEffect(() => {
+    document.title = `CCA Performing Groups`;
+  }, []);
+
   const validateGroup = (group: typeof newGroup, isNew: boolean) => {
     const newErrors: typeof errors = {};
     const name = group.name?.trim() ?? "";
@@ -356,6 +360,7 @@ const AssignTrainer = ({
 
     return trainers
       .filter((t) => !t.department)
+      .filter((t) => !t.isArchived)
       .map((t) => ({
         name: t.userId === user?.userId ? `(You) ${t.firstName} ${t.lastName}` : `${t.firstName} ${t.lastName}`,
         value: t.userId,

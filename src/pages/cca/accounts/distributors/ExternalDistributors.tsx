@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
 import { useEditDistributor, useGetDistributors, useNewDistributor } from "@/_lib/@react-client-query/accounts.ts";
@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { EditIcon, Users } from "lucide-react";
 import { useAuthContext } from "@/context/AuthContext";
+import DeleteAccount from "../DeleteAccount";
 
 const Distributors = () => {
   const { user } = useAuthContext();
@@ -55,6 +56,10 @@ const Distributors = () => {
       return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
     });
   }, [debouncedSearch, activeDistributors, type]);
+
+  useEffect(() => {
+    document.title = `External Distributors`;
+  }, []);
 
   if (loadingDistributors) {
     return <h1>Loaddingg..</h1>;
@@ -307,7 +312,7 @@ const Distributors = () => {
                   render: (distributor) => (
                     <div className="flex justify-end items-center gap-2">
                       <UnArchiveAccount queryKey="distributors" user={distributor as User} />
-                      {/* <DeleteAccount queryKey="distributors" user={distributor as User} /> */}
+                      <DeleteAccount queryKey="distributors" user={distributor as User} />
                     </div>
                   ),
                 },

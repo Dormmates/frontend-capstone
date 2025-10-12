@@ -1,6 +1,6 @@
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useEditTrainer, useGetTrainers, useNewTrainer } from "@/_lib/@react-client-query/accounts.ts";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
 import { useGetDepartments, useRemoveDepartmentTrainerByTrainerId } from "@/_lib/@react-client-query/department.ts";
 import { useQueryClient } from "@tanstack/react-query";
@@ -74,6 +74,10 @@ const Trainers = () => {
       error: (err) => err.message || "Failed to remove trainer",
     });
   };
+
+  useEffect(() => {
+    document.title = `SLU CCA Trainers`;
+  }, []);
 
   if (loadingTrainers || loadingDepartments) {
     return <h1>Loading..</h1>;

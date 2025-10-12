@@ -5,12 +5,16 @@ import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import LongCard from "@/components/LongCard";
 import LongCardItem from "@/components/LongCardItem";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
-import { useAllocateTicketByControlNumber, useGetScheduleInformation, useGetScheduleTickets } from "@/_lib/@react-client-query/schedule.ts";
-import type { Distributor } from "@/types/user.ts";
+import {
+  useAllocateTicketByControlNumber,
+  useGetDistributorsForAllocation,
+  useGetScheduleInformation,
+  useGetScheduleTickets,
+} from "@/_lib/@react-client-query/schedule.ts";
+import { distributorTypeOptions } from "@/types/user.ts";
 import AllocateByControlNumber from "./AllocateByControlNumber";
 import AllocatedBySeat from "./AllocatedBySeat";
 import type { ShowData } from "@/types/show.ts";
-import { useGetDistributors } from "@/_lib/@react-client-query/accounts.ts";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import { compressControlNumbers, parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
@@ -26,6 +30,7 @@ import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { compressSeats } from "@/utils/seatmap";
 import NotFound from "@/components/NotFound";
+import Dropdown from "@/components/Dropdown";
 
 const TicketAllocation = () => {
   const { user } = useAuthContext();
@@ -43,7 +48,12 @@ const TicketAllocation = () => {
   const allocateTicketByControlNumber = useAllocateTicketByControlNumber();
   const queryClient = useQueryClient();
 
-  const [selectedDistributor, setSelectedDistributor] = useState<Distributor | null>(null);
+  const [selectedDistributor, setSelectedDistributor] = useState<{
+    userId: string;
+    firstName: string;
+    lastName: string;
+    distributorType: string;
+  } | null>(null);
   const [isChooseDistributor, setIsChooseDistributor] = useState(false);
   const [allocationMethod, setAllocationMethod] = useState("controlNumber");
   const [controlNumberInput, setControlNumberInput] = useState("");
@@ -195,8 +205,11 @@ const TicketAllocation = () => {
             <Label>Allocation Method</Label>
             <Tabs value={allocationMethod} onValueChange={(value) => setAllocationMethod(value)}>
               <TabsList>
-                {schedule.seatingType === "controlledSeating" && <TabsTrigger value="seat">By Seat Map</TabsTrigger>}
-                <TabsTrigger value="controlNumber">By Control Number</TabsTrigger>
+                {schedule.seatingType === "controlledSeating" ? (
+                  <TabsTrigger value="seat">By Seat Map</TabsTrigger>
+                ) : (
+                  <TabsTrigger value="controlNumber">By Control Number</TabsTrigger>
+                )}
               </TabsList>
               <TabsContent value="seat">
                 <>
@@ -248,6 +261,8 @@ const TicketAllocation = () => {
               onClose={() => setIsChooseDistributor(false)}
             >
               <ChooseDistributor
+                scheduleId={scheduleId as string}
+                departmentId={showData.showType !== "majorProduction" ? showData.department?.departmentId ?? "" : ""}
                 closeModal={() => setIsChooseDistributor(false)}
                 selectedDistributor={selectedDistributor}
                 show={showData}
@@ -269,7 +284,7 @@ const TicketAllocation = () => {
             >
               <LongCard className="w-full" label="Ticket">
                 <LongCardItem value={selectedDistributor?.firstName + " " + selectedDistributor?.lastName} label="Distributor Name" />
-                <LongCardItem value={selectedDistributor?.distributor.distributorType + ""} label="Type" />
+                <LongCardItem value={selectedDistributor?.distributorType + ""} label="Type" />
                 <LongCardItem
                   value={allocationMethod === "controlNumber" ? parsedControlNumbers?.length + "" : choosenSeats.length}
                   label={allocationMethod === "controlNumber" ? "Total Tickets" : "Total Seats"}
@@ -312,34 +327,37 @@ const TicketAllocation = () => {
 };
 
 type ChooseDistributorProps = {
-  selectedDistributor: Distributor | null;
+  selectedDistributor: { userId: string; firstName: string; lastName: string; distributorType: string } | null;
   show: ShowData;
   closeModal: () => void;
-  onChoose: (dist: Distributor) => void;
+  onChoose: (dist: { userId: string; firstName: string; lastName: string; distributorType: string }) => void;
+  scheduleId: string;
+  departmentId: string;
 };
 
-const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: ChooseDistributorProps) => {
+const ChooseDistributor = ({ onChoose, selectedDistributor, closeModal, scheduleId, departmentId }: ChooseDistributorProps) => {
   const {
     data: distributors,
     isLoading: loadingDistributors,
     isError: distributorsError,
-  } = useGetDistributors({ departmentId: show.showType !== "majorProduction" ? show.department?.departmentId : "", includeOtherTypes: true });
+  } = useGetDistributorsForAllocation(scheduleId, departmentId);
   const [searchValue, setSearchValue] = useState("");
+  const [selectedType, setSelectedType] = useState("cca");
   const debouncedSearch = useDebounce(searchValue);
 
-  const activeDistributors = useMemo(() => {
-    if (!distributors) return [];
-    return distributors.filter((d) => !d.isArchived);
-  }, [distributors]);
-
   const searchedDistributors = useMemo(() => {
-    if (!activeDistributors) return [];
+    if (!distributors) return [];
 
-    return activeDistributors.filter((dist) => {
-      const fullName = dist.firstName + " " + dist.lastName;
-      return fullName.trim().includes(searchValue.trim());
+    const search = debouncedSearch.trim().toLowerCase();
+
+    return distributors.filter((dist) => {
+      const fullName = `${dist.firstName} ${dist.lastName}`.toLowerCase();
+      const matchesName = fullName.includes(search);
+      const matchesType = selectedType ? dist.distributorType === selectedType : true;
+
+      return matchesName && matchesType;
     });
-  }, [debouncedSearch, activeDistributors]);
+  }, [debouncedSearch, selectedType, distributors]);
 
   if (loadingDistributors) {
     return <h1>Loading...</h1>;
@@ -351,10 +369,15 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
 
   return (
     <div className="flex flex-col gap-6">
-      <InputField placeholder="Search Distributor by Name" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+      <div className="flex items-center gap-4">
+        <div className="w-full max-w-[300px]">
+          <InputField placeholder="Search Distributor by Name" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+        </div>
+        <Dropdown value={selectedType} items={distributorTypeOptions} onChange={(value) => setSelectedType(value)} />
+      </div>
       <div>
         <p className="mb-3 text-sm">
-          Total Distributors: <span className="font-bold">{activeDistributors.length}</span>
+          Total Distributors: <span className="font-bold">{searchedDistributors.length}</span>
         </p>
 
         <PaginatedTable
@@ -366,19 +389,29 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
               render: (dist) => (
                 <div className="flex gap-2 items-center">
                   {selectedDistributor?.userId === dist.userId && <div className="w-3 h-3 rounded-full bg-green"></div>}
-                  {dist.firstName + " " + dist.lastName}
+                  {dist.lastName + ", " + dist.firstName}
                 </div>
               ),
             },
             {
               key: "type",
               header: "Type",
-              render: (dist) => dist.distributor.distributorType,
+              render: (dist) => distributorTypeOptions.find((d) => d.value === dist.distributorType)?.name,
             },
             {
               key: "group",
               header: "Performing Group",
-              render: (dist) => (dist.distributor.department ? dist.distributor.department.name : "No Group"),
+              render: (dist) => dist.department,
+            },
+            {
+              key: "current",
+              header: "Tickets Allocated",
+              render: (dist) => (
+                <div className="flex items-center gap-2">
+                  <p>{dist.tickets.length}</p>
+                  {dist.tickets.length !== 0 && <p>[{compressControlNumbers(dist.tickets.map((t) => t.controlNumber))}]</p>}
+                </div>
+              ),
             },
             {
               key: "action",
@@ -389,7 +422,7 @@ const ChooseDistributor = ({ show, onChoose, selectedDistributor, closeModal }: 
                   <Button
                     disabled={selectedDistributor?.userId === dist.userId}
                     onClick={() => {
-                      onChoose(dist);
+                      onChoose({ userId: dist.userId, firstName: dist.firstName, lastName: dist.lastName, distributorType: dist.distributorType });
                       closeModal();
                       toast.info(`Selected: ${dist.firstName + " " + dist.lastName}`, { position: "top-center" });
                     }}

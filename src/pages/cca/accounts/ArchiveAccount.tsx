@@ -21,7 +21,7 @@ const ArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
       position: "top-center",
       loading: "Archiving user...",
       success: () => {
-        queryClient.invalidateQueries({ queryKey: [queryKey], exact: true });
+        queryClient.invalidateQueries({ queryKey: [queryKey] });
         return "User Archived ";
       },
       error: (err) => err.message || "Failed to archive user",

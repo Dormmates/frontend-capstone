@@ -275,14 +275,14 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
                   <Checkbox checked={inludes.lost} onCheckedChange={(val) => setIncludes((prev) => ({ ...prev, lost: val === true }))} id="lost" />
                   <Label htmlFor="lost">Have Lost Tickets?</Label>
                 </div>
-                <div className="flex items-center gap-2">
+                {/* <div className="flex items-center gap-2">
                   <Checkbox
                     checked={inludes.discounted}
                     onCheckedChange={(val) => setIncludes((prev) => ({ ...prev, discounted: val === true }))}
                     id="discounted"
                   />
                   <Label htmlFor="discounted">Have Discounted Tickets?</Label>
-                </div>
+                </div> */}
               </div>
 
               {inludes.lost && (
@@ -292,7 +292,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
                   name="lost"
                   value={form.lost}
                   onChange={handleInput}
-                  label="Enter any ticket control number lost by Distributor (Optional)"
+                  label="Enter any ticket control number lost by Distributor"
                 />
               )}
 
@@ -304,7 +304,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
                     name="discounted"
                     value={form.discounted}
                     onChange={handleInput}
-                    label="Ticket control number discounted  (Optional)"
+                    label="Ticket control number discounted"
                   />
                   <InputField
                     disabled={remit.isPending}

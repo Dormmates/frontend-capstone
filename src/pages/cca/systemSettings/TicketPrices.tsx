@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { useQueryClient } from "@tanstack/react-query";
-import { AlertCircleIcon, CirclePlusIcon } from "lucide-react";
+import { AlertCircleIcon, CirclePlusIcon, TriangleAlertIcon } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -55,6 +55,11 @@ const TicketPrices = () => {
             }
             description="Choose a pricing type below. Fixed pricing applies a single price for all seats, while Sectioned pricing allows you to set different prices per seating section."
           >
+            <div className="flex items-center gap-2 mb-3 text-yellow-700 text-sm bg-yellow-50 border border-yellow-200 rounded-md p-2">
+              <TriangleAlertIcon className="w-4 h-4" />
+              <p className="font-bold">Note: </p>
+              <p>You cannot edit the the pricing once created</p>
+            </div>
             <Tabs>
               <TabsList>
                 <TabsTrigger value="fixed">New Fixed Pricing</TabsTrigger>
@@ -77,42 +82,44 @@ const TicketPrices = () => {
           {ticketPrices.length == 0 ? (
             <div className="flex items-center justify-center">No Ticket Prices Yet</div>
           ) : (
-            <Tabs defaultValue="fixed">
-              <TabsList>
-                <TabsTrigger value="fixed">Fixed Prices</TabsTrigger>
-                <TabsTrigger value="sectioned">Sectioned Prices</TabsTrigger>
-              </TabsList>
-              <TabsContent value="fixed">
-                {fixedPrices.length == 0 ? (
-                  <div className="border h-28 my-5 rounded-md shadow-sm flex justify-center items-center font-bold">
-                    <p className="flex items-center gap-2">
-                      <AlertCircleIcon /> No Fixed Prices Yet
-                    </p>
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap gap-3 my-5">
-                    {fixedPrices.map((t, index) => (
-                      <FixedPrice key={index} data={t} />
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-              <TabsContent value="sectioned">
-                {sectionedPrices.length == 0 ? (
-                  <div className="border h-28 my-5 rounded-md shadow-sm flex justify-center items-center font-bold">
-                    <p className="flex items-center gap-2">
-                      <AlertCircleIcon /> No Sectioned Prices Yet
-                    </p>
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap gap-3 my-5">
-                    {sectionedPrices.map((t, index) => (
-                      <SectionedPrice key={index} data={t} />
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-            </Tabs>
+            <>
+              <Tabs defaultValue="fixed">
+                <TabsList>
+                  <TabsTrigger value="fixed">Fixed Prices</TabsTrigger>
+                  <TabsTrigger value="sectioned">Sectioned Prices</TabsTrigger>
+                </TabsList>
+                <TabsContent value="fixed">
+                  {fixedPrices.length == 0 ? (
+                    <div className="border h-28 my-5 rounded-md shadow-sm flex justify-center items-center font-bold">
+                      <p className="flex items-center gap-2">
+                        <AlertCircleIcon /> No Fixed Prices Yet
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-3 my-5">
+                      {fixedPrices.map((t, index) => (
+                        <FixedPrice key={index} data={t} />
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+                <TabsContent value="sectioned">
+                  {sectionedPrices.length == 0 ? (
+                    <div className="border h-28 my-5 rounded-md shadow-sm flex justify-center items-center font-bold">
+                      <p className="flex items-center gap-2">
+                        <AlertCircleIcon /> No Sectioned Prices Yet
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-3 my-5">
+                      {sectionedPrices.map((t, index) => (
+                        <SectionedPrice key={index} data={t} />
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
+            </>
           )}
         </CardContent>
       </CardHeader>
@@ -149,8 +156,6 @@ const NewFixedPricing = ({ closeModal }: { closeModal: () => void }) => {
       newErrors.fee = "Commission Fee should be a non-negative value";
       isValid = false;
     }
-
-    console.log(data);
 
     if (Number(data.fee) >= Number(data.price)) {
       newErrors.fee = "Commission fee should be less than Ticket Price";

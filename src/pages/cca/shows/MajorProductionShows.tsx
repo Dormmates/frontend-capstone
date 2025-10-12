@@ -1,6 +1,6 @@
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { Link } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuthContext } from "@/context/AuthContext.tsx";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
 import type { ShowData } from "@/types/show.ts";
@@ -41,6 +41,10 @@ const MajorProductionShows = () => {
       return matchTitle;
     });
   }, [activeShows, debouncedSearch]);
+
+  useEffect(() => {
+    document.title = `Major Production Shows`;
+  }, []);
 
   if (showsLoading) return <h1>Loading...</h1>;
   if (!shows || !user) return <h1>Error: No shows fetched.</h1>;

@@ -52,6 +52,10 @@ const AddSchedule = () => {
     }
   }, [navigate, data]);
 
+  useEffect(() => {
+    document.title = `${data?.title} - Add Schedule`;
+  }, [data]);
+
   const [selectedPrice, setSelectedPrice] = useState<TicketPricing | null>(null);
 
   const [openScheduleSummary, setOpenScheduleSummary] = useState(false);

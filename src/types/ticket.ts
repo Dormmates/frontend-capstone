@@ -1,7 +1,7 @@
 import type { SeatingConfiguration } from "./schedule";
 import type { SeatSection } from "./seat";
 
-type TicketStatuses = "sold" | "lost" | "not_allocated" | "allocated";
+export type TicketStatuses = "sold" | "lost" | "not_allocated" | "allocated";
 type TicketSection = "orchestra" | "balcony";
 
 export interface Ticket {

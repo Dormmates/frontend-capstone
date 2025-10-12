@@ -70,7 +70,7 @@ const ScheduleDistributorAndRemittances = () => {
             {
               key: "type",
               header: "Type",
-              render: (dist) => dist.distributorType,
+              render: (dist) => dist.distributorType.toUpperCase(),
             },
             {
               key: "group",

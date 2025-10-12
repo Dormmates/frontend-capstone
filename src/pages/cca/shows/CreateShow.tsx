@@ -28,6 +28,10 @@ const CreateShow = () => {
     }
   }, [params, navigate]);
 
+  useEffect(() => {
+    document.title = `Create New Show - ${type?.toUpperCase()}`;
+  }, [params]);
+
   const type = params.get("showType");
 
   return (

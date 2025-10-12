@@ -1,5 +1,5 @@
 import { PageWrapper, ContentWrapper } from "../../components/layout/Wrapper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLogin } from "@/_lib/@react-client-query/auth.ts";
 import { useAuthContext } from "../../context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,10 @@ const CCALogin = () => {
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    document.title = `SLU CCA - Login`;
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

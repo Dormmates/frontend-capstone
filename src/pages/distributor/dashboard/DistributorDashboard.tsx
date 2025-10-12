@@ -31,7 +31,7 @@ const DistributorDashboard = () => {
     if (!data) return { allocatedTickets: 0, soldTickets: 0, unsoldTickets: 0 };
 
     const allocatedTickets = data.reduce((acc, cur) => acc + cur.tickets.length, 0);
-    const soldTickets = data.reduce((acc, cur) => acc + cur.tickets.filter((ticket) => ticket.status === "sold").length, 0);
+    const soldTickets = data.reduce((acc, cur) => acc + cur.tickets.filter((ticket) => ticket.status === "sold" || ticket.isRemitted).length, 0);
     const unsoldTickets = allocatedTickets - soldTickets;
 
     return { allocatedTickets, soldTickets, unsoldTickets };

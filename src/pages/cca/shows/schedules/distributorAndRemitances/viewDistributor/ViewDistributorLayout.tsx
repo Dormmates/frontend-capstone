@@ -132,14 +132,15 @@ const ViewDistributorLayout = () => {
         <h1 className="text-2xl">{distributorName}</h1>
         <div className="flex gap-3 items-center">
           {/* <Button className="!bg-green">Allocate Ticket</Button> */}
-          <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnallocateTicket(true)} variant="destructive">
-            Unallocate Ticket
-          </Button>
+
           <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsRemitTicket(true)} className="bg-primary">
             Remit Tickets
           </Button>
-          <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnRemitTicket(true)}>
+          <Button variant="secondary" disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnRemitTicket(true)}>
             Unremit Tickets
+          </Button>
+          <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnallocateTicket(true)} variant="outline">
+            Unallocate Ticket
           </Button>
         </div>
         <div className="flex flex-col gap-5">
@@ -205,37 +206,43 @@ const ViewDistributorLayout = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ChartContainer config={remittanceChartConfig} className="mx-auto aspect-square max-h-[250px]">
-                  <PieChart>
-                    <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-                    <Pie
-                      data={remittanceChartData}
-                      dataKey="value"
-                      nameKey="name"
-                      innerRadius={60}
-                      strokeWidth={5}
-                      activeIndex={0}
-                      activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => <Sector {...props} outerRadius={outerRadius + 10} />}
-                    >
-                      <Label
-                        content={({ viewBox }) => {
-                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                            return (
-                              <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
-                                <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
-                                  {summary.soldTickets}
-                                </tspan>
-                                <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
-                                  Total Sold Tickets
-                                </tspan>
-                              </text>
-                            );
-                          }
-                        }}
-                      />
-                    </Pie>
-                  </PieChart>
-                </ChartContainer>
+                {remittanceChartData.every((s) => s.value == 0) ? (
+                  <div className="flex items-center justify-center border rounded-md  h-[250px] text-muted-foreground">
+                    Distributor have no remittance data
+                  </div>
+                ) : (
+                  <ChartContainer config={remittanceChartConfig} className="mx-auto aspect-square max-h-[250px]">
+                    <PieChart>
+                      <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                      <Pie
+                        data={remittanceChartData}
+                        dataKey="value"
+                        nameKey="name"
+                        innerRadius={60}
+                        strokeWidth={5}
+                        activeIndex={0}
+                        activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => <Sector {...props} outerRadius={outerRadius + 10} />}
+                      >
+                        <Label
+                          content={({ viewBox }) => {
+                            if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                              return (
+                                <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                                  <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                                    {summary.soldTickets}
+                                  </tspan>
+                                  <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
+                                    Total Sold Tickets
+                                  </tspan>
+                                </text>
+                              );
+                            }
+                          }}
+                        />
+                      </Pie>
+                    </PieChart>
+                  </ChartContainer>
+                )}
               </CardContent>
             </Card>
           </div>

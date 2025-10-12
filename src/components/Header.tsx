@@ -5,8 +5,10 @@ import NotificationBell from "./NotificationBell";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { Separator } from "./ui/separator";
 import { SidebarTrigger } from "./ui/sidebar";
+import { useAuthContext } from "@/context/AuthContext";
 
 const Header = () => {
+  const { user } = useAuthContext();
   const isMobile = useIsMobile();
   return (
     <header className="flex border-b border-b-muted p-2 w-full bg-background h-12 items-center">
@@ -22,7 +24,7 @@ const Header = () => {
           <Separator className="h-5" orientation="vertical" />
           <ThemeSwitch />
         </div>
-        <NotificationBell />
+        {(user?.roles.includes("head") || !!user?.department) && <NotificationBell />}
       </ContentWrapper>
     </header>
   );

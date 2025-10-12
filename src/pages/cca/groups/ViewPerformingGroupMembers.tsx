@@ -101,6 +101,10 @@ const ViewPerformingGroups = () => {
     return [];
   }, [departments, user]);
 
+  useEffect(() => {
+    document.title = `${groupOptions.find((t) => t.value === groupId)?.name ?? "Performing Group"} Members`;
+  }, [groupOptions]);
+
   const handleSelect = (distributor: Distributor) => {
     setSelectedDistributors((prev) => {
       const isSelected = prev.some((d) => d.userId === distributor.userId);
@@ -157,9 +161,6 @@ const ViewPerformingGroups = () => {
                           The file should contain exactly <strong>4 columns</strong>:
                           <br />
                           (firstname, lastname, email, contactNumber)
-                        </li>
-                        <li>
-                          After uploading, <strong>select the Performing Group</strong> to assign to all uploaded accounts.
                         </li>
                       </ul>
                     </>
@@ -240,7 +241,7 @@ const ViewPerformingGroups = () => {
                           <Button
                             variant="secondary"
                             onClick={(e) => {
-                              e.stopPropagation(); // 👈 prevents parent click
+                              e.stopPropagation();
                               setSelectedDistributor(distributor);
                             }}
                           >
@@ -263,64 +264,6 @@ const ViewPerformingGroups = () => {
                 );
               })}
             </div>
-
-            {/* <PaginatedTable
-              itemsPerPage={10}
-              selectable
-              onSelectionChange={(selectedDistributors) => {
-                setSelectedDistributors(selectedDistributors);
-              }}
-              data={searchedDistributors}
-              columns={[
-                {
-                  key: "name",
-                  header: "Full Name",
-                  render: (distributor) => distributor.lastName + ", " + distributor.firstName,
-                },
-                {
-                  key: "email",
-                  header: "Email",
-                  render: (distributor) => distributor.email,
-                },
-                {
-                  key: "contact",
-                  header: "Contact Number",
-                  render: (distributor) => distributor.distributor.contactNumber,
-                },
-                {
-                  key: "type",
-                  header: "Distributor Type",
-                  render: () => "CCA Member",
-                },
-                {
-                  key: "group",
-                  header: "Performing Group",
-                  render: (distributor) => distributor.distributor.department?.name ?? "No Department",
-                },
-                {
-                  key: "action",
-                  header: "Actions",
-                  headerClassName: "text-right",
-                  render: (distributor) => (
-                    <div className="flex justify-end items-center gap-2">
-                      <Link to={`/manage/distributors/${distributor.userId}`}>
-                        <Button variant="outline">View Distributor</Button>
-                      </Link>
-
-                      {(user?.roles.includes("head") || user?.department) && (
-                        <>
-                          <Button onClick={() => setSelectedDistributor(distributor)} variant="outline">
-                            <EditIcon />
-                          </Button>
-                          <ArchiveAccount queryKey="distributors" user={distributor as User} />
-                          <DeleteAccount queryKey="distributors" user={distributor as User} />
-                        </>
-                      )}
-                    </div>
-                  ),
-                },
-              ]}
-            /> */}
           </div>
         </>
       )}
@@ -445,7 +388,7 @@ const ViewPerformingGroups = () => {
                 {
                   key: "name",
                   header: "Full Name",
-                  render: (distributor) => distributor.firstName + " " + distributor.lastName,
+                  render: (distributor) => distributor.lastName + ", " + distributor.firstName,
                 },
                 {
                   key: "email",

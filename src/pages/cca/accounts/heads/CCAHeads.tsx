@@ -5,7 +5,7 @@ import PaginatedTable from "@/components/PaginatedTable";
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/context/AuthContext";
 import { useDebounce } from "@/hooks/useDeabounce";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ArchiveAccount from "../ArchiveAccount";
 import type { User } from "@/types/user";
 import SimpleCard from "@/components/SimpleCard";
@@ -48,6 +48,10 @@ const CCAHeads = () => {
       return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
     });
   }, [debouncedSearch, activeCCAHeads]);
+
+  useEffect(() => {
+    document.title = `SLU CCA Heads`;
+  }, []);
 
   if (isLoading) {
     return <h1>Loading...</h1>;

@@ -31,6 +31,11 @@ const BulkDistributorCreation = ({ group }: Props) => {
   const [file, setFile] = useState<File | null>(null);
 
   const [parsedData, setParsedData] = useState<DistributorRow[]>([]);
+  const [summary, setSummary] = useState<{
+    message: string;
+    summary: { name: string; email: string; status: string }[];
+  } | null>(null);
+
   const [isParsing, setIsParsing] = useState(false);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -113,6 +118,7 @@ const BulkDistributorCreation = ({ group }: Props) => {
 
       const validated = validateRows(json);
       setParsedData(validated);
+      setSummary(null);
     } catch (err) {
       console.error("Error parsing file:", err);
       alert("Failed to parse file. Please upload a valid CSV or Excel file.");
@@ -135,7 +141,8 @@ const BulkDistributorCreation = ({ group }: Props) => {
         loading: "Creating Distributors",
         error: (err) => err.message || "Failed to Bulk Create Distributors, please try again later",
         success: (payload) => {
-          alert(JSON.stringify(payload.summary));
+          setSummary(payload);
+          setParsedData([]);
           queryClient.invalidateQueries({ queryKey: ["distributors"] });
           return payload.message;
         },
@@ -241,9 +248,38 @@ const BulkDistributorCreation = ({ group }: Props) => {
       )}
 
       {parsedData.some((data) => data.isValid) && (
-        <Button onClick={handleSubmit} disabled={isParsing || bulkCreate.isPending}>
+        <Button className="mt-5" onClick={handleSubmit} disabled={isParsing || bulkCreate.isPending}>
           Create Account
         </Button>
+      )}
+
+      {summary && (
+        <div className="mt-5">
+          <div className="flex flex-col -gap-2 mb-2">
+            <h1 className="font-medium ">{summary.message}</h1>
+            <p className="text-sm">{summary.summary.length} accounts created</p>
+          </div>
+          <PaginatedTable
+            data={summary.summary}
+            columns={[
+              {
+                key: "name",
+                header: "Name",
+                render: (summary) => summary.name,
+              },
+              {
+                key: "email",
+                header: "Email",
+                render: (summary) => summary.email,
+              },
+              {
+                key: "name",
+                header: "Status",
+                render: (summary) => <span className="text-green">{summary.status.toUpperCase()}</span>,
+              },
+            ]}
+          />
+        </div>
       )}
     </>
   );
