@@ -34,7 +34,7 @@ const ArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
       actionText="Archive Account"
       onConfirm={handleSubmit}
       trigger={
-        <Button variant="outline">
+        <Button size="icon" variant="outline">
           <ArchiveIcon />
         </Button>
       }

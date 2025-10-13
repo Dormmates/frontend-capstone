@@ -18,9 +18,12 @@ const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
   const soldTickets = schedule.tickets.filter((ticket) => ticket.status === "sold");
   const totalSales = soldTickets.reduce((acc, ticket) => acc + Number(ticket.ticketPrice), 0);
   const commission = soldTickets.length * (Number(schedule.commissionFee) || 0);
+  const amountRemitted = schedule.tickets
+    .filter((ticket) => ticket.isRemitted)
+    .reduce((acc, curr) => (acc += curr.ticketPrice - (Number(schedule.commissionFee) || 0)), 0);
   const amountToRemit = totalSales - commission;
 
-  return { totalSales, commission, amountToRemit };
+  return { totalSales, commission, amountToRemit, amountRemitted };
 };
 
 const DistributorDashboard = () => {
@@ -137,14 +140,27 @@ const DistributorDashboard = () => {
               header: "Tickets Allocated",
               render: (schedule) => schedule.tickets.length,
             },
+            // {
+            //   key: "sold",
+            //   header: "Sold Tickets",
+            //   render: (schedule) => schedule.tickets.filter((ticket) => ticket.status === "sold" || ticket.isRemitted).length,
+            // },
             {
-              key: "sold",
-              header: "Sold Tickets",
-              render: (schedule) => schedule.tickets.filter((ticket) => ticket.status === "sold" || ticket.isRemitted).length,
+              key: "remitted",
+              header: "Remitted Tickets",
+              render: (schedule) => schedule.tickets.filter((ticket) => ticket.isRemitted).length,
+            },
+            {
+              key: "amountRemitted",
+              header: "Amount Remitted",
+              render: (schedule) => {
+                const { amountRemitted } = calculateRemittanceAmount(schedule);
+                return formatCurrency(amountRemitted);
+              },
             },
             {
               key: "amount",
-              header: "Amount to be Remitted",
+              header: "Pending Remittance",
               render: (schedule) => {
                 const { amountToRemit } = calculateRemittanceAmount(schedule);
                 return formatCurrency(amountToRemit);

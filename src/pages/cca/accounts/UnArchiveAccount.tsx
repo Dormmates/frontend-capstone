@@ -33,7 +33,7 @@ const UnArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
       actionText="Unarchive Account"
       onConfirm={handleSubmit}
       trigger={
-        <Button variant="outline">
+        <Button size="icon" variant="outline">
           <ArchiveIcon />
         </Button>
       }

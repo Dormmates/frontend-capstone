@@ -99,13 +99,13 @@ const ViewDistributorLayout = () => {
   } satisfies ChartConfig;
 
   const ticketsChartData = [
-    { name: "sold", value: summary.soldTickets, fill: "hsl(var(--chart-4))" },
-    { name: "unsold", value: summary.unsoldTickets, fill: "hsl(var(--chart-1))" },
+    { name: "sold", value: summary.soldTickets, fill: "hsl(122 42.2% 45.8%)" },
+    { name: "unsold", value: summary.unsoldTickets, fill: "hsl(0 54.2% 45.8%)" },
   ];
 
   const remittanceChartData = [
-    { name: "verified", value: summary.remittedTickets, fill: "hsl(var(--chart-4))" },
-    { name: "pending", value: summary.pendingRemittance, fill: "hsl(var(--chart-1))" },
+    { name: "verified", value: summary.remittedTickets, fill: "hsl(122 42.2% 45.8%)" },
+    { name: "pending", value: summary.pendingRemittance, fill: "hsl(0 54.2% 45.8%)" },
   ];
 
   if (isLoading) {
@@ -268,6 +268,7 @@ const ViewDistributorLayout = () => {
 
       {isUnallocateTicket && (
         <Modal
+          className="max-w-5xl max-h-[98%] overflow-auto"
           description={`Distributor: ${distributorName}`}
           title="Unallocate Ticket"
           isOpen={isUnallocateTicket}
@@ -310,13 +311,23 @@ const ViewDistributorLayout = () => {
       )}
 
       {isRemitTicket && (
-        <Modal className="max-w-2xl" title="Remit Ticket Sales" isOpen={isRemitTicket} onClose={() => setIsRemitTicket(false)}>
+        <Modal
+          className="max-w-5xl max-h-[98%] overflow-auto"
+          title="Remit Ticket Sales"
+          isOpen={isRemitTicket}
+          onClose={() => setIsRemitTicket(false)}
+        >
           <RemitTickets closeRemit={() => setIsRemitTicket(false)} distributorData={data} />
         </Modal>
       )}
 
       {isUnRemitTicket && (
-        <Modal className="max-w-2xl" title="Unremit Ticket Sales" isOpen={isUnRemitTicket} onClose={() => setIsUnRemitTicket(false)}>
+        <Modal
+          className="max-w-5xl max-h-[98%] overflow-auto"
+          title="Unremit Ticket Sales"
+          isOpen={isUnRemitTicket}
+          onClose={() => setIsUnRemitTicket(false)}
+        >
           <UnRemitTickets distributorData={data} closeModal={() => setIsUnRemitTicket(false)} />
         </Modal>
       )}

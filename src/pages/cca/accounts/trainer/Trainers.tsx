@@ -16,7 +16,7 @@ import ArchiveAccount from "../ArchiveAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
 import { useAuthContext } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { Users, UserX2Icon } from "lucide-react";
+import { EditIcon, Users, UserX2Icon } from "lucide-react";
 
 const Trainers = () => {
   const { user } = useAuthContext();
@@ -138,8 +138,8 @@ const Trainers = () => {
                   <p></p>
                 ) : (
                   <div className="flex justify-end items-center gap-2">
-                    <Button onClick={() => setSelectedTrainer(trainer)} variant="outline">
-                      Edit Details
+                    <Button onClick={() => setSelectedTrainer(trainer)} variant="secondary">
+                      <EditIcon />
                     </Button>
                     <div className="flex items-center gap-2">
                       <AlertModal
@@ -149,6 +149,7 @@ const Trainers = () => {
                         tooltip="Remove Trainer Assignment"
                         trigger={
                           <Button
+                            size="icon"
                             variant="outline"
                             onClick={() =>
                               setUnassignTrainer({

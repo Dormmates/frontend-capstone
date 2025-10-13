@@ -32,7 +32,7 @@ const Breadcrumbs = ({ items, backHref }: BreadcrumbsProps) => {
     <Breadcrumb>
       <BreadcrumbList className="flex items-center gap-2">
         <BreadcrumbItem>
-          <Button variant="outline" size="sm" onClick={handleBack} className="flex items-center gap-1 px-2">
+          <Button variant="outline" size="icon" onClick={handleBack} className="flex items-center gap-1">
             <ChevronLeft className="w-4 h-4" />
           </Button>
         </BreadcrumbItem>

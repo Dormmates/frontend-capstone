@@ -34,7 +34,7 @@ const FixedPrice = ({ data, hideAction = false }: { data: FixedPricing; hideActi
         </Button> */}
         {!hideAction && (
           <AlertModal
-            description="Are you sure you want to delete this? It will not affect any schedules currently using this price."
+            description="Are you sure you want to delete this? The operation won't continue if this pricing is used by a schedule/s already."
             title={`Delete "${data.priceName}" price`}
             onConfirm={() => {
               toast.promise(deletePrice.mutateAsync(data.id), {
@@ -52,7 +52,7 @@ const FixedPrice = ({ data, hideAction = false }: { data: FixedPricing; hideActi
             }}
             confirmation="Delete"
             trigger={
-              <Button variant="outline">
+              <Button size="icon" variant="outline">
                 <Trash2Icon className="text-red" />
               </Button>
             }

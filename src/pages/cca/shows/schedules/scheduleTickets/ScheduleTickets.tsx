@@ -27,8 +27,7 @@ import { Settings2Icon } from "lucide-react";
 const statusOptions = [
   { name: "All Status", value: "all" },
   { name: "Sold", value: "sold" },
-  { name: "Not Allocated", value: "not_allocated" },
-  { name: "Allocated", value: "allocated" },
+  { name: "Unsold", value: "unsold" },
 ];
 
 const sectionOptions = [
@@ -54,9 +53,8 @@ const ScheduleTickets = () => {
     return tickets.filter((ticket) => {
       const matchStatus =
         filterValues.status === "all" ||
-        (filterValues.status === "sold" && ticket.isRemitted) ||
-        (filterValues.status === "allocated" && ticket.status === "allocated") ||
-        (filterValues.status === "not_allocated" && ticket.status !== "allocated");
+        (filterValues.status === "unsold" && !ticket.isRemitted) ||
+        (filterValues.status === "sold" && ticket.isRemitted);
 
       const matchSection =
         filterValues.section === "all" ||
@@ -64,10 +62,13 @@ const ScheduleTickets = () => {
         ticket.ticketSection === filterValues.section;
 
       const matchControlNumber =
-        !filterValues.controlNumber || filterValues.controlNumber == "all" || String(ticket.controlNumber) === filterValues.controlNumber.trim();
+        !filterValues.controlNumber ||
+        filterValues.controlNumber === "all" ||
+        String(ticket.controlNumber).trim() === filterValues.controlNumber.trim();
+
       return matchStatus && matchSection && matchControlNumber;
     });
-  }, [tickets, filterValues.section, filterValues.status, debouncedSearch]);
+  }, [tickets, filterValues.section, filterValues.status, filterValues.controlNumber, debouncedSearch]);
 
   const paginatedTicket = useMemo(() => {
     const start = (page - 1) * ITEMS_PER_PAGE;
@@ -293,11 +294,7 @@ const ScheduleTickets = () => {
               header: "Seat Section",
               render: (ticket) => ticket.ticketSection?.toUpperCase() ?? "Complimentary Seat",
             },
-            {
-              key: "section",
-              header: "Seat Section",
-              render: (ticket) => ticket.ticketSection?.toUpperCase() ?? "Complimentary Seat",
-            },
+
             ...(schedule.seatingType === "controlledSeating"
               ? [
                   {

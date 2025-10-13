@@ -44,7 +44,7 @@ const ArchiveShow = ({ show }: ArchiveShowProps) => {
       title="Archive Show"
       description="This will move this show on the archive list"
       trigger={
-        <Button disabled={archiveShow.isPending} variant="outline">
+        <Button size="icon" disabled={archiveShow.isPending} variant="outline">
           <ArchiveIcon />
         </Button>
       }

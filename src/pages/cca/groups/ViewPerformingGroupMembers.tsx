@@ -239,6 +239,7 @@ const ViewPerformingGroups = () => {
                       {(user?.roles.includes("head") || user?.department) && (
                         <>
                           <Button
+                            size="icon"
                             variant="secondary"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -254,7 +255,7 @@ const ViewPerformingGroups = () => {
                       )}
                       <div onClick={(e) => e.stopPropagation()}>
                         <Link to={`/manage/distributors/${distributor.userId}`}>
-                          <Button variant="outline">
+                          <Button size="icon" variant="outline">
                             <NavigationIcon />
                           </Button>
                         </Link>

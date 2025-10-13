@@ -210,16 +210,18 @@ const PerformingGroups = () => {
                   render: (department) => (
                     <div className="flex justify-end items-center gap-2">
                       <Link to={`/performing-groups/${department.departmentId}`}>
-                        <Button variant="secondary">Manage Members</Button>
+                        <Button>Manage Members</Button>
                       </Link>
 
                       {user.roles.includes("head") && (
                         <>
-                          <Button onClick={() => setSelectedGroup(department)} variant="outline">
+                          <Button size="icon" onClick={() => setSelectedGroup(department)} variant="secondary">
                             <EditIcon />
                           </Button>
 
                           <Button
+                            size="icon"
+                            variant="outline"
                             onClick={() => {
                               setIsAssignTrainer(department);
                             }}
@@ -229,7 +231,7 @@ const PerformingGroups = () => {
 
                           <AlertModal
                             trigger={
-                              <Button disabled={department.totalShows !== 0 || department.totalMembers !== 0} variant="destructive">
+                              <Button size="icon" disabled={department.totalShows !== 0 || department.totalMembers !== 0} variant="destructive">
                                 <Trash2Icon />
                               </Button>
                             }

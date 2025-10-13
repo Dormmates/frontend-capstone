@@ -332,15 +332,13 @@ const ViewShow = () => {
                   headerClassName: "text-right",
                   render: (schedule) => (
                     <div className="flex gap-2 justify-end items-center ">
-                      <div className="relative group">
-                        <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
-                          <Button>Go To Schedule</Button>
-                        </Link>
-                      </div>
+                      <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
+                        <Button>Go To Schedule</Button>
+                      </Link>
 
                       <DropdownMenu>
                         <DropdownMenuTrigger disabled={show.isArchived}>
-                          <Button disabled={show.isArchived} variant="outline">
+                          <Button size="icon" disabled={show.isArchived} variant="outline">
                             <Settings2Icon />
                           </Button>
                         </DropdownMenuTrigger>
@@ -371,7 +369,7 @@ const ViewShow = () => {
                         onConfirm={() => handleDeleteSchedule(schedule.scheduleId)}
                         title="Delete Schedule"
                         trigger={
-                          <Button disabled={show.isArchived} variant="destructive">
+                          <Button size="icon" disabled={show.isArchived} variant="destructive">
                             <Trash2Icon />
                           </Button>
                         }

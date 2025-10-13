@@ -42,7 +42,7 @@ const DeleteShow = ({ show }: DeleteShowProps) => {
       title="Delete Show"
       actionText="Delete"
       trigger={
-        <Button disabled={deleteShow.isPending} variant="destructive">
+        <Button size="icon" disabled={deleteShow.isPending} variant="destructive">
           <Trash2Icon />
         </Button>
       }

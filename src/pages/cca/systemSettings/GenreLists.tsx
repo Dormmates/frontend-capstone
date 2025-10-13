@@ -66,7 +66,7 @@ const GenreLists = () => {
                       title="Delete Genre"
                       description="This will permanently remove the selected genre from the system. You can only delete genres that are not currently assigned to any shows."
                       trigger={
-                        <Button disabled={genre.showCount > 0} variant="outline">
+                        <Button size="icon" disabled={genre.showCount > 0} variant="outline">
                           <Trash2Icon className="text-red" />
                         </Button>
                       }
@@ -118,7 +118,7 @@ const EditGenre = ({ genre }: { genre: string }) => {
       title={`Change Name of Genre "${genre}"`}
       description="Rename this genre. This change will be reflected anywhere this genre is displayed."
       triggerElement={
-        <Button variant="outline">
+        <Button size="icon" variant="outline">
           <EditIcon />
         </Button>
       }

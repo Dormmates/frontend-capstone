@@ -3,16 +3,12 @@ import type { Schedule } from "@/types/schedule.ts";
 import LongCard from "@/components/LongCard";
 import LongCardItem from "@/components/LongCardItem";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
-import ControlNumberInputTutorial from "@/components/ControlNumberInputTutorial";
 import { useState } from "react";
-import { compressControlNumbers, parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
+import { compressControlNumbers } from "@/utils/controlNumber.ts";
 import { Button } from "@/components/ui/button";
-import InputField from "@/components/InputField";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import Modal from "@/components/Modal";
-import { toast } from "sonner";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { CircleQuestionMarkIcon } from "lucide-react";
+import ControlNumberGrid from "@/components/ControlNumberGrid";
 
 type Props = {
   distributorName: string;
@@ -25,41 +21,15 @@ type Props = {
 };
 
 const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbersAllocated, schedule, disabled }: Props) => {
-  const [input, setInput] = useState("");
-  const [error, setError] = useState("");
-  const [controlNumbers, setControlNumbers] = useState<number[] | []>([]);
+  const [selectedControlNumbers, setSelectedControlNumbers] = useState<number[]>([]);
   const [openSummary, setOpenSummary] = useState(false);
 
   const handleSubmit = () => {
-    if (!validateControlInput(input)) {
-      setError("Invalid Control Number Input");
-      toast.error("Invalid Control Number Input", { position: "top-center" });
-      return;
-    }
-
-    try {
-      const controlNumbers = parseControlNumbers(input);
-      const allExist = controlNumbers.every((num) => controlNumbersAllocated.includes(num));
-
-      if (!allExist) {
-        setError("One or more control numbers are not in the allocated list.");
-        toast.error("One or more control numbers are not in the allocated list.", { position: "top-center" });
-        return;
-      }
-
-      setError("");
-      setControlNumbers(controlNumbers);
-      setOpenSummary(true);
-    } catch (err) {
-      if (err instanceof Error) {
-        toast.error(err.message, { position: "top-center" });
-        setError(err.message);
-      }
-    }
+    setOpenSummary(true);
   };
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 ">
       <LongCard className="w-full" label="Show Details">
         <LongCardItem label="Show Title" value={show.title} />
         <LongCardItem label="Date" value={formatToReadableDate(schedule.datetime + "")} />
@@ -69,30 +39,14 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
       <Card className="border border-lightGrey rounded-md ">
         {controlNumbersAllocated.length != 0 ? (
           <>
-            <CardContent>
-              <p className="text-sm font-bold my-5 max-w-[450px]">
-                Control Numbers available for unallocation: <span className="font-normal">{compressControlNumbers(controlNumbersAllocated)}</span>
-              </p>
-              <InputField
-                error={error}
-                label={
-                  <div className="flex items-center gap-2">
-                    <p>Enter Ticket Control Number to be Unallocated</p>
-                    <HoverCard openDelay={0} closeDelay={200}>
-                      <HoverCardTrigger>
-                        <CircleQuestionMarkIcon className="w-4 text-muted-foreground " />
-                      </HoverCardTrigger>
-                      <HoverCardContent className="p-0">
-                        <ControlNumberInputTutorial className="border-none" />
-                      </HoverCardContent>
-                    </HoverCard>
-                  </div>
-                }
-                disabled={disabled}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
+            <div className="p-5">
+              <p className=" text-sm mb-4">Click Control Numbers to be Unallocated</p>
+              <ControlNumberGrid
+                selectedControlNumbers={selectedControlNumbers}
+                setSelectedControlNumbers={setSelectedControlNumbers}
+                tickets={controlNumbersAllocated}
               />
-            </CardContent>
+            </div>
           </>
         ) : (
           <p className="text-center font-bold my-5">
@@ -107,7 +61,7 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
           <Button disabled={disabled} onClick={close} variant="outline">
             Cancel
           </Button>
-          <Button disabled={input.length == 0 || !input || disabled || controlNumbersAllocated.length === 0} onClick={handleSubmit}>
+          <Button disabled={selectedControlNumbers.length == 0 || disabled || controlNumbersAllocated.length === 0} onClick={handleSubmit}>
             Unallocate Tickets
           </Button>
         </div>
@@ -123,14 +77,14 @@ const UnallocateTicket = ({ distributorName, close, onSubmit, show, controlNumbe
         >
           <LongCard className="w-full" label="Ticket">
             <LongCardItem label="Distributor Name" value={distributorName} />
-            <LongCardItem label="Total Tickets " value={controlNumbers.length} />
-            <LongCardItem label="Ticket Control Numbers" value={compressControlNumbers(controlNumbers)} />
+            <LongCardItem label="Total Tickets " value={selectedControlNumbers.length} />
+            <LongCardItem label="Ticket Control Numbers" value={compressControlNumbers(selectedControlNumbers)} />
           </LongCard>
           <div className="flex justify-end gap-3 mt-5">
             <Button disabled={disabled} onClick={() => setOpenSummary(false)} variant="outline">
               Cancel
             </Button>
-            <Button disabled={input.length == 0 || !input || disabled} onClick={() => onSubmit(controlNumbers)}>
+            <Button disabled={selectedControlNumbers.length == 0 || disabled} onClick={() => onSubmit(selectedControlNumbers)}>
               Confirm
             </Button>
           </div>

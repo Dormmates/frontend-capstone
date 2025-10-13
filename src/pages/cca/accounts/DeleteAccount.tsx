@@ -34,7 +34,7 @@ const DeleteAccount = ({ user, queryKey }: DeleteAccountProps) => {
       actionText="Delete User"
       onConfirm={handleSubmit}
       trigger={
-        <Button variant="destructive">
+        <Button size="icon" variant="destructive">
           <Trash2Icon />
         </Button>
       }

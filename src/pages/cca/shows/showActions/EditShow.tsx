@@ -23,7 +23,7 @@ const EditShow = ({ show }: EditShowProps) => {
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       triggerElement={
-        <Button variant="outline">
+        <Button size="icon" variant="secondary">
           <EditIcon />
         </Button>
       }

@@ -70,60 +70,6 @@ const ScheduleSummary = () => {
     <>
       <h1 className="text-2xl">Schedule Summary</h1>
 
-      {/* <Card>
-        <CardHeader>
-          <CardTitle>Schedule Information Overview</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col md:flex-row gap-2">
-          <div className="flex flex-col gap-2">
-            <p>Show Title: {show.title}</p>
-            <p>
-              Schedule: {formatToReadableDate(schedule.datetime + "")} at {formatToReadableTime(schedule.datetime + "")}
-            </p>
-            <p>Seating Type: {schedule.seatingType}</p>
-          </div>
-
-          <div>
-            {summary.schedulePrices?.ticketPrice && (
-              <FixedPrice
-                data={
-                  {
-                    id: "asv",
-                    type: "fixed",
-                    priceName: "Ticket Price",
-                    commisionFee: schedule.commissionFee,
-                    fixedPrice: summary.schedulePrices.ticketPrice,
-                  } as FixedPricing
-                }
-                hideAction={true}
-              />
-            )}
-
-            {summary.schedulePrices?.ticketPricesBySection && (
-              <SectionedPrice
-                data={
-                  {
-                    id: "njkasvnjasv",
-                    type: "sectioned",
-                    sectionPrices: {
-                      orchestraLeft: summary.schedulePrices.ticketPricesBySection.orchestraLeft,
-                      orchestraMiddle: summary.schedulePrices.ticketPricesBySection.orchestraMiddle | 0,
-                      orchestraRight: summary.schedulePrices.ticketPricesBySection.orchestraRight,
-                      balconyLeft: summary.schedulePrices.ticketPricesBySection.balconyLeft,
-                      balconyMiddle: summary.schedulePrices.ticketPricesBySection.balconyMiddle,
-                      balconyRight: summary.schedulePrices.ticketPricesBySection.balconyRight,
-                    },
-                    priceName: "Ticket Price",
-                    commisionFee: schedule.commissionFee,
-                  } as SectionedPricing
-                }
-                hideAction={true}
-              />
-            )}
-          </div>
-        </CardContent>
-      </Card> */}
-
       <Card>
         <CardHeader>
           <CardTitle>Sales Progress ({((summary.salesSummary.current / summary.salesSummary.expected) * 100).toFixed(2)}%)</CardTitle>
@@ -161,7 +107,7 @@ const ScheduleSummary = () => {
                   <ChartContainer config={ticketsChartDataConfig} className="[&_.recharts-text]:fill-background mx-auto aspect-square h-[300px]">
                     <PieChart>
                       <ChartTooltip content={<ChartTooltipContent nameKey="value" hideLabel />} />
-                      <Pie data={ticketsChartData} dataKey="value">
+                      <Pie data={ticketsChartData.filter((t) => t.value !== 0)} dataKey="value">
                         <LabelList
                           dataKey="ticket"
                           className="fill-background"
@@ -191,8 +137,8 @@ const ScheduleSummary = () => {
                         tickFormatter={(value) => String(value).toUpperCase()}
                       />
                       <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dashed" />} />
-                      <Bar dataKey="sold" fill="hsl(var(--chart-1))" radius={4} minPointSize={3} />
-                      <Bar dataKey="unsold" fill="hsl(var(--chart-2))" radius={4} minPointSize={3} />
+                      <Bar dataKey="sold" fill="hsl(122 42.2% 45.8%)" radius={4} minPointSize={3} />
+                      <Bar dataKey="unsold" fill="hsl(0 54.2% 45.8%)" radius={4} minPointSize={3} />
                     </BarChart>
                   </ChartContainer>
                 </CardContent>
