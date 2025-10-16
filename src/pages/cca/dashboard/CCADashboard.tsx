@@ -39,7 +39,7 @@ const CCADashboard = () => {
     return (
       <ContentWrapper>
         <h1 className="text-3xl">
-          Welcome, {user?.firstName} {user?.lastName}
+          Welcome, {user?.firstName} {user?.lastName} {selectedDepartment}
         </h1>
 
         <div className="flex flex-col mt-10 items-center">
@@ -57,7 +57,7 @@ const CCADashboard = () => {
 
   return (
     <ContentWrapper>
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex flex-col items-start gap-3 mb-5 md:flex-row md:justify-between md:items-center">
         <h1 className="text-3xl">
           Welcome, {user?.firstName} {user?.lastName}
         </h1>
@@ -65,7 +65,18 @@ const CCADashboard = () => {
           <Dropdown onChange={(value) => setSelectedDepartment(value)} value={selectedDepartment} items={departmentOptions} />
         )}
 
-        {!isHead && <div className="font-bold">{user?.department?.name}</div>}
+        {!isHead && (
+          <div className="font-bold flex flex-row-reverse items-center gap-2">
+            <div>{user?.department?.name}</div>
+            <div className="aspect-square max-w-[400px]">
+              <img
+                className="w-full h-full object-cover"
+                src={departments?.find((d) => d.departmentId === user.department?.departmentId)?.logoUrl}
+                alt=""
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-5 flex-col">

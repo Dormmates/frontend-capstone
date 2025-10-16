@@ -1,12 +1,16 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
+
 import CCALayout from "../pages/cca/CCALayout";
 import DistributorLayout from "../pages/distributor/DistributorLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
 import NotFound from "../pages/NotFound";
+
 import DistributorDashboard from "../pages/distributor/dashboard/DistributorDashboard";
 import DistributorHistory from "../pages/distributor/history/DistributorHistory";
+import DistributorHistoryMenu from "@/pages/distributor/history/DistributorHistoryMenu";
+import DistributorShowHistory from "@/pages/distributor/history/DistributorShowHistory";
 
 import {
   CCAHeads,
@@ -36,12 +40,12 @@ import {
   Settings,
   ViewPerformingGroups,
 } from "../pages/cca/index";
-import DistributorShowHistory from "@/pages/distributor/history/DistributorShowHistory";
-import DistributorHistoryMenu from "@/pages/distributor/history/DistributorHistoryMenu";
+
 import CustomerHome from "@/pages/customer/CustomerHome";
 import CustomerLayout from "@/pages/customer/CustomerLayout";
 import CustomerViewShow from "@/pages/customer/CustomerViewShow";
 import CustomerViewSchedule from "@/pages/customer/CustomerViewSchedule";
+
 import SalesReport from "@/pages/cca/shows/SalesReport";
 import TicketSeatLocation from "@/components/TicketSeatLocation";
 
@@ -50,26 +54,38 @@ const AppRoute = () => {
 
   return (
     <Routes>
-      {/* Dynamic root route depending on user role */}
+      {/* ===================== ROOT ROUTE ===================== */}
       <Route
         path="/"
         element={
           !user ? (
-            <CCALogin />
+            // No user, show Customer site
+            <CustomerLayout />
           ) : user.roles.includes("distributor") ? (
+            // Distributor , show distributor layout
             <ProtectedRoute allowedRoles={["distributor"]}>
               <DistributorLayout />
             </ProtectedRoute>
           ) : (
+            // CCA Head or Trainer
             <ProtectedRoute allowedRoles={["head", "trainer"]}>
               <CCALayout />
             </ProtectedRoute>
           )
         }
       >
-        {/* <Route index element={<DistributorCompleteAllocationHistory />} />
-              <Route path="remittance" element={<DistributorCompleteRemittanceHistory />} /> */}
-        {user?.roles.includes("distributor") ? (
+        {/* ===================== WHEN NO USER (CUSTOMER SITE) ===================== */}
+        {!user && (
+          <>
+            <Route index element={<CustomerHome />} />
+            <Route path="show/:showId" element={<CustomerViewShow />}>
+              <Route path="schedule/:scheduleId" element={<CustomerViewSchedule />} />
+            </Route>
+          </>
+        )}
+
+        {/* ===================== WHEN DISTRIBUTOR ===================== */}
+        {user?.roles.includes("distributor") && (
           <>
             <Route index element={<DistributorDashboard />} />
             <Route path="history" element={<DistributorHistory />}>
@@ -77,12 +93,14 @@ const AppRoute = () => {
               <Route path=":showId" element={<DistributorShowHistory />} />
             </Route>
           </>
-        ) : (
+        )}
+
+        {/* ===================== WHEN HEAD / TRAINER ===================== */}
+        {(user?.roles.includes("head") || user?.roles.includes("trainer")) && (
           <>
             <Route index element={<CCADashboard />} />
 
-            {/* Just render if trainer has a department */}
-            {(user?.roles.includes("head") || user?.department) && (
+            {(user.roles.includes("head") || user.department) && (
               <>
                 <Route path="shows" element={<PerformingGroupShows />} />
                 <Route path="majorShows" element={<MajorProductionShows />} />
@@ -110,7 +128,7 @@ const AppRoute = () => {
               </>
             )}
 
-            {user?.roles.includes("head") && (
+            {user.roles.includes("head") && (
               <>
                 <Route path="manage/trainers" element={<Trainers />} />
                 <Route path="manage/cca-head" element={<CCAHeads />} />
@@ -121,15 +139,10 @@ const AppRoute = () => {
         )}
       </Route>
 
-      {/* Customer Routes */}
-      <Route path="/customer" element={<CustomerLayout />}>
-        <Route index element={<CustomerHome />} />
-        <Route path="show/:showId" element={<CustomerViewShow />}>
-          <Route path="schedule/:scheduleId" element={<CustomerViewSchedule />} />
-        </Route>
-      </Route>
+      {/* ===================== LOGIN PAGE ===================== */}
+      <Route path="/login" element={user ? <Navigate to="/" replace /> : <CCALogin />} />
 
-      {/* Others */}
+      {/* ===================== OTHERS ===================== */}
       <Route path="/unathorized" element={<Unauthorized />} />
       <Route path="*" element={<NotFound />} />
       <Route path="salesreport/:showId/:scheduleIds" element={<SalesReport />} />
