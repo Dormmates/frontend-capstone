@@ -7,12 +7,14 @@ import { useMemo, useState } from "react";
 import { TheaterIcon } from "lucide-react";
 import CustomerShowCard from "./components/CustomerShowCard";
 import { Label } from "@/components/ui/label";
+import Breadcrumbs from "@/components/BreadCrumbs";
 
 const CustomerHome = () => {
   const [filter, setFilter] = useState("all");
 
   return (
     <>
+      <Breadcrumbs backHref="/" items={[{ name: "Return Home" }]} />
       <div className="flex gap-3 flex-col">
         <Label>Filter: </Label>
         <DepartmentsFilter filter={filter} setFilter={setFilter} />

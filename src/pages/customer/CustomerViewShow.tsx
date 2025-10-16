@@ -44,12 +44,12 @@ const CustomerViewShow = () => {
 
   const handleScheduleClick = (schedule: Schedule) => {
     setSelectedSchedule(schedule);
-    navigate(`/customer/show/${showId}/schedule/${schedule.scheduleId}`);
+    navigate(`/show/${showId}/schedule/${schedule.scheduleId}`);
   };
 
   return (
     <>
-      <Breadcrumbs backHref="/customer" items={[{ name: "Return to Shows List", href: "/customer" }]} />
+      <Breadcrumbs backHref="/" items={[{ name: "Return to Shows List", href: "/" }]} />
 
       {/* Show Details */}
       <div className="flex flex-col gap-5 mt-10 md:flex-row">

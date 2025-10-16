@@ -41,13 +41,14 @@ import {
   ViewPerformingGroups,
 } from "../pages/cca/index";
 
-import CustomerHome from "@/pages/customer/CustomerHome";
+import CustomerShows from "@/pages/customer/CustomerShows";
 import CustomerLayout from "@/pages/customer/CustomerLayout";
 import CustomerViewShow from "@/pages/customer/CustomerViewShow";
 import CustomerViewSchedule from "@/pages/customer/CustomerViewSchedule";
 
 import SalesReport from "@/pages/cca/shows/SalesReport";
 import TicketSeatLocation from "@/components/TicketSeatLocation";
+import LandingPage from "@/pages/customer/LandingPage";
 
 const AppRoute = () => {
   const { user } = useAuthContext();
@@ -77,7 +78,8 @@ const AppRoute = () => {
         {/* ===================== WHEN NO USER (CUSTOMER SITE) ===================== */}
         {!user && (
           <>
-            <Route index element={<CustomerHome />} />
+            <Route index element={<LandingPage />} />
+            <Route path="/shows" element={<CustomerShows />} />
             <Route path="show/:showId" element={<CustomerViewShow />}>
               <Route path="schedule/:scheduleId" element={<CustomerViewSchedule />} />
             </Route>
@@ -140,7 +142,7 @@ const AppRoute = () => {
       </Route>
 
       {/* ===================== LOGIN PAGE ===================== */}
-      <Route path="/login" element={user ? <Navigate to="/" replace /> : <CCALogin />} />
+      <Route path="/cca/login" element={user ? <Navigate to="/" replace /> : <CCALogin />} />
 
       {/* ===================== OTHERS ===================== */}
       <Route path="/unathorized" element={<Unauthorized />} />

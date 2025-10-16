@@ -37,7 +37,7 @@ const CustomerShowCard = ({ show }: ShowCardsProps) => {
       </CardContent>
 
       <CardFooter className="p-5 mt-auto justify-end">
-        <Link className="w-full" to={`/customer/show/${show.showId}`}>
+        <Link className="w-full" to={`/show/${show.showId}`}>
           <Button className="w-full">View Show</Button>
         </Link>
       </CardFooter>

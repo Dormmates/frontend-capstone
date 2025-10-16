@@ -25,7 +25,7 @@ const CustomerViewSchedule = () => {
 
   return (
     <div className="mt-20">
-      <Breadcrumbs backHref={`/customer/show/${showId}`} items={[{ name: "Change Schedule" }]} />
+      <Breadcrumbs backHref={`/show/${showId}`} items={[{ name: "Change Schedule" }]} />
 
       <h1 className="text-xl font-medium mt-10">
         {formatToReadableDate(schedule.datetime + "")} at {formatToReadableTime(schedule.datetime + "")}
