@@ -39,7 +39,7 @@ const CCADashboard = () => {
     return (
       <ContentWrapper>
         <h1 className="text-3xl">
-          Welcome, {user?.firstName} {user?.lastName} {selectedDepartment}
+          Welcome, {user?.firstName} {user?.lastName}
         </h1>
 
         <div className="flex flex-col mt-10 items-center">

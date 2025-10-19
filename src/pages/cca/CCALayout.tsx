@@ -51,7 +51,7 @@ const CCALayout = () => {
       name: "Manage Accounts",
       items: [
         { name: "Trainer", path: "/manage/trainers", hidden: !user?.roles.includes("head") },
-        { name: "External Distributor", path: "/manage/distributors" },
+        { name: "Other Distributor", path: "/manage/distributors" },
         { name: "CCA Head", path: "/manage/cca-head", hidden: !user?.roles.includes("head") },
         // { name: "Account Request", path: "/manage/request" },
       ],
