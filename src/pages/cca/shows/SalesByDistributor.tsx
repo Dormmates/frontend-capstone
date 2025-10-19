@@ -33,35 +33,37 @@ const SalesByDistributor = ({ report }: Props) => {
           let renderedDateCell = false;
 
           return schedules.map((sched) => {
-            const distributors = sched.salesByDistributor;
+            const distributors = sched.salesByDistributor.filter((d) => d.ticketsSold > 0);
             const timeRowSpan = distributors.length || 1;
 
-            return distributors.map((d: DistributorReport, distIndex: number) => (
-              <TableRow className="border border-gray-400" key={`${sched.schedule.scheduleId}-${d.distributorId}`}>
-                {!renderedDateCell && (
-                  <TableCell
-                    className="border border-gray-400 align-top"
-                    rowSpan={schedules.reduce((acc, s) => acc + (s.salesByDistributor.length || 1), 0)}
-                  >
-                    {date}
-                  </TableCell>
-                )}
-                {(renderedDateCell = true)}
+            return distributors.map((d: DistributorReport, distIndex: number) => {
+              return (
+                <TableRow className="border border-gray-400" key={`${sched.schedule.scheduleId}-${d.distributorId}`}>
+                  {!renderedDateCell && (
+                    <TableCell
+                      className="border border-gray-400 align-top"
+                      rowSpan={schedules.reduce((acc, s) => acc + (s.salesByDistributor.filter((d) => d.ticketsSold > 0).length || 1), 0)}
+                    >
+                      {date}
+                    </TableCell>
+                  )}
+                  {(renderedDateCell = true)}
 
-                {/* Merge time cell */}
-                {distIndex === 0 && (
-                  <TableCell className="border border-gray-400 align-top" rowSpan={timeRowSpan}>
-                    {formatToReadableTime(sched.schedule.datetime + "")}
-                  </TableCell>
-                )}
+                  {/* Merge time cell */}
+                  {distIndex === 0 && (
+                    <TableCell className="border border-gray-400 align-top" rowSpan={timeRowSpan}>
+                      {formatToReadableTime(sched.schedule.datetime + "")}
+                    </TableCell>
+                  )}
 
-                {/* Distributor row */}
-                <TableCell className="border border-gray-400">{d.distributorName}</TableCell>
-                <TableCell className="border border-gray-400">{d.ticketsSold}</TableCell>
-                <TableCell className="border border-gray-400">{formatCurrency(d.totalAmountRemitted)}</TableCell>
-                <TableCell className="border border-gray-400">{formatCurrency(d.totalCommission)}</TableCell>
-              </TableRow>
-            ));
+                  {/* Distributor row */}
+                  <TableCell className="border border-gray-400">{d.distributorName}</TableCell>
+                  <TableCell className="border border-gray-400">{d.ticketsSold}</TableCell>
+                  <TableCell className="border border-gray-400">{formatCurrency(d.totalAmountRemitted)}</TableCell>
+                  <TableCell className="border border-gray-400">{formatCurrency(d.totalCommission)}</TableCell>
+                </TableRow>
+              );
+            });
           });
         })}
 

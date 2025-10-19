@@ -6,6 +6,18 @@ import type { FlattenedSeat } from "../../types/seat";
 import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket, TicketStatuses } from "../../types/ticket";
 import type { TicketPricing } from "@/types/ticketpricing";
 
+export interface ScheduleDistributorForAllocation {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  department: {
+    name: string;
+    id: string | null;
+  };
+  distributorType: string;
+  tickets: { controlNumber: number; status: TicketStatuses }[];
+}
+
 export interface AddSchedulePayload extends ScheduleFormData {
   showId: string;
   controlNumbers?: { orchestra: number[]; balcony: number[]; complimentary: number[] };
@@ -126,8 +138,12 @@ export const useGetScheduleDistributors = (scheduleId: string) => {
       totalAllocated: number;
       totalSold: number;
       email: string;
-      department: string;
+      department: {
+        name: string;
+        id: string;
+      };
       distributorType: string;
+      ticketControlNumbers: number[];
     }[],
     Error
   >({
@@ -140,8 +156,9 @@ export const useGetScheduleDistributors = (scheduleId: string) => {
           totalAllocated: number;
           totalSold: number;
           email: string;
-          department: string;
+          department: { name: string; id: string };
           distributorType: string;
+          ticketControlNumbers: number[];
         }[]
       >(`/api/schedule/distributors/${scheduleId}`, {}, "get");
       return res.data;
@@ -151,29 +168,10 @@ export const useGetScheduleDistributors = (scheduleId: string) => {
 };
 
 export const useGetDistributorsForAllocation = (scheduleId: string, departmentId: string) => {
-  return useQuery<
-    {
-      userId: string;
-      firstName: string;
-      lastName: string;
-      department: string;
-      distributorType: string;
-      tickets: { controlNumber: number; status: TicketStatuses }[];
-    }[],
-    Error
-  >({
+  return useQuery<ScheduleDistributorForAllocation[], Error>({
     queryKey: ["schedule", "distributors", "allocation"],
     queryFn: async () => {
-      const res = await request<
-        {
-          userId: string;
-          firstName: string;
-          lastName: string;
-          department: string;
-          distributorType: string;
-          tickets: { controlNumber: number; status: TicketStatuses }[];
-        }[]
-      >(`/api/schedule/distributors/${scheduleId}/allocation`, { departmentId }, "get");
+      const res = await request<ScheduleDistributorForAllocation[]>(`/api/schedule/distributors/${scheduleId}/allocation`, { departmentId }, "get");
       return res.data;
     },
     retry: false,
@@ -195,6 +193,24 @@ export const useAllocateTicketByControlNumber = () => {
   return useMutation<any, Error, { distributorId: string; scheduleId: string; controlNumbers: number[]; allocatedBy: string }>({
     mutationFn: async (payload: { distributorId: string; scheduleId: string; controlNumbers: number[]; allocatedBy: string }) => {
       const res = await request<any>(`/api/schedule/allocate/controlNumber/`, payload, "post");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useAllocateTicketToMultipleDistributors = () => {
+  return useMutation<
+    any,
+    Error,
+    { scheduleId: string; allocatedBy: string; allocations: { distributorId: string; ticketCount: number; name: string }[] }
+  >({
+    mutationFn: async (payload: {
+      scheduleId: string;
+      allocatedBy: string;
+      allocations: { distributorId: string; ticketCount: number; name: string }[];
+    }) => {
+      const res = await request<any>(`/api/schedule/allocate/multiple/`, payload, "post");
       return res.data;
     },
     retry: false,

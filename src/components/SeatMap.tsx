@@ -207,19 +207,6 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
                   fill="currentColor"
                 />
               </g>
-
-              <path
-                id="Vector 6"
-                d="M79 487.5L110.5 508L136 522.5L169.5 537.5L221.5 550L257.5 556.5L430 558.5H604L793 542.5L857.5 527.5L894 519.5L923 511L971 490.5"
-                stroke="#BEBEBE"
-                stroke-dasharray="4 4"
-              />
-              <path
-                id="Vector 7"
-                d="M76.5 508.5L103.5 529L137.5 548.5L167.5 561L193 568.5L223.5 574L256.5 577L426 575.5H599L796.5 559.5L896.5 538.5L913.5 533.5L946 519.5L978 505"
-                stroke="#BEBEBE"
-                stroke-dasharray="4 4"
-              />
             </g>
           </svg>
 

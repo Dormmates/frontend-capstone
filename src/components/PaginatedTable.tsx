@@ -5,7 +5,7 @@ import Pagination from "./Pagination";
 interface Column<T> {
   key: string;
   header: string;
-  render?: (item: T) => React.ReactNode;
+  render?: (item: T, index: number) => React.ReactNode;
   headerClassName?: string;
 }
 
@@ -15,7 +15,6 @@ interface DataTableProps<T> {
   emptyMessage?: string;
   itemsPerPage?: number;
   className?: string;
-
   selectable?: boolean;
   getRowId?: (item: T, index?: number) => string | number;
   onSelectionChange?: (selectedItems: T[]) => void;

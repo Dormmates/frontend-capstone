@@ -8,11 +8,27 @@ import { Button } from "@/components/ui/button";
 import PaginatedTable from "@/components/PaginatedTable";
 import type { Schedule } from "@/types/schedule";
 import type { ShowData } from "@/types/show";
+import { compressControlNumbers } from "@/utils/controlNumber";
+import { useGetDepartments } from "@/_lib/@react-client-query/department";
+import Dropdown from "@/components/Dropdown";
+import { distributorTypeOptions } from "@/types/user";
 
 const ScheduleDistributorAndRemittances = () => {
   const { scheduleId, showId } = useParams();
   const { schedule, show } = useOutletContext<{ schedule: Schedule; show: ShowData }>();
   const { data: distributors, isLoading, isError } = useGetScheduleDistributors(scheduleId as string);
+  const {
+    data: departments,
+    isLoading: loadingDepartments,
+    isError: errorDepartments,
+  } = useGetDepartments(null, { enabled: show.showType != "majorProduction" });
+
+  const [selectedType, setSelectedType] = useState("cca");
+  const [selectedDepartment, setSelectedDepartment] = useState("all");
+  const departmentOptions = useMemo(() => {
+    if (!departments) return [];
+    return [{ name: "All Groups", value: "all" }, ...departments.map((d) => ({ value: d.departmentId, name: d.name }))];
+  }, [departments]);
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue);
@@ -21,16 +37,18 @@ const ScheduleDistributorAndRemittances = () => {
     if (!distributors) return [];
 
     return distributors.filter((dist) => {
+      const matchesType = selectedType ? dist.distributorType === selectedType : true;
       const matchingName = dist.name.includes(searchValue);
-      return matchingName;
+      const matchDeparment = selectedDepartment == "all" || selectedDepartment == dist.department.id;
+      return matchingName && matchDeparment && matchesType;
     });
-  }, [debouncedSearch, distributors]);
+  }, [debouncedSearch, distributors, selectedDepartment, selectedType]);
 
-  if (isLoading) {
+  if (isLoading || loadingDepartments) {
     return <h1>Loading....</h1>;
   }
 
-  if (!distributors || isError) {
+  if (!distributors || isError || errorDepartments) {
     return <h1>Error</h1>;
   }
 
@@ -42,18 +60,28 @@ const ScheduleDistributorAndRemittances = () => {
 
       <div className="flex flex-col gap-10">
         <div className="flex justify-between">
-          <Input
-            className="max-w-[500px]"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Search Distributor by Name"
-          />
+          <div className="w-full flex  gap-2">
+            <Input
+              className="w-full max-w-[500px]"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search Distributor by Name"
+            />
+
+            <Dropdown value={selectedType} items={distributorTypeOptions} onChange={(value) => setSelectedType(value)} />
+
+            {show.showType == "majorProduction" && selectedType == "cca" && (
+              <Dropdown value={selectedDepartment} items={departmentOptions} onChange={(value) => setSelectedDepartment(value)} />
+            )}
+          </div>
+
           <Button disabled={!schedule.isOpen || show.isArchived}>
             <Link to={`/shows/${showId}/${scheduleId}/allocation`}>Allocate Ticket</Link>
           </Button>
         </div>
 
         <PaginatedTable
+          itemsPerPage={10}
           emptyMessage="No Distributors found."
           data={searchedDistributors}
           columns={[
@@ -75,7 +103,7 @@ const ScheduleDistributorAndRemittances = () => {
             {
               key: "group",
               header: "Group",
-              render: (dist) => dist.department ?? "No Group",
+              render: (dist) => dist.department.name ?? "No Group",
             },
             {
               key: "ticket",
@@ -83,9 +111,9 @@ const ScheduleDistributorAndRemittances = () => {
               render: (dist) => dist.totalAllocated,
             },
             {
-              key: "sold",
-              header: "Sold Tickets",
-              render: (dist) => dist.totalSold,
+              key: "control",
+              header: "Ticket Control Numbers",
+              render: (dist) => (dist.ticketControlNumbers?.length == 0 ? "No Tickets Allocated" : compressControlNumbers(dist.ticketControlNumbers)),
             },
             {
               key: "action",

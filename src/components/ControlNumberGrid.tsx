@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { compressControlNumbers } from "@/utils/controlNumber";
+import Pagination from "./Pagination";
 
 type ControlNumberGridProps = {
   tickets: number[];
@@ -11,15 +12,13 @@ type ControlNumberGridProps = {
 
 const ControlNumberGrid = ({ tickets, disabled = false, selectedControlNumbers, setSelectedControlNumbers }: ControlNumberGridProps) => {
   const pageSize = 100;
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [selectionMode, setSelectionMode] = useState<"add" | "remove" | null>(null);
   const [hoveredTickets, setHoveredTickets] = useState<number[]>([]);
 
-  const totalPages = Math.ceil(tickets.length / pageSize);
-
   const currentPageTickets = useMemo(() => {
-    const start = page * pageSize;
+    const start = (page - 1) * pageSize;
     const end = start + pageSize;
     return tickets.slice(start, end);
   }, [tickets, page]);
@@ -98,17 +97,7 @@ const ControlNumberGrid = ({ tickets, disabled = false, selectedControlNumbers, 
         })}
       </div>
 
-      <div className="flex items-center justify-center gap-5 pt-4">
-        <Button variant="outline" onClick={() => setPage((p) => Math.max(p - 1, 0))} disabled={page === 0}>
-          Previous
-        </Button>
-        <div className="text-sm text-muted-foreground">
-          Page {page + 1} of {totalPages}
-        </div>
-        <Button variant="outline" onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))} disabled={page + 1 === totalPages}>
-          Next
-        </Button>
-      </div>
+      <Pagination currentPage={page} totalPage={Math.ceil(tickets.length / pageSize)} onPageChange={(newPage) => setPage(newPage)} />
     </div>
   );
 };
