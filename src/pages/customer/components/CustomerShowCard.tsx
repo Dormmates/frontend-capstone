@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import type { ShowData } from "@/types/show";
+
 import { Link } from "react-router-dom";
 
 type ShowCardsProps = {

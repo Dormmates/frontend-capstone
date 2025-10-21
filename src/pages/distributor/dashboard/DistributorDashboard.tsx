@@ -113,6 +113,7 @@ const DistributorDashboard = () => {
         </div>
 
         <PaginatedTable
+          className="min-w-[1200px]"
           data={data}
           columns={[
             {

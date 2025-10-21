@@ -40,11 +40,12 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
   const [errors, setErrors] = useState<{ email?: string; customerName?: string }>({});
 
   const summary = useMemo(() => {
+    const total = schedule.tickets.length;
     const sold = schedule.tickets.filter((t) => t.status === "sold").length;
     const unsold = schedule.tickets.length - sold;
     const remitted = schedule.tickets.filter((t) => t.isRemitted).length;
     const pending = schedule.tickets.filter((t) => !t.isRemitted).length;
-    return { sold, unsold, remitted, pending };
+    return { sold, unsold, remitted, pending, total };
   }, [schedule]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,14 +119,21 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
   };
 
   return (
-    <div>
+    <div className="overflow-x-auto">
       <p className="mb-5">
         {schedule.show.title} ({formatToReadableDate(schedule.datetime + "")} at {formatToReadableTime(schedule.datetime + "")})
       </p>
 
-      <div className="my-5">
-        <Label>Sale Progress {(((summary.sold + summary.remitted) / schedule.tickets.length) * 100).toFixed(2)}%</Label>
-        <Progress className="mt-2" value={Number((((summary.sold + summary.remitted) / schedule.tickets.length) * 100).toFixed(2))} />
+      <div className="flex flex-col gap-2 mb-5">
+        <div className="">
+          <Label>Sale Progress {(((summary.sold + summary.remitted) / schedule.tickets.length) * 100).toFixed(2)}%</Label>
+          <Progress value={Number((((summary.sold + summary.remitted) / schedule.tickets.length) * 100).toFixed(2))} />
+        </div>
+
+        <div className="">
+          <Label>Remittance Progress {((summary.remitted / summary.total) * 100).toFixed(2)}%</Label>
+          <Progress value={Number(((summary.remitted / summary.total) * 100).toFixed(2))} />
+        </div>
       </div>
 
       <Tabs defaultValue="unsold">
@@ -285,7 +293,7 @@ const TicketTableData = ({ data, type, seatingType, scheduleId, selectedTickets,
   return (
     <div>
       {selectedTickets.length > 0 && <p className="font-bold text-sm mb-2">Selected Tickets: {selectedTickets.length}</p>}
-      <div className="overflow-x-auto rounded-lg border">
+      <div className="overflow-x-auto rounded-lg border min-w-[500px]">
         <Table>
           <TableHeader className="bg-muted">
             <TableRow>
@@ -328,7 +336,7 @@ const TicketTableData = ({ data, type, seatingType, scheduleId, selectedTickets,
               </TableRow>
             ) : (
               paginatedTickets.map((ticket) => (
-                <TableRow key={ticket.ticketId} className={selectedTickets.some((t) => t.ticketId === ticket.ticketId) ? "bg-blue-200" : ""}>
+                <TableRow key={ticket.ticketId}>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {!ticket.isRemitted && (

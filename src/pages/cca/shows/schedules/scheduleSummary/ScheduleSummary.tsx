@@ -2,8 +2,7 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { useGetDistributorTicketActivities, useGetScheduleSummary } from "@/_lib/@react-client-query/schedule.ts";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { LabelList, Pie, PieChart } from "recharts";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Pie, PieChart, Label as ChartLabel, Sector } from "recharts";
 import SimpleCard from "@/components/SimpleCard";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
@@ -15,6 +14,7 @@ import type { SoldTicketActivity, UnsoldActivity } from "@/types/schedule";
 import DialogPopup from "@/components/DialogPopup";
 import { compressControlNumbers } from "@/utils/controlNumber";
 import { useEffect } from "react";
+import type { PieSectorDataItem } from "recharts/types/polar/Pie";
 
 const ScheduleSummary = () => {
   const { scheduleId, showId } = useParams();
@@ -40,30 +40,46 @@ const ScheduleSummary = () => {
     return <h1>Error loading</h1>;
   }
 
-  const ticketsChartData = [
-    { ticket: "complimentary", value: summary.ticketsSummary.complimentary, fill: "hsl(var(--chart-5))" },
-    { ticket: "orchestra", value: summary.ticketsSummary.orchestraTickets.total, fill: "hsl(var(--chart-3))" },
-    { ticket: "balcony", value: summary.ticketsSummary.balconyTickets.total, fill: "hsl(var(--chart-1))" },
-  ];
-
-  const ticketsChartDataConfig = {
+  const ticketsChartConfig = {
     value: {
       label: "Ticket Count:",
     },
-    complimentary: {
-      label: "Complimentary Tickets",
+    sold: {
+      label: "Sold Tickets",
     },
-    orchestra: {
-      label: "Orchestra Tickets",
-    },
-    balcony: {
-      label: "Balcony Tickets",
+    unsold: {
+      label: "Unsold Tickets",
     },
   } satisfies ChartConfig;
 
-  const ticketSectionChartData = [
-    { ticket: "orchestra", sold: summary.ticketsSummary.orchestraTickets.sold, unsold: summary.ticketsSummary.orchestraTickets.remaining },
-    { ticket: "balcony", sold: summary.ticketsSummary.balconyTickets.sold, unsold: summary.ticketsSummary.balconyTickets.remaining },
+  const ticketsChartData = [
+    { name: "sold", value: summary.ticketsSummary.regularTickets.sold, fill: "hsl(122 42.2% 45.8%)" },
+    { name: "unsold", value: summary.ticketsSummary.regularTickets.remaining, fill: "hsl(0 54.2% 45.8%)" },
+  ];
+
+  const ticketsAllocatedAndRemittanceChartConfig = {
+    value: {
+      label: "Ticket Count:",
+    },
+    allocated: {
+      label: "Allocated Tickets",
+    },
+    notAllocated: {
+      label: "Not Allocated Tickets",
+    },
+    remitted: {
+      label: "Remitted Tickets",
+    },
+    pendingRemittance: {
+      label: "Pending for Remittance",
+    },
+  } satisfies ChartConfig;
+
+  const ticketsAllocatedAndRemittanceChartData = [
+    { name: "allocated", value: summary.ticketsSummary.regularTickets.allocated, fill: "hsl(var(--chart-2))" },
+    { name: "notAllocated", value: summary.ticketsSummary.regularTickets.notAllocated, fill: "hsl(var(--chart-4))" },
+    { name: "remitted", value: summary.ticketsSummary.regularTickets.remitted, fill: "hsl(122 42.2% 45.8%)" },
+    { name: "pendingRemittance", value: summary.ticketsSummary.regularTickets.unremitted, fill: "hsl(0 54.2% 45.8%)" },
   ];
 
   return (
@@ -74,12 +90,11 @@ const ScheduleSummary = () => {
         <CardHeader>
           <CardTitle>Sales Progress ({((summary.salesSummary.current / summary.salesSummary.expected) * 100).toFixed(2)}%)</CardTitle>
 
-          <CardDescription>Current vs expected ticket sales</CardDescription>
           <CardContent className="p-0">
             <Progress value={(summary.salesSummary.current / summary.salesSummary.expected) * 100} />
             <div className="mt-5">
-              <p>Expected: {formatCurrency(summary.salesSummary.expected)}</p>
-              <p>Current: {formatCurrency(summary.salesSummary.current)}</p>
+              <p>Forecasted Sales: {formatCurrency(summary.salesSummary.expected)}</p>
+              <p>Current Sales: {formatCurrency(summary.salesSummary.current)}</p>
             </div>
           </CardContent>
         </CardHeader>
@@ -87,33 +102,49 @@ const ScheduleSummary = () => {
 
       <DistributorActivities scheduleId={scheduleId as string} />
 
-      <div className="grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-2 gap-6 w-full">
+      <div className="grid grid-cols-1  xl:grid-cols-2  gap-6 w-full">
         {/*Tickets Overview */}
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap w-fit gap-5">
-            <div className="grid grid-cols-2  md:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
               <SimpleCard label="Total Tickets" value={summary.ticketsSummary.total} />
-              <SimpleCard label="Orchestra Tickets" value={summary.ticketsSummary.orchestraTickets.total} />
-              <SimpleCard label="Balcony Tickets" value={summary.ticketsSummary.balconyTickets.total} />
+              <SimpleCard label="Regular Tickets" value={summary.ticketsSummary.regularTickets.total} />
               <SimpleCard label="Complimentary Tickets" value={summary.ticketsSummary.complimentary} />
             </div>
-            <div className="grid xl:grid-cols-2 w-full gap-5  items-center">
+            <div className="grid xl:grid-cols-2 w-full gap-5  items-start">
               <Card>
                 <CardHeader>
-                  <CardTitle>Ticket Distribution by Category</CardTitle>
-                  <CardDescription>Breakdown of Orchestra, Balcony, and Complimentary tickets.</CardDescription>
+                  <CardTitle>Regular Ticket Sales Overview</CardTitle>
+                  <CardDescription>Displays the total number of regular tickets sold and remaining for this schedule.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ChartContainer config={ticketsChartDataConfig} className="[&_.recharts-text]:fill-background mx-auto aspect-square h-[300px]">
+                  <ChartContainer config={ticketsChartConfig} className="mx-auto aspect-square max-h-[250px]">
                     <PieChart>
-                      <ChartTooltip content={<ChartTooltipContent nameKey="value" hideLabel />} />
-                      <Pie data={ticketsChartData.filter((t) => t.value !== 0)} dataKey="value">
-                        <LabelList
-                          dataKey="ticket"
-                          className="fill-background"
-                          stroke="none"
-                          fontSize={12}
-                          formatter={(value: keyof typeof ticketsChartDataConfig) => ticketsChartDataConfig[value]?.label}
+                      <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                      <Pie
+                        data={ticketsChartData}
+                        dataKey="value"
+                        nameKey="name"
+                        innerRadius={60}
+                        strokeWidth={5}
+                        activeIndex={0}
+                        activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => <Sector {...props} outerRadius={outerRadius + 10} />}
+                      >
+                        <ChartLabel
+                          content={({ viewBox }) => {
+                            if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                              return (
+                                <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                                  <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                                    {summary.ticketsSummary.regularTickets.total}
+                                  </tspan>
+                                  <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
+                                    Regular Tickets
+                                  </tspan>
+                                </text>
+                              );
+                            }
+                          }}
                         />
                       </Pie>
                     </PieChart>
@@ -122,24 +153,40 @@ const ScheduleSummary = () => {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle>Sold vs Remaining by Section</CardTitle>
-                  <CardDescription>Visual comparison of sold and unsold tickets for Orchestra and Balcony.</CardDescription>
+                  <CardTitle>Ticket Allocation & Remittance Overview</CardTitle>
+                  <CardDescription>Shows the distribution of allocated, unallocated, remitted, and pending regular tickets.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ChartContainer className="mx-auto aspect-square h-[300px] w-full" config={ticketsChartDataConfig}>
-                    <BarChart accessibilityLayer data={ticketSectionChartData}>
-                      <CartesianGrid vertical={false} />
-                      <XAxis
-                        dataKey="ticket"
-                        tickLine={false}
-                        tickMargin={10}
-                        axisLine={false}
-                        tickFormatter={(value) => String(value).toUpperCase()}
-                      />
-                      <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dashed" />} />
-                      <Bar dataKey="sold" fill="hsl(122 42.2% 45.8%)" radius={4} minPointSize={3} />
-                      <Bar dataKey="unsold" fill="hsl(0 54.2% 45.8%)" radius={4} minPointSize={3} />
-                    </BarChart>
+                  <ChartContainer config={ticketsAllocatedAndRemittanceChartConfig} className="mx-auto aspect-square max-h-[250px]">
+                    <PieChart>
+                      <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                      <Pie
+                        data={ticketsAllocatedAndRemittanceChartData}
+                        dataKey="value"
+                        nameKey="name"
+                        innerRadius={60}
+                        strokeWidth={5}
+                        activeIndex={0}
+                        activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => <Sector {...props} outerRadius={outerRadius + 10} />}
+                      >
+                        <ChartLabel
+                          content={({ viewBox }) => {
+                            if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                              return (
+                                <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                                  <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                                    {summary.ticketsSummary.regularTickets.total}
+                                  </tspan>
+                                  <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
+                                    Regular Tickets
+                                  </tspan>
+                                </text>
+                              );
+                            }
+                          }}
+                        />
+                      </Pie>
+                    </PieChart>
                   </ChartContainer>
                 </CardContent>
               </Card>
@@ -151,7 +198,6 @@ const ScheduleSummary = () => {
         <Card className="overflow-x-auto h-fit">
           <CardHeader>
             <CardTitle>Distributors</CardTitle>
-            <CardDescription>ashakjvnakjsvnkavnkajsvkav</CardDescription>
           </CardHeader>
           <CardContent>
             <Label>Total Distributors: {summary.distributorSummary.distributors.length}</Label>
@@ -258,6 +304,7 @@ const DistributorActivities = ({ scheduleId }: DistributorActivitiesProps) => {
 
       <CardContent>
         <PaginatedTable
+          className="min-w-[1100px]"
           itemsPerPage={10}
           data={data}
           columns={[

@@ -3,7 +3,7 @@ import { request } from "../api";
 
 import type { ScheduleFormData, Schedule, ScheduleSummary, DistributorTicketActivities } from "../../types/schedule";
 import type { FlattenedSeat } from "../../types/seat";
-import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket, TicketStatuses } from "../../types/ticket";
+import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket, TicketLog, TicketStatuses } from "../../types/ticket";
 import type { TicketPricing } from "@/types/ticketpricing";
 
 export interface ScheduleDistributorForAllocation {
@@ -20,7 +20,7 @@ export interface ScheduleDistributorForAllocation {
 
 export interface AddSchedulePayload extends ScheduleFormData {
   showId: string;
-  controlNumbers?: { orchestra: number[]; balcony: number[]; complimentary: number[] };
+  controlNumbers?: { tickets: number[]; complimentary: number[] };
   seats?: FlattenedSeat[];
   ticketPricing: TicketPricing;
 }
@@ -127,6 +127,16 @@ export const useGetScheduleTickets = (scheduleId: string, options?: Omit<UseQuer
     },
     retry: false,
     ...options,
+  });
+};
+
+export const useGetTicketLogs = (scheduleId: string, controlNumber: number) => {
+  return useQuery<TicketLog[], Error>({
+    queryKey: ["ticket", "log", controlNumber, scheduleId],
+    queryFn: async () => {
+      const res = await request<TicketLog[]>(`/api/schedule/ticket/logs/${scheduleId}/${controlNumber}`, {}, "get");
+      return res.data;
+    },
   });
 };
 

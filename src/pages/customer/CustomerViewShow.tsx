@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetShow } from "@/_lib/@react-client-query/show";
 import { useGetShowSchedules } from "@/_lib/@react-client-query/schedule";
 import Breadcrumbs from "@/components/BreadCrumbs";
@@ -24,6 +24,10 @@ const CustomerViewShow = () => {
     excludeClosed: true,
     excludeReservationOff: true,
   });
+
+  useEffect(() => {
+    document.title = `${show?.title}`;
+  }, [show]);
 
   if (loadingShow || loadingSchedules) {
     return <h1>Loading...</h1>;

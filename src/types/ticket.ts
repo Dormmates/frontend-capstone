@@ -11,7 +11,7 @@ export interface Ticket {
   controlNumber: number;
   discountPercentage: number;
   status: TicketStatuses;
-  ticketSection: TicketSection;
+  seatSection: SeatSection;
   ticketId: string;
   seatNumber: string | null;
   distributorId: string | null;
@@ -118,4 +118,12 @@ export interface DistributorScheduleTickets {
     dateAllocated: Date;
     allocatedBy: string;
   }[];
+}
+
+export interface TicketLog {
+  logType: string;
+  actionBy: string;
+  logDate: string;
+  distributorName: string;
+  currentDistributor: string;
 }

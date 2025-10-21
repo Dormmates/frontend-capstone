@@ -3,13 +3,17 @@ import { useGetShows } from "@/_lib/@react-client-query/show";
 import ccaLogo from "@/assets/images/cca-logo.png";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TheaterIcon } from "lucide-react";
 import CustomerShowCard from "./components/CustomerShowCard";
 import { Label } from "@/components/ui/label";
 import Breadcrumbs from "@/components/BreadCrumbs";
 
 const CustomerHome = () => {
+  useEffect(() => {
+    document.title = "SLU CCA - Shows";
+  }, []);
+
   const [filter, setFilter] = useState("all");
 
   return (

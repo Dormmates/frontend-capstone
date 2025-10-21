@@ -14,21 +14,25 @@ export interface ScheduleFormData {
   ticketType: TicketType;
   seatingConfiguration: SeatingConfiguration;
   seatPricing: SeatPricing;
-  totalOrchestra: number | undefined;
-  totalBalcony: number | undefined;
+  totalTickets: number | undefined;
+  // totalOrchestra: number | undefined;
+  // totalBalcony: number | undefined;
   totalComplimentary: number | undefined;
-  orchestraControlNumber: string;
-  balconyControlNumber: string;
+  ticketsControlNumber: string;
+  // orchestraControlNumber: string;
+  // balconyControlNumber: string;
   complimentaryControlNumber: string;
 }
 
 export type ErrorKeys =
   | "dates"
   | "commisionFee"
-  | "totalOrchestra"
-  | "orchestraControlNumber"
-  | "totalBalcony"
-  | "balconyControlNumber"
+  // | "totalOrchestra"
+  // | "orchestraControlNumber"
+  | "totalTickets"
+  | "ticketsControlNumber"
+  // | "totalBalcony"
+  // | "balconyControlNumber"
   | "totalComplimentary"
   | "complimentaryControlNumber"
   | "ticketPrice"
@@ -60,6 +64,10 @@ interface TicketBreakdown {
   total: number;
   sold: number;
   remaining: number;
+  notAllocated: number;
+  allocated: number;
+  unremitted: number;
+  remitted: number;
 }
 
 interface DistributorSummary {
@@ -81,8 +89,7 @@ export interface ScheduleSummary {
   ticketsSummary: {
     total: number;
     complimentary: number;
-    orchestraTickets: TicketBreakdown;
-    balconyTickets: TicketBreakdown;
+    regularTickets: TicketBreakdown;
   };
   distributorSummary: {
     distributors: DistributorSummary[];

@@ -16,16 +16,30 @@ export const formatSectionName = (sectionName: string) => {
   return sectionName.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
-export const sortSeatsByRowAndNumber = (seats: FlattenedSeat[]) =>
-  [...seats].sort((a, b) => {
-    if (a.row.length !== b.row.length) return b.row.length - a.row.length;
+export const sortSeatsByRowAndNumber = (seats: FlattenedSeat[]) => {
+  const SECTION_ORDER = ["orchestraLeft", "orchestraMiddle", "orchestraRight", "balconyLeft", "balconyMiddle", "balconyRight"];
 
-    if (a.row !== b.row) return a.row.localeCompare(b.row, undefined, { numeric: true });
+  const getSectionIndex = (section: string) => {
+    const index = SECTION_ORDER.indexOf(section);
+    return index === -1 ? SECTION_ORDER.length : index;
+  };
+
+  return [...seats].sort((a, b) => {
+    const sectionDiff = getSectionIndex(a.section) - getSectionIndex(b.section);
+    if (sectionDiff !== 0) return sectionDiff;
+
+    const rowA = a.row.match(/^[A-Z]+/i)?.[0] || "";
+    const rowB = b.row.match(/^[A-Z]+/i)?.[0] || "";
+
+    if (rowA.length !== rowB.length) return rowB.length - rowA.length;
+    if (rowA !== rowB) return rowA.localeCompare(rowB, undefined, { numeric: true });
 
     const numA = parseInt((a.seatNumber.match(/\d+/) || ["0"])[0], 10);
     const numB = parseInt((b.seatNumber.match(/\d+/) || ["0"])[0], 10);
+
     return numA - numB;
   });
+};
 
 export const compressSeats = (seatNumbers: string[]): string[] => {
   const groups: Record<string, number[]> = {};

@@ -25,12 +25,11 @@ const TicketAllocation = () => {
   } = useGetScheduleTickets(scheduleId as string, { enabled: schedule?.isOpen });
 
   const unAllocatedTickets = useMemo(() => {
-    if (!tickets) return { orchestra: [], balcony: [] };
+    if (!tickets) return { total: 0, tickets: [] };
 
-    const orchestra = tickets.filter((ticket) => ticket.status == "not_allocated" && !ticket.isComplimentary && ticket.ticketSection == "orchestra");
-    const balcony = tickets.filter((ticket) => ticket.status == "not_allocated" && !ticket.isComplimentary && ticket.ticketSection == "balcony");
+    const t = tickets.filter((ticket) => ticket.status == "not_allocated" && !ticket.isComplimentary);
 
-    return { orchestra, balcony };
+    return { tickets: t, total: t.length };
   }, [tickets]);
 
   useEffect(() => {
@@ -45,7 +44,7 @@ const TicketAllocation = () => {
 
   return (
     <ContentWrapper className="flex flex-col">
-      {unAllocatedTickets.balcony.length + unAllocatedTickets.orchestra.length === 0 && (
+      {unAllocatedTickets.total === 0 && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6 text-center space-y-4">
             <h2 className="text-xl font-semibold text-gray-800">No More Tickets Available</h2>

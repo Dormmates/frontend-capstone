@@ -67,7 +67,7 @@ const ViewDistributorLayout = () => {
     const unsoldTickets = totalAllocatedTickets - soldTickets;
     const remittedTickets = data.filter((ticket) => ticket.isRemitted).length;
 
-    const pendingRemittance = soldTickets - remittedTickets;
+    const pendingRemittance = totalAllocatedTickets - remittedTickets;
     const expected = data.reduce<number>(
       (acc, ticket) => acc + (Number(ticket.ticketPrice) - (schedule.ticketPricing ? schedule.ticketPricing.commissionFee : 0)),
       0
@@ -186,7 +186,7 @@ const ViewDistributorLayout = () => {
                                   {summary.totalAllocatedTickets}
                                 </tspan>
                                 <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
-                                  Total Tickets
+                                  Allocated Tickets
                                 </tspan>
                               </text>
                             );
@@ -222,24 +222,7 @@ const ViewDistributorLayout = () => {
                         strokeWidth={5}
                         activeIndex={0}
                         activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => <Sector {...props} outerRadius={outerRadius + 10} />}
-                      >
-                        <Label
-                          content={({ viewBox }) => {
-                            if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                              return (
-                                <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
-                                  <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
-                                    {summary.soldTickets}
-                                  </tspan>
-                                  <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
-                                    Total Sold Tickets
-                                  </tspan>
-                                </text>
-                              );
-                            }
-                          }}
-                        />
-                      </Pie>
+                      />
                     </PieChart>
                   </ChartContainer>
                 )}

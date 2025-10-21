@@ -23,7 +23,7 @@ import LongCardItem from "@/components/LongCardItem";
 import { compressSeats } from "@/utils/seatmap";
 
 type Props = {
-  unAllocatedTickets: { orchestra: Ticket[]; balcony: Ticket[] };
+  unAllocatedTickets: { total: number; tickets: Ticket[] };
   showData: ShowData;
 };
 
@@ -134,7 +134,7 @@ const AllocatedBySeat = ({ unAllocatedTickets, showData }: Props) => {
       <div className="flex gap-2 flex-col">
         <Label>Choose Distributor</Label>
         <Button
-          disabled={unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0}
+          disabled={unAllocatedTickets.total === 0}
           onClick={() => setIsChooseDistributor(true)}
           className={`w-fit ${error.distributorError && "border-red"}`}
           variant="outline"
@@ -206,11 +206,7 @@ const AllocatedBySeat = ({ unAllocatedTickets, showData }: Props) => {
       </div>
       {error.seatError && <p className="text-sm text-red">{error.seatError}</p>}
 
-      <Button
-        disabled={(unAllocatedTickets.balcony.length === 0 && unAllocatedTickets.orchestra.length === 0) || allocateTicket.isPending}
-        onClick={validate}
-        className=" max-w-fit mt-5"
-      >
+      <Button disabled={unAllocatedTickets.total === 0 || allocateTicket.isPending} onClick={validate} className=" max-w-fit mt-5">
         Reserve Seats
       </Button>
 

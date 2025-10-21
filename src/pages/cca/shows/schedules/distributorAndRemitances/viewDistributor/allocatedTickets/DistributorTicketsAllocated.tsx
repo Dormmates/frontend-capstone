@@ -2,15 +2,14 @@ import { useOutletContext } from "react-router-dom";
 import type { AllocatedTicketToDistributor } from "@/types/ticket.ts";
 import { useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
-import LongCard from "../../../../../../../components/LongCard";
-import LongCardItem from "../../../../../../../components/LongCardItem";
 import type { Schedule } from "@/types/schedule.ts";
 import { formatTicket } from "@/utils/controlNumber.ts";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Dropdown from "@/components/Dropdown";
 import PaginatedTable from "@/components/PaginatedTable";
+import DialogPopup from "@/components/DialogPopup";
+import ViewTicket from "@/components/ViewTicket";
 
 const verificationOptions = [
   { name: "All Verification Status", value: "all" },
@@ -27,8 +26,6 @@ const saleOptions = [
 const DistributorTicketsAllocated = () => {
   const { allocatedTickets } = useOutletContext<{ allocatedTickets: AllocatedTicketToDistributor[] }>();
   const { schedule } = useOutletContext<{ schedule: Schedule }>();
-
-  const [selectedTicket, setSelectedTicket] = useState<AllocatedTicketToDistributor | null>(null);
 
   const [filter, setFilter] = useState({ search: "", saleStatus: "", verificationStatus: "" });
   const debouncedSearch = useDebounce(filter.search);
@@ -119,39 +116,19 @@ const DistributorTicketsAllocated = () => {
               key: "action",
               header: "Actions",
               render: (ticket) => (
-                <Button onClick={() => setSelectedTicket(ticket)} variant="outline">
-                  View Ticket
-                </Button>
+                <DialogPopup className="max-w-3xl" title="Ticket Information" triggerElement={<Button>View Ticket</Button>}>
+                  <ViewTicket
+                    status={ticket.status}
+                    ticketPrice={ticket.ticketPrice}
+                    scheduleId={schedule.scheduleId}
+                    controlNumber={ticket.controlNumber}
+                  />
+                </DialogPopup>
               ),
             },
           ]}
         />
       </div>
-
-      {selectedTicket && (
-        <Dialog onOpenChange={() => setSelectedTicket(null)} open={!!selectedTicket}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Allocation History</DialogTitle>
-            </DialogHeader>
-            <LongCard className="mt-8 w-full" label="Ticket">
-              <LongCardItem label="Section" value={(selectedTicket.ticketSection + "").toUpperCase()} />
-              {schedule.seatingType === "controlledSeating" && (
-                <>
-                  <LongCardItem label="Seat Number" value={selectedTicket.seatNumber + ""} />
-                </>
-              )}
-              <LongCardItem label="Ticket Status" value={selectedTicket.status == "sold" || selectedTicket.isRemitted ? "Sold" : "Sold"} />
-              <LongCardItem label="Verification Status" value={selectedTicket.isRemitted ? "Verified" : "Pending"} />
-              <LongCardItem label="Ticket Price" value={selectedTicket.ticketPrice} />
-            </LongCard>
-            <div className="flex mt-5 gap-3 flex-col">
-              <p className="text-lightGrey text-sm">Distributor Name</p>
-              <p className="text-lg">{selectedTicket.distributor}</p>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
     </>
   );
 };

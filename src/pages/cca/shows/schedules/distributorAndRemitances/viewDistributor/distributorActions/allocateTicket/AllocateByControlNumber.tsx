@@ -24,7 +24,7 @@ import PaginatedTable from "@/components/PaginatedTable";
 type Props = {
   scheduleId: string;
   departmentId: string;
-  unAllocatedTickets: { orchestra: Ticket[]; balcony: Ticket[] };
+  unAllocatedTickets: { total: number; tickets: Ticket[] };
   error?: string;
 };
 
@@ -94,7 +94,7 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
       isValid = false;
     }
 
-    const totalAvailable = unAllocatedTickets.balcony.length + unAllocatedTickets.orchestra.length;
+    const totalAvailable = unAllocatedTickets.total;
 
     if (ticketsCount * selectedDistributors.length > totalAvailable) {
       toast.error("Not enough unallocated tickets to distribute", {
@@ -149,18 +149,12 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
     <div className="flex flex-col gap-3 ">
       <div className="flex flex-col gap-2">
         <p className="font-bold">
-          Remining Tickets for Allocation:{" "}
-          <span className="font-normal">{unAllocatedTickets.orchestra.length + unAllocatedTickets.balcony.length} tickets remaining</span>
+          Remining Tickets for Allocation: <span className="font-normal">{unAllocatedTickets.total} tickets remaining</span>
         </p>
 
         <p className="font-bold">
           Unallocated Control Numbers:{" "}
-          <span className="font-normal">
-            {compressControlNumbers([
-              ...unAllocatedTickets.balcony.map((t) => t.controlNumber),
-              ...unAllocatedTickets.orchestra.map((t) => t.controlNumber),
-            ])}
-          </span>
+          <span className="font-normal">{compressControlNumbers([...unAllocatedTickets.tickets.map((t) => t.controlNumber)])}</span>
         </p>
       </div>
 
@@ -180,9 +174,9 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
           )}
         </div>
         <div>
+          <p className="font-semibold mb-2">Selected Distributors: {selectedDistributors.length}</p>
           {selectedDistributors.length !== 0 && (
             <div className="mb-5">
-              <p className="font-semibold mb-2">Selected Distributors: {selectedDistributors.length}</p>
               <p className="font-semibold mb-2">Total Tickets to be Allocated: {selectedDistributors.length * ticketsCount}</p>
               <p className="text-sm text-muted-foreground mb-4">
                 Specify how many tickets each distributor will receive. Control numbers will be automatically assigned.
@@ -245,7 +239,7 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
                     const isSelected = selectedDistributors.some((d) => d.userId === dist.userId);
 
                     return (
-                      <TableRow className={`${isSelected && "bg-accent"}`} key={dist.userId}>
+                      <TableRow key={dist.userId}>
                         <TableCell className="text-center">
                           <Checkbox
                             checked={isSelected}

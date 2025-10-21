@@ -47,6 +47,8 @@ const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) =
     );
   }
 
+  console.log(topDistributors);
+
   return (
     <Card>
       <CardHeader>

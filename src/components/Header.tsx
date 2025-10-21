@@ -24,7 +24,7 @@ const Header = () => {
           <Separator className="h-5" orientation="vertical" />
           <ThemeSwitch />
         </div>
-        {user?.roles.includes("head") || !!user?.department || (user?.roles.includes("distributor") && <NotificationBell />)}
+        {(user?.roles.includes("head") || !!user?.department || user?.roles.includes("distributor")) && <NotificationBell />}
       </ContentWrapper>
     </header>
   );

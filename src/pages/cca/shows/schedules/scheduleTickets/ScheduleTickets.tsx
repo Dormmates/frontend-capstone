@@ -18,11 +18,16 @@ import {
 import InputField from "@/components/InputField";
 import { DataTable } from "@/components/DataTable";
 import type { Ticket } from "@/types/ticket";
-import { Bar, BarChart, CartesianGrid, Label, Pie, PieChart, Sector, XAxis, YAxis } from "recharts";
+import { Label, Pie, PieChart, Sector } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import type { PieSectorDataItem } from "recharts/types/polar/Pie";
 import { Settings2Icon } from "lucide-react";
+import SimpleCard from "@/components/SimpleCard";
+import DialogPopup from "@/components/DialogPopup";
+import ViewTicket from "@/components/ViewTicket";
+import { formatCurrency } from "@/utils";
+import { formatSectionName } from "@/utils/seatmap";
 
 const statusOptions = [
   { name: "All Status", value: "all" },
@@ -32,9 +37,18 @@ const statusOptions = [
 
 const sectionOptions = [
   { name: "All Tickets", value: "all" },
-  { name: "Orchestra Tickets", value: "orchestra" },
-  { name: "Balcony Tickets", value: "balcony" },
+  { name: "Regular Tickets", value: "regular" },
   { name: "Complimentary Tickets", value: "complimentary" },
+];
+
+const seatSectionOptions = [
+  { name: "All Sections", value: "all" },
+  { name: "Orchestra Left", value: "orchestraLeft" },
+  { name: "Orchestra Middle", value: "orchestraMiddle" },
+  { name: "Orchestra Right", value: "orchestraRight" },
+  { name: "Balcony Left", value: "balconyLeft" },
+  { name: "Balcony Middle", value: "balconyMiddle" },
+  { name: "Balcony Right", value: "balconyRight" },
 ];
 
 const ITEMS_PER_PAGE = 10;
@@ -43,7 +57,7 @@ const ScheduleTickets = () => {
   const { schedule } = useOutletContext<{ schedule: Schedule }>();
   const { scheduleId } = useParams();
   const { data: tickets, isLoading: loadingTickets, isError: errorTickets } = useGetScheduleTickets(scheduleId as string);
-  const [filterValues, setFilterValues] = useState({ controlNumber: "", section: "all", status: "all" });
+  const [filterValues, setFilterValues] = useState({ controlNumber: "", section: "all", status: "all", seatSection: "all" });
   const debouncedSearch = useDebounce(filterValues.controlNumber);
   const [page, setPage] = useState(1);
 
@@ -59,16 +73,18 @@ const ScheduleTickets = () => {
       const matchSection =
         filterValues.section === "all" ||
         (filterValues.section === "complimentary" && ticket.isComplimentary) ||
-        ticket.ticketSection === filterValues.section;
+        (filterValues.section === "regular" && !ticket.isComplimentary);
+
+      const matchSeatSection = filterValues.seatSection === "all" || ticket.seatSection === filterValues.seatSection;
 
       const matchControlNumber =
         !filterValues.controlNumber ||
         filterValues.controlNumber === "all" ||
         String(ticket.controlNumber).trim() === filterValues.controlNumber.trim();
 
-      return matchStatus && matchSection && matchControlNumber;
+      return matchStatus && matchSection && matchControlNumber && matchSeatSection;
     });
-  }, [tickets, filterValues.section, filterValues.status, filterValues.controlNumber, debouncedSearch]);
+  }, [tickets, filterValues.section, filterValues.status, filterValues.controlNumber, filterValues.seatSection, debouncedSearch]);
 
   const paginatedTicket = useMemo(() => {
     const start = (page - 1) * ITEMS_PER_PAGE;
@@ -88,8 +104,7 @@ const ScheduleTickets = () => {
         unsold: 0,
         allocated: 0,
         notAllocated: 0,
-        orchestra: 0,
-        balcony: 0,
+        regularTickets: 0,
         complimentary: 0,
       };
 
@@ -97,10 +112,7 @@ const ScheduleTickets = () => {
     const notAllocated = tickets.filter((ticket) => !ticket.isComplimentary).length - allocated;
     const sold = tickets.filter((t) => t.isRemitted).length;
     const unsold = allocated - sold;
-
-    const orchestra = tickets.filter((t) => t.ticketSection === "orchestra").length;
-    const balcony = tickets.filter((t) => t.ticketSection === "balcony").length;
-
+    const regularTickets = tickets.filter((t) => !t.isComplimentary).length;
     const complimentary = tickets.filter((t) => t.isComplimentary).length;
 
     return {
@@ -109,35 +121,17 @@ const ScheduleTickets = () => {
       unsold,
       allocated,
       notAllocated,
-      orchestra,
-      balcony,
+      regularTickets,
       complimentary,
     };
   }, [tickets]);
-
-  const ticketBarChartData = [
-    { name: "balcony", value: summary.balcony, fill: "hsl(var(--chart-4))" },
-    { name: "orchestra", value: summary.orchestra, fill: "hsl(var(--chart-3))" },
-    { name: "complimentary", value: summary.complimentary, fill: "hsl(var(--chart-2))" },
-  ];
-
-  const ticketBarCharConfig = {
-    balcony: {
-      label: "Balcony",
-    },
-    orchestra: {
-      label: "Orchestra",
-    },
-    complimentary: {
-      label: "Complimentary",
-    },
-  } satisfies ChartConfig;
 
   const ticketInformationSummaryData = [
     { name: "allocated", value: summary.allocated, fill: "hsl(var(--chart-1))" },
     { name: "not", value: summary.notAllocated, fill: "grey" },
     { name: "sold", value: summary.sold, fill: "green" },
     { name: "unsold", value: summary.unsold, fill: "red" },
+    { name: "complimentary", value: summary.complimentary, fill: "hsl(var(--chart-4))" },
   ];
 
   const ticketInformationSummaryConfig = {
@@ -153,6 +147,9 @@ const ScheduleTickets = () => {
     unsold: {
       label: "Unsold Tickets",
     },
+    complimentary: {
+      label: "Complimentary Tickets",
+    },
   } satisfies ChartConfig;
 
   if (loadingTickets) {
@@ -165,9 +162,14 @@ const ScheduleTickets = () => {
 
   return (
     <>
-      <h1 className="text-2xl">Ticket Information</h1>
+      <h1 className="text-2xl">Schedule Tickets</h1>
 
-      <div className="flex flex-col md:flex-row gap-3">
+      <div className="flex flex-col lg:flex-row gap-3">
+        <div className="flex gap-2 lg:flex-col">
+          <SimpleCard label="Total Tickets" value={summary.total} />
+          <SimpleCard label="Regular Tickets" value={summary.regularTickets} />
+          <SimpleCard label="Complimentary Tickets" value={summary.complimentary} />
+        </div>
         <Card>
           <CardHeader>
             <CardTitle>Ticket Statuses Breakdown</CardTitle>
@@ -208,41 +210,13 @@ const ScheduleTickets = () => {
           </CardContent>
         </Card>
 
-        <Card className="w-full h-fit">
+        {/* <Card className="w-full h-fit">
           <CardHeader>
             <CardTitle>Ticket Distribution by Section</CardTitle>
             <CardDescription>Number of tickets per section (Balcony, Orchestra, Complimentary)</CardDescription>
           </CardHeader>
-          <CardContent>
-            <ChartContainer className="h-36 w-full" config={ticketBarCharConfig}>
-              <BarChart
-                barCategoryGap={30}
-                accessibilityLayer
-                data={ticketBarChartData}
-                layout="vertical"
-                margin={{
-                  left: 40,
-                  right: 20,
-                }}
-              >
-                <YAxis
-                  dataKey="name"
-                  type="category"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => ticketBarCharConfig[value as keyof typeof ticketBarCharConfig]?.label}
-                />
-
-                <XAxis type="number" axisLine={true} tickLine={true} tick={{ fontSize: 12 }} tickCount={10} />
-
-                <CartesianGrid vertical={false} horizontal={true} strokeDasharray="3 3" />
-                <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-                <Bar dataKey="value" layout="vertical" radius={5} barSize={20} />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
+          <CardContent></CardContent>
+        </Card> */}
       </div>
 
       <div>
@@ -264,12 +238,22 @@ const ScheduleTickets = () => {
             />
             <Dropdown
               className="w-fit"
-              label="Select Section"
-              placeholder="Select Section"
+              label="Select"
+              placeholder="Select"
               items={sectionOptions}
               onChange={(value) => setFilterValues((prev) => ({ ...prev, section: value }))}
               value={filterValues.section}
             />
+            {schedule.seatingType == "controlledSeating" && (
+              <Dropdown
+                className="w-fit"
+                label="Select Section"
+                placeholder="Select Section"
+                items={seatSectionOptions}
+                onChange={(value) => setFilterValues((prev) => ({ ...prev, seatSection: value }))}
+                value={filterValues.seatSection}
+              />
+            )}
           </div>
         </div>
 
@@ -290,9 +274,9 @@ const ScheduleTickets = () => {
               render: (ticket) => formatTicket(ticket.controlNumber),
             },
             {
-              key: "section",
-              header: "Seat Section",
-              render: (ticket) => ticket.ticketSection?.toUpperCase() ?? "Complimentary Seat",
+              key: "price.",
+              header: "Ticket Price",
+              render: (ticket) => formatCurrency(ticket.ticketPrice),
             },
 
             ...(schedule.seatingType === "controlledSeating"
@@ -301,6 +285,16 @@ const ScheduleTickets = () => {
                     key: "seat",
                     header: "Seat Number",
                     render: (ticket: Ticket) => ticket.seatNumber,
+                  },
+                ]
+              : []),
+
+            ...(schedule.seatingType === "controlledSeating"
+              ? [
+                  {
+                    key: "section",
+                    header: "Section",
+                    render: (ticket: Ticket) => formatSectionName(ticket.seatSection),
                   },
                 ]
               : []),
@@ -320,7 +314,14 @@ const ScheduleTickets = () => {
               headerClassName: "text-right",
               render: (ticket) => (
                 <div className="flex gap-2 justify-end  items-center ">
-                  <Button>View Ticket</Button>
+                  <DialogPopup className="max-w-3xl" title="Ticket Information" triggerElement={<Button>View Ticket</Button>}>
+                    <ViewTicket
+                      status={ticket.status}
+                      ticketPrice={ticket.ticketPrice}
+                      scheduleId={scheduleId as string}
+                      controlNumber={ticket.controlNumber}
+                    />
+                  </DialogPopup>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline">
