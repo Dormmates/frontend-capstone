@@ -43,7 +43,7 @@ const KPISummary = ({ isHead, selectedDepartment }: KPISummaryProps) => {
         // </div>
         <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 ${isHead && selectedDepartment === "all" ? "xl:grid-cols-6" : ""}`}>
           <KPICard title="Total Shows" value={data.totalShows ?? 0} />
-          <KPICard title="Upcoming Shows (Next 30 Days)" value={data.upcomingShows ?? 0} />
+          <KPICard title="Upcoming Shows" value={data.upcomingShows ?? 0} />
           {isHead && selectedDepartment === "all" && <KPICard title="Total Departments" value={data.totalDepartments ?? 0} />}
           <KPICard title="Open Schedules" value={data.openSchedules ?? 0} />
           <KPICard title="Closed Schedules" value={data.closedSchedules ?? 0} />

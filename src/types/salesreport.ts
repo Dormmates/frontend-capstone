@@ -35,6 +35,7 @@ export type SectionReport = {
 };
 
 export type DistributorReport = {
+  distributorType: string;
   distributorId: string;
   distributorName: string;
   ticketsSold: number;

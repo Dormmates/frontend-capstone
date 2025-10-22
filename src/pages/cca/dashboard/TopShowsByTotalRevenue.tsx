@@ -55,7 +55,7 @@ const TopShowsByTotalRevenue = ({ isHead, selectedDepartment }: TopShowsByTotalR
   }
 
   return (
-    <Card className="w-full">
+    <Card>
       <CardHeader>
         <CardTitle>
           <p>{!isHead && user?.department && user.department.name} Top Shows by Total Revenue</p>

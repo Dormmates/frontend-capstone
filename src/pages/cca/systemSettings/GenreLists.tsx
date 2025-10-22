@@ -50,6 +50,11 @@ const GenreLists = () => {
                     <EditGenre genre={genre.genre} />
                     <AlertModal
                       onConfirm={() => {
+                        if (genre.showCount > 0) {
+                          toast.error("Cannot Delete Genre, this genre was currently used by other shows", { position: "top-center" });
+                          return;
+                        }
+
                         toast.promise(deleteGenre.mutateAsync(genre.genre), {
                           position: "top-center",
                           loading: "Deleting Genre...",
@@ -66,7 +71,7 @@ const GenreLists = () => {
                       title="Delete Genre"
                       description="This will permanently remove the selected genre from the system. You can only delete genres that are not currently assigned to any shows."
                       trigger={
-                        <Button size="icon" disabled={genre.showCount > 0} variant="outline">
+                        <Button size="icon" variant="outline">
                           <Trash2Icon className="text-red" />
                         </Button>
                       }

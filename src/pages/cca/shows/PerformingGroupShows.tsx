@@ -88,15 +88,21 @@ const PerformingGroupShows = () => {
   return (
     <ContentWrapper>
       <h1 className="text-3xl">{!user.roles.includes("head") ? user.department?.name : "Performing Group"} Shows</h1>
-      <div className="flex justify-between">
-        <div className="flex gap-5 mt-10 flex-wrap">
-          <SimpleCard icon={<TheaterIcon size={18} />} label="Total Show" value={filteredShows.length} />
+      <div className="flex justify-between mt-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 md:gap-5 gap-2">
+          <SimpleCard className="w-full" icon={<TheaterIcon size={18} />} label="Total Show" value={filteredShows.length} />
           <SimpleCard
+            className="w-full"
             icon={<DramaIcon size={18} />}
             label="Major Concert"
             value={filteredShows.filter((s) => s.showType === "majorConcert").length}
           />
-          <SimpleCard icon={<SpotlightIcon size={18} />} label="Show Case" value={filteredShows.filter((s) => s.showType === "showCase").length} />
+          <SimpleCard
+            className="w-full"
+            icon={<SpotlightIcon size={18} />}
+            label="Show Case"
+            value={filteredShows.filter((s) => s.showType === "showCase").length}
+          />
         </div>
         <Link className="self-end" to={"/shows/add?showType=group"}>
           <Button>Add New Show</Button>

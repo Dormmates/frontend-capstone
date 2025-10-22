@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import type { SalesReport, DistributorReport, ScheduleReport } from "@/types/salesreport";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
 import { formatCurrency } from "@/utils";
+import { distributorTypeOptions } from "@/types/user";
 
 interface Props {
   report: SalesReport;
@@ -21,6 +22,7 @@ const SalesByDistributor = ({ report }: Props) => {
         <TableRow>
           <TableHead className="border border-gray-400 font-bold text-black">Date</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Time</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-black">Type</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Distributor</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Tickets Sold</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Total Remitted</TableHead>
@@ -58,6 +60,9 @@ const SalesByDistributor = ({ report }: Props) => {
 
                   {/* Distributor row */}
                   <TableCell className="border border-gray-400">{d.distributorName}</TableCell>
+                  <TableCell className="border border-gray-400">
+                    {distributorTypeOptions.find((t) => t.value === d.distributorType)?.name ?? "No Type"}
+                  </TableCell>
                   <TableCell className="border border-gray-400">{d.ticketsSold}</TableCell>
                   <TableCell className="border border-gray-400">{formatCurrency(d.totalAmountRemitted)}</TableCell>
                   <TableCell className="border border-gray-400">{formatCurrency(d.totalCommission)}</TableCell>
@@ -69,7 +74,7 @@ const SalesByDistributor = ({ report }: Props) => {
 
         {/* Totals Row */}
         <TableRow className="font-bold bg-muted/50">
-          <TableCell className="border border-gray-400" colSpan={3}>
+          <TableCell className="border border-gray-400" colSpan={4}>
             Overall Totals
           </TableCell>
           <TableCell className="border border-gray-400">
