@@ -75,9 +75,21 @@ const ScheduleDistributorAndRemittances = () => {
             )}
           </div>
 
-          <Button disabled={!schedule.isOpen || show.isArchived}>
-            <Link to={`/shows/${showId}/${scheduleId}/allocation`}>Allocate Ticket</Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => {
+                const url = `/ticketInformation/${scheduleId}`;
+                window.open(url, "_blank");
+              }}
+              variant="secondary"
+            >
+              Generate Ticket Allocations
+            </Button>
+
+            <Button disabled={!schedule.isOpen || show.isArchived}>
+              <Link to={`/shows/${showId}/${scheduleId}/allocation`}>Allocate Ticket</Link>
+            </Button>
+          </div>
         </div>
 
         <PaginatedTable

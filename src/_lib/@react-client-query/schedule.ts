@@ -140,6 +140,20 @@ export const useGetTicketLogs = (scheduleId: string, controlNumber: number) => {
   });
 };
 
+export const useGenerateTicketInformation = (scheduleId: string) => {
+  return useQuery<{ distributorName: string; controlNumber: number; currentStatus: TicketStatuses; isComplimentary: boolean }[], Error>({
+    queryKey: ["ticket", "informations", scheduleId],
+    queryFn: async () => {
+      const res = await request<{ distributorName: string; controlNumber: number; currentStatus: TicketStatuses; isComplimentary: boolean }[]>(
+        `/api/schedule/ticket/informations/${scheduleId}`,
+        {},
+        "get"
+      );
+      return res.data;
+    },
+  });
+};
+
 export const useGetScheduleDistributors = (scheduleId: string) => {
   return useQuery<
     {

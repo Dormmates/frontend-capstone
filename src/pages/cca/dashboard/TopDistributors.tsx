@@ -7,9 +7,6 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { DataTable } from "@/components/DataTable";
 import { formatCurrency } from "@/utils";
 import top1Icon from "@/assets/icons/top1.png";
-import trophy from "@/assets/icons/award.png";
-import trophy2 from "@/assets/icons/2nd.png";
-import trophy3 from "@/assets/icons/3rd.png";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
 import { Link } from "react-router-dom";
 
@@ -47,8 +44,6 @@ const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) =
     );
   }
 
-  console.log(topDistributors);
-
   return (
     <Card>
       <CardHeader>
@@ -69,24 +64,7 @@ const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) =
               {
                 key: "rank",
                 header: "Rank",
-                render: (_, index) => (
-                  <span
-                    className={`font-semibold ${
-                      index === 0
-                        ? "text-primary font-bold text-2xl"
-                        : index === 1
-                        ? "text-orange-400 font-medium text-xl"
-                        : index === 2
-                        ? "text-amber-700 text-lg"
-                        : ""
-                    }`}
-                  >
-                    {index === 0 && <img className="w-10 h-10" src={trophy} alt="1" />}
-                    {index === 1 && <img className="w-8 h-8" src={trophy2} alt="2" />}
-                    {index === 2 && <img className="w-6 h-6" src={trophy3} alt="3" />}
-                    {index > 2 && index + 1}
-                  </span>
-                ),
+                render: (_, index) => <span>{index + 1}.</span>,
               },
               {
                 key: "name",

@@ -49,6 +49,7 @@ import CustomerViewSchedule from "@/pages/customer/CustomerViewSchedule";
 import SalesReport from "@/pages/cca/shows/SalesReport";
 import TicketSeatLocation from "@/components/TicketSeatLocation";
 import LandingPage from "@/pages/customer/LandingPage";
+import TicketInformations from "@/pages/cca/shows/schedules/distributorAndRemitances/TicketInformations";
 
 const AppRoute = () => {
   const { user } = useAuthContext();
@@ -148,6 +149,7 @@ const AppRoute = () => {
       <Route path="/unathorized" element={<Unauthorized />} />
       <Route path="*" element={<NotFound />} />
       <Route path="salesreport/:showId/:scheduleIds" element={<SalesReport />} />
+      <Route path="ticketInformation/:scheduleId" element={<TicketInformations />} />
       <Route path="seatLocation/:controlNumberParam/:scheduleIdParam" element={<TicketSeatLocation />} />
     </Routes>
   );
