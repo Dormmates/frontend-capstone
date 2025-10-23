@@ -3,10 +3,10 @@ import { useAuthContext } from "@/context/AuthContext";
 import { distributorTypeOptions, type Distributor, type User } from "@/types/user";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDebounce } from "@/hooks/useDeabounce";
 import { ContentWrapper } from "@/components/layout/Wrapper";
-import { EditIcon, MailIcon, NavigationIcon, PhoneIcon, Users } from "lucide-react";
+import { EditIcon, MailIcon, PhoneIcon, Users } from "lucide-react";
 import DialogPopup from "@/components/DialogPopup";
 import { Button } from "@/components/ui/button";
 import BulkDistributorCreation from "./BulkDistributorCreation";
@@ -41,7 +41,6 @@ const ViewPerformingGroups = () => {
 
   const [isAddDistributor, setIsAddDistributor] = useState(false);
   const [selectedDistributor, setSelectedDistributor] = useState<Distributor | null>(null);
-  const [selectedDistributors, setSelectedDistributors] = useState<Distributor[]>([]);
   const [selectedLetter, setSelectedLetter] = useState("All");
   const [showArchived, setShowArchived] = useState(false);
 
@@ -104,17 +103,6 @@ const ViewPerformingGroups = () => {
   useEffect(() => {
     document.title = `${groupOptions.find((t) => t.value === groupId)?.name ?? "Performing Group"} Members`;
   }, [groupOptions]);
-
-  const handleSelect = (distributor: Distributor) => {
-    setSelectedDistributors((prev) => {
-      const isSelected = prev.some((d) => d.userId === distributor.userId);
-      if (isSelected) {
-        return prev.filter((d) => d.userId !== distributor.userId);
-      } else {
-        return [...prev, distributor];
-      }
-    });
-  };
 
   if (loadingDistributors || loadingDepartments) {
     return <h1>Loaddingg..</h1>;
@@ -194,30 +182,13 @@ const ViewPerformingGroups = () => {
             </div>
 
             <p className="text-sm">Total : {searchedDistributors.length}</p>
-            {selectedDistributors.length !== 0 && (
-              <div className="flex flex-col gap-2 m-0">
-                <p className="text-sm font-medium">Selected Member: {selectedDistributors.length}</p>
-                <div className="flex gap-2">
-                  <Button variant="secondary" onClick={() => toast.info("This feature will come soon", { position: "top-center" })}>
-                    Archive Selected Member
-                  </Button>
-                  {/* <Button variant="secondary" onClick={() => toast.info("This feature will come soon", { position: "top-center" })}>
-                    Delete Selected Member
-                  </Button> */}
-                </div>
-              </div>
-            )}
 
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {searchedDistributors.map((distributor) => {
-                const isChecked = selectedDistributors.some((d) => d.userId === distributor.userId);
-
                 return (
                   <div
-                    onClick={() => handleSelect(distributor)}
-                    className={`p-5 border rounded-md shadow-sm font-medium cursor-pointer hover:shadow-xl ${
-                      isChecked ? "border-primary shadow-primary shadow-lg" : ""
-                    }`}
+                    onClick={() => navigate(`/manage/distributors/${distributor.userId}`)}
+                    className={`p-5 border rounded-md shadow-sm font-medium cursor-pointer hover:shadow-xl `}
                     key={distributor.userId}
                   >
                     <div className="flex justify-between items-center">
@@ -253,13 +224,6 @@ const ViewPerformingGroups = () => {
                           </div>
                         </>
                       )}
-                      <div onClick={(e) => e.stopPropagation()}>
-                        <Link to={`/manage/distributors/${distributor.userId}`}>
-                          <Button size="icon" variant="outline">
-                            <NavigationIcon />
-                          </Button>
-                        </Link>
-                      </div>
                     </div>
                   </div>
                 );

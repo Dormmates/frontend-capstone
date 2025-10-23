@@ -45,7 +45,6 @@ import CustomerShows from "@/pages/customer/CustomerShows";
 import CustomerLayout from "@/pages/customer/CustomerLayout";
 import CustomerViewShow from "@/pages/customer/CustomerViewShow";
 import CustomerViewSchedule from "@/pages/customer/CustomerViewSchedule";
-
 import SalesReport from "@/pages/cca/shows/SalesReport";
 import TicketSeatLocation from "@/components/TicketSeatLocation";
 import LandingPage from "@/pages/customer/LandingPage";

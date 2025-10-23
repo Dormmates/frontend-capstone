@@ -390,7 +390,7 @@ export const useUnRemitTicketSales = () => {
 
 export const useUpdateTallyData = () => {
   return useMutation<any, Error, { femaleCount: number; maleCount: number; scheduleId: string }>({
-    mutationFn: async (payload: { femaleCount: number; maleCount: number; scheduleId: string }) => {
+    mutationFn: async (payload) => {
       const res = await request<any>("/api/schedule/tallyData", payload, "post");
       return res.data;
     },
@@ -415,5 +415,23 @@ export const useGetDistributorTicketActivities = (scheduleId: string) => {
       return res.data;
     },
     retry: false,
+  });
+};
+
+export const useTrainerSellTicket = () => {
+  return useMutation<any, Error, { scheduleId: string; controlNumber: number; trainerId: string; customerEmail?: string; customerName?: string }>({
+    mutationFn: async (payload) => {
+      const res = await request(`/api/schedule/sell/ticket`, payload, "post");
+      return res.data;
+    },
+  });
+};
+
+export const useTrainerUnsoldTicket = () => {
+  return useMutation<any, Error, { scheduleId: string; controlNumber: number; trainerId: string }>({
+    mutationFn: async (payload) => {
+      const res = await request(`/api/schedule/unsell/ticket`, payload, "post");
+      return res.data;
+    },
   });
 };

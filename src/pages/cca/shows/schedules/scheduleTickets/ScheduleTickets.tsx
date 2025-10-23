@@ -1,5 +1,5 @@
 import { useOutletContext, useParams } from "react-router-dom";
-import { useGetScheduleTickets } from "@/_lib/@react-client-query/schedule.ts";
+import { useGetScheduleTickets, useTrainerSellTicket, useTrainerUnsoldTicket } from "@/_lib/@react-client-query/schedule.ts";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
 import type { Schedule } from "@/types/schedule.ts";
@@ -26,8 +26,14 @@ import { Settings2Icon } from "lucide-react";
 import SimpleCard from "@/components/SimpleCard";
 import DialogPopup from "@/components/DialogPopup";
 import ViewTicket from "@/components/ViewTicket";
-import { formatCurrency } from "@/utils";
+import { formatCurrency, isValidEmail } from "@/utils";
 import { formatSectionName } from "@/utils/seatmap";
+import { distributorTypeOptions } from "@/types/user";
+import Modal from "@/components/Modal";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { Label as InputLabel } from "@/components/ui/label";
+import { useAuthContext } from "@/context/AuthContext";
 
 const statusOptions = [
   { name: "All Status", value: "all" },
@@ -60,6 +66,10 @@ const ScheduleTickets = () => {
   const [filterValues, setFilterValues] = useState({ controlNumber: "", section: "all", status: "all", seatSection: "all" });
   const debouncedSearch = useDebounce(filterValues.controlNumber);
   const [page, setPage] = useState(1);
+
+  const [isSellTicket, setIsSellTicket] = useState(false);
+  const [isUnSellTicket, setUnIsSellTicket] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
 
   const filteredTickets = useMemo(() => {
     if (!tickets) return [];
@@ -209,14 +219,6 @@ const ScheduleTickets = () => {
             </ChartContainer>
           </CardContent>
         </Card>
-
-        {/* <Card className="w-full h-fit">
-          <CardHeader>
-            <CardTitle>Ticket Distribution by Section</CardTitle>
-            <CardDescription>Number of tickets per section (Balcony, Orchestra, Complimentary)</CardDescription>
-          </CardHeader>
-          <CardContent></CardContent>
-        </Card> */}
       </div>
 
       <div>
@@ -278,6 +280,14 @@ const ScheduleTickets = () => {
               header: "Ticket Price",
               render: (ticket) => formatCurrency(ticket.ticketPrice),
             },
+            {
+              key: "distributor.",
+              header: "Ticket Distributor",
+              render: (ticket) =>
+                ticket.distributorName
+                  ? `${ticket.distributorName} (${distributorTypeOptions.find((d) => d.value == ticket.distributorType)?.name ?? "Trainer"})`
+                  : "",
+            },
 
             ...(schedule.seatingType === "controlledSeating"
               ? [
@@ -306,7 +316,7 @@ const ScheduleTickets = () => {
             {
               key: "status",
               header: "Ticket Status",
-              render: (ticket) => (["sold", "remitted"].includes(ticket.status) ? "Sold" : ticket.status),
+              render: (ticket) => ticket.status.toUpperCase(),
             },
             {
               key: "action",
@@ -328,11 +338,31 @@ const ScheduleTickets = () => {
                         <Settings2Icon />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent>
+                    <DropdownMenuContent side="left" align="start">
                       <DropdownMenuLabel>Select Options</DropdownMenuLabel>
                       <DropdownMenuGroup>
                         <DropdownMenuItem>Transfer Ticket to another Schedule</DropdownMenuItem>
-                        {ticket.isComplimentary && <DropdownMenuItem> Mark as Non-Complimentary</DropdownMenuItem>}
+                        {!ticket.isComplimentary && ticket.status == "not_allocated" && (
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setIsSellTicket(true);
+                              setSelectedTicket(ticket);
+                            }}
+                          >
+                            Sell Ticket
+                          </DropdownMenuItem>
+                        )}
+                        {!ticket.isComplimentary && ticket.trainerSold && (
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setUnIsSellTicket(true);
+                              setSelectedTicket(ticket);
+                            }}
+                          >
+                            Unsold Ticket
+                          </DropdownMenuItem>
+                        )}
+                        {/* {ticket.isComplimentary && <DropdownMenuItem> Mark as Non-Complimentary</DropdownMenuItem>} */}
                       </DropdownMenuGroup>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -342,7 +372,232 @@ const ScheduleTickets = () => {
           ]}
         />
       </div>
+
+      {isSellTicket && !!selectedTicket && (
+        <Modal
+          onClose={() => {
+            setIsSellTicket(false);
+            setSelectedTicket(null);
+          }}
+          title="Sell Ticket"
+          isOpen={isSellTicket && !!selectedTicket}
+        >
+          <SellTicket
+            setSelectedTicket={setSelectedTicket}
+            setSellTicket={setIsSellTicket}
+            scheduleId={scheduleId as string}
+            ticket={selectedTicket}
+          />
+        </Modal>
+      )}
+
+      {isUnSellTicket && !!selectedTicket && (
+        <Modal
+          onClose={() => {
+            setUnIsSellTicket(false);
+            setSelectedTicket(null);
+          }}
+          title="Unsold the Ticket"
+          isOpen={isUnSellTicket && !!selectedTicket}
+        >
+          <UnSellTicket
+            setSelectedTicket={setSelectedTicket}
+            setUnSellTicket={setUnIsSellTicket}
+            scheduleId={scheduleId as string}
+            ticket={selectedTicket}
+          />
+        </Modal>
+      )}
     </>
+  );
+};
+
+type SellTicketProps = {
+  ticket: Ticket;
+  scheduleId: string;
+  setSellTicket: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedTicket: React.Dispatch<React.SetStateAction<Ticket | null>>;
+};
+
+const SellTicket = ({ ticket, scheduleId, setSellTicket, setSelectedTicket }: SellTicketProps) => {
+  const { user } = useAuthContext();
+
+  const queryClient = useQueryClient();
+  const sellTicket = useTrainerSellTicket();
+
+  const [customerInfo, setCustomerInfo] = useState({ email: "", name: "", includeInfo: false });
+  const [errors, setErrors] = useState<{ email?: string; name?: string }>({});
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCustomerInfo((prev) => ({ ...prev, [name]: value }));
+
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const submit = () => {
+    let isValid = true;
+    const newErrors: typeof errors = {};
+
+    if (customerInfo.includeInfo) {
+      if (!customerInfo.name) {
+        newErrors.name = "Please enter customer name";
+        isValid = false;
+      }
+
+      if (!customerInfo.email) {
+        newErrors.email = "Please enter customer email";
+        isValid = false;
+      } else if (!isValidEmail(customerInfo.email)) {
+        newErrors.name = "Please enter a valid email format";
+        isValid = false;
+      }
+
+      setErrors(newErrors);
+    }
+
+    if (!isValid) {
+      return;
+    }
+
+    const payload: { scheduleId: string; controlNumber: number; trainerId: string; customerEmail?: string; customerName?: string } = {
+      trainerId: user?.userId as string,
+      scheduleId,
+      controlNumber: ticket.controlNumber,
+    };
+
+    if (customerInfo.includeInfo) {
+      payload.customerEmail = customerInfo.email.trim();
+      payload.customerName = customerInfo.name.trim();
+    }
+
+    toast.promise(sellTicket.mutateAsync(payload), {
+      success: () => {
+        queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId], exact: true });
+        setSellTicket(false);
+        setSelectedTicket(null);
+        return "Ticket Sold and Remitted";
+      },
+      error: (err) => err.message || "Failed to Sell Ticket, please try again later",
+      loading: "Ticket is being processed",
+      position: "top-center",
+    });
+  };
+
+  return (
+    <div>
+      <div>
+        <p>Ticket Control Number: {formatTicket(ticket.controlNumber)}</p>
+        <p>Ticket Price: {formatCurrency(ticket.ticketPrice)}</p>
+      </div>
+
+      <div className="flex items-center gap-2 mb-3 text-yellow-700 text-sm bg-yellow-50 border-2 border-yellow-200 rounded-md p-2 mt-3">
+        <div className="flex gap-1 flex-col">
+          <p className="font-bold">Note: </p>
+          <p>
+            When a trainer sells a ticket directly, the ticket will be marked as <span className="font-medium">sold</span> and automatically{" "}
+            <span className="font-medium">remitted</span>. The trainer will be recorded as the seller of that ticket.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex gap-2 items-center my-5">
+        <input
+          id="cust-info"
+          className="cursor-pointer"
+          type="checkbox"
+          checked={customerInfo.includeInfo}
+          onChange={(e) => setCustomerInfo((prev) => ({ ...prev, includeInfo: e.target.checked }))}
+        />
+        <InputLabel htmlFor="cust-info">Input Customer Info</InputLabel>
+      </div>
+      {customerInfo.includeInfo && (
+        <div className="flex flex-col gap-2 border p-5 rounded-md">
+          <InputField
+            disabled={sellTicket.isPending}
+            error={errors.email}
+            label="Customer Email"
+            onChange={handleInputChange}
+            value={customerInfo.email}
+            type="email"
+            name="email"
+          />
+          <InputField
+            disabled={sellTicket.isPending}
+            error={errors.name}
+            label="Customer Name"
+            onChange={handleInputChange}
+            value={customerInfo.name}
+            name="name"
+          />
+        </div>
+      )}
+      <div className="flex justify-end mt-3">
+        <Button disabled={sellTicket.isPending} onClick={submit}>
+          Sell Ticket
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+type UnSellTicketProps = {
+  ticket: Ticket;
+  scheduleId: string;
+  setUnSellTicket: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedTicket: React.Dispatch<React.SetStateAction<Ticket | null>>;
+};
+
+const UnSellTicket = ({ ticket, scheduleId, setUnSellTicket, setSelectedTicket }: UnSellTicketProps) => {
+  const { user } = useAuthContext();
+
+  const queryClient = useQueryClient();
+  const unsellTicket = useTrainerUnsoldTicket();
+
+  const submit = () => {
+    const payload: { scheduleId: string; controlNumber: number; trainerId: string } = {
+      trainerId: user?.userId as string,
+      scheduleId,
+      controlNumber: ticket.controlNumber,
+    };
+
+    toast.promise(unsellTicket.mutateAsync(payload), {
+      success: () => {
+        queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId], exact: true });
+        setUnSellTicket(false);
+        setSelectedTicket(null);
+        return "Ticket Unsold and Unremitted";
+      },
+      error: (err) => err.message || "Failed to Unsold the Ticket, please try again later",
+      loading: "Ticket is being processed",
+      position: "top-center",
+    });
+  };
+
+  return (
+    <div>
+      <div>
+        <p>Ticket Control Number: {formatTicket(ticket.controlNumber)}</p>
+        <p>Ticket Price: {formatCurrency(ticket.ticketPrice)}</p>
+      </div>
+
+      <div className="flex items-center gap-2 mb-3 text-yellow-700 text-sm bg-yellow-50 border-2 border-yellow-200 rounded-md p-2 mt-3">
+        <div className="flex gap-1 flex-col">
+          <p className="font-bold">Note: </p>
+          <p>
+            This ticket was <span className="font-medium">sold and remitted directly</span> by the trainer. Unselling it will revert the ticket’s
+            status to <span className="font-medium">available</span> and remove its remittance record. Please ensure this action is intended before
+            proceeding.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex justify-end mt-3">
+        <Button disabled={unsellTicket.isPending} onClick={submit}>
+          Unsold Ticket
+        </Button>
+      </div>
+    </div>
   );
 };
 

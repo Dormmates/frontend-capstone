@@ -77,7 +77,7 @@ const ScheduleSummary = () => {
 
   const ticketsAllocatedAndRemittanceChartData = [
     { name: "allocated", value: summary.ticketsSummary.regularTickets.allocated, fill: "hsl(var(--chart-2))" },
-    { name: "notAllocated", value: summary.ticketsSummary.regularTickets.notAllocated, fill: "hsl(var(--chart-4))" },
+    { name: "notAllocated", value: summary.ticketsSummary.regularTickets.notAllocated, fill: "grey" },
     { name: "remitted", value: summary.ticketsSummary.regularTickets.remitted, fill: "hsl(122 42.2% 45.8%)" },
     { name: "pendingRemittance", value: summary.ticketsSummary.regularTickets.unremitted, fill: "hsl(0 54.2% 45.8%)" },
   ];

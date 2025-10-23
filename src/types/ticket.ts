@@ -5,6 +5,8 @@ export type TicketStatuses = "sold" | "lost" | "not_allocated" | "allocated";
 type TicketSection = "orchestra" | "balcony";
 
 export interface Ticket {
+  distributorName: string;
+  distributorType: string;
   scheduleId: string;
   ticketPrice: number;
   isComplimentary: boolean;
@@ -16,6 +18,7 @@ export interface Ticket {
   seatNumber: string | null;
   distributorId: string | null;
   isRemitted: boolean;
+  trainerSold: boolean;
   ticketTransferMetaData: {
     oldControlNumber: number;
     oldShowId: string;

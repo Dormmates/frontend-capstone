@@ -128,7 +128,7 @@ const NotificationContent = () => {
 
       {allNotifications.map((notification) => {
         const isRead = !!notification.readAt;
-        const textColor = isRead ? "text-muted-foreground" : "text-black";
+        const textColor = isRead ? "text-muted-foreground" : "text-foreground";
 
         return (
           <div key={notification.notificationId} className="flex flex-col border-b pb-2">
@@ -137,7 +137,7 @@ const NotificationContent = () => {
                 <Button variant="link" className="w-full p-3 text-left flex flex-col items-start mt-4" onClick={() => handleRead(notification)}>
                   <div className="flex justify-between items-start w-full">
                     <div className="flex flex-col">
-                      <p className={`${textColor} font-semibold flex gap-2 items-center `}>
+                      <p className={`${textColor}  font-semibold flex gap-2 items-center `}>
                         {iconMap[notification.type]}
                         <p className={`break-words truncate max-w-[250px]`}>{notification.title}</p>
                       </p>

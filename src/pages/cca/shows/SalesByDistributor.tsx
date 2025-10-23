@@ -22,8 +22,8 @@ const SalesByDistributor = ({ report }: Props) => {
         <TableRow>
           <TableHead className="border border-gray-400 font-bold text-black">Date</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Time</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black">Type</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black">Distributor</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-black">Distributor Name</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-black">Distributor Type</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Tickets Sold</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Total Remitted</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Commission</TableHead>
@@ -61,7 +61,7 @@ const SalesByDistributor = ({ report }: Props) => {
                   {/* Distributor row */}
                   <TableCell className="border border-gray-400">{d.distributorName}</TableCell>
                   <TableCell className="border border-gray-400">
-                    {distributorTypeOptions.find((t) => t.value === d.distributorType)?.name ?? "No Type"}
+                    {distributorTypeOptions.find((t) => t.value === d.distributorType)?.name ?? "Trainer"}
                   </TableCell>
                   <TableCell className="border border-gray-400">{d.ticketsSold}</TableCell>
                   <TableCell className="border border-gray-400">{formatCurrency(d.totalAmountRemitted)}</TableCell>

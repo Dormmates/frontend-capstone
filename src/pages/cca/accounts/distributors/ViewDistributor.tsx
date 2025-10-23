@@ -5,8 +5,10 @@ import { ContentWrapper } from "@/components/layout/Wrapper";
 import PaginatedTable from "@/components/PaginatedTable";
 import { Button } from "@/components/ui/button";
 import type { DistributorScheduleTickets } from "@/types/ticket";
+import { distributorTypeOptions } from "@/types/user";
 import { formatCurrency } from "@/utils";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
+import { MailIcon, NetworkIcon, PhoneIcon, TypeIcon } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
@@ -43,7 +45,24 @@ const ViewDistributor = () => {
 
       <div className="mb-10">
         <h1 className="text-xl">{distributor.firstName + " " + distributor.lastName}</h1>
-        <div></div>
+        <div className="border w-fit p-3 rounded-md mt-2 bg-muted">
+          <div className="flex flex-col gap-1">
+            <p className="flex items-center gap-2 text-sm">
+              <MailIcon className="w-4" /> <span>{distributor.email}</span>
+            </p>
+            <p className="flex items-center gap-2 text-sm">
+              <PhoneIcon className="w-4" /> <span>{distributor.distributor.contactNumber}</span>
+            </p>
+            <p className="flex items-center gap-2 text-sm">
+              <TypeIcon className="w-4" />{" "}
+              <span>{distributorTypeOptions.find((d) => d.value === distributor.distributor.distributorType)?.name}</span>
+            </p>
+            <p className="flex items-center gap-2 text-sm">
+              <NetworkIcon className="w-4" />{" "}
+              <span>{distributor.distributor?.department ? distributor.distributor.department.name : "No Group"}</span>
+            </p>
+          </div>
+        </div>
       </div>
 
       <p className="text-darkGrey mb-3 font-medium">Shows and show schedules that distributor have current allocations</p>

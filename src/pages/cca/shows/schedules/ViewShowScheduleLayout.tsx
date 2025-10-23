@@ -19,7 +19,7 @@ const ViewShowScheduleLayout = () => {
 
   const links = [
     { name: "Summary", path: "" },
-    { name: "Distributor and Remittance", path: "d&r" },
+    { name: "Ticket Distributors", path: "d&r" },
     { name: "Tickets", path: "tickets" },
     { name: "Seats", path: "seats", hidden: schedule?.seatingType === "freeSeating" },
     { name: "Tally Data", path: "tally" },
@@ -54,7 +54,7 @@ const ViewShowScheduleLayout = () => {
                     <NavLink
                       key={link.path}
                       end={link.path == ""}
-                      className={({ isActive }) => (isActive ? "font-semibold" : "font-normal text-lightGrey")}
+                      className={({ isActive }) => (isActive ? "font-semibold text-lg" : "font-normal text-lightGrey")}
                       to={`/shows/schedule/${showId}/${scheduleId}/${link.path}`}
                     >
                       {link.name}
