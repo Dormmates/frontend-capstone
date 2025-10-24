@@ -1,13 +1,13 @@
 import { useGetDepartments } from "@/_lib/@react-client-query/department";
 import { useGetShows } from "@/_lib/@react-client-query/show";
 import ccaLogo from "@/assets/images/cca-logo.png";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
 import { TheaterIcon } from "lucide-react";
 import CustomerShowCard from "./components/CustomerShowCard";
 import { Label } from "@/components/ui/label";
 import Breadcrumbs from "@/components/BreadCrumbs";
+import Navbar from "./Navbar";
 
 const CustomerHome = () => {
   useEffect(() => {
@@ -18,7 +18,10 @@ const CustomerHome = () => {
 
   return (
     <>
+      <Navbar className="flex items-center gap-10" />
+
       <Breadcrumbs backHref="/" items={[{ name: "Return Home" }]} />
+
       <div className="flex gap-3 flex-col">
         <Label>Filter: </Label>
         <DepartmentsFilter filter={filter} setFilter={setFilter} />
@@ -62,21 +65,16 @@ const DepartmentsFilter = ({ setFilter, filter }: { filter: string; setFilter: R
   return (
     <div className="flex justify-between overflow-x-auto overflow-y-hidden w-full">
       {items.map((item) => (
-        <Tooltip key={item.id}>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              onClick={() => setFilter(item.id)}
-              className={`flex-none flex flex-col items-center justify-center h-20 w-20 p-0 overflow-hidden transition-colors ${
-                filter === item.id ? "bg-gray border shadow-lg" : ""
-              }`}
-            >
-              <div className="h-20 w-20 flex items-center justify-center overflow-hidden p-2">{item.icon}</div>
-              {item.id === "all" && <p className="text-xs mt-1">All</p>}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>{item.label}</TooltipContent>
-        </Tooltip>
+        <Button
+          variant="ghost"
+          onClick={() => setFilter(item.id)}
+          className={`flex-none flex flex-col items-center justify-center h-20 w-20 p-0 overflow-hidden transition-colors ${
+            filter === item.id ? "bg-gray border shadow-lg" : ""
+          }`}
+        >
+          <div className="h-20 w-20 flex items-center justify-center overflow-hidden p-2">{item.icon}</div>
+          {item.id === "all" && <p className="text-xs mt-1">All</p>}
+        </Button>
       ))}
     </div>
   );

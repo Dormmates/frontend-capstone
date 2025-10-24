@@ -333,7 +333,7 @@ const ViewShow = () => {
                   render: (schedule) => (
                     <div className="flex gap-2 justify-end items-center ">
                       <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
-                        <Button>Go To Schedule</Button>
+                        <Button>Manage Schedule</Button>
                       </Link>
 
                       <DropdownMenu>

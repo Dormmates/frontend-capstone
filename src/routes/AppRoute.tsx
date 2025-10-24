@@ -42,13 +42,13 @@ import {
 } from "../pages/cca/index";
 
 import CustomerShows from "@/pages/customer/CustomerShows";
-import CustomerLayout from "@/pages/customer/CustomerLayout";
 import CustomerViewShow from "@/pages/customer/CustomerViewShow";
 import CustomerViewSchedule from "@/pages/customer/CustomerViewSchedule";
 import SalesReport from "@/pages/cca/shows/SalesReport";
 import TicketSeatLocation from "@/components/TicketSeatLocation";
 import LandingPage from "@/pages/customer/LandingPage";
 import TicketInformations from "@/pages/cca/shows/schedules/distributorAndRemitances/TicketInformations";
+import CustomerLayout from "@/pages/customer/CustomerLayout";
 
 const AppRoute = () => {
   const { user } = useAuthContext();
@@ -78,7 +78,7 @@ const AppRoute = () => {
         {/* ===================== WHEN NO USER (CUSTOMER SITE) ===================== */}
         {!user && (
           <>
-            <Route index element={<LandingPage />} />
+            <Route index path="/" element={<LandingPage />} />
             <Route path="/shows" element={<CustomerShows />} />
             <Route path="show/:showId" element={<CustomerViewShow />}>
               <Route path="schedule/:scheduleId" element={<CustomerViewSchedule />} />

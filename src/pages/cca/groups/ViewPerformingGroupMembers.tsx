@@ -44,6 +44,11 @@ const ViewPerformingGroups = () => {
   const [selectedLetter, setSelectedLetter] = useState("All");
   const [showArchived, setShowArchived] = useState(false);
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const canOpenDialog = user?.department || user?.roles?.includes("head");
+  const [pendingBulkCreation, setIsPendingBulkCreation] = useState(false);
+
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue);
 
@@ -129,9 +134,17 @@ const ViewPerformingGroups = () => {
           <div className="flex justify-between mt-10">
             <SimpleCard icon={<Users size={18} />} label="Total Members" value={activeDistributors.length} />
 
-            {(user?.department || user?.roles.includes("head")) && (
+            {canOpenDialog && (
               <div className="self-end flex gap-2">
                 <DialogPopup
+                  isOpen={isOpen}
+                  setIsOpen={(value) => {
+                    if (pendingBulkCreation) {
+                      return;
+                    }
+
+                    setIsOpen(value);
+                  }}
                   className="w-[98%] lg:w-full max-w-5xl max-h-[90%]"
                   description={
                     <>
@@ -156,7 +169,7 @@ const ViewPerformingGroups = () => {
                   title="Bulk Distributor Account Creation"
                   triggerElement={<Button variant="secondary">Bulk Member Creation</Button>}
                 >
-                  <BulkDistributorCreation group={groupId as string} />
+                  <BulkDistributorCreation setIsPendingBulkCreation={setIsPendingBulkCreation} group={groupId as string} />
                 </DialogPopup>
 
                 <Button onClick={() => setIsAddDistributor(true)}>Add New Member</Button>

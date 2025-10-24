@@ -20,9 +20,10 @@ interface DistributorRow {
 
 type Props = {
   group: string;
+  setIsPendingBulkCreation: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const BulkDistributorCreation = ({ group }: Props) => {
+const BulkDistributorCreation = ({ group, setIsPendingBulkCreation }: Props) => {
   const { data: emails } = useGetEmails();
   const queryClient = useQueryClient();
   const bulkCreate = useCreateBulkDistributors();
@@ -90,8 +91,6 @@ const BulkDistributorCreation = ({ group }: Props) => {
       });
     }
 
-    console.log(emails);
-
     return validated;
   };
 
@@ -131,6 +130,8 @@ const BulkDistributorCreation = ({ group }: Props) => {
   const invalidCount = parsedData.filter((r) => !r.isValid).length;
 
   const handleSubmit = () => {
+    setIsPendingBulkCreation(true);
+
     toast.promise(
       bulkCreate.mutateAsync({
         performingGroup: group,
@@ -139,10 +140,14 @@ const BulkDistributorCreation = ({ group }: Props) => {
       {
         position: "top-center",
         loading: "Creating Distributors",
-        error: (err) => err.message || "Failed to Bulk Create Distributors, please try again later",
+        error: (err) => {
+          setIsPendingBulkCreation(false);
+          return err.message || "Failed to Bulk Create Distributors, please try again later";
+        },
         success: (payload) => {
           setSummary(payload);
           setParsedData([]);
+          setIsPendingBulkCreation(false);
           queryClient.invalidateQueries({ queryKey: ["distributors"] });
           return payload.message;
         },
