@@ -3,7 +3,6 @@ import logo from "@/assets/images/cca-logo.png";
 
 const navigationLinks = [
   { title: "Home", to: "/" },
-  { title: "Shows", to: "/shows" },
   {
     title: "About Us",
     to: "https://sites.google.com/slu.edu.ph/cca/home?authuser=0",
@@ -13,9 +12,9 @@ const navigationLinks = [
 
 const Navbar = ({ className }: { className: string }) => {
   return (
-    <div className={`${className}`}>
-      <div className="max-w-[120px]">
-        <img src={logo} alt="CCA Logo" />
+    <div className={` ${className}`}>
+      <div className="max-w-[100px] h-[35px]">
+        <img className="object-cover w-full h-full" src={logo} alt="CCA Logo" />
       </div>
       {navigationLinks.map((link) => (
         <Link key={link.title} to={link.to} target={link?.target}>

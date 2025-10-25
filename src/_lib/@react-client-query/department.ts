@@ -14,6 +14,17 @@ export const useGetDepartments = (trainerId?: string | null, options?: Omit<UseQ
   });
 };
 
+export const useGetDepartment = (departmentId: string) => {
+  return useQuery<Department, Error>({
+    queryKey: ["department", departmentId],
+    queryFn: async () => {
+      const res = await request<Department>(`/api/department/${departmentId}`, {}, "get");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
 export const useAddDepartment = () => {
   return useMutation<any, Error, { name: string; image: File }>({
     mutationFn: async (data: { name: string; image: File }) => {

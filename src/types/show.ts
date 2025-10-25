@@ -31,3 +31,9 @@ export interface ShowData {
   genreNames: string[];
   showschedules: Schedule[];
 }
+
+export interface ShowDataWithSchedules extends ShowData {
+  nextSchedule?: Schedule | null;
+  upcomingSchedules: Schedule[];
+  pastSchedules: Schedule[];
+}
