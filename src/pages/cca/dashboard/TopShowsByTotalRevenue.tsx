@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuthContext } from "@/context/AuthContext";
 import { useMemo } from "react";
 import { formatCurrency } from "@/utils";
 
@@ -13,14 +12,12 @@ type TopShowsByTotalRevenueProps = {
 };
 
 const TopShowsByTotalRevenue = ({ isHead, selectedDepartment }: TopShowsByTotalRevenueProps) => {
-  const { user } = useAuthContext();
-
   const {
     data: topShows,
     isLoading,
     isError,
   } = useGetTopShowsByTotalRevenue({
-    departmentId: !isHead && user?.department ? user.department.departmentId : selectedDepartment == "all" ? undefined : selectedDepartment,
+    departmentId: isHead && selectedDepartment == "all" ? undefined : selectedDepartment,
   });
 
   const chartData = useMemo(() => {
@@ -43,7 +40,7 @@ const TopShowsByTotalRevenue = ({ isHead, selectedDepartment }: TopShowsByTotalR
       <Card className="w-full">
         <CardHeader>
           <CardTitle>
-            <p>{!isHead && user?.department && user.department.name} Top Shows by Total Revenue</p>
+            <p>Top Shows by Total Revenue</p>
           </CardTitle>
           <CardDescription>Visual comparison of ticket sales per show.</CardDescription>
         </CardHeader>
@@ -58,7 +55,7 @@ const TopShowsByTotalRevenue = ({ isHead, selectedDepartment }: TopShowsByTotalR
     <Card>
       <CardHeader>
         <CardTitle>
-          <p>{!isHead && user?.department && user.department.name} Top Shows by Total Revenue</p>
+          <p>Top Shows by Total Revenue</p>
         </CardTitle>
         <CardDescription>Visual comparison of ticket sales per show.</CardDescription>
       </CardHeader>

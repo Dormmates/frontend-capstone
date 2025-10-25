@@ -18,14 +18,15 @@ const CCADashboard = () => {
 
   const isHead = !!user?.roles?.includes("head");
 
-  const [selectedDepartment, setSelectedDepartment] = useState("all");
-  const { data: departments, isLoading: loadingDepartments, isError: errorDepartments } = useGetDepartments(null, { enabled: isHead });
+  const [selectedDepartment, setSelectedDepartment] = useState(isHead ? "all" : (user?.departments[0].departmentId as string));
+  const { data: departments, isLoading: loadingDepartments, isError: errorDepartments } = useGetDepartments(!isHead ? user?.userId : undefined);
 
   const departmentOptions = useMemo(() => {
     if (!departments) return [];
     const options = departments.map((d) => ({ name: d.name, value: d.departmentId }));
-    return [{ name: "All Departments", value: "all" }, ...options];
-  }, [departments]);
+
+    return isHead ? [{ name: "All Departments", value: "all" }, ...options] : options;
+  }, [departments, isHead]);
 
   useEffect(() => {
     document.title = `SLU CCA - Dashboard | ${user?.firstName} ${user?.lastName}`;
@@ -35,7 +36,7 @@ const CCADashboard = () => {
     return <h1>Loading..</h1>;
   }
 
-  if (!user?.roles.includes("head") && !user?.department) {
+  if (!user?.roles.includes("head") && user?.departments.length === 0) {
     return (
       <ContentWrapper>
         <h1 className="text-3xl">
@@ -61,27 +62,15 @@ const CCADashboard = () => {
         <h1 className="text-3xl">
           Welcome, {user?.firstName} {user?.lastName}
         </h1>
-        {isHead && !errorDepartments && (
-          <Dropdown onChange={(value) => setSelectedDepartment(value)} value={selectedDepartment} items={departmentOptions} />
-        )}
-
-        {!isHead && (
-          <div className="font-bold flex flex-row-reverse items-center gap-2">
-            <div>{user?.department?.name}</div>
-            <div className="aspect-square max-w-[400px]">
-              <img
-                className="w-full h-full object-cover"
-                src={departments?.find((d) => d.departmentId === user.department?.departmentId)?.logoUrl}
-                alt=""
-              />
-            </div>
-          </div>
-        )}
+        {!errorDepartments && <Dropdown onChange={(value) => setSelectedDepartment(value)} value={selectedDepartment} items={departmentOptions} />}
       </div>
 
       <div className="flex gap-5 flex-col">
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold">Performance Overview</h2>
+          <h2 className="text-xl font-semibold">
+            {selectedDepartment == "all" ? "All Performing Groups" : departmentOptions.find((d) => d.value === selectedDepartment)?.name} Performance
+            Overview
+          </h2>
           <p className="text-sm text-muted-foreground">Overview of active shows, schedules, and department performance.</p>
           <KPISummary isHead={isHead} selectedDepartment={selectedDepartment} />
         </section>
@@ -94,7 +83,7 @@ const CCADashboard = () => {
           <Card className="h-fit">
             <CardHeader>
               <CardTitle>
-                <p>{!isHead && user?.department && user.department.name} Top Shows </p>
+                <p>Top Shows </p>
               </CardTitle>
             </CardHeader>
             <CardContent>

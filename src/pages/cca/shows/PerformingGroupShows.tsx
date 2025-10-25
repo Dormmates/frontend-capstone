@@ -24,16 +24,10 @@ const showTypes = [
   { name: "Show Case", value: "showCase" },
 ];
 
-const parseDepartments = (departments: Department[]) => {
-  const data = departments.map((d) => ({ name: d.name, value: d.departmentId }));
-  data.unshift({ name: "All Departments", value: "all" });
-  return data;
-};
-
 const PerformingGroupShows = () => {
   const { user } = useAuthContext();
 
-  if (!user?.department && !user?.roles.includes("head")) {
+  if (user?.departments.length === 0 && !user?.roles.includes("head")) {
     return (
       <ContentWrapper>
         <h1>You are not currently assigned to any Department</h1>
@@ -41,25 +35,30 @@ const PerformingGroupShows = () => {
     );
   }
 
-  const departmentId = user?.roles.includes("head") ? undefined : user?.department ? user.department.departmentId : undefined;
+  // const departmentId = user?.roles.includes("head") ? undefined : user?.department ? user.department.departmentId : undefined;
 
-  const { data: shows, isLoading: showsLoading } = useGetShows({
-    departmentId,
-  });
+  const { data: shows, isLoading: showsLoading } = useGetShows();
 
   useEffect(() => {
-    document.title = `${!user.roles.includes("head") ? user.department?.name : "Performing Group"} Shows`;
+    document.title = `Performing Group Shows`;
   }, []);
 
-  const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments();
+  const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments(user?.userId);
 
-  const [filter, setFilter] = useState({ showType: "all", department: "all", search: "" });
+  const [filter, setFilter] = useState({
+    showType: "all",
+    department: user?.roles.includes("head") ? "all" : (user?.departments[0].departmentId as string),
+    search: "",
+  });
   const debouncedSearch = useDebounce(filter.search, 500);
 
   const [isViewArchivedShows, setIsViewArchivedShows] = useState(false);
 
   const departments = useMemo(() => {
-    return parseDepartments(departmentsData ?? []);
+    if (!departmentsData) return [];
+    const options = departmentsData.map((d) => ({ name: d.name, value: d.departmentId }));
+
+    return user?.roles.includes("head") ? [{ name: "All Departments", value: "all" }, ...options] : options;
   }, [departmentsData]);
 
   const activeShows = useMemo(() => {
@@ -87,7 +86,7 @@ const PerformingGroupShows = () => {
 
   return (
     <ContentWrapper>
-      <h1 className="text-3xl">{!user.roles.includes("head") ? user.department?.name : "Performing Group"} Shows</h1>
+      <h1 className="text-3xl">Performing Group Shows</h1>
       <div className="flex justify-between mt-10">
         <div className="grid grid-cols-2 md:grid-cols-3 md:gap-5 gap-2">
           <SimpleCard className="w-full" icon={<TheaterIcon size={18} />} label="Total Show" value={filteredShows.length} />
@@ -117,12 +116,11 @@ const PerformingGroupShows = () => {
         />
         <div className="flex gap-3">
           <Dropdown
-            disabled={!user?.roles.includes("head")}
             label="Performing Groups"
             placeholder="Select Performing Group"
             className="max-w-[200px]"
             onChange={(value) => setFilter((prev) => ({ ...prev, department: value }))}
-            value={user?.roles.includes("head") ? filter.department : user?.department ? user.department.departmentId : ""}
+            value={filter.department}
             items={departments}
           />
           <Dropdown

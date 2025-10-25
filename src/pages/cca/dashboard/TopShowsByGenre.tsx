@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuthContext } from "@/context/AuthContext";
 import { useMemo, useState } from "react";
 import Modal from "@/components/Modal";
 import { formatCurrency } from "@/utils";
@@ -15,7 +14,6 @@ type TopShowsByGenreProps = {
 };
 
 const TopShowsByGenre = ({ isHead, selectedDepartment }: TopShowsByGenreProps) => {
-  const { user } = useAuthContext();
   const [selectedGenre, setSelectedGenre] = useState<TopGenres | null>(null);
 
   const {
@@ -23,7 +21,7 @@ const TopShowsByGenre = ({ isHead, selectedDepartment }: TopShowsByGenreProps) =
     isLoading,
     isError,
   } = useGetTopGenres({
-    departmentId: !isHead && user?.department ? user.department.departmentId : selectedDepartment == "all" ? undefined : selectedDepartment,
+    departmentId: isHead && selectedDepartment == "all" ? undefined : selectedDepartment,
   });
 
   const chartData = useMemo(() => {
@@ -47,7 +45,7 @@ const TopShowsByGenre = ({ isHead, selectedDepartment }: TopShowsByGenreProps) =
       <Card className="w-full">
         <CardHeader>
           <CardTitle>
-            <p>{!isHead && user?.department && user.department.name} Top Genres by Ticket Sales</p>
+            <p>Top Genres by Ticket Sales</p>
           </CardTitle>
           <CardDescription>Based on total remitted revenue per genre.</CardDescription>
         </CardHeader>
@@ -63,7 +61,7 @@ const TopShowsByGenre = ({ isHead, selectedDepartment }: TopShowsByGenreProps) =
       <Card>
         <CardHeader>
           <CardTitle>
-            <p>{!isHead && user?.department && user.department.name} Top Genres by Ticket Sales</p>
+            <p> Top Genres by Ticket Sales</p>
           </CardTitle>
           <CardDescription>Based on total remitted revenue per genre.</CardDescription>
         </CardHeader>

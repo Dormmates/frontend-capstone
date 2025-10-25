@@ -27,7 +27,7 @@ import {
   ScheduleDistributorAndRemittances,
   ScheduleReservations,
   ScheduleSeats,
-  ScheduleTallyData,
+  // ScheduleTallyData,
   ScheduleTickets,
   TicketAllocation,
   ViewDistributorLayout,
@@ -52,6 +52,8 @@ import CustomerViewDepartment from "@/pages/customer/CustomerViewDepartment";
 
 const AppRoute = () => {
   const { user } = useAuthContext();
+
+  console.log(user);
 
   return (
     <Routes>
@@ -102,7 +104,7 @@ const AppRoute = () => {
           <>
             <Route index element={<CCADashboard />} />
 
-            {(user.roles.includes("head") || user.department) && (
+            {(user.roles.includes("head") || user.departments.length !== 0) && (
               <>
                 <Route path="shows" element={<PerformingGroupShows />} />
                 <Route path="majorShows" element={<MajorProductionShows />} />
@@ -113,7 +115,7 @@ const AppRoute = () => {
                   <Route path="d&r" element={<ScheduleDistributorAndRemittances />} />
                   <Route path="seats" element={<ScheduleSeats />} />
                   <Route path="tickets" element={<ScheduleTickets />} />
-                  <Route path="tally" element={<ScheduleTallyData />} />
+                  {/* <Route path="tally" element={<ScheduleTallyData />} /> */}
                   <Route path="reservations" element={<ScheduleReservations />} />
                   <Route path="d&r/:distributorId" element={<ViewDistributorLayout />}>
                     <Route index element={<DistributorTicketsAllocated />} />

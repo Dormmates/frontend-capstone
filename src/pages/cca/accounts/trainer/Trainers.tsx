@@ -2,7 +2,7 @@ import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useEditTrainer, useGetTrainers, useNewTrainer } from "@/_lib/@react-client-query/accounts.ts";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/useDeabounce.ts";
-import { useGetDepartments, useRemoveDepartmentTrainerByTrainerId } from "@/_lib/@react-client-query/department.ts";
+import { useGetDepartments } from "@/_lib/@react-client-query/department.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import type { User } from "@/types/user.ts";
 import TrainerForm from "./TrainerForm";
@@ -10,19 +10,17 @@ import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Modal from "@/components/Modal";
-import AlertModal from "@/components/AlertModal";
 import PaginatedTable from "@/components/PaginatedTable";
 import ArchiveAccount from "../ArchiveAccount";
 import UnArchiveAccount from "../UnArchiveAccount";
 import { useAuthContext } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { EditIcon, Users, UserX2Icon } from "lucide-react";
+import { EditIcon, Users } from "lucide-react";
 
 const Trainers = () => {
   const { user } = useAuthContext();
   const addTrainer = useNewTrainer();
   const editTrainer = useEditTrainer();
-  const removeTrainer = useRemoveDepartmentTrainerByTrainerId();
   const queryClient = useQueryClient();
 
   const [isAddTrainer, setIsAddTrainer] = useState(false);
@@ -33,7 +31,6 @@ const Trainers = () => {
   const { data: departments, isLoading: loadingDepartments } = useGetDepartments();
 
   const [selectedTrainer, setSelectedTrainer] = useState<User | null>(null);
-  const [unassignTrainer, setUnassignTrainer] = useState({ userId: "", openModal: false });
   const [showArchived, setShowArchived] = useState(false);
 
   const activeTrainers = useMemo(() => {
@@ -56,24 +53,6 @@ const Trainers = () => {
       return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
     });
   }, [debouncedSearch, activeTrainers]);
-
-  const groupOptions = (departments ?? [])
-    .filter((department) => !department.trainerId || !department.trainerName)
-    .map((department) => ({ name: department.name, value: department.departmentId }));
-
-  const handleRemoveTrainerDepartment = () => {
-    toast.promise(removeTrainer.mutateAsync(unassignTrainer.userId), {
-      position: "top-center",
-      loading: "Removing trainer from department...",
-      success: () => {
-        queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
-        queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
-        setUnassignTrainer({ userId: "", openModal: false });
-        return "Trainer department removed";
-      },
-      error: (err) => err.message || "Failed to remove trainer",
-    });
-  };
 
   useEffect(() => {
     document.title = `SLU CCA Trainers`;
@@ -107,6 +86,7 @@ const Trainers = () => {
         />
 
         <PaginatedTable
+          itemsPerPage={10}
           data={searchedTrainers}
           columns={[
             {
@@ -121,8 +101,8 @@ const Trainers = () => {
             },
             {
               key: "group",
-              header: "Group",
-              render: (trainer) => (trainer.department ? trainer.department.name : "No Group Assigned"),
+              header: "Assigned Groups",
+              render: (trainer) => (trainer.departments.length > 0 ? trainer.departments.map((d) => d.name).join(", ") : ""),
             },
             {
               key: "email",
@@ -142,27 +122,6 @@ const Trainers = () => {
                       <EditIcon />
                     </Button>
                     <div className="flex items-center gap-2">
-                      <AlertModal
-                        title="Remove Trainer Assignment"
-                        description="This will remove the user as a trainer on its performing group"
-                        onConfirm={handleRemoveTrainerDepartment}
-                        tooltip="Remove Trainer Assignment"
-                        trigger={
-                          <Button
-                            size="icon"
-                            variant="outline"
-                            onClick={() =>
-                              setUnassignTrainer({
-                                userId: trainer.userId,
-                                openModal: true,
-                              })
-                            }
-                            disabled={!trainer.department}
-                          >
-                            <UserX2Icon />
-                          </Button>
-                        }
-                      />
                       <ArchiveAccount user={trainer as User} queryKey="trainers" />
                       {/* <DeleteAccount user={trainer as User} queryKey="trainers" /> */}
                     </div>
@@ -177,21 +136,17 @@ const Trainers = () => {
         <Modal title="Add new Trainer Account" onClose={() => setIsAddTrainer(false)} isOpen={isAddTrainer}>
           <TrainerForm
             isSubmitting={editTrainer.isPending}
-            groupOptions={groupOptions}
             close={() => setIsAddTrainer(false)}
             initalValues={{
               firstName: "",
               lastName: "",
               email: "",
-              group: "",
-              assignDepartment: false,
             }}
             onSubmit={(payload) => {
               const data = {
                 firstName: payload.firstName.trim(),
                 lastName: payload.lastName.trim(),
                 email: payload.email.trim(),
-                departmentId: payload.group as string,
               };
 
               toast.promise(addTrainer.mutateAsync(data), {
@@ -214,21 +169,17 @@ const Trainers = () => {
         <Modal title="Edit Trainer" onClose={() => setSelectedTrainer(null)} isOpen={!!selectedTrainer}>
           <TrainerForm
             isSubmitting={editTrainer.isPending}
-            groupOptions={groupOptions}
             close={() => setSelectedTrainer(null)}
             initalValues={{
               firstName: selectedTrainer.firstName,
               lastName: selectedTrainer.lastName,
               email: selectedTrainer.email,
-              group: selectedTrainer.department?.departmentId as string,
-              assignDepartment: false,
             }}
             onSubmit={(payload) => {
               const hasChanges =
                 payload.firstName.trim() !== selectedTrainer.firstName.trim() ||
                 payload.lastName.trim() !== selectedTrainer.lastName.trim() ||
-                payload.email.trim() !== selectedTrainer.email.trim() ||
-                payload.group !== selectedTrainer.department?.departmentId;
+                payload.email.trim() !== selectedTrainer.email.trim();
 
               if (!hasChanges) {
                 toast.info("No Changes Detected");
@@ -240,7 +191,6 @@ const Trainers = () => {
                 firstName: payload.firstName.trim(),
                 lastName: payload.lastName.trim(),
                 email: payload.email.trim(),
-                departmentId: payload.group as string,
               };
 
               toast.promise(editTrainer.mutateAsync(data), {
@@ -276,11 +226,10 @@ const Trainers = () => {
                   header: "Full Name",
                   render: (trainer) => trainer.firstName + " " + trainer.lastName,
                 },
-
                 {
                   key: "group",
-                  header: "Group",
-                  render: (trainer) => (trainer.department ? trainer.department.name : "No Group Assigned"),
+                  header: "Assigned Groups",
+                  render: (trainer) => (trainer.departments.length > 0 ? trainer.departments.map((d) => d.name).join(", ") : ""),
                 },
                 {
                   key: "email",

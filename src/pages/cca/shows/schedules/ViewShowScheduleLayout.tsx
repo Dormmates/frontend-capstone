@@ -22,7 +22,7 @@ const ViewShowScheduleLayout = () => {
     { name: "Ticket Distributors", path: "d&r" },
     { name: "Tickets", path: "tickets" },
     { name: "Seats", path: "seats", hidden: schedule?.seatingType === "freeSeating" },
-    { name: "Tally Data", path: "tally" },
+    // { name: "Tally Data", path: "tally" },
     // { name: "Reservations", path: "reservations" },
   ];
 

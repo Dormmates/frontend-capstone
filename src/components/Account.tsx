@@ -183,7 +183,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                         />
                       )}
 
-                      {user?.department?.name && <InputField label="Trainer of" disabled={true} value={user.department.name} onChange={() => {}} />}
+                      {/* {user?.department?.name && <InputField label="Trainer of" disabled={true} value={user.department.name} onChange={() => {}} />} */}
                     </div>
 
                     {user?.roles.includes("distributor") && (

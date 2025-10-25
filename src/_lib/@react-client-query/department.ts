@@ -69,18 +69,9 @@ export const useDeleteDepartment = () => {
   });
 };
 
-export const useRemoveDepartmentTrainerByTrainerId = () => {
-  return useMutation<any, Error, string>({
-    mutationFn: async (userId: string) => {
-      const res = await request<any>(`/api/department/remove-trainer`, { userId }, "patch");
-      return res.data;
-    },
-  });
-};
-
-export const useAssingDepartmentTrainer = () => {
-  return useMutation<any, Error, { userId: string; departmentId: string }>({
-    mutationFn: async (payload: { userId: string; departmentId: string }) => {
+export const useAssingDepartmentTrainers = () => {
+  return useMutation<any, Error, { trainers: string[]; departmentId: string }>({
+    mutationFn: async (payload) => {
       const res = await request<any>(`/api/department/assign`, payload, "post");
       return res.data;
     },

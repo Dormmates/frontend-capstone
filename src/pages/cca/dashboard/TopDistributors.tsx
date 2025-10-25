@@ -2,7 +2,6 @@ import { useGetTopDistributors } from "@/_lib/@react-client-query/dashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuthContext } from "@/context/AuthContext";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { DataTable } from "@/components/DataTable";
 import { formatCurrency } from "@/utils";
@@ -16,14 +15,12 @@ type TopDistributorsProps = {
 };
 
 const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) => {
-  const { user } = useAuthContext();
-
   const {
     data: topDistributors,
     isLoading: loadingTopDistributors,
     isError: errorDistributors,
   } = useGetTopDistributors({
-    departmentId: !isHead && user?.department ? user.department.departmentId : selectedDepartment == "all" ? undefined : selectedDepartment,
+    departmentId: isHead && selectedDepartment == "all" ? undefined : selectedDepartment,
   });
 
   if (loadingTopDistributors) {
@@ -32,7 +29,7 @@ const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) =
         <CardHeader>
           <CardTitle>
             <div className="flex justify-between items-center">
-              <p>{!isHead && user?.department && user.department.name} Top Distributors</p>
+              <p>Top Distributors</p>
             </div>
           </CardTitle>
           <CardDescription>Shows the top-performing distributors calculated from cumulative remitted ticket sales.</CardDescription>
@@ -49,7 +46,7 @@ const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) =
       <CardHeader>
         <CardTitle>
           <div className="flex justify-between items-center">
-            <p>{!isHead && user?.department && user.department.name} Top Distributors</p>
+            <p>Top Distributors</p>
           </div>
         </CardTitle>
         <CardDescription>Shows the top-performing distributors calculated from cumulative remitted ticket sales.</CardDescription>

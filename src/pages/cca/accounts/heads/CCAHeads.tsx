@@ -89,7 +89,7 @@ const CCAHeads = () => {
               render: (head) => (
                 <span className={user?.userId === head.userId ? "font-bold" : ""}>
                   {user?.userId === head.userId ? "You: " : ""}
-                  {head.firstName} {head.lastName} {head.department ? `(${head.department.name} trainer)` : ""}
+                  {head.firstName} {head.lastName}
                 </span>
               ),
             },

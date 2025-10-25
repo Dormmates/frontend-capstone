@@ -129,7 +129,9 @@ const ByAddRole = ({ closeModal }: CreateCCAHeadProps) => {
   }, [data]);
 
   const trainerOptions = filtered.map((trainer) => ({
-    label: `${trainer.firstName} ${trainer.lastName} ${trainer.department ? `(${trainer.department.name} trainer)` : "(No Group)"}`,
+    label: `${trainer.firstName} ${trainer.lastName} ${
+      trainer.departments.length > 0 ? `(${trainer.departments.map((t) => t.name)} trainer)` : "(No Group)"
+    }`,
     value: trainer.userId,
   }));
 

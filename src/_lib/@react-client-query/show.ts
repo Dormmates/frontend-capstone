@@ -53,7 +53,7 @@ export const useUpdateShow = () => {
   });
 };
 
-export const useGetShows = (query: {
+export const useGetShows = (query?: {
   departmentId?: string;
   showType?: ShowType;
   includeMajorProduction?: boolean;
@@ -61,7 +61,7 @@ export const useGetShows = (query: {
   limit?: number;
 }) => {
   return useQuery<ShowData[], Error>({
-    queryKey: ["shows", query.departmentId, query.showType].filter(Boolean),
+    queryKey: ["shows", query?.departmentId, query?.showType].filter(Boolean),
     queryFn: async () => {
       const res = await request<ShowData[]>(`/api/show`, query, "get");
       return res.data;

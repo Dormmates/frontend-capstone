@@ -2,11 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import {
   useAddDepartment,
-  useAssingDepartmentTrainer,
+  useAssingDepartmentTrainers,
   useDeleteDepartment,
   useEditDepartment,
   useGetDepartments,
-  useRemoveDepartmentTrainerByTrainerId,
 } from "@/_lib/@react-client-query/department.ts";
 import type { Department } from "@/types/department.ts";
 import { useQueryClient } from "@tanstack/react-query";
@@ -22,10 +21,10 @@ import PaginatedTable from "@/components/PaginatedTable";
 import { toast } from "sonner";
 import { EditIcon, GroupIcon, Trash2Icon, UserRoundPenIcon } from "lucide-react";
 import { useGetTrainers } from "@/_lib/@react-client-query/accounts";
-import Dropdown from "@/components/Dropdown";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuthContext } from "@/context/AuthContext";
 import { Link } from "react-router-dom";
+import { MultiSelect } from "@/components/MultiSelect";
 
 const PerformingGroups = () => {
   const { user } = useAuthContext();
@@ -155,7 +154,7 @@ const PerformingGroups = () => {
     <ContentWrapper>
       <h1 className="text-3xl">Performing Groups</h1>
 
-      {!user?.roles.includes("head") && !user?.department ? (
+      {!user?.roles.includes("head") && user?.departments.length == 0 ? (
         <div>You are not currently assigned to any departmnet</div>
       ) : (
         <>
@@ -170,6 +169,7 @@ const PerformingGroups = () => {
           </div>
           <div className="mt-10">
             <PaginatedTable
+              itemsPerPage={10}
               data={departments}
               columns={[
                 {
@@ -184,15 +184,27 @@ const PerformingGroups = () => {
                 },
                 {
                   key: "trainer",
-                  header: "Trainer name",
+                  header: "Trainers",
                   render: (department) => {
-                    if (!department.trainerName) return "No Trainer";
+                    if (department.trainers.length === 0) return "";
 
-                    const isYou = department.trainerId === user?.userId;
-                    return <span className={isYou ? "font-bold" : ""}>{isYou ? `(You) ${department.trainerName}` : department.trainerName}</span>;
+                    return (
+                      <div className="flex gap-2">
+                        {department.trainers.map((trainer, index) => {
+                          const isYou = trainer.trainerId === user?.userId;
+                          const name = isYou ? `(You) ${trainer.trainerName}` : `${trainer.trainerName}`;
+
+                          return (
+                            <span key={trainer.trainerId} className={isYou ? "font-bold" : ""}>
+                              {name}
+                              {index < department.trainers.length - 1 ? ", " : ""}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    );
                   },
                 },
-
                 {
                   key: "total",
                   header: "Total Shows",
@@ -213,7 +225,7 @@ const PerformingGroups = () => {
                         <Button>Manage Members</Button>
                       </Link>
 
-                      {user.roles.includes("head") && (
+                      {user?.roles.includes("head") && (
                         <>
                           <Button size="icon" onClick={() => setSelectedGroup(department)} variant="secondary">
                             <EditIcon />
@@ -348,20 +360,29 @@ const AssignTrainer = ({
   setIsAssignTrainer: (value: React.SetStateAction<Department | null>) => void;
 }) => {
   const queryClient = useQueryClient();
-  const assignTrainer = useAssingDepartmentTrainer();
-  const removeTrainer = useRemoveDepartmentTrainerByTrainerId();
+  const assignTrainer = useAssingDepartmentTrainers();
   const { user } = useAuthContext();
 
   const { data: trainers, isLoading, isError } = useGetTrainers();
-  const [selectedTrainer, setSelectedTrainer] = useState("");
+  const [selectedTrainers, setSelectedTrainers] = useState<string[]>(department.trainers.map((t) => t.trainerId));
+  const [error, setError] = useState("");
 
-  const [errors, setErrors] = useState<{ choose?: string }>({});
+  const filtered = useMemo(() => {
+    if (!trainers) return [];
+    return trainers.filter((trainer) => !trainer.isArchived);
+  }, [trainers]);
+
+  const trainerOptions = filtered.map((trainer) => ({
+    label: `${trainer.firstName} ${trainer.lastName} ${
+      trainer.departments.length > 0 ? `(${trainer.departments.map((t) => t.name)} trainer)` : "(No Group)"
+    }`,
+    value: trainer.userId,
+  }));
 
   const trainersDropdown = useMemo(() => {
     if (!trainers) return [];
 
     return trainers
-      .filter((t) => !t.department)
       .filter((t) => !t.isArchived)
       .map((t) => ({
         name: t.userId === user?.userId ? `(You) ${t.firstName} ${t.lastName}` : `${t.firstName} ${t.lastName}`,
@@ -378,18 +399,12 @@ const AssignTrainer = ({
   }
 
   const handleSubmitAssign = () => {
-    const newErrors: typeof errors = {};
-    let isValid = true;
-
-    if (!selectedTrainer) {
-      newErrors.choose = "Please Choose a Trainer to be assigned";
-      isValid = false;
+    if (!selectedTrainers) {
+      setError("Please Choose a Trainer to be assigned");
+      return;
     }
 
-    setErrors(newErrors);
-    if (!isValid) return;
-
-    toast.promise(assignTrainer.mutateAsync({ userId: selectedTrainer, departmentId: department.departmentId }), {
+    toast.promise(assignTrainer.mutateAsync({ trainers: selectedTrainers, departmentId: department.departmentId }), {
       position: "top-center",
       loading: "Assigning Trainer...",
       success: () => {
@@ -402,76 +417,40 @@ const AssignTrainer = ({
     });
   };
 
-  const handleRemoveTrainer = () => {
-    toast.promise(removeTrainer.mutateAsync(department.trainerId as string), {
-      position: "top-center",
-      loading: "Removing Trainer...",
-      success: () => {
-        queryClient.invalidateQueries({ queryKey: ["departments"], exact: true });
-        queryClient.invalidateQueries({ queryKey: ["trainers"], exact: true });
-        setIsAssignTrainer(null);
-        return "Trainer Removed";
-      },
-      error: (err) => err.message || "Failed to Remove Trainer",
-    });
-  };
-
   return (
     <>
-      {department.trainerId && (
-        <div className="flex gap-2 flex-col">
-          <Label>Current Performing Group Trainer</Label>
-          <div className="p-2 border rounded-md text-sm flex justify-between items-center">
-            {department.trainerName ? (
-              <span>{department.trainerId === user?.userId ? `(You) ${department.trainerName}` : department.trainerName}</span>
-            ) : (
-              "No Trainer Assigned"
-            )}
-            {department.trainerName && (
-              <Button variant="destructive" size="sm" onClick={handleRemoveTrainer}>
-                Remove
-              </Button>
-            )}
-          </div>
-        </div>
-      )}
-
-      {!department.trainerId && (
-        <div className="flex items-center mt-5">
-          {trainersDropdown.length !== 0 ? (
-            <Card>
-              <CardHeader>
-                <CardTitle>Select Trainers</CardTitle>
-                <CardDescription>This only shows trainers that are not assigned to a performing group yet</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Dropdown
-                  error={errors.choose}
-                  className="w-full"
-                  label="Trainers"
-                  includeHeader={true}
-                  placeholder="Select Trainer to be assigned"
-                  value={selectedTrainer}
-                  onChange={(value) => setSelectedTrainer(value)}
-                  items={trainersDropdown}
+      <div className="flex items-center mt-5">
+        {trainersDropdown.length !== 0 ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Select Trainers</CardTitle>
+              <CardDescription>This only shows trainers that are not assigned to a performing group yet</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-3">
+                <Label>Select Trainers</Label>
+                <MultiSelect
+                  defaultValue={selectedTrainers}
+                  placeholder="Select Trainers"
+                  onValueChange={(trainers) => setSelectedTrainers(trainers)}
+                  options={trainerOptions}
                 />
-              </CardContent>
-              <CardFooter className="flex justify-end">
-                <Button onClick={handleSubmitAssign}>Assign Trainer</Button>
-              </CardFooter>
-            </Card>
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>No Available Trainers</CardTitle>
-                <CardDescription>
-                  All trainers are already assigned to performing groups. Please create a new trainer account instead.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          )}
-        </div>
-      )}
+                {error && <p className="text-red text-sm">{error}</p>}
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-end">
+              <Button onClick={handleSubmitAssign}>Assign Trainer</Button>
+            </CardFooter>
+          </Card>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>No Available Trainers</CardTitle>
+              <CardDescription>There are no trainer accounts or trainer accounts are archived</CardDescription>
+            </CardHeader>
+          </Card>
+        )}
+      </div>
     </>
   );
 };

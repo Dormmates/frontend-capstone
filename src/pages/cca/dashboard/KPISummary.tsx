@@ -1,7 +1,6 @@
 import { useGetKPISummary } from "@/_lib/@react-client-query/dashboard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuthContext } from "@/context/AuthContext";
 
 type KPISummaryProps = {
   isHead: boolean;
@@ -9,10 +8,8 @@ type KPISummaryProps = {
 };
 
 const KPISummary = ({ isHead, selectedDepartment }: KPISummaryProps) => {
-  const { user } = useAuthContext();
-
   const { data, isLoading, isError } = useGetKPISummary({
-    departmentId: !isHead && user?.department ? user.department.departmentId : selectedDepartment == "all" ? undefined : selectedDepartment,
+    departmentId: isHead && selectedDepartment == "all" ? undefined : selectedDepartment,
   });
 
   if (isLoading) {

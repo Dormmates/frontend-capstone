@@ -6,7 +6,6 @@ interface NewTrainerPayload {
   firstName: string;
   lastName: string;
   email: string;
-  departmentId: string;
 }
 
 interface NewDistributorPayload {

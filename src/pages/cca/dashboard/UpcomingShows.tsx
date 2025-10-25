@@ -1,7 +1,6 @@
 import { useGetUpcomingShows } from "@/_lib/@react-client-query/dashboard";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuthContext } from "@/context/AuthContext";
 import { useState } from "react";
 import PaginatedTable from "@/components/PaginatedTable";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
@@ -28,11 +27,10 @@ const getRangeLabel = (days: number) => {
 };
 
 const UpcomingShows = ({ isHead, selectedDepartment }: UpcomingShowsProps) => {
-  const { user } = useAuthContext();
   const [selectedDay, setSelectedDay] = useState("30");
 
   const { data, isLoading, isError } = useGetUpcomingShows({
-    departmentId: !isHead && user?.department ? user.department.departmentId : selectedDepartment == "all" ? undefined : selectedDepartment,
+    departmentId: isHead && selectedDepartment == "all" ? undefined : selectedDepartment,
     daysAhead: Number(selectedDay),
   });
 
@@ -47,7 +45,7 @@ const UpcomingShows = ({ isHead, selectedDepartment }: UpcomingShowsProps) => {
       <Card className="w-full">
         <CardHeader>
           <CardTitle>
-            <p>{!isHead && user?.department && user.department.name} Upcoming shows</p>
+            <p>Upcoming shows</p>
           </CardTitle>
           <CardDescription>Displays shows scheduled within {getRangeLabel(Number(selectedDay))}.</CardDescription>
         </CardHeader>
@@ -63,7 +61,7 @@ const UpcomingShows = ({ isHead, selectedDepartment }: UpcomingShowsProps) => {
       <CardHeader>
         <CardTitle>
           <div className="flex justify-between items-center">
-            <p>{!isHead && user?.department && user.department.name} Upcoming shows</p>
+            <p>Upcoming shows</p>
             <Dropdown items={daysOptions} value={selectedDay} onChange={(value) => setSelectedDay(value)} />
           </div>
         </CardTitle>

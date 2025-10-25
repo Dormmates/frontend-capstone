@@ -76,7 +76,7 @@ const Distributors = () => {
       <div className="flex justify-between mt-10">
         <SimpleCard icon={<Users size={18} />} label="Total Distributors" value={searchedDistributors.length} />
 
-        {(user?.department || user?.roles.includes("head")) && (
+        {(user?.departments.length !== 0 || user?.roles.includes("head")) && (
           <div className="self-end flex gap-2">
             <Button onClick={() => setIsAddDistributor(true)}>Add New Distributor</Button>
           </div>
@@ -152,7 +152,7 @@ const Distributors = () => {
                     <Button variant="outline">View Distributor</Button>
                   </Link>
 
-                  {(user?.roles.includes("head") || user?.department) && (
+                  {(user?.roles.includes("head") || user?.departments.length !== 0) && (
                     <>
                       <Button onClick={() => setSelectedDistributor(distributor)} variant="outline">
                         <EditIcon />
@@ -322,7 +322,7 @@ const Distributors = () => {
         </Modal>
       )}
 
-      {(user?.department || user?.roles.includes("head")) && (
+      {(user?.departments.length !== 0 || user?.roles.includes("head")) && (
         <Button onClick={() => setShowArchived(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full ">
           View Archived Distributors
         </Button>

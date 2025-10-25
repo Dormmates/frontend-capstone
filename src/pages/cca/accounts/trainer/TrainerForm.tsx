@@ -2,26 +2,21 @@ import { useState } from "react";
 import { isValidEmail } from "@/utils";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
-import { Label } from "@/components/ui/label";
-import Dropdown from "@/components/Dropdown";
 
 type TrainerFormValues = {
   firstName: string;
   lastName: string;
   email: string;
-  group: string;
-  assignDepartment: boolean;
 };
 
 type TrainerFormProps = {
   initalValues: TrainerFormValues;
-  groupOptions: { name: string; value: string }[];
   isSubmitting: boolean;
   onSubmit: (payload: TrainerFormValues) => void;
   close: () => void;
 };
 
-const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting }: TrainerFormProps) => {
+const TrainerForm = ({ initalValues, onSubmit, close, isSubmitting }: TrainerFormProps) => {
   const [trainerData, setTrainerData] = useState(initalValues);
 
   const [errors, setErrors] = useState<Partial<Record<keyof TrainerFormValues, string>>>();
@@ -52,11 +47,6 @@ const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting
 
     if (!isValidEmail(trainerData.email.trim())) {
       newErrors.email = "Invalid Email Format";
-      isValid = false;
-    }
-
-    if (trainerData.assignDepartment && groupOptions.length !== 0 && !trainerData.group) {
-      newErrors.group = "Please Select a Group to assign this trainer";
       isValid = false;
     }
 
@@ -106,41 +96,6 @@ const TrainerForm = ({ initalValues, groupOptions, onSubmit, close, isSubmitting
               value={trainerData.email}
               onChange={handleInputChange}
             />
-          </div>
-          <div>
-            <div className="flex gap-2 items-center mb-5">
-              <input
-                disabled={isSubmitting}
-                type="checkbox"
-                onChange={(e) =>
-                  setTrainerData((prev) => {
-                    const { checked } = e.target;
-                    return {
-                      ...prev,
-                      assignDepartment: checked,
-                      ...(checked ? {} : { group: initalValues.group }),
-                    };
-                  })
-                }
-              />
-
-              <Label>{initalValues.group ? "Change Performing Group?" : "Assign Performing Group?"}</Label>
-            </div>
-            {trainerData.assignDepartment &&
-              (groupOptions.length !== 0 ? (
-                <Dropdown
-                  error={errors?.group}
-                  disabled={isSubmitting}
-                  onChange={(value) => setTrainerData((prev) => ({ ...prev, group: value }))}
-                  className="w-full"
-                  items={groupOptions}
-                  value={trainerData.group as string}
-                  label="Performing Group"
-                  includeHeader={true}
-                />
-              ) : (
-                <h1 className="text-center mt-2 font-medium">All performing groups have respective trainers already</h1>
-              ))}
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ export interface User {
   createdAt: Date;
   isArchived: boolean;
   isDefaultPassword: boolean;
-  department?: Department;
+  departments: Department[];
 }
 
 export interface Distributor extends User {

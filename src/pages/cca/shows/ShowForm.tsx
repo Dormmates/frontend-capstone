@@ -39,7 +39,7 @@ interface ShowFormInterface {
 
 const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: ShowFormInterface) => {
   const { user } = useAuthContext();
-  const { data: groups, isLoading: loadingDepartments, error: errorDepartment } = useGetDepartments();
+  const { data: groups, isLoading: loadingDepartments, error: errorDepartment } = useGetDepartments(user?.userId);
   const { data: genres, isLoading: loadingGenres, error: errorGenres } = useGetGenres();
   const [showData, setShowData] = useState<ShowFormProps>(showFormValue);
   const [errors, setErrors] = useState<Partial<Record<keyof ShowFormProps, string>>>({});
@@ -84,7 +84,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
   const haveChanges = useMemo(() => {
     return (
       showData.title.trim() !== showFormValue.title.trim() ||
-      (showData.productionType !== "majorProduction" && showData.group !== (showFormValue.group || user?.department?.departmentId || "")) ||
+      // (showData.productionType !== "majorProduction" && showData.group !== (showFormValue.group || user?.departments.includes() || "")) ||
       showData.productionType !== showFormValue.productionType ||
       showData.description.trim() !== showFormValue.description.trim() ||
       JSON.stringify(showData.genre) !== JSON.stringify(showFormValue.genre) ||
@@ -148,10 +148,10 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                 <Dropdown
                   includeHeader={true}
                   error={errors.group}
-                  disabled={!user?.roles.includes("head") || isLoading || showData.productionType == "majorProduction"}
+                  disabled={isLoading || showData.productionType == "majorProduction"}
                   className="w-full"
                   label="Performing Group"
-                  placeholder={!user?.roles.includes("head") ? user?.department?.name : "Select Group"}
+                  placeholder={"Select Group"}
                   items={showData.productionType == "majorProduction" ? [{ name: "All Group", value: "all" }] : groupOptions}
                   value={showData.productionType == "majorProduction" ? "all" : (showData.group as string)}
                   onChange={(value) => setShowData((prev) => ({ ...prev, group: value }))}

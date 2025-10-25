@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuthContext } from "@/context/AuthContext";
 import { useMemo } from "react";
 
 type TopShowsByTicketsSoldProps = {
@@ -12,14 +11,12 @@ type TopShowsByTicketsSoldProps = {
 };
 
 const TopShowsByTicketsSold = ({ isHead, selectedDepartment }: TopShowsByTicketsSoldProps) => {
-  const { user } = useAuthContext();
-
   const {
     data: topShows,
     isLoading,
     isError,
   } = useGetTopShowsByTicketsSold({
-    departmentId: !isHead && user?.department ? user.department.departmentId : selectedDepartment == "all" ? undefined : selectedDepartment,
+    departmentId: isHead && selectedDepartment == "all" ? undefined : selectedDepartment,
   });
 
   const chartData = useMemo(() => {
@@ -42,7 +39,7 @@ const TopShowsByTicketsSold = ({ isHead, selectedDepartment }: TopShowsByTickets
       <Card className="w-full">
         <CardHeader>
           <CardTitle>
-            <p>{!isHead && user?.department && user.department.name} Top Shows by Tickets Sold</p>
+            <p>Top Shows by Tickets Sold</p>
           </CardTitle>
           <CardDescription>Visual comparison of ticket sales per show.</CardDescription>
         </CardHeader>
@@ -58,7 +55,7 @@ const TopShowsByTicketsSold = ({ isHead, selectedDepartment }: TopShowsByTickets
       <CardHeader>
         <CardTitle>
           <div className="flex justify-between items-center">
-            <p>{!isHead && user?.department && user.department.name} Top Shows by Tickets Sold</p>
+            <p>Top Shows by Tickets Sold</p>
           </div>
         </CardTitle>
         <CardDescription>Based on total remitted ticket sales.</CardDescription>

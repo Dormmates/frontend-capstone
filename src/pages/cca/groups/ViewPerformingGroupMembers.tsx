@@ -31,7 +31,7 @@ const ViewPerformingGroups = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user?.roles.includes("head") && !user?.department) {
+    if (!user?.roles.includes("head") && user?.departments.length === 0) {
       navigate("/");
     }
   }, [navigate, user]);
@@ -46,7 +46,7 @@ const ViewPerformingGroups = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const canOpenDialog = user?.department || user?.roles?.includes("head");
+  const canOpenDialog = user?.departments.length !== 0 || user?.roles?.includes("head");
   const [pendingBulkCreation, setIsPendingBulkCreation] = useState(false);
 
   const [searchValue, setSearchValue] = useState("");
@@ -93,14 +93,14 @@ const ViewPerformingGroups = () => {
       }));
     }
 
-    if (user.department) {
-      return [
-        {
-          name: user.department.name,
-          value: user.department.departmentId,
-        },
-      ];
-    }
+    // if (user.department) {
+    //   return [
+    //     {
+    //       name: user.department.name,
+    //       value: user.department.departmentId,
+    //     },
+    //   ];
+    // }
 
     return [];
   }, [departments, user]);
@@ -127,7 +127,7 @@ const ViewPerformingGroups = () => {
         />
       </div>
 
-      {errorDistributor || !distributors || errorDeparments || !groupOptions.find((t) => t.value === groupId) ? (
+      {errorDistributor || !distributors || errorDeparments ? (
         <NotFound title="Performing Group Not Found" description="This Performing Group does not exist or have been deleted already" />
       ) : (
         <>
@@ -220,7 +220,7 @@ const ViewPerformingGroups = () => {
                     </div>
 
                     <div className="flex justify-start items-center gap-2 mt-5 flex-wrap">
-                      {(user?.roles.includes("head") || user?.department) && (
+                      {(user?.roles.includes("head") || user?.departments.length !== 0) && (
                         <>
                           <Button
                             size="icon"
@@ -405,7 +405,7 @@ const ViewPerformingGroups = () => {
         </Modal>
       )}
 
-      {(user?.department || user?.roles.includes("head")) && (
+      {(user?.departments.length !== 0 || user?.roles.includes("head")) && (
         <Button onClick={() => setShowArchived(true)} className="fixed bottom-10 right-10 shadow-lg rounded-full ">
           View Archived Members
         </Button>

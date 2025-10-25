@@ -32,19 +32,19 @@ const CCALayout = () => {
       icon: <DramaIcon className="h-4 w-4" />,
       name: "Shows",
       path: "/shows",
-      hidden: !user?.roles.includes("head") && !user?.department,
+      hidden: !user?.roles.includes("head") && user?.departments.length === 0,
     },
     {
       icon: <TheaterIcon className="h-4 w-4" />,
       name: "Major Production",
       path: "/majorShows",
-      hidden: !user?.roles.includes("head") && !user?.department,
+      hidden: !user?.roles.includes("head") && user?.departments.length === 0,
     },
     {
       icon: <NetworkIcon className="h-4 w-4" />,
       name: "Performing Groups",
       path: "/performing-groups",
-      hidden: !user?.roles.includes("head") && !user?.department,
+      hidden: !user?.roles.includes("head") && user?.departments.length === 0,
     },
     {
       icon: <UsersIcon className="h-4 w-4" />,
@@ -55,7 +55,7 @@ const CCALayout = () => {
         { name: "CCA Head", path: "/manage/cca-head", hidden: !user?.roles.includes("head") },
         // { name: "Account Request", path: "/manage/request" },
       ],
-      hidden: !user?.roles.includes("head") && !user?.department,
+      hidden: !user?.roles.includes("head") && user?.departments.length === 0,
     },
     {
       icon: <SettingsIcon className="h-4 w-4" />,
