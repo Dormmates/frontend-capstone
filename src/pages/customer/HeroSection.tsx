@@ -1,18 +1,26 @@
 import { useGetLandingPageUpcomingShows } from "@/_lib/@react-client-query/customer";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
 import { Button } from "@/components/ui/button";
 import Navbar from "./Navbar";
 import Countdown from "@/components/Countdown";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   const { data, isLoading, isError } = useGetLandingPageUpcomingShows();
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
 
   const startX = useRef<number | null>(null);
   const currentX = useRef<number | null>(null);
   const isDragging = useRef(false);
+  const sliderRef = useRef<HTMLDivElement>(null);
+
+  const slides = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    return [data[data.length - 1], ...data, data[0]];
+  }, [data]);
 
   useEffect(() => {
     document.title = `SLU CCA - Landing Page`;
@@ -20,27 +28,43 @@ const HeroSection = () => {
 
   useEffect(() => {
     if (!data || data.length === 0) return;
-
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % data.length);
+      handleNext();
     }, 20000);
-
     return () => clearInterval(interval);
-  }, [data]);
+  }, [data, index]);
 
   const handleNext = () => {
-    if (isAnimating || !data) return;
+    if (isAnimating || slides.length === 0) return;
     setIsAnimating(true);
-    setIndex((prev) => (prev + 1) % data.length);
-    setTimeout(() => setIsAnimating(false), 600);
+    setIndex((prev) => prev + 1);
   };
 
   const handlePrev = () => {
-    if (isAnimating || !data) return;
+    if (isAnimating || slides.length === 0) return;
     setIsAnimating(true);
-    setIndex((prev) => (prev - 1 + data.length) % data.length);
-    setTimeout(() => setIsAnimating(false), 600);
+    setIndex((prev) => prev - 1);
   };
+
+  const handleTransitionEnd = () => {
+    if (!data || data.length === 0) return;
+
+    if (index === 0) {
+      setIsAnimating(false);
+      setIndex(data.length);
+    } else if (index === data.length + 1) {
+      setIsAnimating(false);
+      setIndex(1);
+    } else {
+      setIsAnimating(false);
+    }
+  };
+
+  useEffect(() => {
+    const slider = sliderRef.current;
+    slider?.addEventListener("transitionend", handleTransitionEnd);
+    return () => slider?.removeEventListener("transitionend", handleTransitionEnd);
+  }, [index, data]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     startX.current = e.touches[0].clientX;
@@ -48,9 +72,7 @@ const HeroSection = () => {
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     currentX.current = e.touches[0].clientX;
   };
-  const handleTouchEnd = () => {
-    detectSwipe();
-  };
+  const handleTouchEnd = () => detectSwipe();
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     startX.current = e.clientX;
@@ -88,13 +110,15 @@ const HeroSection = () => {
 
   return (
     <div className="min-h-screen w-full relative overflow-hidden select-none">
-      <Navbar
-        className={` text-white absolute flex items-center gap-10 text-lg z-[999] top-0 left-0 w-full px-10 py-5  transition-all duration-500`}
-      />
+      <Navbar className="text-white absolute flex items-center gap-10 text-lg z-[999] top-0 left-0 w-full px-10 py-5 transition-all duration-500" />
 
       <div
-        className="relative w-full h-screen flex transition-transform duration-700 ease-in-out"
-        style={{ transform: `translateX(-${index * 100}%)` }}
+        ref={sliderRef}
+        className={`slider relative w-full h-screen flex transition-transform duration-700 ease-in-out`}
+        style={{
+          transform: `translateX(-${index * 100}%)`,
+          transitionProperty: isAnimating ? "transform" : "none",
+        }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -103,7 +127,7 @@ const HeroSection = () => {
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
       >
-        {data.map((show, i) => (
+        {slides.map((show, i) => (
           <div key={i} className="w-full h-full flex-shrink-0 relative">
             <img src={show.showCover} alt={show.title} className="absolute inset-0 w-full h-full object-cover object-center" />
             <div className="absolute inset-0 bg-black/80"></div>
@@ -124,7 +148,7 @@ const HeroSection = () => {
                 <p className="text-2xl">
                   Show Starts in: <Countdown showDate={show.date} />
                 </p>
-                <Button size="lg" className="w-fit">
+                <Button onClick={() => navigate(`/show/${show.showId}`)} size="lg" className="w-fit">
                   View Show Details
                 </Button>
               </div>
@@ -133,12 +157,13 @@ const HeroSection = () => {
         ))}
       </div>
 
+      {/* Pagination */}
       <div className="flex gap-2 absolute bottom-6 items-center justify-center w-full z-[10000] pointer-events-auto">
         {data.map((_, i) => (
           <div
             key={i}
-            onClick={() => setIndex(i)}
-            className={`cursor-pointer rounded-full transition-all duration-300 ${index === i ? "w-20 h-2 bg-primary" : "w-3 h-2 bg-white/60"}`}
+            onClick={() => setIndex(i + 1)}
+            className={`cursor-pointer rounded-full transition-all duration-300 ${index === i + 1 ? "w-20 h-2 bg-primary" : "w-3 h-2 bg-white/60"}`}
           ></div>
         ))}
       </div>

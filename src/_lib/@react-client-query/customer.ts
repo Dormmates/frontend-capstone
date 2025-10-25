@@ -7,6 +7,7 @@ type UpcomingShows = {
   showCover: string;
   title: string;
   description: string;
+  showId: string;
 };
 
 export const useGetLandingPageUpcomingShows = () => {
