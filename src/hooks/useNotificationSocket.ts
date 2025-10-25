@@ -32,7 +32,8 @@ export const useNotificationSocket = () => {
     const handleNotification = (notif: Notification) => {
       toast(notif.title, {
         description: notif.message,
-        duration: 5000,
+        duration: 100000000,
+        closeButton: true,
       });
 
       queryClient.setQueryData<number>(["notification", "unread", user.userId], (oldCount) => (oldCount ?? 0) + 1);

@@ -128,7 +128,7 @@ const TicketPrices = () => {
 };
 
 const NewFixedPricing = ({ closeModal }: { closeModal: () => void }) => {
-  const [data, setData] = useState({ price: 0, fee: 0, pricingName: "" });
+  const [data, setData] = useState({ price: undefined, fee: undefined, pricingName: "" });
   const [errors, setErrors] = useState<{ price?: string; fee?: string; pricingName?: string }>({});
   const queryClient = useQueryClient();
   const newFixed = useAddNewFixedTicketPricing();
@@ -136,6 +136,8 @@ const NewFixedPricing = ({ closeModal }: { closeModal: () => void }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setData((prev) => ({ ...prev, [name]: value }));
+
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validate = () => {
@@ -144,6 +146,16 @@ const NewFixedPricing = ({ closeModal }: { closeModal: () => void }) => {
 
     if (!data.pricingName || data.pricingName.length < 5) {
       newErrors.pricingName = "Pricing name should be at least 5 characters long";
+      isValid = false;
+    }
+
+    if (!data.price) {
+      newErrors.price = "Input a Value";
+      isValid = false;
+    }
+
+    if (!data.fee) {
+      newErrors.fee = "Commission Fee should be a non-negative value";
       isValid = false;
     }
 
@@ -168,6 +180,8 @@ const NewFixedPricing = ({ closeModal }: { closeModal: () => void }) => {
 
   const submit = () => {
     if (!validate()) return;
+
+    if (!data.price || !data.fee) return;
 
     toast.promise(newFixed.mutateAsync({ priceName: data.pricingName, fixedPrice: data.price, commissionFee: data.fee, type: "fixed" }), {
       position: "top-center",
@@ -229,14 +243,14 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
   const newSectioned = useAddNewSectionedTicketPricing();
 
   const [sectionedPrice, setSectionedPrice] = useState({
-    orchestraLeft: 0,
-    orchestraMiddle: 0,
-    orchestraRight: 0,
-    balconyLeft: 0,
-    balconyMiddle: 0,
-    balconyRight: 0,
+    orchestraLeft: undefined,
+    orchestraMiddle: undefined,
+    orchestraRight: undefined,
+    balconyLeft: undefined,
+    balconyMiddle: undefined,
+    balconyRight: undefined,
     pricingName: "",
-    commissionFee: 0,
+    commissionFee: undefined,
   });
 
   const [errors, setErrors] = useState<{
@@ -253,29 +267,44 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSectionedPrice((prev) => ({ ...prev, [name]: value }));
+
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validate = () => {
     const newErrors: typeof errors = {};
     let isValid = true;
 
+    if (!sectionedPrice.commissionFee) {
+      newErrors.commissionFee = "Commission Fee should be a non-negative value";
+      isValid = false;
+    }
+
     if (!sectionedPrice.pricingName || sectionedPrice.pricingName.length < 5) {
       newErrors.pricingName = "Pricing name should be at least 5 characters";
       isValid = false;
     }
 
-    if (sectionedPrice.commissionFee < 0) {
+    if (sectionedPrice.commissionFee !== undefined && sectionedPrice.commissionFee < 0) {
       newErrors.commissionFee = "Commission fee should be a non-negative value";
       isValid = false;
     }
 
     const sections = ["orchestraLeft", "orchestraMiddle", "orchestraRight", "balconyLeft", "balconyMiddle", "balconyRight"] as const;
     sections.forEach((section) => {
-      if (sectionedPrice[section] <= 0) {
+      if (!sectionedPrice[section]) {
+        newErrors[section] = "Input a value";
+      }
+
+      if (sectionedPrice[section] !== undefined && sectionedPrice[section] <= 0) {
         newErrors[section] = "Price must be greater than 0";
         isValid = false;
       }
-      if (sectionedPrice.commissionFee > sectionedPrice[section]) {
+      if (
+        sectionedPrice.commissionFee !== undefined &&
+        sectionedPrice[section] !== undefined &&
+        sectionedPrice.commissionFee > sectionedPrice[section]
+      ) {
         newErrors[section] = "Commission fee cannot be greater than section price";
         isValid = false;
       }
@@ -288,31 +317,41 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
   const submit = () => {
     if (!validate()) return;
 
-    toast.promise(
-      newSectioned.mutateAsync({
-        commissionFee: sectionedPrice.commissionFee,
-        priceName: sectionedPrice.pricingName,
-        type: "sectioned",
-        sectionPrices: {
-          orchestraLeft: sectionedPrice.orchestraLeft,
-          orchestraMiddle: sectionedPrice.orchestraMiddle,
-          orchestraRight: sectionedPrice.orchestraRight,
-          balconyLeft: sectionedPrice.balconyLeft,
-          balconyMiddle: sectionedPrice.balconyMiddle,
-          balconyRight: sectionedPrice.balconyRight,
-        },
-      }),
-      {
-        success: () => {
-          queryClient.invalidateQueries({ queryKey: ["pricings"] });
-          closeModal();
-          return "Added New Sectioned Price";
-        },
-        loading: `Adding ${sectionedPrice.pricingName} pricing...`,
-        error: (err) => err.message || "Failed to add new Price",
-        position: "top-center",
-      }
-    );
+    if (
+      sectionedPrice.balconyLeft &&
+      sectionedPrice.balconyRight &&
+      sectionedPrice.orchestraLeft &&
+      sectionedPrice.orchestraMiddle &&
+      sectionedPrice.orchestraRight &&
+      sectionedPrice.balconyMiddle &&
+      sectionedPrice.commissionFee
+    ) {
+      toast.promise(
+        newSectioned.mutateAsync({
+          commissionFee: sectionedPrice.commissionFee,
+          priceName: sectionedPrice.pricingName,
+          type: "sectioned",
+          sectionPrices: {
+            orchestraLeft: sectionedPrice.orchestraLeft,
+            orchestraMiddle: sectionedPrice.orchestraMiddle,
+            orchestraRight: sectionedPrice.orchestraRight,
+            balconyLeft: sectionedPrice.balconyLeft,
+            balconyMiddle: sectionedPrice.balconyMiddle,
+            balconyRight: sectionedPrice.balconyRight,
+          },
+        }),
+        {
+          success: () => {
+            queryClient.invalidateQueries({ queryKey: ["pricings"] });
+            closeModal();
+            return "Added New Sectioned Price";
+          },
+          loading: `Adding ${sectionedPrice.pricingName} pricing...`,
+          error: (err) => err.message || "Failed to add new Price",
+          position: "top-center",
+        }
+      );
+    }
   };
 
   return (
@@ -327,7 +366,12 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
           label="Pricing Name"
           value={sectionedPrice.pricingName}
           error={errors.pricingName}
-          onChange={(e) => setSectionedPrice((prev) => ({ ...prev, pricingName: e.target.value }))}
+          onChange={(e) =>
+            setSectionedPrice((prev) => {
+              setErrors((prev) => ({ ...prev, pricingName: "" }));
+              return { ...prev, pricingName: e.target.value };
+            })
+          }
         />
         <div className="w-full flex flex-col gap-5">
           <div className="flex gap-5 w-full">
@@ -407,7 +451,8 @@ const NewSectionedPricing = ({ closeModal }: { closeModal: () => void }) => {
           value={sectionedPrice.commissionFee}
           error={errors.commissionFee}
           type="number"
-          onChange={(e) => setSectionedPrice((prev) => ({ ...prev, commissionFee: Number(e.target.value) }))}
+          name="commissionFee"
+          onChange={handlePriceChange}
         />
       </CardContent>
       <CardFooter className="flex justify-end">

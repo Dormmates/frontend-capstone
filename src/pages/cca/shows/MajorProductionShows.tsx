@@ -57,7 +57,7 @@ const MajorProductionShows = () => {
           <SimpleCard
             icon={<TheaterIcon size={18} />}
             label="Major Production"
-            value={filteredShows.filter((s) => s.showType === "majorProduction").length}
+            value={activeShows.filter((s) => s.showType === "majorProduction").length}
           />
         </div>
         {user.roles.includes("head") && (
@@ -75,7 +75,7 @@ const MajorProductionShows = () => {
         />
       </div>
       <PaginatedTable
-        className={activeShows.length != 0 ? "min-w-[1200px]" : ""}
+        className={filteredShows.length != 0 ? "min-w-[1200px]" : ""}
         columns={[
           {
             key: "title",
@@ -117,7 +117,7 @@ const MajorProductionShows = () => {
             ),
           },
         ]}
-        data={activeShows}
+        data={filteredShows}
       />
 
       {user.roles.includes("head") && (

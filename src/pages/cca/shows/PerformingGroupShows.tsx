@@ -34,15 +34,13 @@ const PerformingGroupShows = () => {
     );
   }
 
-  // const departmentId = user?.roles.includes("head") ? undefined : user?.department ? user.department.departmentId : undefined;
-
   const { data: shows, isLoading: showsLoading } = useGetShows();
 
   useEffect(() => {
     document.title = `Performing Group Shows`;
   }, []);
 
-  const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments(user?.userId);
+  const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments(!user?.roles.includes("head") ? user?.userId : undefined);
 
   const [filter, setFilter] = useState({
     showType: "all",
@@ -88,18 +86,18 @@ const PerformingGroupShows = () => {
       <h1 className="text-3xl">Performing Group Shows</h1>
       <div className="flex justify-between mt-10">
         <div className="grid grid-cols-2 md:grid-cols-3 md:gap-5 gap-2">
-          <SimpleCard className="w-full" icon={<TheaterIcon size={18} />} label="Total Show" value={filteredShows.length} />
+          <SimpleCard className="w-full" icon={<TheaterIcon size={18} />} label="Total Show" value={activeShows.length} />
           <SimpleCard
             className="w-full"
             icon={<DramaIcon size={18} />}
             label="Major Concert"
-            value={filteredShows.filter((s) => s.showType === "majorConcert").length}
+            value={activeShows.filter((s) => s.showType === "majorConcert").length}
           />
           <SimpleCard
             className="w-full"
             icon={<SpotlightIcon size={18} />}
             label="Show Case"
-            value={filteredShows.filter((s) => s.showType === "showCase").length}
+            value={activeShows.filter((s) => s.showType === "showCase").length}
           />
         </div>
         <Link className="self-end" to={"/shows/add?showType=group"}>

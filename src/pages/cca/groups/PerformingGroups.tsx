@@ -421,14 +421,13 @@ const AssignTrainer = ({
     <>
       <div className="flex items-center mt-5">
         {trainersDropdown.length !== 0 ? (
-          <Card>
+          <Card className="w-full">
             <CardHeader>
               <CardTitle>Select Trainers</CardTitle>
-              <CardDescription>This only shows trainers that are not assigned to a performing group yet</CardDescription>
+              <CardDescription>You can assign multiple trainers on this department</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col gap-3">
-                <Label>Select Trainers</Label>
                 <MultiSelect
                   defaultValue={selectedTrainers}
                   placeholder="Select Trainers"

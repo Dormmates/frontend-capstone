@@ -1,7 +1,6 @@
 import { Link, useOutletContext, useParams } from "react-router-dom";
 import { useGetScheduleDistributors } from "@/_lib/@react-client-query/schedule.ts";
 import { useMemo, useState } from "react";
-import { useDebounce } from "@/hooks/useDeabounce.ts";
 import SimpleCard from "@/components/SimpleCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -31,18 +30,17 @@ const ScheduleDistributorAndRemittances = () => {
   }, [departments]);
 
   const [searchValue, setSearchValue] = useState("");
-  const debouncedSearch = useDebounce(searchValue);
 
   const searchedDistributors = useMemo(() => {
     if (!distributors) return [];
 
     return distributors.filter((dist) => {
       const matchesType = selectedType ? dist.distributorType === selectedType : true;
-      const matchingName = dist.name.includes(searchValue);
+      const matchingName = dist.name.toLowerCase().includes(searchValue.toLowerCase());
       const matchDeparment = selectedDepartment == "all" || selectedDepartment == dist.department.id;
       return matchingName && matchDeparment && matchesType;
     });
-  }, [debouncedSearch, distributors, selectedDepartment, selectedType]);
+  }, [searchValue, distributors, selectedDepartment, selectedType]);
 
   if (isLoading || loadingDepartments) {
     return <h1>Loading....</h1>;

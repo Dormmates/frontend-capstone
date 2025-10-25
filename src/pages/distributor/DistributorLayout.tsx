@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import { toast } from "sonner";
 import UpdatePassword from "../UpdatePassword";
+import { useNotificationSocket } from "@/hooks/useNotificationSocket";
 
 const sideBarItems = [
   {
@@ -25,6 +26,7 @@ const sideBarItems = [
 const DistributorLayout = () => {
   const { user } = useAuthContext();
   const [openDefaultPasswordModal, setOpenDefaultPasswordModal] = useState(false);
+  useNotificationSocket();
 
   useEffect(() => {
     if (user && user.isDefaultPassword) {

@@ -13,7 +13,7 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
       <hr className="text-lightGrey" />
       <div className="flex flex-col gap-5">
         <h1 className="text-xl mb-5">Ticket Details</h1>
-        {/* <ControlNumberInputTutorial className="-mt-5" /> */}
+
         <div className="flex gap-5 ">
           <InputField
             onChange={handleInputChange}
@@ -23,17 +23,8 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
             type="number"
             value={scheduleData.totalTickets + ""}
             error={errors?.totalTickets}
+            onWheel={(e) => e.currentTarget.blur()}
           />
-
-          {/* <InputField
-            onChange={handleInputChange}
-            label="Total Number of Balcony Tickets"
-            className="w-full min-w-[300px]"
-            name="totalBalcony"
-            type="number"
-            value={scheduleData.totalBalcony + ""}
-            error={errors?.totalBalcony}
-          /> */}
 
           <InputField
             onChange={handleInputChange}
@@ -43,10 +34,10 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
             type="number"
             value={scheduleData.totalComplimentary + ""}
             error={errors?.totalComplimentary}
+            onWheel={(e) => e.currentTarget.blur()}
           />
         </div>
 
-        {/* <h2>Ticket Control Numbers</h2> */}
         <div className="flex gap-5 w-full">
           <InputField
             onChange={handleInputChange}
@@ -58,17 +49,6 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
             error={errors?.ticketsControlNumber}
             disabled={!scheduleData.totalTickets}
           />
-
-          {/* <InputField
-            onChange={handleInputChange}
-            label="Control Number of Balcony Tickets"
-            placeholder="eg. 251-500"
-            className="w-full min-w-[300px]"
-            name="balconyControlNumber"
-            value={!scheduleData.totalBalcony ? "" : scheduleData.balconyControlNumber}
-            error={errors?.balconyControlNumber}
-            disabled={!scheduleData.totalBalcony}
-          /> */}
 
           <InputField
             onChange={handleInputChange}

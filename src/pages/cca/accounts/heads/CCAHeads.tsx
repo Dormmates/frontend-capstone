@@ -128,7 +128,7 @@ const CCAHeads = () => {
                         }}
                         title={`Remove "${head.firstName} ${head.lastName}" as CCA Head`}
                         trigger={
-                          <Button variant="outline" className="h-7 w-7 p-2 rounded-full flex items-center justify-center">
+                          <Button size="icon" variant="outline" className="flex items-center justify-center">
                             <UserRoundXIcon />
                           </Button>
                         }

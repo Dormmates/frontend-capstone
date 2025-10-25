@@ -184,7 +184,7 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                           {
                             onSuccess: () => {
                               setUser(null);
-                              navigate("/");
+                              navigate("/cca/login");
                             },
                           }
                         ),
