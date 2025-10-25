@@ -18,7 +18,7 @@ const CCADashboard = () => {
 
   const isHead = !!user?.roles?.includes("head");
 
-  const [selectedDepartment, setSelectedDepartment] = useState(isHead ? "all" : (user?.departments[0].departmentId as string));
+  const [selectedDepartment, setSelectedDepartment] = useState(isHead ? "all" : (user?.departments[0]?.departmentId as string));
   const { data: departments, isLoading: loadingDepartments, isError: errorDepartments } = useGetDepartments(!isHead ? user?.userId : undefined);
 
   const departmentOptions = useMemo(() => {
