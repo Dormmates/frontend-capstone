@@ -427,10 +427,10 @@ export const useTrainerSellTicket = () => {
   });
 };
 
-export const useTrainerUnsoldTicket = () => {
-  return useMutation<any, Error, { scheduleId: string; controlNumber: number; trainerId: string }>({
+export const useRefundTicket = () => {
+  return useMutation<any, Error, { scheduleId: string; controlNumber: number; trainerId: string; distributorId: string; remarks: string }>({
     mutationFn: async (payload) => {
-      const res = await request(`/api/schedule/unsell/ticket`, payload, "post");
+      const res = await request(`/api/schedule/refund`, payload, "post");
       return res.data;
     },
   });

@@ -30,7 +30,7 @@ const HeroSection = () => {
     if (!data || data.length === 0) return;
     const interval = setInterval(() => {
       handleNext();
-    }, 20000);
+    }, 5000);
     return () => clearInterval(interval);
   }, [data, index]);
 

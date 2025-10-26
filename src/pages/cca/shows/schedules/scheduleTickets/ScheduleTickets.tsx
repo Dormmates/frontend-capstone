@@ -1,5 +1,5 @@
 import { useOutletContext, useParams } from "react-router-dom";
-import { useGetScheduleTickets, useTrainerSellTicket, useTrainerUnsoldTicket } from "@/_lib/@react-client-query/schedule.ts";
+import { useGetScheduleTickets, useTrainerSellTicket, useRefundTicket } from "@/_lib/@react-client-query/schedule.ts";
 import { useEffect, useMemo, useState } from "react";
 import type { Schedule } from "@/types/schedule.ts";
 import { formatTicket } from "@/utils/controlNumber.ts";
@@ -350,14 +350,14 @@ const ScheduleTickets = () => {
                             Sell Ticket
                           </DropdownMenuItem>
                         )}
-                        {!ticket.isComplimentary && ticket.trainerSold && (
+                        {!ticket.isComplimentary && ticket.isRemitted && (
                           <DropdownMenuItem
                             onClick={() => {
                               setUnIsSellTicket(true);
                               setSelectedTicket(ticket);
                             }}
                           >
-                            Unsold Ticket
+                            Refund Ticket
                           </DropdownMenuItem>
                         )}
                         {/* {ticket.isComplimentary && <DropdownMenuItem> Mark as Non-Complimentary</DropdownMenuItem>} */}
@@ -549,17 +549,20 @@ type UnSellTicketProps = {
 const UnSellTicket = ({ ticket, scheduleId, setUnSellTicket, setSelectedTicket }: UnSellTicketProps) => {
   const { user } = useAuthContext();
 
+  const [remarks, setRemarks] = useState("");
   const queryClient = useQueryClient();
-  const unsellTicket = useTrainerUnsoldTicket();
+  const refundTicket = useRefundTicket();
 
   const submit = () => {
-    const payload: { scheduleId: string; controlNumber: number; trainerId: string } = {
+    const payload: { scheduleId: string; controlNumber: number; trainerId: string; distributorId: string; remarks: string } = {
       trainerId: user?.userId as string,
       scheduleId,
       controlNumber: ticket.controlNumber,
+      distributorId: ticket?.distributorId ?? (user?.userId as string),
+      remarks,
     };
 
-    toast.promise(unsellTicket.mutateAsync(payload), {
+    toast.promise(refundTicket.mutateAsync(payload), {
       success: () => {
         queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId], exact: true });
         setUnSellTicket(false);
@@ -583,16 +586,17 @@ const UnSellTicket = ({ ticket, scheduleId, setUnSellTicket, setSelectedTicket }
         <div className="flex gap-1 flex-col">
           <p className="font-bold">Note: </p>
           <p>
-            This ticket was <span className="font-medium">sold and remitted directly</span> by the trainer. Unselling it will revert the ticket’s
-            status to <span className="font-medium">available</span> and remove its remittance record. Please ensure this action is intended before
-            proceeding.
+            Refunding the ticket will revert the ticket’s status to <span className="font-medium">available</span> and remove its remittance record.
+            Please ensure this action is intended before proceeding.
           </p>
         </div>
       </div>
 
+      <InputField label="Remarks (Optional)" value={remarks} onChange={(e) => setRemarks(e.target.value)} />
+
       <div className="flex justify-end mt-3">
-        <Button disabled={unsellTicket.isPending} onClick={submit}>
-          Unsold Ticket
+        <Button disabled={refundTicket.isPending} onClick={submit}>
+          Refund Ticket
         </Button>
       </div>
     </div>
