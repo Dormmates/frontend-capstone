@@ -39,7 +39,11 @@ interface ShowFormInterface {
 
 const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: ShowFormInterface) => {
   const { user } = useAuthContext();
-  const { data: groups, isLoading: loadingDepartments, error: errorDepartment } = useGetDepartments(user?.userId);
+  const {
+    data: groups,
+    isLoading: loadingDepartments,
+    error: errorDepartment,
+  } = useGetDepartments(user?.roles.includes("head") ? undefined : user?.userId);
   const { data: genres, isLoading: loadingGenres, error: errorGenres } = useGetGenres();
   const [showData, setShowData] = useState<ShowFormProps>(showFormValue);
   const [errors, setErrors] = useState<Partial<Record<keyof ShowFormProps, string>>>({});
@@ -47,10 +51,10 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
   const validate = () => {
     const newErrors: typeof errors = {};
 
-    if (!showData.title) {
+    if (!showData.title.trim()) {
       newErrors.title = "Please input title";
-    } else if (showData.title.length < 5) {
-      newErrors.title = "Length must be greater than 5 characters";
+    } else if (showData.title.trim().length < 4) {
+      newErrors.title = "Length must be greater than 4 characters";
     }
 
     if (!showData.productionType && showType == "group") {
@@ -63,7 +67,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
 
     if (!showData.description) {
       newErrors.description = "Please add a description";
-    } else if (showData.description.length < 10) {
+    } else if (showData.description.trim().length < 10) {
       newErrors.description = "Description must be at least 10 characters long";
     }
 
@@ -101,11 +105,13 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setShowData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setShowData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   if (loadingDepartments || loadingGenres) {
@@ -154,7 +160,10 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                   placeholder={"Select Group"}
                   items={showData.productionType == "majorProduction" ? [{ name: "All Group", value: "all" }] : groupOptions}
                   value={showData.productionType == "majorProduction" ? "all" : (showData.group as string)}
-                  onChange={(value) => setShowData((prev) => ({ ...prev, group: value }))}
+                  onChange={(value) => {
+                    setShowData((prev) => ({ ...prev, group: value }));
+                    setErrors((prev) => ({ ...prev, group: "" }));
+                  }}
                 />
                 <Dropdown
                   includeHeader={true}
@@ -169,7 +178,10 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                       : productionType
                   }
                   value={showData.productionType}
-                  onChange={(value) => setShowData((prev) => ({ ...prev, productionType: value as ShowType }))}
+                  onChange={(value) => {
+                    setShowData((prev) => ({ ...prev, productionType: value as ShowType }));
+                    setErrors((prev) => ({ ...prev, productionType: "" }));
+                  }}
                 />
               </div>
             )}
@@ -193,7 +205,10 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                 disabled={isLoading}
                 placeholder="Choose Genres"
                 options={genreValues}
-                onValueChange={(a) => setShowData((prev) => ({ ...prev, genre: a }))}
+                onValueChange={(a) => {
+                  setShowData((prev) => ({ ...prev, genre: a }));
+                  setErrors((prev) => ({ ...prev, genre: "" }));
+                }}
                 defaultValue={showData.genre}
               />
               {errors.genre && <p className="text-sm text-red mt-1">{errors.genre}</p>}
@@ -218,7 +233,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                   if (file) {
                     const allowedExtensions = ["png", "jpg", "jpeg"];
                     const fileExtension = file.name.split(".").pop()?.toLowerCase();
-                    const maxSize = 5 * 1024 * 1024;
+                    const maxSize = 30 * 1024 * 1024;
 
                     if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
                       toast("File extension not allowed", {
@@ -232,7 +247,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                     if (file.size > maxSize) {
                       toast("Image too large", {
                         position: "top-center",
-                        description: "Image must be less than 5MB.",
+                        description: "Image must be less than 30MB.",
                         duration: 5000,
                       });
                       return;
@@ -244,6 +259,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                       showImagePreview: imageURL,
                       image: file,
                     }));
+                    setErrors((prev) => ({ ...prev, imageCover: "" }));
                   }
                 }}
               />

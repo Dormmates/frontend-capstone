@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/context/AuthContext";
 import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
-import { Trash2Icon } from "lucide-react";
+import { AlertCircleIcon, Trash2Icon } from "lucide-react";
 
 type DeleteShowProps = {
   show: ShowData;
@@ -76,8 +76,9 @@ const DeleteShow = ({ show }: DeleteShowProps) => {
           </div>
         </div>
       </div>
-      <div className="border-red border  bg-gray p-2 rounded-sm mt-5">
-        <p className=" font-medium">The operation cannot be undone</p>
+      <div className="border-red border  bg-red/5 p-2 rounded-sm mt-5 flex items-center gap-2">
+        <AlertCircleIcon className="text-red w-4" />
+        <p className=" text-sm font-medium">The operation cannot be undone</p>
       </div>
     </AlertModal>
   );

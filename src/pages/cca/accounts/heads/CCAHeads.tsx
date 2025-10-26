@@ -4,7 +4,6 @@ import { ContentWrapper } from "@/components/layout/Wrapper";
 import PaginatedTable from "@/components/PaginatedTable";
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/context/AuthContext";
-import { useDebounce } from "@/hooks/useDeabounce";
 import { useEffect, useMemo, useState } from "react";
 import ArchiveAccount from "../ArchiveAccount";
 import type { User } from "@/types/user";
@@ -23,7 +22,6 @@ const CCAHeads = () => {
   const { user } = useAuthContext();
   const { data, isLoading, isError } = useGetCCAHeads();
   const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search);
 
   const [isAddHead, setIsAddHead] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
@@ -41,13 +39,13 @@ const CCAHeads = () => {
   const searchedTrainers = useMemo(() => {
     if (!activeCCAHeads) return [];
     return activeCCAHeads.filter((head) => {
-      const l = head.lastName.toLocaleLowerCase().trim();
-      const f = head.firstName.toLocaleLowerCase().trim();
-      const s = debouncedSearch.toLocaleLowerCase().trim();
+      const l = head.lastName.toLowerCase().trim();
+      const f = head.firstName.toLowerCase().trim();
+      const s = search.toLowerCase().trim();
 
       return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
     });
-  }, [debouncedSearch, activeCCAHeads]);
+  }, [search, activeCCAHeads]);
 
   useEffect(() => {
     document.title = `SLU CCA Heads`;

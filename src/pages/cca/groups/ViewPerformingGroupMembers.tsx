@@ -4,7 +4,6 @@ import { distributorTypeOptions, type Distributor, type User } from "@/types/use
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDebounce } from "@/hooks/useDeabounce";
 import { ContentWrapper } from "@/components/layout/Wrapper";
 import { EditIcon, MailIcon, PhoneIcon, Users } from "lucide-react";
 import DialogPopup from "@/components/DialogPopup";
@@ -21,6 +20,7 @@ import { useGetDepartments } from "@/_lib/@react-client-query/department";
 import UnArchiveAccount from "../accounts/UnArchiveAccount";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import NotFound from "@/components/NotFound";
+import DeleteAccount from "../accounts/DeleteAccount";
 
 const ViewPerformingGroups = () => {
   const addDistributor = useNewDistributor();
@@ -50,7 +50,6 @@ const ViewPerformingGroups = () => {
   const [pendingBulkCreation, setIsPendingBulkCreation] = useState(false);
 
   const [searchValue, setSearchValue] = useState("");
-  const debouncedSearch = useDebounce(searchValue);
 
   const activeDistributors = useMemo(() => {
     if (!distributors) return [];
@@ -81,7 +80,7 @@ const ViewPerformingGroups = () => {
 
       return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
     });
-  }, [debouncedSearch, filteredDistributors]);
+  }, [searchValue, filteredDistributors]);
 
   const groupOptions = useMemo(() => {
     if (!departments || !user) return [];
@@ -309,7 +308,7 @@ const ViewPerformingGroups = () => {
               department: selectedDistributor.distributor.department?.departmentId || "",
             }}
             distributorTypeOptions={distributorTypeOptions.filter((t) => t.value === "cca")}
-            groupOptions={groupOptions.filter((g) => g.value === groupId)}
+            groupOptions={groupOptions}
             onSubmit={(payload) => {
               const hasChanges =
                 payload.firstName.trim() !== selectedDistributor.firstName.trim() ||
@@ -360,7 +359,6 @@ const ViewPerformingGroups = () => {
         >
           <div>
             <PaginatedTable
-              selectable
               data={archivedDistributors}
               columns={[
                 {
@@ -395,7 +393,7 @@ const ViewPerformingGroups = () => {
                   render: (distributor) => (
                     <div className="flex justify-end items-center gap-2">
                       <UnArchiveAccount queryKey="distributors" user={distributor as User} />
-                      {/* <DeleteAccount queryKey="distributors" user={distributor as User} /> */}
+                      <DeleteAccount queryKey="distributors" user={distributor as User} />
                     </div>
                   ),
                 },

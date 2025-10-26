@@ -60,7 +60,7 @@ const TopShowsByTotalRevenue = ({ isHead, selectedDepartment }: TopShowsByTotalR
         <CardDescription>Visual comparison of ticket sales per show.</CardDescription>
       </CardHeader>
       <CardContent className="">
-        {isError || !topShows ? (
+        {isError || chartData.length == 0 ? (
           <div className="border flex items-center justify-center rounded-md p-5 text-sm text-foreground h-20">No Data Available.</div>
         ) : (
           <ChartContainer className="mx-auto aspect-square h-[250px] w-full" config={chartConfig}>

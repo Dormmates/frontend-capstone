@@ -2,7 +2,6 @@ import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { useAuthContext } from "@/context/AuthContext.tsx";
-import { useDebounce } from "@/hooks/useDeabounce.ts";
 import type { ShowData } from "@/types/show.ts";
 import SimpleCard from "@/components/SimpleCard";
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,6 @@ const MajorProductionShows = () => {
   const [isViewArchivedShows, setIsViewArchivedShows] = useState(false);
 
   const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 500);
 
   const activeShows = useMemo(() => {
     if (!shows) return [];
@@ -37,10 +35,10 @@ const MajorProductionShows = () => {
   const filteredShows = useMemo(() => {
     if (!shows) return [];
     return activeShows.filter((show) => {
-      const matchTitle = show.title.toLowerCase().includes(debouncedSearch.toLowerCase());
+      const matchTitle = show.title.toLowerCase().includes(search.toLowerCase());
       return matchTitle;
     });
-  }, [activeShows, debouncedSearch]);
+  }, [activeShows, search]);
 
   useEffect(() => {
     document.title = `Major Production Shows`;

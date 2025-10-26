@@ -33,7 +33,7 @@ export interface ShowData {
 }
 
 export interface ShowDataWithSchedules extends ShowData {
-  nextSchedule?: Schedule | null;
-  upcomingSchedules: Schedule[];
+  nextSchedule: Schedule | null;
+  remainingUpcomingSchedules: Schedule[];
   pastSchedules: Schedule[];
 }

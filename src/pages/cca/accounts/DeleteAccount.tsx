@@ -4,7 +4,7 @@ import type { User } from "@/types/user";
 import { useQueryClient } from "@tanstack/react-query";
 import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
-import { Trash2Icon } from "lucide-react";
+import { InfoIcon, Trash2Icon } from "lucide-react";
 
 type DeleteAccountProps = {
   user: User;
@@ -20,7 +20,7 @@ const DeleteAccount = ({ user, queryKey }: DeleteAccountProps) => {
       position: "top-center",
       loading: "Deleting user...",
       success: () => {
-        queryClient.invalidateQueries({ queryKey: [queryKey], exact: true });
+        queryClient.invalidateQueries({ queryKey: [queryKey] });
         return "User Deleted";
       },
       error: (err) => err.message || "Failed to delete user",
@@ -41,7 +41,11 @@ const DeleteAccount = ({ user, queryKey }: DeleteAccountProps) => {
       title="Delete User"
       description="This will permanently delete this user"
     >
-      <div>{user.firstName + " " + user.lastName}</div>
+      <div>User Name: {user.firstName + " " + user.lastName}</div>
+      <div className="flex  gap-2 border border-orange-400 bg-orange-50 p-3">
+        <InfoIcon className="w-5 text-orange-400" />
+        <p className="text-sm font-semibold">Account Deletion will fail if the system detects that the user contains important data.</p>
+      </div>
     </AlertModal>
   );
 };

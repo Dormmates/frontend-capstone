@@ -21,15 +21,26 @@ export const useGetLandingPageUpcomingShows = () => {
 };
 
 export const useGetDepartmentShows = (departmentId: string, query?: { isArchived?: boolean }) => {
-  return useQuery<{ upcomingShows: ShowDataWithSchedules[]; pastShows: ShowDataWithSchedules[] }, Error>({
+  return useQuery<{ featuredShow: ShowDataWithSchedules; otherShows: ShowDataWithSchedules[] }, Error>({
     queryKey: ["department", "shows", departmentId],
     queryFn: async () => {
-      const res = await request<{ featuredShow: ShowDataWithSchedules; upcomingShows: ShowDataWithSchedules[]; pastShows: ShowDataWithSchedules[] }>(
+      const res = await request<{ featuredShow: ShowDataWithSchedules; otherShows: ShowDataWithSchedules[] }>(
         `/api/customer/department/${departmentId}`,
         query,
         "get"
       );
       return res.data;
     },
+  });
+};
+
+export const useGetShowWithSchedules = (showId: string) => {
+  return useQuery<ShowDataWithSchedules, Error>({
+    queryKey: ["customer", "shows", showId],
+    queryFn: async () => {
+      const res = await request<ShowDataWithSchedules>(`/api/customer/show/${showId}`, {}, "get");
+      return res.data;
+    },
+    retry: false,
   });
 };

@@ -1,7 +1,6 @@
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useEditTrainer, useGetTrainers, useNewTrainer } from "@/_lib/@react-client-query/accounts.ts";
 import { useEffect, useMemo, useState } from "react";
-import { useDebounce } from "@/hooks/useDeabounce.ts";
 import { useGetDepartments } from "@/_lib/@react-client-query/department.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import type { User } from "@/types/user.ts";
@@ -16,6 +15,7 @@ import UnArchiveAccount from "../UnArchiveAccount";
 import { useAuthContext } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { EditIcon, Users } from "lucide-react";
+import DeleteAccount from "../DeleteAccount";
 
 const Trainers = () => {
   const { user } = useAuthContext();
@@ -26,7 +26,6 @@ const Trainers = () => {
   const [isAddTrainer, setIsAddTrainer] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
-  const debouncedSearch = useDebounce(searchValue);
   const { data: trainers, isLoading: loadingTrainers } = useGetTrainers();
   const { data: departments, isLoading: loadingDepartments } = useGetDepartments();
 
@@ -46,13 +45,13 @@ const Trainers = () => {
   const searchedTrainers = useMemo(() => {
     if (!activeTrainers) return [];
     return activeTrainers.filter((trainer) => {
-      const l = trainer.lastName.toLocaleLowerCase().trim();
-      const f = trainer.firstName.toLocaleLowerCase().trim();
-      const s = debouncedSearch.toLocaleLowerCase().trim();
+      const l = trainer.lastName.toLowerCase().trim();
+      const f = trainer.firstName.toLowerCase().trim();
+      const s = searchValue.toLowerCase().trim();
 
       return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
     });
-  }, [debouncedSearch, activeTrainers]);
+  }, [searchValue, activeTrainers]);
 
   useEffect(() => {
     document.title = `SLU CCA Trainers`;
@@ -243,7 +242,7 @@ const Trainers = () => {
                   render: (trainer) => (
                     <div className="flex justify-end items-center gap-2">
                       <UnArchiveAccount user={trainer as User} queryKey="trainers" />
-                      {/* <DeleteAccount user={trainer as User} queryKey="trainers" /> */}
+                      <DeleteAccount user={trainer as User} queryKey="trainers" />
                     </div>
                   ),
                 },

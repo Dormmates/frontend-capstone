@@ -3,9 +3,7 @@ import { useAllocateTicketByControlNumber, useGetDistributorsForAllocation, useG
 import type { FlattenedSeat } from "@/types/seat.ts";
 import { useMemo, useState } from "react";
 import SeatMap from "@/components/SeatMap";
-import { useDebounce } from "@/hooks/useDeabounce";
 import InputField from "@/components/InputField";
-
 import { distributorTypeOptions } from "@/types/user";
 import Dropdown from "@/components/Dropdown";
 import PaginatedTable from "@/components/PaginatedTable";
@@ -292,12 +290,11 @@ const ChooseDistributor = ({ onChoose, selectedDistributor, closeModal, schedule
   } = useGetDistributorsForAllocation(scheduleId, departmentId);
   const [searchValue, setSearchValue] = useState("");
   const [selectedType, setSelectedType] = useState("cca");
-  const debouncedSearch = useDebounce(searchValue);
 
   const searchedDistributors = useMemo(() => {
     if (!distributors) return [];
 
-    const search = debouncedSearch.trim().toLowerCase();
+    const search = searchValue.trim().toLowerCase();
 
     return distributors.filter((dist) => {
       const fullName = `${dist.firstName} ${dist.lastName}`.toLowerCase();
@@ -306,7 +303,7 @@ const ChooseDistributor = ({ onChoose, selectedDistributor, closeModal, schedule
 
       return matchesName && matchesType;
     });
-  }, [debouncedSearch, selectedType, distributors]);
+  }, [searchValue, selectedType, distributors]);
 
   if (loadingDistributors) {
     return <h1>Loading...</h1>;

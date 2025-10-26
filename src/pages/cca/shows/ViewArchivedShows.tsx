@@ -1,11 +1,11 @@
 import type { ShowData } from "@/types/show.ts";
 import SimpleCard from "@/components/SimpleCard";
-import { DataTable } from "@/components/DataTable.tsx";
 import DeleteShow from "./showActions/DeleteShow";
 import UnArchiveShow from "./showActions/UnArchiveShow";
 import { TheaterIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import PaginatedTable from "@/components/PaginatedTable";
 
 type Props = {
   archivedShows: ShowData[];
@@ -16,7 +16,7 @@ const ViewArchivedShows = ({ archivedShows }: Props) => {
     <div className="flex flex-col gap-5 w-full">
       <SimpleCard icon={<TheaterIcon size={18} />} className="w-fit" label="Total Shows" value={archivedShows.length} />
       <div className="w-full overflow-x-auto">
-        <DataTable
+        <PaginatedTable
           className={archivedShows.length != 0 ? "min-w-[600px]" : ""}
           columns={[
             {

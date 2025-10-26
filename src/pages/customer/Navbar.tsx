@@ -12,7 +12,7 @@ const navigationLinks = [
 
 const Navbar = ({ className }: { className: string }) => {
   return (
-    <div className={` ${className}`}>
+    <div className={`${className}`}>
       <div className="max-w-[100px] h-[35px]">
         <img className="object-cover w-full h-full" src={logo} alt="CCA Logo" />
       </div>

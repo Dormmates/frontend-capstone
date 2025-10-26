@@ -64,6 +64,7 @@ const ByCreation = ({ closeModal }: CreateCCAHeadProps) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleSubmit = () => {
@@ -172,7 +173,14 @@ const ByAddRole = ({ closeModal }: CreateCCAHeadProps) => {
         ) : (
           <div className="flex flex-col gap-3">
             <Label>Select Trainers</Label>
-            <MultiSelect placeholder="Select Trainers" onValueChange={(trainers) => setSelectedTrainers(trainers)} options={trainerOptions} />
+            <MultiSelect
+              placeholder="Select Trainers"
+              onValueChange={(trainers) => {
+                setSelectedTrainers(trainers);
+                setError("");
+              }}
+              options={trainerOptions}
+            />
             {error && <p className="text-red text-sm">{error}</p>}
           </div>
         )}

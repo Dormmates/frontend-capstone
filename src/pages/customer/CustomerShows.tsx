@@ -28,7 +28,7 @@ const CustomerHome = () => {
 
           <div className="flex flex-wrap gap-10 justify-center md:gap-20">
             {(departments ?? []).map((d) => (
-              <Link className="flex items-center justify-center" to={`/shows/${d.departmentId}`}>
+              <Link key={d.departmentId} className="flex items-center justify-center" to={`/shows/${d.departmentId}`}>
                 <div key={d.departmentId} className="aspect-square cursor-pointer transition duration-300">
                   <img className="w-full h-full object-contain  hover:scale-110 transition duration-300" src={d.logoUrl} alt={d.name} />
                 </div>
@@ -39,29 +39,8 @@ const CustomerHome = () => {
 
         <section className="mt-20">
           <h1 className="text-center text-5xl mb-20">Major Production Shows</h1>
-          <ShowsList showType="majorProduction" limit={3} />
+          <ShowsList showType="majorProduction" />
         </section>
-
-        {/* <h1 className="text-center text-5xl my-20">Performing Group Shows</h1> */}
-
-        {/* {departments?.map((d) => (
-          <section key={d.departmentId}>
-            <Separator className="mt-10 mb-5" />
-            <div className="flex justify-end">
-              <Link to={`/shows/${d.departmentId}`} className="underline">
-                View More
-              </Link>
-            </div>
-            <div className="flex justify-center w-full flex-col items-center">
-              <div className="flex justify-center aspect-square max-h-[200px] ">
-                <img src={d.logoUrl} alt="" />
-              </div>
-              <h2 className="text-center text-4xl mb-20">{d.name}</h2>
-            </div>
-
-            <ShowsList departmentId={d.departmentId} limit={3} />
-          </section>
-        ))} */}
       </ContentWrapper>
     </PageWrapper>
   );
@@ -80,12 +59,12 @@ const ShowsList = ({ departmentId, limit, showType }: { departmentId?: string; l
   }
 
   return (
-    <div className="flex gap-10 flex-wrap justify-center">
+    <div className="gap-10 grid md:grid-cols-2">
       {shows.map((show) => (
         <div
           onClick={() => navigate(`/show/${show.showId}`)}
           key={show.showId}
-          className="relative w-full max-w-[350px] h-[550px] overflow-hidden group cursor-pointer"
+          className="relative w-full  h-[550px] overflow-hidden group cursor-pointer"
         >
           <img
             className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 group-hover:grayscale"

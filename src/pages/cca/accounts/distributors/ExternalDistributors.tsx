@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
-import { useDebounce } from "@/hooks/useDeabounce.ts";
 import { useEditDistributor, useGetDistributors, useNewDistributor } from "@/_lib/@react-client-query/accounts.ts";
 import { distributorTypeOptions, type Distributor, type DistributorTypes, type User } from "@/types/user.ts";
 import DistributorForm from "./DistributorForm";
@@ -34,7 +33,6 @@ const Distributors = () => {
   const [type, setType] = useState("all");
 
   const [searchValue, setSearchValue] = useState("");
-  const debouncedSearch = useDebounce(searchValue);
 
   const activeDistributors = useMemo(() => {
     if (!distributors) return [];
@@ -49,13 +47,13 @@ const Distributors = () => {
   const searchedDistributors = useMemo(() => {
     if (!activeDistributors) return [];
     return activeDistributors.filter((distributor) => {
-      const l = distributor.lastName.toLocaleLowerCase().trim();
-      const f = distributor.firstName.toLocaleLowerCase().trim();
-      const s = searchValue.toLocaleLowerCase().trim();
+      const l = distributor.lastName.toLowerCase().trim();
+      const f = distributor.firstName.toLowerCase().trim();
+      const s = searchValue.toLowerCase().trim();
 
       return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
     });
-  }, [debouncedSearch, activeDistributors, type]);
+  }, [searchValue, activeDistributors, type]);
 
   useEffect(() => {
     document.title = `External Distributors`;

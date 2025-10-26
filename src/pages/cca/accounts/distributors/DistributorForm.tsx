@@ -34,6 +34,7 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
       newValue = value.replace(/\D/g, "");
     }
     setFormData((prev) => ({ ...prev, [name]: newValue }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validate = () => {
@@ -55,8 +56,8 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
       newErrors.email = "Invalid Email Format";
       isValid = false;
     }
-    if (!formData.contactNumber.trim() || formData.contactNumber.length !== 11) {
-      newErrors.contactNumber = "Contact Number should be 11 digits";
+    if (!formData.contactNumber.trim() || formData.contactNumber.length < 10 || formData.contactNumber.length > 11) {
+      newErrors.contactNumber = "Invalid Contact Number Length";
       isValid = false;
     }
     if (!formData.type) {
@@ -138,7 +139,10 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
               className="w-full"
               placeholder="Select Distributor Type"
               label="Distributor Type"
-              onChange={(value) => setFormData((prev) => ({ ...prev, type: value as DistributorTypes }))}
+              onChange={(value) => {
+                setFormData((prev) => ({ ...prev, type: value as DistributorTypes }));
+                setErrors((prev) => ({ ...prev, type: "" }));
+              }}
               value={formData.type}
               items={distributorTypeOptions}
               includeHeader={true}

@@ -49,7 +49,7 @@ const DateTimeSelection = ({ dateItem, removeHidden, index, handleDateChange, ha
         error={errors?.dates}
         label="Time"
         type="time"
-        step={60}
+        step={900}
         id={`time-picker-${index}`}
         value={dateItem.time?.slice(0, 5)}
         onChange={(e) => handleTimeChange(e.target.value, index)}

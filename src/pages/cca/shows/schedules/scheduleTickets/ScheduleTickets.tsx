@@ -1,7 +1,6 @@
 import { useOutletContext, useParams } from "react-router-dom";
 import { useGetScheduleTickets, useTrainerSellTicket, useTrainerUnsoldTicket } from "@/_lib/@react-client-query/schedule.ts";
 import { useEffect, useMemo, useState } from "react";
-import { useDebounce } from "@/hooks/useDeabounce.ts";
 import type { Schedule } from "@/types/schedule.ts";
 import { formatTicket } from "@/utils/controlNumber.ts";
 import { Button } from "@/components/ui/button";
@@ -64,7 +63,6 @@ const ScheduleTickets = () => {
   const { scheduleId } = useParams();
   const { data: tickets, isLoading: loadingTickets, isError: errorTickets } = useGetScheduleTickets(scheduleId as string);
   const [filterValues, setFilterValues] = useState({ controlNumber: "", section: "all", status: "all", seatSection: "all" });
-  const debouncedSearch = useDebounce(filterValues.controlNumber);
   const [page, setPage] = useState(1);
 
   const [isSellTicket, setIsSellTicket] = useState(false);
@@ -94,7 +92,7 @@ const ScheduleTickets = () => {
 
       return matchStatus && matchSection && matchControlNumber && matchSeatSection;
     });
-  }, [tickets, filterValues.section, filterValues.status, filterValues.controlNumber, filterValues.seatSection, debouncedSearch]);
+  }, [tickets, filterValues.section, filterValues.status, filterValues.controlNumber, filterValues.seatSection, filterValues.controlNumber]);
 
   const paginatedTicket = useMemo(() => {
     const start = (page - 1) * ITEMS_PER_PAGE;
@@ -104,7 +102,7 @@ const ScheduleTickets = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [filterValues.section, filterValues.status, debouncedSearch]);
+  }, [filterValues.section, filterValues.status, filterValues.controlNumber]);
 
   const summary = useMemo(() => {
     if (!tickets)

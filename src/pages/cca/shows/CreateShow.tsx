@@ -44,8 +44,8 @@ const CreateShow = () => {
         onSubmit={(data) => {
           toast.promise(
             createShow.mutateAsync({
-              showTitle: data.title,
-              description: data.description,
+              showTitle: data.title.trim(),
+              description: data.description.trim(),
               department: data.productionType == "majorProduction" ? "" : data.group,
               genre: data.genre.join(", "),
               createdBy: user?.userId as string,

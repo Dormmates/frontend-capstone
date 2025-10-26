@@ -7,7 +7,6 @@ import {
 } from "@/_lib/@react-client-query/schedule";
 import Dropdown from "@/components/Dropdown";
 import { useEffect, useMemo, useState } from "react";
-import { useDebounce } from "@/hooks/useDeabounce";
 import { distributorTypeOptions } from "@/types/user";
 import { compressControlNumbers } from "@/utils/controlNumber";
 import { Button } from "@/components/ui/button";
@@ -53,7 +52,6 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
   const [selectedDistributors, setSelectedDistributors] = useState<ScheduleDistributorForAllocation[]>([]);
   const [ticketsCount, setTicketsCount] = useState(0);
 
-  const debouncedSearch = useDebounce(searchValue);
   const departmentOptions = useMemo(() => {
     if (!departments) return [];
     return [{ name: "All Groups", value: "all" }, ...departments.map((d) => ({ value: d.departmentId, name: d.name }))];
@@ -62,7 +60,7 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
   const searchedDistributors = useMemo(() => {
     if (!distributors) return [];
 
-    const search = debouncedSearch.trim().toLowerCase();
+    const search = searchValue.trim().toLowerCase();
 
     return distributors.filter((dist) => {
       const fullName = `${dist.firstName} ${dist.lastName}`.toLowerCase();
@@ -72,7 +70,7 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
 
       return matchesName && matchesType && matchDeparment;
     });
-  }, [debouncedSearch, selectedType, distributors, selectedDepartment]);
+  }, [searchValue, selectedType, distributors, selectedDepartment]);
 
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * itemsPerPage;

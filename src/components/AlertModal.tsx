@@ -80,7 +80,10 @@ const AlertModal: React.FC<AlertModalProps> = ({
                 Type "<span className="text-red">{confirmation}</span>" to continue
               </p>
             }
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              setError("");
+            }}
             value={input}
           />
         </div>

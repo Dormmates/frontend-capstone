@@ -1,7 +1,6 @@
 import { useOutletContext } from "react-router-dom";
 import type { AllocatedTicketToDistributor } from "@/types/ticket.ts";
 import { useMemo, useState } from "react";
-import { useDebounce } from "@/hooks/useDeabounce.ts";
 import type { Schedule } from "@/types/schedule.ts";
 import { formatTicket } from "@/utils/controlNumber.ts";
 import { Input } from "@/components/ui/input";
@@ -28,11 +27,10 @@ const DistributorTicketsAllocated = () => {
   const { schedule } = useOutletContext<{ schedule: Schedule }>();
 
   const [filter, setFilter] = useState({ search: "", saleStatus: "", verificationStatus: "" });
-  const debouncedSearch = useDebounce(filter.search);
 
   const filteredTickets = useMemo(() => {
     return allocatedTickets.filter((ticket) => {
-      const matchesSearch = !debouncedSearch || ticket.controlNumber?.toString().includes(debouncedSearch);
+      const matchesSearch = !filter.search || ticket.controlNumber?.toString().includes(filter.search);
       const matchesSale =
         !filter.saleStatus ||
         filter.saleStatus == "all" ||
@@ -44,7 +42,7 @@ const DistributorTicketsAllocated = () => {
 
       return matchesSearch && matchesSale && matchesVerification;
     });
-  }, [debouncedSearch, filter.saleStatus, filter.verificationStatus, allocatedTickets]);
+  }, [filter.search, filter.saleStatus, filter.verificationStatus, allocatedTickets]);
 
   return (
     <>

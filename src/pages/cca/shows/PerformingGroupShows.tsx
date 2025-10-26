@@ -4,7 +4,6 @@ import { useGetShows } from "@/_lib/@react-client-query/show.ts";
 import { useEffect, useMemo, useState } from "react";
 import { useGetDepartments } from "@/_lib/@react-client-query/department.ts";
 import { useAuthContext } from "@/context/AuthContext.tsx";
-import { useDebounce } from "@/hooks/useDeabounce.ts";
 import type { ShowData } from "@/types/show.ts";
 import SimpleCard from "@/components/SimpleCard";
 import Dropdown from "@/components/Dropdown";
@@ -47,7 +46,6 @@ const PerformingGroupShows = () => {
     department: user?.roles.includes("head") ? "all" : (user?.departments[0].departmentId as string),
     search: "",
   });
-  const debouncedSearch = useDebounce(filter.search, 500);
 
   const [isViewArchivedShows, setIsViewArchivedShows] = useState(false);
 
@@ -71,12 +69,12 @@ const PerformingGroupShows = () => {
   const filteredShows = useMemo(() => {
     if (!shows) return [];
     return activeShows.filter((show) => {
-      const matchTitle = show.title.toLowerCase().includes(debouncedSearch.toLowerCase());
+      const matchTitle = show.title.toLowerCase().includes(filter.search.toLowerCase());
       const matchType = !filter.showType || filter.showType === "all" || show.showType === filter.showType;
       const matchDepartment = !filter.department || filter.department === "all" || show.department?.departmentId === filter.department;
       return matchTitle && matchType && matchDepartment;
     });
-  }, [activeShows, debouncedSearch, filter.showType, filter.department]);
+  }, [activeShows, filter.search, filter.showType, filter.department]);
 
   if (showsLoading || departmentsLoading) return <h1>Loading...</h1>;
   if (!shows || !departmentsData || !user) return <h1>Error: No shows fetched.</h1>;

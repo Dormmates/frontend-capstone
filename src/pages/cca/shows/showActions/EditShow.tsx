@@ -38,8 +38,8 @@ const EditShow = ({ show }: EditShowProps) => {
           toast.promise(
             updateShow.mutateAsync({
               showId: show.showId as string,
-              showTitle: data.title,
-              description: data.description,
+              showTitle: data.title.trim(),
+              description: data.description.trim(),
               department: data.group,
               genre: data.genre.join(", "),
               showType: data.productionType,

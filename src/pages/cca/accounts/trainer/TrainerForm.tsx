@@ -24,6 +24,7 @@ const TrainerForm = ({ initalValues, onSubmit, close, isSubmitting }: TrainerFor
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setTrainerData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validate = () => {

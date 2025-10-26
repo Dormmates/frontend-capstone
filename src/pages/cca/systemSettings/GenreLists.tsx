@@ -150,8 +150,8 @@ const AddNewGenre = () => {
   const [error, setError] = useState("");
 
   const handleSubmit = () => {
-    if (!input || input.trim().length < 5) {
-      setError("Genre Name must be greater than 5 characters");
+    if (!input || input.trim().length < 4) {
+      setError("Genre Name must be greater than 4 characters");
       return;
     }
 
@@ -184,7 +184,16 @@ const AddNewGenre = () => {
         </Button>
       }
     >
-      <InputField disabled={add.isPending} label="New Genre Name" value={input} error={error} onChange={(e) => setInput(e.target.value)} />
+      <InputField
+        disabled={add.isPending}
+        label="New Genre Name"
+        value={input}
+        error={error}
+        onChange={(e) => {
+          setInput(e.target.value);
+          setError("");
+        }}
+      />
       <div className="flex justify-end gap-2 mt-5">
         <Button variant="outline" onClick={() => setIsOpen(false)}>
           Cancel
