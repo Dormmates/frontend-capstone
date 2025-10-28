@@ -52,7 +52,7 @@ const CustomerViewDepartment = () => {
               </div>
               <div className="mt-20">
                 <p className="font-semibold mb-2 text-sm">Explore Other Shows: </p>
-                <div className="flex flex-wrap gap-5 ">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
                   {departmentShows?.otherShows
                     .filter((s) => s.showId !== selectedShow.showId)
                     .slice(0, 3)
@@ -63,7 +63,7 @@ const CustomerViewDepartment = () => {
                           window.scrollTo({ top: 0, behavior: "smooth" });
                         }}
                         key={show.showId}
-                        className="relative w-full max-w-[200px] h-[350px] overflow-hidden group cursor-pointer"
+                        className="relative w-full  h-[350px] overflow-hidden group cursor-pointer"
                       >
                         <img
                           className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 group-hover:grayscale"
@@ -99,7 +99,7 @@ const CustomerViewDepartment = () => {
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                       key={departmentShows.featuredShow.showId}
-                      className="relative w-full  h-[550px] overflow-hidden group cursor-pointer"
+                      className="relative w-full h-[550px] overflow-hidden group cursor-pointer"
                     >
                       <img
                         className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 group-hover:grayscale"
@@ -134,7 +134,7 @@ const CustomerViewDepartment = () => {
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                     key={show.showId}
-                    className="relative w-full  h-[550px] overflow-hidden group cursor-pointer"
+                    className="relative w-full h-[550px] overflow-hidden group cursor-pointer"
                   >
                     <img
                       className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 group-hover:grayscale"
