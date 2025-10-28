@@ -74,40 +74,44 @@ const DistributorDashboard = () => {
           <Card>
             <CardHeader>
               <CardTitle>Overall Ticket Distribution</CardTitle>
-              <CardDescription>achjahvashcjkasncaaaaaaaaaaaaaaajk</CardDescription>
+              <CardDescription>Show the distribution of Sold and Unsold tickets by Distributor</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={ticketsChartConfig} className="mx-auto aspect-square max-h-[250px]">
-                <PieChart>
-                  <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-                  <Pie
-                    data={ticketsChartData}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={60}
-                    strokeWidth={5}
-                    activeIndex={0}
-                    activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => <Sector {...props} outerRadius={outerRadius + 10} />}
-                  >
-                    <Label
-                      content={({ viewBox }) => {
-                        if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                          return (
-                            <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
-                              <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
-                                {summary.allocatedTickets}
-                              </tspan>
-                              <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
-                                Total Tickets
-                              </tspan>
-                            </text>
-                          );
-                        }
-                      }}
-                    />
-                  </Pie>
-                </PieChart>
-              </ChartContainer>
+              {ticketsChartData.every((d) => d.value === 0) ? (
+                <div className="flex items-center justify-center border text-sm p-10 rounded-md">No Data Found.</div>
+              ) : (
+                <ChartContainer config={ticketsChartConfig} className="mx-auto aspect-square max-h-[250px]">
+                  <PieChart>
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                    <Pie
+                      data={ticketsChartData}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={60}
+                      strokeWidth={5}
+                      activeIndex={0}
+                      activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => <Sector {...props} outerRadius={outerRadius + 10} />}
+                    >
+                      <Label
+                        content={({ viewBox }) => {
+                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                            return (
+                              <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                                <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                                  {summary.allocatedTickets}
+                                </tspan>
+                                <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
+                                  Total Tickets
+                                </tspan>
+                              </text>
+                            );
+                          }
+                        }}
+                      />
+                    </Pie>
+                  </PieChart>
+                </ChartContainer>
+              )}
             </CardContent>
           </Card>
         </div>

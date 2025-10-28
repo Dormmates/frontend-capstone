@@ -136,7 +136,7 @@ const HeroSection = () => {
               <div className="flex flex-col">
                 <p className="text-lg text-gray-300 uppercase tracking-wide">Upcoming Show</p>
                 <h1 className="text-primary text-6xl font-bold mb-2">{show.title}</h1>
-                <p className="text-lg text-gray-200 mb-2">{show.description}</p>
+                <p className="text-lg text-gray-200 mb-2 tracking-tighter">{show.description}</p>
                 <p className="text-lg">
                   <span className="font-semibold">Date:</span> {formatToReadableDate(show.date)}
                 </p>
@@ -144,7 +144,7 @@ const HeroSection = () => {
                   <span className="font-semibold">Time:</span> {formatToReadableTime(show.date)}
                 </p>
               </div>
-              <div className="flex flex-col justify-start gap-5 items-end">
+              <div className="flex flex-col justify-end gap-5 items-end">
                 <p className="text-2xl">
                   Show Starts in: <Countdown showDate={show.date} />
                 </p>
