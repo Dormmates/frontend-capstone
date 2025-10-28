@@ -325,6 +325,18 @@ const ScheduleTickets = () => {
               render: (ticket) => ticket.status.toUpperCase(),
             },
             {
+              key: "customer",
+              header: "Customer Information",
+              render: (ticket) =>
+                ticket.customerEmail && ticket.customerName ? (
+                  <span>
+                    {ticket.customerName} ({ticket.customerEmail})
+                  </span>
+                ) : (
+                  ""
+                ),
+            },
+            {
               key: "action",
               header: "Actions",
               headerClassName: "text-right",

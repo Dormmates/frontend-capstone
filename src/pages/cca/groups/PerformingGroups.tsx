@@ -224,13 +224,12 @@ const PerformingGroups = () => {
                       <Link to={`/performing-groups/${department.departmentId}`}>
                         <Button>Manage Members</Button>
                       </Link>
+                      <Button size="icon" onClick={() => setSelectedGroup(department)} variant="secondary">
+                        <EditIcon />
+                      </Button>
 
                       {user?.roles.includes("head") && (
                         <>
-                          <Button size="icon" onClick={() => setSelectedGroup(department)} variant="secondary">
-                            <EditIcon />
-                          </Button>
-
                           <Button
                             size="icon"
                             variant="outline"

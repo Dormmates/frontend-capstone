@@ -19,6 +19,8 @@ export interface Ticket {
   distributorId: string | null;
   isRemitted: boolean;
   trainerSold: boolean;
+  customerName: string | null;
+  customerEmail: string | null;
   ticketTransferMetaData: {
     oldControlNumber: number;
     oldShowId: string;
