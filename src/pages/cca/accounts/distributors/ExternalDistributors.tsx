@@ -50,8 +50,9 @@ const Distributors = () => {
       const l = distributor.lastName.toLowerCase().trim();
       const f = distributor.firstName.toLowerCase().trim();
       const s = searchValue.toLowerCase().trim();
+      const t = type === "all" || distributor.distributor.distributorType === type;
 
-      return l.includes(s) || f.includes(s) || (f + " " + l).includes(s);
+      return (l.includes(s) || f.includes(s) || (f + " " + l).includes(s)) && t;
     });
   }, [searchValue, activeDistributors, type]);
 
@@ -95,7 +96,7 @@ const Distributors = () => {
             label="Distributor Type"
             value={type}
             onChange={(value) => setType(value)}
-            items={[{ name: "All Distributor Type", value: "all" }, ...distributorTypeOptions]}
+            items={[{ name: "All Distributor Type", value: "all" }, ...distributorTypeOptions.filter((d) => d.value !== "cca")]}
           />
         </div>
 
@@ -114,7 +115,6 @@ const Distributors = () => {
         )}
 
         <PaginatedTable
-          selectable
           onSelectionChange={(selectedDistributors) => {
             setSelectedDistributors(selectedDistributors);
           }}
@@ -138,7 +138,7 @@ const Distributors = () => {
             {
               key: "type",
               header: "Distributor Type",
-              render: (distributor) => distributor.distributor.distributorType,
+              render: (distributor) => distributorTypeOptions.find((d) => d.value === distributor.distributor.distributorType)?.name,
             },
             {
               key: "action",

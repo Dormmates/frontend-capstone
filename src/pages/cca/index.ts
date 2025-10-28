@@ -30,10 +30,13 @@ import ScheduleSummary from "./shows/schedules/scheduleSummary/ScheduleSummary";
 import PerformingGroups from "./groups/PerformingGroups";
 import CCADashboard from "./dashboard/CCADashboard";
 
+import Reports from "./reports/Reports";
+
 import CCALogin from "./CCALogin";
 import Settings from "./systemSettings/Settings";
 
 export {
+  Reports,
   ViewPerformingGroups,
   Settings,
   ViewDistributor,

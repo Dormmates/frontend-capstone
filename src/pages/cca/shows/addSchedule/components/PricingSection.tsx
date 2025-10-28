@@ -72,7 +72,9 @@ const PricingSection = ({ scheduleData, selectedPrice, setSelectedPrice, handleS
               {fixedPrices.map((t) => (
                 <div
                   key={t.id}
-                  className={`cursor-pointer rounded-md p-1 ${selectedPrice?.id === t.id ? "ring-2 ring-blue-400  shadow-lg shadow-blue-300" : ""}`}
+                  className={`cursor-pointer rounded-md p-1 ${
+                    selectedPrice?.id === t.id ? "ring-2 ring-primary/50  shadow-lg shadow-primary/50" : ""
+                  }`}
                   onClick={() => setSelectedPrice(t)}
                 >
                   <FixedPrice hideAction={true} data={t} />
@@ -94,7 +96,9 @@ const PricingSection = ({ scheduleData, selectedPrice, setSelectedPrice, handleS
               {sectionedPrices.map((t) => (
                 <div
                   key={t.id}
-                  className={`cursor-pointer rounded-md p-1 ${selectedPrice?.id === t.id ? "ring-2 ring-blue-400  shadow-lg shadow-blue-300" : ""}`}
+                  className={`cursor-pointer rounded-md p-1 ${
+                    selectedPrice?.id === t.id ? "ring-2 ring-primary/50  shadow-lg shadow-primary/50" : ""
+                  }`}
                   onClick={() => setSelectedPrice(t)}
                 >
                   <SectionedPrice hideAction={true} data={t} />

@@ -6,39 +6,26 @@ import PaginatedTable from "@/components/PaginatedTable";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import Dropdown from "@/components/Dropdown";
+import type { DateRange } from "react-day-picker";
+import { addMonths } from "date-fns";
+import DateRangeSelector from "@/components/DateRangeSelector";
 
 type UpcomingShowsProps = {
   isHead: boolean;
   selectedDepartment: string;
 };
 
-const getRangeLabel = (days: number) => {
-  switch (days) {
-    case 7:
-      return "the next 7 days";
-    case 30:
-      return "the next 30 days";
-    case 365:
-      return "the next 12 months";
-    default:
-      return "the selected time range";
-  }
-};
-
 const UpcomingShows = ({ isHead, selectedDepartment }: UpcomingShowsProps) => {
-  const [selectedDay, setSelectedDay] = useState("30");
+  const [range, setRange] = useState<DateRange>({
+    from: new Date(),
+    to: addMonths(new Date(), 1),
+  });
 
   const { data, isLoading, isError } = useGetUpcomingShows({
     departmentId: isHead && selectedDepartment == "all" ? undefined : selectedDepartment,
-    daysAhead: Number(selectedDay),
+    from: range.from?.toISOString(),
+    to: range.to?.toISOString(),
   });
-
-  const daysOptions = [
-    { name: "This Week", value: "7" },
-    { name: "This Month", value: "30" },
-    { name: "This Year", value: "365" },
-  ];
 
   if (isLoading) {
     return (
@@ -47,7 +34,9 @@ const UpcomingShows = ({ isHead, selectedDepartment }: UpcomingShowsProps) => {
           <CardTitle>
             <p>Upcoming shows</p>
           </CardTitle>
-          <CardDescription>Displays shows scheduled within {getRangeLabel(Number(selectedDay))}.</CardDescription>
+          <CardDescription>
+            Displays shows scheduled from {formatToReadableDate(range.from + "")} to {formatToReadableDate(range.to + "")}.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Skeleton className="h-64 w-full rounded-xl bg-muted" />
@@ -62,19 +51,21 @@ const UpcomingShows = ({ isHead, selectedDepartment }: UpcomingShowsProps) => {
         <CardTitle>
           <div className="flex justify-between items-center">
             <p>Upcoming shows</p>
-            <Dropdown items={daysOptions} value={selectedDay} onChange={(value) => setSelectedDay(value)} />
+            <DateRangeSelector value={range} onChange={setRange} />
           </div>
         </CardTitle>
-        <CardDescription>Displays shows scheduled within {getRangeLabel(Number(selectedDay))}.</CardDescription>
+        <CardDescription>
+          Displays shows scheduled from {formatToReadableDate(range.from + "")} to {formatToReadableDate(range.to + "")}.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {isError || !data ? (
           <div className="border flex items-center justify-center rounded-md p-5 text-sm text-foreground h-20">
-            No Upcoming Shows within {getRangeLabel(Number(selectedDay))}.
+            No Upcoming Shows scheduled from {formatToReadableDate(range.from + "")} to {formatToReadableDate(range.to + "")}.
           </div>
         ) : (
           <PaginatedTable
-            emptyMessage={`No upcoming shows within ${getRangeLabel(Number(selectedDay))}.`}
+            emptyMessage={`No Upcoming Shows scheduled from ${formatToReadableDate(range.from + "")} to ${formatToReadableDate(range.to + "")}.`}
             data={data}
             columns={[
               {

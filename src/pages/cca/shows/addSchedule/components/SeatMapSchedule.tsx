@@ -8,9 +8,11 @@ interface Props {
   sectionClick?: (seats: FlattenedSeat[]) => void;
   seatMap: FlattenedSeat[];
   disabled?: boolean;
+  regularRemaining?: number;
+  complimentaryRemaining?: number;
 }
 
-const SeatMapSchedule = ({ seatClick, rowClick, sectionClick, seatMap, disabled = false }: Props) => {
+const SeatMapSchedule = ({ seatClick, regularRemaining, complimentaryRemaining, rowClick, sectionClick, seatMap, disabled = false }: Props) => {
   const summary = useMemo(() => {
     if (!seatMap) return { assigned: 0, complimentary: 0 };
     const assigned = seatMap.filter((seat) => seat.ticketControlNumber != 0 && !seat.isComplimentary).length;
@@ -19,15 +21,19 @@ const SeatMapSchedule = ({ seatClick, rowClick, sectionClick, seatMap, disabled 
   }, [seatMap]);
 
   return (
-    <div className="flex flex-col  mt-5">
-      <div className="flex flex-col self-end gap-2">
+    <div className="flex flex-col  mt-10">
+      <div className="flex flex-col  gap-2 mb-5">
         <div className="flex items-center gap-2">
           <div className="w-5 h-5 bg-orange-400"></div>
-          <p className="text-sm">Assigned Seat: {summary.assigned}</p>
+          <p className="text-sm">
+            Assigned Seat: {summary.assigned} ({regularRemaining} remaining)
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-5 h-5 bg-blue-400"></div>
-          <p className="text-sm">Complimentary Seat: {summary.complimentary}</p>
+          <p className="text-sm">
+            Assigned Complimentary Seat: {summary.complimentary} ({complimentaryRemaining} remaining)
+          </p>
         </div>
       </div>
       <SeatMap

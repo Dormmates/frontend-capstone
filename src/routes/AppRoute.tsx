@@ -27,7 +27,6 @@ import {
   ScheduleDistributorAndRemittances,
   ScheduleReservations,
   ScheduleSeats,
-  // ScheduleTallyData,
   ScheduleTickets,
   TicketAllocation,
   ViewDistributorLayout,
@@ -39,6 +38,7 @@ import {
   ViewDistributor,
   Settings,
   ViewPerformingGroups,
+  Reports,
 } from "../pages/cca/index";
 
 import SalesReport from "@/pages/cca/shows/SalesReport";
@@ -126,6 +126,7 @@ const AppRoute = () => {
                 <Route path="shows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
                 <Route path="performing-groups" element={<PerformingGroups />} />
                 <Route path="performing-groups/:groupId" element={<ViewPerformingGroups />} />
+                <Route path="reports" element={<Reports />} />
               </>
             )}
 

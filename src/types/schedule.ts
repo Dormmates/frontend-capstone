@@ -1,3 +1,4 @@
+import type { Ticket } from "./ticket";
 import type { TicketPricing } from "./ticketpricing";
 
 export type TicketType = "ticketed" | "nonTicketed";
@@ -14,25 +15,17 @@ export interface ScheduleFormData {
   ticketType: TicketType;
   seatingConfiguration: SeatingConfiguration;
   seatPricing: SeatPricing;
-  totalTickets: number | undefined;
-  // totalOrchestra: number | undefined;
-  // totalBalcony: number | undefined;
-  totalComplimentary: number | undefined;
+  totalTickets: number;
+  totalComplimentary: number;
   ticketsControlNumber: string;
-  // orchestraControlNumber: string;
-  // balconyControlNumber: string;
   complimentaryControlNumber: string;
 }
 
 export type ErrorKeys =
   | "dates"
   | "commisionFee"
-  // | "totalOrchestra"
-  // | "orchestraControlNumber"
   | "totalTickets"
   | "ticketsControlNumber"
-  // | "totalBalcony"
-  // | "balconyControlNumber"
   | "totalComplimentary"
   | "complimentaryControlNumber"
   | "ticketPrice"
@@ -58,6 +51,10 @@ export interface Schedule {
   femaleCount: number | null;
   maleCount: number | null;
   ticketPricing: TicketPricing;
+}
+
+export interface ScheduleWithTickets extends Schedule {
+  tickets: Ticket[];
 }
 
 interface TicketBreakdown {

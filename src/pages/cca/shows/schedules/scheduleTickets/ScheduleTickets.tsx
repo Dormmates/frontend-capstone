@@ -33,6 +33,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Label as InputLabel } from "@/components/ui/label";
 import { useAuthContext } from "@/context/AuthContext";
+import TransferTicket from "./TransferTicket";
+import type { ShowData } from "@/types/show";
 
 const statusOptions = [
   { name: "All Status", value: "all" },
@@ -59,7 +61,7 @@ const seatSectionOptions = [
 const ITEMS_PER_PAGE = 10;
 
 const ScheduleTickets = () => {
-  const { schedule } = useOutletContext<{ schedule: Schedule }>();
+  const { schedule, show } = useOutletContext<{ schedule: Schedule; show: ShowData }>();
   const { scheduleId } = useParams();
   const { data: tickets, isLoading: loadingTickets, isError: errorTickets } = useGetScheduleTickets(scheduleId as string);
   const [filterValues, setFilterValues] = useState({ controlNumber: "", section: "all", status: "all", seatSection: "all" });
@@ -67,6 +69,7 @@ const ScheduleTickets = () => {
 
   const [isSellTicket, setIsSellTicket] = useState(false);
   const [isUnSellTicket, setUnIsSellTicket] = useState(false);
+  const [isTransferTicket, setIsTransferTicket] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
 
   const filteredTickets = useMemo(() => {
@@ -219,6 +222,11 @@ const ScheduleTickets = () => {
         </Card>
       </div>
 
+      <div className="flex gap-2 w-full justify-end">
+        <Button>Transfer Tickets</Button>
+        <Button>Refund Tickets</Button>
+      </div>
+
       <div>
         <div className="flex gap-5 mt-10 w-full">
           <InputField
@@ -322,7 +330,7 @@ const ScheduleTickets = () => {
               headerClassName: "text-right",
               render: (ticket) => (
                 <div className="flex gap-2 justify-end  items-center ">
-                  <DialogPopup className="max-w-3xl" title="Ticket Information" triggerElement={<Button>View Ticket</Button>}>
+                  <DialogPopup className="max-w-3xl" title="Ticket Information" triggerElement={<Button variant="secondary">View Ticket</Button>}>
                     <ViewTicket
                       status={ticket.status}
                       ticketPrice={ticket.ticketPrice}
@@ -339,7 +347,16 @@ const ScheduleTickets = () => {
                     <DropdownMenuContent side="left" align="start">
                       <DropdownMenuLabel>Select Options</DropdownMenuLabel>
                       <DropdownMenuGroup>
-                        <DropdownMenuItem>Transfer Ticket to another Schedule</DropdownMenuItem>
+                        {!ticket.isComplimentary && ticket.isRemitted && (
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setSelectedTicket(ticket);
+                              setIsTransferTicket(true);
+                            }}
+                          >
+                            Transfer Ticket
+                          </DropdownMenuItem>
+                        )}
                         {!ticket.isComplimentary && ticket.status == "not_allocated" && (
                           <DropdownMenuItem
                             onClick={() => {
@@ -360,7 +377,6 @@ const ScheduleTickets = () => {
                             Refund Ticket
                           </DropdownMenuItem>
                         )}
-                        {/* {ticket.isComplimentary && <DropdownMenuItem> Mark as Non-Complimentary</DropdownMenuItem>} */}
                       </DropdownMenuGroup>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -386,6 +402,20 @@ const ScheduleTickets = () => {
             scheduleId={scheduleId as string}
             ticket={selectedTicket}
           />
+        </Modal>
+      )}
+
+      {isTransferTicket && !!selectedTicket && (
+        <Modal
+          className="max-w-7xl max-h-[90%] overflow-y-auto"
+          onClose={() => {
+            setIsTransferTicket(false);
+            setSelectedTicket(null);
+          }}
+          title="Transfer Ticket"
+          isOpen={isTransferTicket && !!selectedTicket}
+        >
+          <TransferTicket show={show} schedule={schedule} ticket={selectedTicket} />
         </Modal>
       )}
 

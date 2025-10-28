@@ -39,12 +39,8 @@ const AddSchedule = () => {
     ticketType: "ticketed",
     seatingConfiguration: "freeSeating",
     seatPricing: "fixed",
-    // totalOrchestra: undefined,
-    // totalBalcony: undefined,
-    totalComplimentary: undefined,
-    totalTickets: undefined,
-    // orchestraControlNumber: "",
-    // balconyControlNumber: "",
+    totalComplimentary: 0,
+    totalTickets: 0,
     ticketsControlNumber: "",
     complimentaryControlNumber: "",
   });
@@ -135,6 +131,14 @@ const AddSchedule = () => {
     const { name, value } = e.target;
     setScheduleData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
+
+    if (name === "totalComplimentary" && !e.target.value) {
+      setScheduleData((prev) => ({ ...prev, complimentaryControlNumber: "" }));
+    }
+
+    if (name === "totalTickets" && !e.target.value) {
+      setScheduleData((prev) => ({ ...prev, ticketsControlNumber: "" }));
+    }
   };
 
   const handleDateChange = (value: Date, index: number) => {
@@ -180,6 +184,17 @@ const AddSchedule = () => {
     if (scheduleData.ticketType === "ticketed") {
       if (!selectedPrice || (scheduleData.seatingConfiguration === "freeSeating" && selectedPrice.type == "sectioned")) {
         newErrors.ticketPrice = "Please Select a ticket price";
+        isValid = false;
+      }
+
+      const totalTickets = Number(scheduleData.totalTickets || 0);
+      const totalComplimentary = Number(scheduleData.totalComplimentary || 0);
+      const total = totalTickets + totalComplimentary;
+
+      if (total > seatData.length) {
+        const msg = `Total tickets cannot exceed available seats (${seatData.length}).`;
+        newErrors.totalTickets = msg;
+        newErrors.totalComplimentary = msg;
         isValid = false;
       }
     }
@@ -263,7 +278,6 @@ const AddSchedule = () => {
   };
 
   const validateControlNumbers = (): boolean => {
-    // const controlKeys: ControlKey[] = ["orchestraControlNumber", "balconyControlNumber"];
     const controlKeys: ControlKey[] = ["ticketsControlNumber"];
 
     if (scheduleData.totalComplimentary && scheduleData.totalComplimentary > 0) {
@@ -281,6 +295,17 @@ const AddSchedule = () => {
 
       if (!result.isValid) isValid = false;
       Object.assign(newErrors, result.sectionErrors);
+    }
+
+    const totalTickets = Number(scheduleData.totalTickets || 0);
+    const totalComplimentary = Number(scheduleData.totalComplimentary || 0);
+    const total = totalTickets + totalComplimentary;
+
+    if (total > seatData.length) {
+      const msg = `Total tickets cannot exceed available seats (${seatData.length}).`;
+      newErrors.totalTickets = msg;
+      newErrors.totalComplimentary = msg;
+      isValid = false;
     }
 
     setErrors(newErrors);
@@ -366,7 +391,7 @@ const AddSchedule = () => {
         }
       }
 
-      // 🧠 Always recalc assigned control numbers fresh — no merging or adding
+      //  Always recalc assigned control numbers fresh — no merging or adding
       const newRegularAssigned = updated
         .filter((s) => s.ticketControlNumber > 0 && !s.isComplimentary)
         .map((s) => s.ticketControlNumber)
@@ -438,7 +463,7 @@ const AddSchedule = () => {
             />
 
             {scheduleData.dates.length < 3 ? (
-              <Button variant="ghost" onClick={addAnotherDate}>
+              <Button variant="secondary" onClick={addAnotherDate}>
                 Add Another Schedule
               </Button>
             ) : (
@@ -470,14 +495,10 @@ const AddSchedule = () => {
 
         {scheduleData.seatingConfiguration == "controlledSeating" && scheduleData.ticketType == "ticketed" && (
           <>
-            <div className="-mb-16 mt-5">
-              <p>Remaining Controll Numbers to be assinged</p>
-              <div>
-                <p>Tickets: {getRemainingControlNumbers("ticketsControlNumber").length}</p>
-                <p>Complimentary: {getRemainingControlNumbers("complimentaryControlNumber").length}</p>
-              </div>
-            </div>
+            <div className="-mb-16 mt-5"></div>
             <SeatMapSchedule
+              regularRemaining={getRemainingControlNumbers("ticketsControlNumber").length}
+              complimentaryRemaining={getRemainingControlNumbers("complimentaryControlNumber").length}
               seatMap={seatData}
               seatClick={(clickedSeat: FlattenedSeat) => {
                 toggleSeats([clickedSeat]);

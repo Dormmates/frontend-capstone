@@ -5,6 +5,7 @@ import type { ScheduleFormData, Schedule, ScheduleSummary, DistributorTicketActi
 import type { FlattenedSeat } from "../../types/seat";
 import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket, TicketLog, TicketStatuses } from "../../types/ticket";
 import type { TicketPricing } from "@/types/ticketpricing";
+import type { ShowDataWithSchedulesAndTickets } from "@/types/show";
 
 export interface ScheduleDistributorForAllocation {
   userId: string;
@@ -202,13 +203,14 @@ export const useGetDistributorsForAllocation = (scheduleId: string, departmentId
   });
 };
 
-export const useGetScheduleSeatMap = (scheduleId: string) => {
+export const useGetScheduleSeatMap = (scheduleId: string, options?: { enabled?: boolean }) => {
   return useQuery<FlattenedSeat[], Error>({
     queryKey: ["schedule", "seatmap", scheduleId],
     queryFn: async () => {
       const res = await request<FlattenedSeat[]>(`/api/schedule/seatmap/${scheduleId}`, {}, "get");
       return res.data;
     },
+    enabled: !!scheduleId && (options?.enabled ?? true),
     retry: false,
   });
 };
@@ -432,6 +434,30 @@ export const useRefundTicket = () => {
     mutationFn: async (payload) => {
       const res = await request(`/api/schedule/refund`, payload, "post");
       return res.data;
+    },
+  });
+};
+
+export const useGetShowsWithAvailableTicket = (query?: { departmentId?: string; scheduleId?: string }) => {
+  return useQuery<ShowDataWithSchedulesAndTickets[], Error>({
+    queryKey: ["ticket", "availability", query],
+    queryFn: async () => {
+      const res = await request<ShowDataWithSchedulesAndTickets[]>(`/api/schedule/ticket/availability`, query, "get");
+      return res.data;
+    },
+    retry: false,
+  });
+};
+
+export const useTransferTicket = () => {
+  return useMutation<
+    any,
+    Error,
+    { remarks: string; trainerId: string; scheduleId: string; controlNumber: number; newScheduleId: string; newControlNumber: number }
+  >({
+    mutationFn: async (payload) => {
+      const result = await request<any>(`/api/schedule/transfer`, payload, "post");
+      return result.data;
     },
   });
 };

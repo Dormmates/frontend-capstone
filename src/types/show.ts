@@ -1,5 +1,5 @@
 import type { Department } from "./department";
-import type { Schedule } from "./schedule";
+import type { Schedule, ScheduleWithTickets } from "./schedule";
 
 export type ShowType = "majorConcert" | "showCase" | "majorProduction" | "";
 
@@ -36,4 +36,8 @@ export interface ShowDataWithSchedules extends ShowData {
   nextSchedule: Schedule | null;
   remainingUpcomingSchedules: Schedule[];
   pastSchedules: Schedule[];
+}
+
+export interface ShowDataWithSchedulesAndTickets extends ShowData {
+  schedules: ScheduleWithTickets[];
 }

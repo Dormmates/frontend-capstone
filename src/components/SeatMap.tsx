@@ -12,9 +12,20 @@ interface Props {
   disabled?: boolean;
   width?: string | number;
   height?: string | number;
+  showToggle?: boolean;
 }
 
-const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disabled = false, width = "100%", height = "100%" }: Props) => {
+const SeatMap = ({
+  showToggle = true,
+  seatClick,
+  rowClick,
+  sectionClick,
+  recStyle,
+  seatMap,
+  disabled = false,
+  width = "100%",
+  height = "100%",
+}: Props) => {
   const tooltipRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [scale, setScale] = useState(1);
@@ -210,7 +221,7 @@ const SeatMap = ({ seatClick, rowClick, sectionClick, recStyle, seatMap, disable
             </g>
           </svg>
 
-          {hoveredSeat && (
+          {hoveredSeat && showToggle && (
             <div
               ref={tooltipRef}
               className="fixed z-20 bg-background shadow-lg rounded px-2 py-1 text-xs border border-gray-300"

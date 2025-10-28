@@ -89,7 +89,7 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                 .filter((item) => !item.hidden)
                 .map((item) => {
                   const hasSubItems = item.items ? item.items?.filter((sub) => !sub.hidden).length > 0 : null;
-                  const [open, setOpen] = useState(true);
+                  const [open, setOpen] = useState(false);
 
                   return (
                     <SidebarMenuItem key={item.name}>
