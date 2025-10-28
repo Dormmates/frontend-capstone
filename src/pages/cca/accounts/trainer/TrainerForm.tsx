@@ -100,7 +100,9 @@ const TrainerForm = ({ initalValues, onSubmit, close, isSubmitting }: TrainerFor
               onChange={handleInputChange}
             />
           </div>
-          {trainerData.email && <ResetPasswordButton userId={trainerData.userId} firstName={trainerData.firstName} lastName={trainerData.lastName} />}
+          {trainerData.userId && (
+            <ResetPasswordButton userId={trainerData.userId} firstName={trainerData.firstName} lastName={trainerData.lastName} />
+          )}
         </div>
       </div>
       <div className="flex justify-end mt-5 gap-2">

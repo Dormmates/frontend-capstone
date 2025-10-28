@@ -164,7 +164,7 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
               />
             )}
           </div>
-          {formData.email && <ResetPasswordButton userId={formData.userId} firstName={formData.firstName} lastName={formData.lastName} />}
+          {formData.userId && <ResetPasswordButton userId={formData.userId} firstName={formData.firstName} lastName={formData.lastName} />}
         </div>
       </div>
 
