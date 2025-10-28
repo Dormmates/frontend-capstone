@@ -44,10 +44,7 @@ const CustomerViewShow = ({ show }: CustomerViewShowProps) => {
     return acc;
   }, {} as Record<string, typeof show.remainingUpcomingSchedules>);
 
-  // const handleScheduleClick = (schedule: Schedule) => {
-  //   setSelectedSchedule(schedule);
-  //   navigate(`/show/${showId}/schedule/${schedule.scheduleId}`);
-  // };
+  console.log(show.nextSchedule);
 
   return (
     <>
@@ -95,11 +92,15 @@ const CustomerViewShow = ({ show }: CustomerViewShowProps) => {
             </div>
             <div>
               <p className="text-xl">{formatSectionName(show.nextSchedule.seatingType)}</p>
-              <p className="text-xl">
-                {show.nextSchedule.ticketPricing.type === "fixed"
-                  ? formatCurrency(show.nextSchedule.ticketPricing.fixedPrice)
-                  : getSectionedPriceRange(show.nextSchedule.ticketPricing as SectionedPricing).rangeText}
-              </p>
+              {show.nextSchedule.ticketType === "ticketed" ? (
+                <p className="text-xl">
+                  {show.nextSchedule.ticketPricing.type === "fixed"
+                    ? formatCurrency(show.nextSchedule.ticketPricing.fixedPrice)
+                    : getSectionedPriceRange(show.nextSchedule.ticketPricing as SectionedPricing).rangeText}
+                </p>
+              ) : (
+                <div>Free (Non-Ticketed)</div>
+              )}
             </div>
           </div>
         </div>
