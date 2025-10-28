@@ -310,7 +310,7 @@ const ScheduleTickets = () => {
                   {
                     key: "section",
                     header: "Section",
-                    render: (ticket: Ticket) => formatSectionName(ticket.seatSection),
+                    render: (ticket: Ticket) => formatSectionName(ticket.seatSection ?? "Na alis"),
                   },
                 ]
               : []),

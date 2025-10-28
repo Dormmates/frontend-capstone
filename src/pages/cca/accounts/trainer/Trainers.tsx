@@ -140,6 +140,7 @@ const Trainers = () => {
               firstName: "",
               lastName: "",
               email: "",
+              userId: "",
             }}
             onSubmit={(payload) => {
               const data = {
@@ -173,6 +174,7 @@ const Trainers = () => {
               firstName: selectedTrainer.firstName,
               lastName: selectedTrainer.lastName,
               email: selectedTrainer.email,
+              userId: selectedTrainer.userId,
             }}
             onSubmit={(payload) => {
               const hasChanges =

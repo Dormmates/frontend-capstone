@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
 import Dropdown from "@/components/Dropdown";
 import type { DistributorTypes } from "@/types/user";
+import ResetPasswordButton from "@/components/ResetPasswordButton";
 
 type DistributorFormValues = {
   firstName: string;
@@ -12,6 +13,7 @@ type DistributorFormValues = {
   contactNumber: string;
   type: DistributorTypes;
   department: string;
+  userId: string;
 };
 
 type DistributorFormProps = {
@@ -162,6 +164,7 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
               />
             )}
           </div>
+          {formData.email && <ResetPasswordButton userId={formData.userId} firstName={formData.firstName} lastName={formData.lastName} />}
         </div>
       </div>
 

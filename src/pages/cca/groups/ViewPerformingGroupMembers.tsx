@@ -85,23 +85,10 @@ const ViewPerformingGroups = () => {
   const groupOptions = useMemo(() => {
     if (!departments || !user) return [];
 
-    if (user.roles.includes("head")) {
-      return departments.map((department) => ({
-        name: department.name,
-        value: department.departmentId,
-      }));
-    }
-
-    // if (user.department) {
-    //   return [
-    //     {
-    //       name: user.department.name,
-    //       value: user.department.departmentId,
-    //     },
-    //   ];
-    // }
-
-    return [];
+    return departments.map((department) => ({
+      name: department.name,
+      value: department.departmentId,
+    }));
   }, [departments, user]);
 
   useEffect(() => {
@@ -255,6 +242,7 @@ const ViewPerformingGroups = () => {
         >
           <DistributorForm
             initialValues={{
+              userId: "",
               firstName: "",
               lastName: "",
               email: "",
@@ -300,6 +288,7 @@ const ViewPerformingGroups = () => {
           <DistributorForm
             isSubmitting={editDistributor.isPending}
             initialValues={{
+              userId: selectedDistributor.userId,
               firstName: selectedDistributor.firstName,
               lastName: selectedDistributor.lastName,
               email: selectedDistributor.email,

@@ -190,3 +190,12 @@ export const useCreateBulkDistributors = () => {
     retry: false,
   });
 };
+
+export const useResetPassword = () => {
+  return useMutation<any, Error, { userId: string }>({
+    mutationFn: async (payload) => {
+      const result = await request<any>("/api/accounts/password/reset", payload, "post");
+      return result.data;
+    },
+  });
+};

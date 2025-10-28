@@ -430,7 +430,13 @@ const ViewShowSchedules = ({
               <SeatMap
                 showToggle={false}
                 recStyle={(seat) => {
-                  if (seat.status == "vip" || seat.isComplimentary || seat.status === "reserved" || seat.ticketControlNumber == 0)
+                  if (
+                    seat.status == "vip" ||
+                    seat.isComplimentary ||
+                    seat.status === "reserved" ||
+                    seat.ticketControlNumber == 0 ||
+                    seat.status === "sold"
+                  )
                     return "fill-darkGrey";
                   if (selectedSeat && seat.ticketControlNumber === selectedSeat.ticketControlNumber) return "fill-blue-500";
                   if (seat.status === "available") return "fill-white";

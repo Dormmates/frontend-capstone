@@ -176,6 +176,7 @@ const Distributors = () => {
         >
           <DistributorForm
             initialValues={{
+              userId: "",
               firstName: "",
               lastName: "",
               email: "",
@@ -221,6 +222,7 @@ const Distributors = () => {
           <DistributorForm
             isSubmitting={editDistributor.isPending}
             initialValues={{
+              userId: selectedDistributor.userId,
               firstName: selectedDistributor.firstName,
               lastName: selectedDistributor.lastName,
               email: selectedDistributor.email,

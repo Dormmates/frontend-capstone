@@ -2,11 +2,13 @@ import { useState } from "react";
 import { isValidEmail } from "@/utils";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/InputField";
+import ResetPasswordButton from "@/components/ResetPasswordButton";
 
 type TrainerFormValues = {
   firstName: string;
   lastName: string;
   email: string;
+  userId: string;
 };
 
 type TrainerFormProps = {
@@ -98,6 +100,7 @@ const TrainerForm = ({ initalValues, onSubmit, close, isSubmitting }: TrainerFor
               onChange={handleInputChange}
             />
           </div>
+          {trainerData.email && <ResetPasswordButton userId={trainerData.userId} firstName={trainerData.firstName} lastName={trainerData.lastName} />}
         </div>
       </div>
       <div className="flex justify-end mt-5 gap-2">
