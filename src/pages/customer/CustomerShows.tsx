@@ -28,11 +28,14 @@ const CustomerHome = () => {
 
           <div className="flex flex-wrap gap-10 justify-center md:gap-20">
             {(departments ?? []).map((d) => (
-              <Link key={d.departmentId} className="flex items-center justify-center" to={`/shows/${d.departmentId}`}>
-                <div key={d.departmentId} className="aspect-square cursor-pointer transition duration-300">
-                  <img className="w-full h-full object-contain  hover:scale-110 transition duration-300" src={d.logoUrl} alt={d.name} />
-                </div>
-              </Link>
+              <div
+                key={d.departmentId}
+                className="aspect-square max-h-[300px] cursor-pointer flex items-center justify-center  rounded-lg transition duration-300"
+              >
+                <Link to={`/shows/${d.departmentId}`} className="flex items-center justify-center ">
+                  <img className="w-full h-full max-w-[120px] object-cover hover:scale-110 transition duration-300" src={d.logoUrl} alt={d.name} />
+                </Link>
+              </div>
             ))}
           </div>
         </div>
