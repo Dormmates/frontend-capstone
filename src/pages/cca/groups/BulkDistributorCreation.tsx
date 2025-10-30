@@ -74,9 +74,9 @@ const BulkDistributorCreation = ({ group, setIsPendingBulkCreation }: Props) => 
       }
 
       // Contact number validation (must start with 9 and be 11 digits)
-      // if (!/^09\d{9}$/.test(contact)) {
-      //   errors.push("Invalid contact number format");
-      // }
+      if (!/^(09\d{9}|9\d{9})$/.test(contact)) {
+        errors.push("Invalid contact number format");
+      }
 
       if (emails && emails.filter((email) => email == emailLower).length > 0) {
         errors.push("This  email already exists on the database");

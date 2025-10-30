@@ -75,23 +75,23 @@ const TicketAllocation = () => {
             </LongCard>
           </div>
 
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             {schedule.seatingType == "controlledSeating" ? (
               <>
                 <AllocatedBySeat showData={showData} unAllocatedTickets={unAllocatedTickets} />
               </>
             ) : (
-              <>
-                <div className="flex flex-col gap-3">
-                  <AllocateByControlNumber
-                    scheduleId={scheduleId as string}
-                    departmentId={showData.showType !== "majorProduction" ? showData.department?.departmentId ?? "" : ""}
-                    unAllocatedTickets={unAllocatedTickets}
-                  />
-                </div>
-              </>
-            )}
+              <> */}
+          <div className="flex flex-col gap-3">
+            <AllocateByControlNumber
+              scheduleId={scheduleId as string}
+              departmentId={showData.showType !== "majorProduction" ? showData.department?.departmentId ?? "" : ""}
+              unAllocatedTickets={unAllocatedTickets}
+            />
           </div>
+          {/* </>
+            )}
+          </div> */}
         </div>
       )}
     </ContentWrapper>

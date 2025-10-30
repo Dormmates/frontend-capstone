@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { useChangePassword } from "@/_lib/@react-client-query/auth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import PasswordWithValidation from "./PasswordWithValidation";
 
 type Props = {
   openAccount: boolean;
@@ -29,13 +30,13 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
     contactNumber: user?.roles.includes("distributor") ? (user as Distributor).distributor.contactNumber : "",
   });
 
+  const [newPassword, setNewPassword] = useState({ value: "", isValid: false });
+
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
   });
 
-  const [passwordsError, setPasswordsError] = useState<{ currentPassword?: string; newPassword?: string; confirmPassword?: string }>({});
+  const [passwordsError, setPasswordsError] = useState<{ currentPassword?: string; newPassword?: string }>({});
 
   const closeAccountModal = () => {
     setOpenAccount(false);
@@ -63,22 +64,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
       isValid = false;
     }
 
-    if (!passwordForm.newPassword) {
-      errors.newPassword = "Please enter your new password";
-      isValid = false;
-    }
-
-    if (passwordForm.newPassword.length < 8) {
-      errors.newPassword = "New password should be greater than 8 characters";
-      isValid = false;
-    }
-
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      errors.confirmPassword = "Passwords don't match";
-      isValid = false;
-    }
-
-    if (passwordForm.newPassword == passwordForm.currentPassword) {
+    if (newPassword.value == passwordForm.currentPassword) {
       errors.newPassword = "New password should not be the same with your current password";
       isValid = false;
     }
@@ -94,14 +80,12 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
       changePassword.mutateAsync({
         userId: user?.userId as string,
         currentPassword: passwordForm.currentPassword,
-        newPassword: passwordForm.newPassword,
+        newPassword: newPassword.value,
       }),
       {
         success: () => {
           setPasswordForm({
             currentPassword: "",
-            newPassword: "",
-            confirmPassword: "",
           });
 
           toast.promise(
@@ -114,7 +98,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
             {
               position: "top-center",
               loading: "Logging Out...",
-              success: "Logged Out",
+              success: "Please Login again to your account with your new password",
               error: "Failed to logout, please try again",
             }
           );
@@ -228,26 +212,15 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                       name="currentPassword"
                     />
 
-                    <div className="flex flex-col md:flex-row gap-5">
-                      <PasswordField
-                        error={passwordsError.newPassword}
-                        label="New Password"
-                        value={passwordForm.newPassword}
-                        onChange={handlePasswordInputsChange}
-                        name="newPassword"
-                      />
-                      <PasswordField
-                        error={passwordsError.confirmPassword}
-                        label="Confirm Password"
-                        value={passwordForm.confirmPassword}
-                        onChange={handlePasswordInputsChange}
-                        name="confirmPassword"
-                      />
+                    <div className="flex flex-col gap-5">
+                      <PasswordWithValidation error={passwordsError.newPassword} password={newPassword} setPassword={setNewPassword} />
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-end ">
-                  <Button onClick={submitChangePassword}>Change Password</Button>
+                  <Button disabled={!newPassword.isValid || changePassword.isPending} onClick={submitChangePassword}>
+                    Change Password
+                  </Button>
                 </CardFooter>
               </Card>
             </TabsContent>

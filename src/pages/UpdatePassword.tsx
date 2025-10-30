@@ -1,5 +1,6 @@
 import { useUpdatePassword } from "@/_lib/@react-client-query/auth";
 import PasswordField from "@/components/PasswordField";
+import PasswordWithValidation from "@/components/PasswordWithValidation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuthContext } from "@/context/AuthContext";
@@ -15,25 +16,27 @@ const UpdatePassword = ({ closeModal }: { closeModal: () => void }) => {
   const queryClient = useQueryClient();
   const updatePassword = useUpdatePassword();
 
-  const [form, setForm] = useState({ password: "", confirmPassword: "" });
+  const [form, setForm] = useState({ confirmPassword: "" });
   const [errors, setErrors] = useState<{ password?: string; confirmPassword?: string }>({});
+
+  const [newPassword, setNewPassword] = useState({ value: "", isValid: false });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value.trim() }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validate = () => {
     const newErrors: typeof errors = {};
     let isValid = true;
 
-    if (!form.password || form.password.length < 8) {
-      newErrors.password = "Password length must be atleast 8 characters";
+    if (!form.confirmPassword || form.confirmPassword !== newPassword.value) {
+      newErrors.confirmPassword = "Passwords don't match";
       isValid = false;
     }
 
-    if (!form.confirmPassword || form.confirmPassword !== form.password) {
-      newErrors.confirmPassword = "Passwords don't match";
+    if (!newPassword.isValid) {
       isValid = false;
     }
 
@@ -44,7 +47,7 @@ const UpdatePassword = ({ closeModal }: { closeModal: () => void }) => {
   const submit = () => {
     if (!validate()) return;
 
-    toast.promise(updatePassword.mutateAsync({ userId: user?.userId as string, newPassword: form.password }), {
+    toast.promise(updatePassword.mutateAsync({ userId: user?.userId as string, newPassword: newPassword.value }), {
       position: "top-center",
       success: () => {
         queryClient.setQueryData<User>(["user"], (oldData) => {
@@ -69,15 +72,7 @@ const UpdatePassword = ({ closeModal }: { closeModal: () => void }) => {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
-          <PasswordField
-            disabled={updatePassword.isPending}
-            error={errors.password}
-            required={true}
-            label="New Password"
-            onChange={handleInputChange}
-            name="password"
-            value={form.password}
-          />
+          <PasswordWithValidation password={newPassword} setPassword={setNewPassword} />
           <PasswordField
             disabled={updatePassword.isPending}
             error={errors.confirmPassword}
@@ -89,7 +84,7 @@ const UpdatePassword = ({ closeModal }: { closeModal: () => void }) => {
           />
         </CardContent>
         <CardFooter className="flex flex-col gap-2">
-          <Button className="w-full" disabled={updatePassword.isPending} onClick={submit}>
+          <Button className="w-full" disabled={updatePassword.isPending || !newPassword.isValid} onClick={submit}>
             Update Password
           </Button>
           <Button

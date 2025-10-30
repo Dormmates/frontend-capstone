@@ -58,10 +58,12 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
       newErrors.email = "Invalid Email Format";
       isValid = false;
     }
-    if (!formData.contactNumber.trim() || formData.contactNumber.length < 10 || formData.contactNumber.length > 11) {
-      newErrors.contactNumber = "Invalid Contact Number Length";
+
+    if (!/^(09\d{9}|9\d{9})$/.test(formData.contactNumber.trim())) {
+      newErrors.contactNumber = "Invalid contact number";
       isValid = false;
     }
+
     if (!formData.type) {
       newErrors.type = "Please Choose Distributor Type";
       isValid = false;
@@ -129,6 +131,7 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
               placeholder="eg. 0928293752"
               name="contactNumber"
               label="Contact Number"
+              maxLength={11}
               value={formData.contactNumber}
               onChange={handleInputChange}
             />
