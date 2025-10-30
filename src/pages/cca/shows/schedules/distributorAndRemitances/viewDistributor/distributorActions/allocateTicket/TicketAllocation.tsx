@@ -7,7 +7,6 @@ import LongCardItem from "@/components/LongCardItem";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
 import { useGetScheduleInformation, useGetScheduleTickets } from "@/_lib/@react-client-query/schedule.ts";
 import AllocateByControlNumber from "./AllocateByControlNumber";
-import AllocatedBySeat from "./AllocatedBySeat";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import NotFound from "@/components/NotFound";
 import { Button } from "@/components/ui/button";
