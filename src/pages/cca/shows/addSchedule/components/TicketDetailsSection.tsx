@@ -35,6 +35,7 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
             value={scheduleData.totalComplimentary + ""}
             error={errors?.totalComplimentary}
             onWheel={(e) => e.currentTarget.blur()}
+            disabled={!scheduleData.totalTickets}
           />
         </div>
 
@@ -42,23 +43,21 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
           <InputField
             onChange={handleInputChange}
             label="Control Number of Tickets"
-            placeholder="eg. 1-500"
             className="w-full min-w-[300px]"
             name="ticketsControlNumber"
             value={!scheduleData.totalTickets ? "" : scheduleData.ticketsControlNumber}
             error={errors?.ticketsControlNumber}
-            disabled={!scheduleData.totalTickets}
+            disabled
           />
 
           <InputField
             onChange={handleInputChange}
-            label="Control Number of Complimentary Tickets (Optional)"
-            placeholder="eg. 501-750"
+            label="Control Number of Complimentary Tickets"
             className="w-full min-w-[300px]"
             name="complimentaryControlNumber"
             value={!scheduleData.totalComplimentary ? "" : scheduleData.complimentaryControlNumber}
             error={errors?.complimentaryControlNumber}
-            disabled={!scheduleData.totalComplimentary}
+            disabled
           />
         </div>
       </div>

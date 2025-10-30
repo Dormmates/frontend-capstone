@@ -27,7 +27,6 @@ import { useAuthContext } from "@/context/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, type ReactNode } from "react";
 import Account from "./Account";
-import { useLogout } from "@/_lib/@react-client-query/auth";
 import { toast } from "sonner";
 import { ChevronDown, ChevronRight, LogOutIcon, UserIcon } from "lucide-react";
 import logo from "@/assets/images/cca-logo.png";
@@ -47,8 +46,7 @@ interface CCASideBarProps {
 export const SideBar = ({ items }: CCASideBarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, setUser } = useAuthContext();
-  const logout = useLogout();
+  const { user, setUser, setToken } = useAuthContext();
   const [openAccount, setOpenAccount] = useState(false);
 
   // Helper to check if a menu item is active
@@ -179,15 +177,12 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                   <DropdownMenuItem
                     onClick={() => {
                       toast.promise(
-                        logout.mutateAsync(
-                          {},
-                          {
-                            onSuccess: () => {
-                              setUser(null);
-                              navigate("/cca/login");
-                            },
-                          }
-                        ),
+                        new Promise<void>((resolve) => {
+                          setUser(null);
+                          setToken("");
+                          navigate("/login");
+                          resolve();
+                        }),
                         {
                           position: "top-center",
                           loading: "Logging Out...",

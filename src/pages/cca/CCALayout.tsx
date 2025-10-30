@@ -4,7 +4,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import SideBar from "@/components/SideBar";
 import Header from "@/components/Header";
 import { useNotificationSocket } from "@/hooks/useNotificationSocket";
-import { DramaIcon, FileIcon, LayoutDashboardIcon, NetworkIcon, SettingsIcon, TheaterIcon, UsersIcon } from "lucide-react";
+import { DramaIcon, LayoutDashboardIcon, NetworkIcon, SettingsIcon, TheaterIcon, UsersIcon } from "lucide-react";
 import Modal from "@/components/Modal";
 import { toast } from "sonner";
 import UpdatePassword from "../UpdatePassword";
@@ -56,11 +56,6 @@ const CCALayout = () => {
         // { name: "Account Request", path: "/manage/request" },
       ],
       hidden: !user?.roles.includes("head") && user?.departments.length === 0,
-    },
-    {
-      icon: <FileIcon className="h-4 w-4" />,
-      name: "Reports",
-      path: "/reports",
     },
     {
       icon: <SettingsIcon className="h-4 w-4" />,

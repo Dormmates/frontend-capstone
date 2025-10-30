@@ -5,6 +5,8 @@ import type { User } from "../types/user";
 type AuthContextData = {
   user: User | null;
   setUser: React.Dispatch<SetStateAction<User | null>>;
+  setToken: React.Dispatch<React.SetStateAction<string>>;
+  token: string;
   isLoadingUser: boolean;
 };
 
@@ -24,25 +26,39 @@ interface Props {
 
 const AuthContextProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string>(() => localStorage.getItem("authToken") || "");
+
   const { data, isSuccess, isLoading } = useGetUserInformation({
-    enabled: user === null,
+    enabled: user === null && !!token,
   });
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("authToken", token);
+    } else {
+      localStorage.removeItem("authToken");
+    }
+  }, [token]);
 
   useEffect(() => {
     if (isSuccess && data) {
       setUser(data);
     }
-  }, [isLoading]);
+  }, [isSuccess, data]);
 
-  if (user === null && isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <span>Loading...</span>
-      </div>
-    );
-  }
-
-  return <AuthContext.Provider value={{ user, setUser, isLoadingUser: isLoading }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        token,
+        setToken,
+        user,
+        setUser,
+        isLoadingUser: isLoading,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthContextProvider;

@@ -23,8 +23,11 @@ export const request = async <T>(
   const isForm = type.includes("FormData");
   const requiresAuth = !type.includes("WithoutToken");
 
+  const token = localStorage.getItem("authToken");
+
   const headers: AxiosRequestConfig["headers"] = {
     ...(isForm ? { "Content-Type": "multipart/form-data" } : { "Content-Type": "application/json" }),
+    ...(requiresAuth && token ? { Authorization: `Bearer ${token}` } : {}),
     ...configs.headers,
   };
 
@@ -32,7 +35,6 @@ export const request = async <T>(
     url: baseUrl + endpoint,
     method: type === "get" ? "get" : type === "delete" ? "delete" : type.includes("patch") ? "patch" : "post",
     headers,
-    withCredentials: requiresAuth,
     ...configs,
   };
 
@@ -45,7 +47,8 @@ export const request = async <T>(
   try {
     return await axios<T>(config);
   } catch (err: any) {
-    const message = err?.response?.data?.error?.message || err?.response?.statusText || err?.message || "An error occurred";
+    const message =
+      err?.response?.data?.error?.message || err?.response?.data?.message || err?.response?.statusText || err?.message || "An error occurred";
     throw new Error(message);
   }
 };

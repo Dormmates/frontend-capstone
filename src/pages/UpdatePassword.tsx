@@ -1,4 +1,4 @@
-import { useLogout, useUpdatePassword } from "@/_lib/@react-client-query/auth";
+import { useUpdatePassword } from "@/_lib/@react-client-query/auth";
 import PasswordField from "@/components/PasswordField";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,11 +10,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const UpdatePassword = ({ closeModal }: { closeModal: () => void }) => {
-  const { user, setUser } = useAuthContext();
+  const { user, setUser, setToken } = useAuthContext();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const updatePassword = useUpdatePassword();
-  const logout = useLogout();
 
   const [form, setForm] = useState({ password: "", confirmPassword: "" });
   const [errors, setErrors] = useState<{ password?: string; confirmPassword?: string }>({});
@@ -71,7 +70,7 @@ const UpdatePassword = ({ closeModal }: { closeModal: () => void }) => {
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
           <PasswordField
-            disabled={updatePassword.isPending || logout.isPending}
+            disabled={updatePassword.isPending}
             error={errors.password}
             required={true}
             label="New Password"
@@ -80,7 +79,7 @@ const UpdatePassword = ({ closeModal }: { closeModal: () => void }) => {
             value={form.password}
           />
           <PasswordField
-            disabled={updatePassword.isPending || logout.isPending}
+            disabled={updatePassword.isPending}
             error={errors.confirmPassword}
             required={true}
             label="Confirm New Password"
@@ -90,24 +89,28 @@ const UpdatePassword = ({ closeModal }: { closeModal: () => void }) => {
           />
         </CardContent>
         <CardFooter className="flex flex-col gap-2">
-          <Button className="w-full" disabled={updatePassword.isPending || logout.isPending} onClick={submit}>
+          <Button className="w-full" disabled={updatePassword.isPending} onClick={submit}>
             Update Password
           </Button>
           <Button
             variant="outline"
             className="w-full"
-            disabled={updatePassword.isPending || logout.isPending}
+            disabled={updatePassword.isPending}
             onClick={() => {
-              toast.promise(logout.mutateAsync({}), {
-                position: "top-center",
-                loading: "Logging out...",
-                success: () => {
+              toast.promise(
+                new Promise<void>((resolve) => {
                   setUser(null);
-                  navigate("/");
-                  return "Logged out";
-                },
-                error: (err) => err.message || "Failed to log out, try again later",
-              });
+                  setToken("");
+                  navigate("/login");
+                  resolve();
+                }),
+                {
+                  position: "top-center",
+                  loading: "Logging Out...",
+                  success: "Logged Out",
+                  error: "Failed to logout, please try again",
+                }
+              );
             }}
           >
             Logout

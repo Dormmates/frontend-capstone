@@ -11,8 +11,10 @@ import { compressControlNumbers } from "@/utils/controlNumber";
 import { useGetDepartments } from "@/_lib/@react-client-query/department";
 import Dropdown from "@/components/Dropdown";
 import { distributorTypeOptions } from "@/types/user";
+import { useAuthContext } from "@/context/AuthContext";
 
 const ScheduleDistributorAndRemittances = () => {
+  const { user } = useAuthContext();
   const { scheduleId, showId } = useParams();
   const { schedule, show } = useOutletContext<{ schedule: Schedule; show: ShowData }>();
   const { data: distributors, isLoading, isError } = useGetScheduleDistributors(scheduleId as string);
@@ -20,7 +22,7 @@ const ScheduleDistributorAndRemittances = () => {
     data: departments,
     isLoading: loadingDepartments,
     isError: errorDepartments,
-  } = useGetDepartments(null, { enabled: show.showType != "majorProduction" });
+  } = useGetDepartments(null, { enabled: show.showType == "majorProduction" });
 
   const [selectedType, setSelectedType] = useState("cca");
   const [selectedDepartment, setSelectedDepartment] = useState("all");
@@ -74,19 +76,23 @@ const ScheduleDistributorAndRemittances = () => {
           </div>
 
           <div className="flex gap-2">
-            <Button
-              onClick={() => {
-                const url = `/ticketInformation/${scheduleId}`;
-                window.open(url, "_blank");
-              }}
-              variant="secondary"
-            >
-              Generate Ticket Allocations
-            </Button>
+            {(user?.roles.includes("head") || show.showType !== "majorProduction") && (
+              <>
+                <Button
+                  onClick={() => {
+                    const url = `/ticketInformation/${scheduleId}`;
+                    window.open(url, "_blank");
+                  }}
+                  variant="secondary"
+                >
+                  Generate Ticket Allocations
+                </Button>
 
-            <Button disabled={!schedule.isOpen || show.isArchived}>
-              <Link to={`/shows/${showId}/${scheduleId}/allocation`}>Allocate Ticket</Link>
-            </Button>
+                <Button disabled={!schedule.isOpen || show.isArchived}>
+                  <Link to={`/shows/${showId}/${scheduleId}/allocation`}>Allocate Ticket</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
 

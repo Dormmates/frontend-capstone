@@ -10,7 +10,6 @@ import {
   useReschedule,
 } from "@/_lib/@react-client-query/schedule.ts";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
-import { useShowScheduleContext } from "@/context/ShowSchedulesContext.tsx";
 import { useEffect, useState } from "react";
 import type { Schedule } from "@/types/schedule.ts";
 import { Button } from "@/components/ui/button";
@@ -48,7 +47,6 @@ const ViewShow = () => {
   const reschedule = useReschedule();
   const duplicate = useCopySchedule();
 
-  const { setSchedules } = useShowScheduleContext();
   const { id } = useParams();
   const { user } = useAuthContext();
   const { data: show, isLoading: isShowLoading } = useGetShow(id as string);
@@ -58,12 +56,6 @@ const ViewShow = () => {
   const [copySchedule, setCopySchedule] = useState<Schedule | null>(null);
   const [newDate, setNewDate] = useState({ date: new Date(), time: "" });
   const [openSalesReport, setOpenSalesReport] = useState(false);
-
-  useEffect(() => {
-    if (!showSchedules) return;
-
-    setSchedules(showSchedules);
-  }, [showSchedules]);
 
   useEffect(() => {
     document.title = `${show?.title}`;
@@ -244,23 +236,24 @@ const ViewShow = () => {
                 <h1 className="font-semibold text-2xl ">Show Schedules</h1>
               </div>
               <div className="flex gap-2">
-                <SalesReportDialog
-                  showSchedules={showSchedules}
-                  openSalesReport={openSalesReport}
-                  setOpenSalesReport={setOpenSalesReport}
-                  onGenerateReport={(scheduleIds, options) => {
-                    const scheduleIdsParam = scheduleIds.join(",");
-                    const url = `/salesreport/${id}/${scheduleIdsParam}?distributors=${options.includeDistributor}`;
-                    window.open(url, "_blank");
-                  }}
-                />
-                {((show.showType === "majorProduction" && user?.roles.includes("head")) ||
-                  (show.showType !== "majorProduction" && (user?.roles.includes("head") || user?.roles.includes("trainer")))) && (
-                  <Button disabled={show.isArchived}>
-                    <Link className="self-end" to={`/shows/add/schedule/${id}`}>
-                      Add New Schedule
-                    </Link>
-                  </Button>
+                {show.showType === "majorProduction" && user?.roles.includes("head") && (
+                  <>
+                    <SalesReportDialog
+                      showSchedules={showSchedules}
+                      openSalesReport={openSalesReport}
+                      setOpenSalesReport={setOpenSalesReport}
+                      onGenerateReport={(scheduleIds, options) => {
+                        const scheduleIdsParam = scheduleIds.join(",");
+                        const url = `/salesreport/${id}/${scheduleIdsParam}?distributors=${options.includeDistributor}`;
+                        window.open(url, "_blank");
+                      }}
+                    />
+                    <Button disabled={show.isArchived}>
+                      <Link className="self-end" to={`/shows/add/schedule/${id}`}>
+                        Add New Schedule
+                      </Link>
+                    </Button>
+                  </>
                 )}
               </div>
             </div>
@@ -335,54 +328,60 @@ const ViewShow = () => {
                   render: (schedule) => (
                     <div className="flex gap-2 justify-end items-center ">
                       <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
-                        <Button>Manage Schedule</Button>
+                        <Button>{show.showType === "majorProduction" && user?.roles.includes("head") ? "Manage Schedule" : "View Schedule"}</Button>
                       </Link>
 
-                      <DropdownMenu>
-                        <DropdownMenuTrigger disabled={show.isArchived}>
-                          <Button size="icon" disabled={show.isArchived} variant="outline">
-                            <Settings2Icon />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuLabel>Select Options</DropdownMenuLabel>
-                          <DropdownMenuGroup>
-                            <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setCopySchedule(schedule)}>Copy Schedule</DropdownMenuItem>
-                            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                              <AlertModal
-                                confirmation={schedule.isOpen ? "Close" : "Open"}
-                                actionText="Confirm"
-                                onConfirm={() =>
-                                  schedule.isOpen ? handleCloseSchedule(schedule.scheduleId) : handleOpenSchedule(schedule.scheduleId)
-                                }
-                                title={schedule.isOpen ? "Close Schedule" : "Open Schedule"}
-                                description={schedule.isOpen ? "This action will close this schedule." : "This action will open this schedule."}
-                                trigger={<p>{schedule.isOpen ? "Close Schedule" : "Open Schedule"}</p>}
-                              />
-                            </DropdownMenuItem>
-                          </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      {(user?.roles.includes("head") || show.showType !== "majorProduction") && (
+                        <>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger disabled={show.isArchived}>
+                              <Button size="icon" disabled={show.isArchived} variant="outline">
+                                <Settings2Icon />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuLabel>Select Options</DropdownMenuLabel>
+                              <DropdownMenuGroup>
+                                <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setCopySchedule(schedule)}>Copy Schedule</DropdownMenuItem>
+                                {user?.roles.includes("head") && (
+                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                    <AlertModal
+                                      confirmation={schedule.isOpen ? "Close" : "Open"}
+                                      actionText="Confirm"
+                                      onConfirm={() =>
+                                        schedule.isOpen ? handleCloseSchedule(schedule.scheduleId) : handleOpenSchedule(schedule.scheduleId)
+                                      }
+                                      title={schedule.isOpen ? "Close Schedule" : "Open Schedule"}
+                                      description={schedule.isOpen ? "This action will close this schedule." : "This action will open this schedule."}
+                                      trigger={<p>{schedule.isOpen ? "Close Schedule" : "Open Schedule"}</p>}
+                                    />
+                                  </DropdownMenuItem>
+                                )}
+                              </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
 
-                      <AlertModal
-                        confirmation="Delete"
-                        actionText="Confirm"
-                        onConfirm={() => handleDeleteSchedule(schedule.scheduleId)}
-                        title="Delete Schedule"
-                        trigger={
-                          <Button size="icon" disabled={show.isArchived} variant="destructive">
-                            <Trash2Icon />
-                          </Button>
-                        }
-                      >
-                        <div className="-mt-2 space-y-2 text-center">
-                          <p className="text-sm text-muted-foreground">Are you sure you want to delete this schedule?</p>
-                          <p className="text-sm font-medium">
-                            {formatToReadableDate(schedule.datetime + "")} at {formatToReadableTime(schedule.datetime + "")}
-                          </p>
-                        </div>
-                      </AlertModal>
+                          <AlertModal
+                            confirmation="Delete"
+                            actionText="Confirm"
+                            onConfirm={() => handleDeleteSchedule(schedule.scheduleId)}
+                            title="Delete Schedule"
+                            trigger={
+                              <Button size="icon" disabled={show.isArchived} variant="destructive">
+                                <Trash2Icon />
+                              </Button>
+                            }
+                          >
+                            <div className="-mt-2 space-y-2 text-center">
+                              <p className="text-sm text-muted-foreground">Are you sure you want to delete this schedule?</p>
+                              <p className="text-sm font-medium">
+                                {formatToReadableDate(schedule.datetime + "")} at {formatToReadableTime(schedule.datetime + "")}
+                              </p>
+                            </div>
+                          </AlertModal>
+                        </>
+                      )}
                     </div>
                   ),
                 },

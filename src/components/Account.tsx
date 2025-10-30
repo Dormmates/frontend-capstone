@@ -8,7 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import type { Distributor } from "@/types/user";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { useChangePassword, useLogout } from "@/_lib/@react-client-query/auth";
+import { useChangePassword } from "@/_lib/@react-client-query/auth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -18,10 +18,9 @@ type Props = {
 };
 
 const Account = ({ openAccount, setOpenAccount }: Props) => {
-  const { user, setUser } = useAuthContext();
+  const { user, setUser, setToken } = useAuthContext();
   const changePassword = useChangePassword();
   const navigate = useNavigate();
-  const logout = useLogout();
 
   const [userForm, setUserForm] = useState({
     firstName: user?.firstName + "",
@@ -105,14 +104,18 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
             confirmPassword: "",
           });
 
-          logout.mutate(
-            {},
+          toast.promise(
+            new Promise<void>((resolve) => {
+              setUser(null);
+              setToken("");
+              navigate("/login");
+              resolve();
+            }),
             {
-              onSuccess: () => {
-                setUser(null);
-                navigate("/", { replace: true });
-                toast.info("Please login again to your account with your updated password", { position: "top-center" });
-              },
+              position: "top-center",
+              loading: "Logging Out...",
+              success: "Logged Out",
+              error: "Failed to logout, please try again",
             }
           );
 

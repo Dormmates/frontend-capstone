@@ -18,10 +18,11 @@ interface Props {
   selectedPrice: TicketPricing | null;
   setSelectedPrice: React.Dispatch<React.SetStateAction<TicketPricing | null>>;
   handleSeatPricingType: (value: SeatPricing) => void;
-  errors?: Partial<Record<ErrorKeys, string>>;
+  errors: Partial<Record<ErrorKeys, string>>;
+  setErrors: React.Dispatch<React.SetStateAction<Partial<Record<ErrorKeys, string>>>>;
 }
 
-const PricingSection = ({ scheduleData, selectedPrice, setSelectedPrice, handleSeatPricingType, errors }: Props) => {
+const PricingSection = ({ scheduleData, selectedPrice, setSelectedPrice, handleSeatPricingType, setErrors, errors }: Props) => {
   const { data: ticketPrices, isLoading, isError } = useGetTicketPrices();
 
   const sectionedPrices = useMemo(() => {
@@ -75,7 +76,10 @@ const PricingSection = ({ scheduleData, selectedPrice, setSelectedPrice, handleS
                   className={`cursor-pointer rounded-md p-1 ${
                     selectedPrice?.id === t.id ? "ring-2 ring-primary/50  shadow-lg shadow-primary/50" : ""
                   }`}
-                  onClick={() => setSelectedPrice(t)}
+                  onClick={() => {
+                    setSelectedPrice(t);
+                    setErrors((prev) => ({ ...prev, ticketPrice: "" }));
+                  }}
                 >
                   <FixedPrice hideAction={true} data={t} />
                 </div>
@@ -99,7 +103,10 @@ const PricingSection = ({ scheduleData, selectedPrice, setSelectedPrice, handleS
                   className={`cursor-pointer rounded-md p-1 ${
                     selectedPrice?.id === t.id ? "ring-2 ring-primary/50  shadow-lg shadow-primary/50" : ""
                   }`}
-                  onClick={() => setSelectedPrice(t)}
+                  onClick={() => {
+                    setSelectedPrice(t);
+                    setErrors((prev) => ({ ...prev, ticketPrice: "" }));
+                  }}
                 >
                   <SectionedPrice hideAction={true} data={t} />
                 </div>

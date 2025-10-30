@@ -4,9 +4,9 @@ import type { User } from "../../types/user";
 import type { LoginPayload } from "../../types/auth";
 
 export const useLogin = () => {
-  return useMutation<User, Error, LoginPayload>({
+  return useMutation<{ token: string; user: User }, Error, LoginPayload>({
     mutationFn: async (data: LoginPayload) => {
-      const res = await request<User>("/api/auth/login", data, "post");
+      const res = await request<{ token: string; user: User }>("/api/auth/login", data, "post");
       return res.data;
     },
     retry: false,
@@ -27,16 +27,6 @@ export const useChangePassword = () => {
   return useMutation<any, Error, { userId: string; currentPassword: string; newPassword: string }>({
     mutationFn: async (data: { userId: string; currentPassword: string; newPassword: string }) => {
       const res = await request<User>("/api/auth/changePassword", data, "post");
-      return res.data;
-    },
-    retry: false,
-  });
-};
-
-export const useLogout = () => {
-  return useMutation<any, Error, any>({
-    mutationFn: async () => {
-      const res = await request<any>("/api/auth/logout", {}, "post");
       return res.data;
     },
     retry: false,

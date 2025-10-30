@@ -38,7 +38,6 @@ import {
   ViewDistributor,
   Settings,
   ViewPerformingGroups,
-  Reports,
 } from "../pages/cca/index";
 
 import SalesReport from "@/pages/cca/shows/SalesReport";
@@ -126,7 +125,6 @@ const AppRoute = () => {
                 <Route path="shows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
                 <Route path="performing-groups" element={<PerformingGroups />} />
                 <Route path="performing-groups/:groupId" element={<ViewPerformingGroups />} />
-                <Route path="reports" element={<Reports />} />
               </>
             )}
 
@@ -142,7 +140,7 @@ const AppRoute = () => {
       </Route>
 
       {/* ===================== LOGIN PAGE ===================== */}
-      <Route path="/cca/login" element={user ? <Navigate to="/" replace /> : <CCALogin />} />
+      <Route path="/login" element={user ? <Navigate to="/" replace /> : <CCALogin />} />
 
       {/* ===================== OTHERS ===================== */}
       <Route path="/unathorized" element={<Unauthorized />} />

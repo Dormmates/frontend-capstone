@@ -73,7 +73,7 @@ const Distributors = () => {
       <h1 className="text-3xl">Distributors</h1>
 
       <div className="flex justify-between mt-10">
-        <SimpleCard icon={<Users size={18} />} label="Total Distributors" value={searchedDistributors.length} />
+        <SimpleCard icon={<Users size={18} />} label="Total Distributors" value={activeDistributors.length} />
 
         {(user?.departments.length !== 0 || user?.roles.includes("head")) && (
           <div className="self-end flex gap-2">
@@ -83,21 +83,20 @@ const Distributors = () => {
       </div>
 
       <div className="mt-10 flex flex-col gap-5">
-        <div className="flex gap-3">
-          <InputField
-            className="w-full"
-            onChange={(e) => setSearchValue(e.target.value)}
-            value={searchValue}
-            placeholder="Search by Distributor Name"
-          />
-          <Dropdown
-            className="max-w-fit"
-            placeholder="Distributor Type"
-            label="Distributor Type"
-            value={type}
-            onChange={(value) => setType(value)}
-            items={[{ name: "All Distributor Type", value: "all" }, ...distributorTypeOptions.filter((d) => d.value !== "cca")]}
-          />
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
+          <div className="w-full max-w-[400px]">
+            <InputField onChange={(e) => setSearchValue(e.target.value)} value={searchValue} placeholder="Search by Distributor Name" />
+          </div>
+          <div className="w-full sm:w-auto min-w-[200px]">
+            <Dropdown
+              className="w-full sm:w-auto"
+              placeholder="Distributor Type"
+              label="Distributor Type"
+              value={type}
+              onChange={(value) => setType(value)}
+              items={[{ name: "All Distributor Type", value: "all" }, ...distributorTypeOptions.filter((d) => d.value !== "cca")]}
+            />
+          </div>
         </div>
 
         {selectedDistributors.length !== 0 && (
@@ -282,7 +281,6 @@ const Distributors = () => {
         >
           <div>
             <PaginatedTable
-              selectable
               data={archivedDistributors}
               columns={[
                 {

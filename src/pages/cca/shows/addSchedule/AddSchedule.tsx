@@ -3,12 +3,12 @@ import { useGetShow } from "@/_lib/@react-client-query/show.ts";
 import React, { useEffect, useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import type { FlattenedSeat } from "@/types/seat.ts";
-import type { ErrorKeys, ScheduleFormData, ScheduleFormErrors, SeatPricing } from "@/types/schedule.ts";
+import type { ScheduleFormData, ScheduleFormErrors, SeatPricing } from "@/types/schedule.ts";
 import ScheduleDateSelection from "./components/ScheduleDateSelection";
 import TicketTypeSelection from "./components/TicketTypeSelection";
 import SeatingConfigurationSelector from "./components/SeatingConfigurationSelector";
 import PricingSection from "./components/PricingSection";
-import { parseControlNumbers, validateControlInput } from "@/utils/controlNumber.ts";
+import { parseControlNumbers } from "@/utils/controlNumber.ts";
 import TicketDetailsSection from "./components/TicketDetailsSection";
 import { flattenSeatMap, sortSeatsByRowAndNumber } from "@/utils/seatmap.ts";
 import SeatMapSchedule from "./components/SeatMapSchedule";
@@ -23,11 +23,13 @@ import { seatMetaData } from "../../../../../seatmetedata.ts";
 import type { FixedPricing, SectionedPricing, TicketPricing } from "@/types/ticketpricing.ts";
 import FixedPrice from "@/components/FixedPrice.tsx";
 import SectionedPrice from "@/components/SectionedPrice.tsx";
+import { useAuthContext } from "@/context/AuthContext.tsx";
 
 // type ControlKey = "orchestraControlNumber" | "balconyControlNumber" | "complimentaryControlNumber";
 type ControlKey = "complimentaryControlNumber" | "ticketsControlNumber";
 
 const AddSchedule = () => {
+  const { user } = useAuthContext();
   const navigate = useNavigate();
   const addSchedule = useAddSchedule();
   const queryClient = useQueryClient();
@@ -39,8 +41,8 @@ const AddSchedule = () => {
     ticketType: "ticketed",
     seatingConfiguration: "freeSeating",
     seatPricing: "fixed",
-    totalComplimentary: 0,
-    totalTickets: 0,
+    totalComplimentary: undefined,
+    totalTickets: undefined,
     ticketsControlNumber: "",
     complimentaryControlNumber: "",
   });
@@ -52,15 +54,19 @@ const AddSchedule = () => {
   }, [navigate, data]);
 
   useEffect(() => {
+    if (data?.showType === "majorProduction" && !user?.roles.includes("head")) {
+      navigate(`/shows/${data.showId}`, { replace: true });
+      toast.error("Only CCA Head can add a Schedule to a Major Production Show", { position: "top-center" });
+    }
+  }, [navigate, data]);
+
+  useEffect(() => {
     document.title = `${data?.title} - Add Schedule`;
   }, [data]);
 
   const [selectedPrice, setSelectedPrice] = useState<TicketPricing | null>(null);
 
   const [openScheduleSummary, setOpenScheduleSummary] = useState(false);
-  const [assignedControlNumbers, setAssignedControlNumbers] = useState<{
-    [section: string]: number[];
-  }>({});
 
   const [errors, setErrors] = useState<ScheduleFormErrors>({});
 
@@ -100,6 +106,8 @@ const AddSchedule = () => {
     }
   }, [selectedPrice, setSeatData]);
 
+  const hasErrors = Object.values(errors).some((error) => error && error.trim() !== "");
+
   if (isLoading) {
     return <h1>Fetching Show information...</h1>;
   }
@@ -129,15 +137,48 @@ const AddSchedule = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setScheduleData((prev) => ({ ...prev, [name]: value }));
+
+    const updatedData = {
+      ...scheduleData,
+      [name]: value,
+    };
+
+    const ticketsCount = parseInt(updatedData.totalTickets + "") || 0;
+    const complimentaryCount = parseInt(updatedData.totalComplimentary + "") || 0;
+
+    setScheduleData(updatedData);
     setErrors((prev) => ({ ...prev, [name]: "" }));
 
-    if (name === "totalComplimentary" && !e.target.value) {
-      setScheduleData((prev) => ({ ...prev, complimentaryControlNumber: "" }));
-    }
+    if (name === "totalTickets" || name === "totalComplimentary") {
+      if (ticketsCount <= 0 && name === "totalTickets") {
+        setErrors((prev) => ({ ...prev, totalTickets: "Total tickets must be greater than 0." }));
+        setScheduleData((prev) => ({ ...prev, ticketsControlNumber: "", complimentaryControlNumber: "" }));
+        return;
+      }
 
-    if (name === "totalTickets" && !e.target.value) {
-      setScheduleData((prev) => ({ ...prev, ticketsControlNumber: "" }));
+      if (ticketsCount + complimentaryCount > seatData.length) {
+        const msg = `Total tickets cannot exceed available seats (${seatData.length}).`;
+        setErrors((prev) => ({ ...prev, totalTickets: msg, totalComplimentary: msg }));
+        setScheduleData((prev) => ({ ...prev, ticketsControlNumber: "", complimentaryControlNumber: "" }));
+        return;
+      }
+
+      const newData = { ...updatedData };
+
+      if (ticketsCount > 0) {
+        newData.ticketsControlNumber = `1-${ticketsCount}`;
+      } else {
+        newData.ticketsControlNumber = "";
+      }
+
+      if (complimentaryCount > 0 && ticketsCount > 0) {
+        newData.complimentaryControlNumber = `${ticketsCount + 1}-${ticketsCount + complimentaryCount}`;
+      } else {
+        newData.complimentaryControlNumber = "";
+      }
+
+      setScheduleData(newData);
+      setErrors((prev) => ({ ...prev, totalTickets: "", totalComplimentary: "" }));
     }
   };
 
@@ -145,12 +186,14 @@ const AddSchedule = () => {
     const updatedDates = scheduleData.dates;
     updatedDates[index] = { ...updatedDates[index], date: value };
     setScheduleData((prev) => ({ ...prev, dates: updatedDates }));
+    setErrors((prev) => ({ ...prev, dates: "" }));
   };
 
   const handleTimeChange = (value: string, index: number) => {
     const updatedTime = scheduleData.dates;
     updatedTime[index] = { ...updatedTime[index], time: value };
     setScheduleData((prev) => ({ ...prev, dates: updatedTime }));
+    setErrors((prev) => ({ ...prev, dates: "" }));
   };
 
   const handleSeatPricingType = (value: SeatPricing) => {
@@ -163,18 +206,16 @@ const AddSchedule = () => {
 
   const validate = () => {
     const newErrors: typeof errors = {};
-    let isValid = true;
 
     if (scheduleData.dates.length === 0 || scheduleData.dates.some((d) => !d.date || !d.time)) {
       newErrors.dates = "Each schedule must have a date and time.";
-      isValid = false;
     } else {
       const seen = new Set<string>();
       for (const { date, time } of scheduleData.dates) {
         const key = `${new Date(date).toDateString()}_${time}`;
         if (seen.has(key)) {
           newErrors.dates = "Duplicate date and time entries are not allowed.";
-          isValid = false;
+
           break;
         }
         seen.add(key);
@@ -182,141 +223,31 @@ const AddSchedule = () => {
     }
 
     if (scheduleData.ticketType === "ticketed") {
-      if (!selectedPrice || (scheduleData.seatingConfiguration === "freeSeating" && selectedPrice.type == "sectioned")) {
-        newErrors.ticketPrice = "Please Select a ticket price";
-        isValid = false;
+      if (!selectedPrice || (scheduleData.seatingConfiguration === "freeSeating" && selectedPrice.type === "sectioned")) {
+        newErrors.ticketPrice = "Please select a valid ticket price.";
       }
 
-      const totalTickets = Number(scheduleData.totalTickets || 0);
-      const totalComplimentary = Number(scheduleData.totalComplimentary || 0);
-      const total = totalTickets + totalComplimentary;
-
-      if (total > seatData.length) {
-        const msg = `Total tickets cannot exceed available seats (${seatData.length}).`;
-        newErrors.totalTickets = msg;
-        newErrors.totalComplimentary = msg;
-        isValid = false;
+      if (!scheduleData.totalTickets) {
+        newErrors.totalTickets = "Please input ticket count";
       }
     }
 
     setErrors(newErrors);
-    return isValid;
+    return Object.keys(newErrors).length === 0;
   };
 
-  const getControlSection = (name: ControlKey) => {
-    const map = {
-      ticketsControlNumber: {
-        label: "Tickets",
-        total: Number(scheduleData.totalTickets),
-        control: scheduleData.ticketsControlNumber,
-        totalField: "totalTickets" as ErrorKeys,
-        controlField: "ticketsControlNumber" as ErrorKeys,
-      },
-      complimentaryControlNumber: {
-        label: "Complimentary",
-        total: Number(scheduleData.totalComplimentary),
-        control: scheduleData.complimentaryControlNumber,
-        totalField: "totalComplimentary" as ErrorKeys,
-        controlField: "complimentaryControlNumber" as ErrorKeys,
-      },
-    };
+  const getRemainingControlNumbers = (section: ControlKey, seats = seatData): number[] => {
+    const controlRange = scheduleData[section];
+    if (!controlRange) return [];
 
-    return map[name];
-  };
-
-  const validateTicketControlSection = (
-    label: string,
-    total: number,
-    control: string | undefined,
-    totalField: ErrorKeys,
-    controlField: ErrorKeys,
-    used: Set<number>
-  ): { isValid: boolean; sectionErrors: Partial<typeof errors> } => {
-    const sectionErrors: Partial<typeof errors> = {};
-    let isValid = true;
-
-    if (!total || total <= 0) {
-      sectionErrors[totalField] = `Please input a valid number of ${label.toLowerCase()} tickets`;
-      isValid = false;
-    }
-
-    if (!control) {
-      sectionErrors[controlField] = `Please enter control numbers for ${label.toLowerCase()} tickets`;
-      isValid = false;
-    }
-
-    if (control) {
-      if (!validateControlInput(control)) {
-        sectionErrors[controlField] = `${label} control numbers contain invalid characters`;
-        isValid = false;
-        return { isValid, sectionErrors };
-      }
-
-      try {
-        const parsed = parseControlNumbers(control);
-
-        if (parsed.length !== total) {
-          sectionErrors[controlField] = `${label} control numbers do not match total (${parsed.length} vs ${total})`;
-          isValid = false;
-        }
-
-        for (const num of parsed) {
-          if (used.has(num)) {
-            sectionErrors[controlField] = `${label} has duplicate or overlapping control number: ${num}`;
-            isValid = false;
-            break;
-          }
-          used.add(num);
-        }
-      } catch (err) {
-        sectionErrors[controlField] = `${label} control number error: ${(err as Error).message}`;
-        isValid = false;
-      }
-    }
-
-    return { isValid, sectionErrors };
-  };
-
-  const validateControlNumbers = (): boolean => {
-    const controlKeys: ControlKey[] = ["ticketsControlNumber"];
-
-    if (scheduleData.totalComplimentary && scheduleData.totalComplimentary > 0) {
-      controlKeys.push("complimentaryControlNumber");
-    }
-
-    let isValid = true;
-    const newErrors: typeof errors = {};
-    const used = new Set<number>();
-
-    for (const key of controlKeys) {
-      const { label, total, control, totalField, controlField } = getControlSection(key);
-
-      const result = validateTicketControlSection(label, total, control, totalField, controlField, used);
-
-      if (!result.isValid) isValid = false;
-      Object.assign(newErrors, result.sectionErrors);
-    }
-
-    const totalTickets = Number(scheduleData.totalTickets || 0);
-    const totalComplimentary = Number(scheduleData.totalComplimentary || 0);
-    const total = totalTickets + totalComplimentary;
-
-    if (total > seatData.length) {
-      const msg = `Total tickets cannot exceed available seats (${seatData.length}).`;
-      newErrors.totalTickets = msg;
-      newErrors.totalComplimentary = msg;
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-
-    return isValid;
-  };
-
-  const getRemainingControlNumbers = (section: ControlKey): number[] => {
     try {
-      const totalParsed = parseControlNumbers(scheduleData[section]);
-      const assigned = assignedControlNumbers[section] || [];
+      const totalParsed = parseControlNumbers(controlRange);
+      const assigned = seats
+        .filter((s) =>
+          section === "ticketsControlNumber" ? s.ticketControlNumber > 0 && !s.isComplimentary : s.ticketControlNumber > 0 && s.isComplimentary
+        )
+        .map((s) => s.ticketControlNumber);
+
       return totalParsed.filter((num) => !assigned.includes(num));
     } catch {
       return [];
@@ -346,7 +277,7 @@ const AddSchedule = () => {
   };
 
   const toggleSeats = (clickedSeats: FlattenedSeat[]) => {
-    if (!validateControlNumbers()) {
+    if (errors.complimentaryControlNumber || errors.ticketsControlNumber) {
       toast.error("Please enter ticket control numbers first", { position: "top-center" });
       return;
     }
@@ -390,22 +321,6 @@ const AddSchedule = () => {
           seat.isComplimentary = isComplimentaryMode;
         }
       }
-
-      //  Always recalc assigned control numbers fresh — no merging or adding
-      const newRegularAssigned = updated
-        .filter((s) => s.ticketControlNumber > 0 && !s.isComplimentary)
-        .map((s) => s.ticketControlNumber)
-        .sort((a, b) => a - b);
-
-      const newComplimentaryAssigned = updated
-        .filter((s) => s.ticketControlNumber > 0 && s.isComplimentary)
-        .map((s) => s.ticketControlNumber)
-        .sort((a, b) => a - b);
-
-      setAssignedControlNumbers({
-        ticketsControlNumber: newRegularAssigned,
-        complimentaryControlNumber: newComplimentaryAssigned,
-      });
 
       rebalanceControlNumbers(updated);
       return updated;
@@ -481,6 +396,7 @@ const AddSchedule = () => {
         </div>
         {scheduleData.ticketType == "ticketed" && (
           <PricingSection
+            setErrors={setErrors}
             scheduleData={scheduleData}
             setSelectedPrice={setSelectedPrice}
             selectedPrice={selectedPrice}
@@ -514,6 +430,7 @@ const AddSchedule = () => {
         )}
 
         <Button
+          disabled={hasErrors}
           className="w-fit self-end"
           onClick={() => {
             if (!validate()) {
@@ -522,11 +439,6 @@ const AddSchedule = () => {
             }
 
             if (scheduleData.ticketType === "ticketed") {
-              if (!validateControlNumbers()) {
-                toast.error("Please fix control number errors", { position: "top-center" });
-                return;
-              }
-
               if (
                 (getRemainingControlNumbers("ticketsControlNumber").length != 0 ||
                   getRemainingControlNumbers("complimentaryControlNumber").length != 0) &&

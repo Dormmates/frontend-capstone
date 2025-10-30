@@ -130,19 +130,22 @@ const ViewDistributorLayout = () => {
       />
       <div className="flex flex-col gap-5 ">
         <h1 className="text-2xl">{distributorName}</h1>
-        <div className="flex gap-3 items-center">
-          {/* <Button className="!bg-green">Allocate Ticket</Button> */}
+        {(user?.roles.includes("head") || show.showType !== "majorProduction") && (
+          <div className="flex gap-3 items-center">
+            <>
+              <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsRemitTicket(true)} className="bg-primary">
+                Remit Tickets
+              </Button>
+              <Button variant="secondary" disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnRemitTicket(true)}>
+                Unremit Tickets
+              </Button>
+              <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnallocateTicket(true)} variant="outline">
+                Unallocate Ticket
+              </Button>
+            </>
+          </div>
+        )}
 
-          <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsRemitTicket(true)} className="bg-primary">
-            Remit Tickets
-          </Button>
-          <Button variant="secondary" disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnRemitTicket(true)}>
-            Unremit Tickets
-          </Button>
-          <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnallocateTicket(true)} variant="outline">
-            Unallocate Ticket
-          </Button>
-        </div>
         <div className="flex flex-col gap-5">
           <Card>
             <CardHeader>

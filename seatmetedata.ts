@@ -5582,14 +5582,6 @@ export const seatMetaData: SeatMetaData[] = [
   },
   {
     seatNumber: "R28",
-    x: 799.464,
-    y: 652.514,
-    row: "R28-42",
-    section: "balconyRight",
-    rotation: "rotate(-4.31608 799.464 652.514)",
-  },
-  {
-    seatNumber: "R29",
     x: 816.973,
     y: 650.63,
     row: "R28-42",
@@ -5597,7 +5589,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-6.81946 816.973 650.63)",
   },
   {
-    seatNumber: "R30",
+    seatNumber: "R29",
     x: 834.44,
     y: 648.242,
     row: "R28-42",
@@ -5605,7 +5597,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-7.4111 834.44 648.242)",
   },
   {
-    seatNumber: "R31",
+    seatNumber: "R30",
     x: 851.437,
     y: 645.319,
     row: "R28-42",
@@ -5613,7 +5605,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-7.74433 851.437 645.319)",
   },
   {
-    seatNumber: "R32",
+    seatNumber: "R31",
     x: 868.434,
     y: 642.409,
     row: "R28-42",
@@ -5621,7 +5613,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-8.1163 868.434 642.409)",
   },
   {
-    seatNumber: "R33",
+    seatNumber: "R32",
     x: 885.4,
     y: 639.543,
     row: "R28-42",
@@ -5629,7 +5621,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-12.9898 885.4 639.543)",
   },
   {
-    seatNumber: "R34",
+    seatNumber: "R33",
     x: 902.389,
     y: 634.951,
     row: "R28-42",
@@ -5637,7 +5629,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-14.7554 902.389 634.951)",
   },
   {
-    seatNumber: "R35",
+    seatNumber: "R34",
     x: 918.372,
     y: 630.603,
     row: "R28-42",
@@ -5645,7 +5637,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-17.6041 918.372 630.603)",
   },
   {
-    seatNumber: "R36",
+    seatNumber: "R35",
     x: 934.354,
     y: 625.368,
     row: "R28-42",
@@ -5653,7 +5645,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-20.9908 934.354 625.368)",
   },
   {
-    seatNumber: "R37",
+    seatNumber: "R36",
     x: 950.34,
     y: 619.016,
     row: "R28-42",
@@ -5661,7 +5653,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-23.9208 950.34 619.016)",
   },
   {
-    seatNumber: "R38",
+    seatNumber: "R37",
     x: 966.336,
     y: 612.225,
     row: "R28-42",
@@ -5669,7 +5661,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-24.8791 966.336 612.225)",
   },
   {
-    seatNumber: "R39",
+    seatNumber: "R38",
     x: 981.336,
     y: 605.226,
     row: "R28-42",
@@ -5677,7 +5669,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-24.8791 981.336 605.226)",
   },
   {
-    seatNumber: "R40",
+    seatNumber: "R39",
     x: 996.336,
     y: 598.225,
     row: "R28-42",
@@ -5685,7 +5677,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-24.8791 996.336 598.225)",
   },
   {
-    seatNumber: "R41",
+    seatNumber: "R40",
     x: 1011.34,
     y: 591.226,
     row: "R28-42",
@@ -5693,7 +5685,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-24.8791 1011.34 591.226)",
   },
   {
-    seatNumber: "R42",
+    seatNumber: "R41",
     x: 1026.34,
     y: 584.225,
     row: "R28-42",
@@ -5701,7 +5693,7 @@ export const seatMetaData: SeatMetaData[] = [
     rotation: "rotate(-24.8791 1026.34 584.225)",
   },
   {
-    seatNumber: "R43",
+    seatNumber: "R42",
     x: 1071.34,
     y: 563.226,
     row: "R28-42",

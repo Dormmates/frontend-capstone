@@ -61,6 +61,7 @@ const seatSectionOptions = [
 const ITEMS_PER_PAGE = 10;
 
 const ScheduleTickets = () => {
+  const { user } = useAuthContext();
   const { schedule, show } = useOutletContext<{ schedule: Schedule; show: ShowData }>();
   const { scheduleId } = useParams();
   const { data: tickets, isLoading: loadingTickets, isError: errorTickets } = useGetScheduleTickets(scheduleId as string);
@@ -222,10 +223,10 @@ const ScheduleTickets = () => {
         </Card>
       </div>
 
-      <div className="flex gap-2 w-full justify-end">
+      {/* <div className="flex gap-2 w-full justify-end">
         <Button>Transfer Tickets</Button>
         <Button>Refund Tickets</Button>
-      </div>
+      </div> */}
 
       <div>
         <div className="flex gap-5 mt-10 w-full">
@@ -350,48 +351,53 @@ const ScheduleTickets = () => {
                       controlNumber={ticket.controlNumber}
                     />
                   </DialogPopup>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline">
-                        <Settings2Icon />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent side="left" align="start">
-                      <DropdownMenuLabel>Select Options</DropdownMenuLabel>
-                      <DropdownMenuGroup>
-                        {!ticket.isComplimentary && ticket.isRemitted && (
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setSelectedTicket(ticket);
-                              setIsTransferTicket(true);
-                            }}
-                          >
-                            Transfer Ticket
-                          </DropdownMenuItem>
-                        )}
-                        {!ticket.isComplimentary && ticket.status == "not_allocated" && (
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setIsSellTicket(true);
-                              setSelectedTicket(ticket);
-                            }}
-                          >
-                            Sell Ticket
-                          </DropdownMenuItem>
-                        )}
-                        {!ticket.isComplimentary && ticket.isRemitted && (
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setUnIsSellTicket(true);
-                              setSelectedTicket(ticket);
-                            }}
-                          >
-                            Refund Ticket
-                          </DropdownMenuItem>
-                        )}
-                      </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+
+                  {(user?.roles.includes("head") || show.showType !== "majorProduction") && (
+                    <>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline">
+                            <Settings2Icon />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="left" align="start">
+                          <DropdownMenuLabel>Select Options</DropdownMenuLabel>
+                          <DropdownMenuGroup>
+                            {!ticket.isComplimentary && ticket.isRemitted && (
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setSelectedTicket(ticket);
+                                  setIsTransferTicket(true);
+                                }}
+                              >
+                                Transfer Ticket
+                              </DropdownMenuItem>
+                            )}
+                            {!ticket.isComplimentary && ticket.status == "not_allocated" && (
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setIsSellTicket(true);
+                                  setSelectedTicket(ticket);
+                                }}
+                              >
+                                Sell Ticket
+                              </DropdownMenuItem>
+                            )}
+                            {!ticket.isComplimentary && ticket.isRemitted && (
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setUnIsSellTicket(true);
+                                  setSelectedTicket(ticket);
+                                }}
+                              >
+                                Refund Ticket
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </>
+                  )}
                 </div>
               ),
             },

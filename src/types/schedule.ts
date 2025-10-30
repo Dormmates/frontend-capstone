@@ -15,8 +15,8 @@ export interface ScheduleFormData {
   ticketType: TicketType;
   seatingConfiguration: SeatingConfiguration;
   seatPricing: SeatPricing;
-  totalTickets: number;
-  totalComplimentary: number;
+  totalTickets?: number;
+  totalComplimentary?: number;
   ticketsControlNumber: string;
   complimentaryControlNumber: string;
 }

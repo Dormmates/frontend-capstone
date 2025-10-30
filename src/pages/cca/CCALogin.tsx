@@ -13,7 +13,7 @@ import logo from "@/assets/images/cca-logo.png";
 
 const CCALogin = () => {
   const login = useLogin();
-  const { setUser } = useAuthContext();
+  const { setUser, setToken } = useAuthContext();
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [loginError, setLoginError] = useState("");
 
@@ -50,7 +50,8 @@ const CCALogin = () => {
 
     toast.promise(
       login.mutateAsync({ ...formContent, expectedRole: "cca" }).then((data) => {
-        setUser(data);
+        setUser(data.user);
+        setToken(data.token);
       }),
       {
         position: "top-center",
@@ -108,18 +109,6 @@ const CCALogin = () => {
                 {loginError && <h1 className="mx-auto text-red">{loginError}</h1>}
               </form>
             </CardContent>
-            {/* <CardFooter className="flex flex-col gap-3">
-              <div className="flex w-full justify-center gap-2 items-center overflow-hidden my-3">
-                <Separator className="w-full" />
-                <p className="text-sm font-medium text-muted-foreground">Or</p>
-                <Separator className="w-full" />
-              </div>
-              <Button className="w-full" variant="secondary">
-                <Link className="mx-auto hover:opacity-50 duration-500 ease-linear " to="/distributor/login">
-                  Login as Distributor
-                </Link>
-              </Button>
-            </CardFooter> */}
           </Card>
         </ContentWrapper>
       </PageWrapper>
