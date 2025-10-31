@@ -1,5 +1,5 @@
 import { Link, useOutletContext, useParams } from "react-router-dom";
-import { useGetScheduleDistributors } from "@/_lib/@react-client-query/schedule.ts";
+import { useCheckCloseSchedule, useGetScheduleDistributors } from "@/_lib/@react-client-query/schedule.ts";
 import { useMemo, useState } from "react";
 import SimpleCard from "@/components/SimpleCard";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,9 @@ import { useGetDepartments } from "@/_lib/@react-client-query/department";
 import Dropdown from "@/components/Dropdown";
 import { distributorTypeOptions } from "@/types/user";
 import { useAuthContext } from "@/context/AuthContext";
+import DialogPopup from "@/components/DialogPopup";
+import { formatCurrency } from "@/utils";
+import InputField from "@/components/InputField";
 
 const ScheduleDistributorAndRemittances = () => {
   const { user } = useAuthContext();
@@ -59,10 +62,10 @@ const ScheduleDistributorAndRemittances = () => {
       <SimpleCard className="w-fit" label="Total Distributors" value={distributors.length} />
 
       <div className="flex flex-col gap-10">
-        <div className="flex justify-between">
+        <div className="flex flex-col gap-5">
           <div className="w-full flex  gap-2">
             <Input
-              className="w-full max-w-[500px]"
+              className="w-full "
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search Distributor by Name"
@@ -75,9 +78,18 @@ const ScheduleDistributorAndRemittances = () => {
             )}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-wrap justify-end gap-2 mt-5">
             {(user?.roles.includes("head") || show.showType !== "majorProduction") && (
               <>
+                <DialogPopup
+                  className="max-w-4xl max-h-[90%]"
+                  title="Distributor Balance Summary"
+                  description="View the remaining balances and payment statuses of all distributors for this schedule. This includes allocated tickets, sales, payments made to the CCA, and outstanding balances."
+                  triggerElement={<Button variant="secondary">View Distributor Balances</Button>}
+                >
+                  <AllocationSummary scheduleId={schedule.scheduleId} />
+                </DialogPopup>
+
                 <Button
                   onClick={() => {
                     const url = `/ticketInformation/${scheduleId}`;
@@ -147,6 +159,82 @@ const ScheduleDistributorAndRemittances = () => {
         />
       </div>
     </>
+  );
+};
+
+type AllocationSummaryProps = {
+  scheduleId: string;
+};
+
+const AllocationSummary = ({ scheduleId }: AllocationSummaryProps) => {
+  const { data, isLoading, isError } = useCheckCloseSchedule(scheduleId);
+
+  const [search, setSearch] = useState("");
+
+  const filtered = useMemo(() => {
+    if (!data?.withBalanceDue) return [];
+    return data?.withBalanceDue.filter((d) => d.name.toLowerCase().includes(search.toLowerCase()));
+  }, [search]);
+
+  if (isLoading) {
+    return <h1>Loadingg....</h1>;
+  }
+
+  if (isError || !data) {
+    return <h1>Erorr</h1>;
+  }
+
+  console.log(data);
+
+  return (
+    <div>
+      <div className="my-5">
+        <p className="font-bold">Summary</p>
+        <div>
+          <p>Total Distributors: {data.summary.totalDistributors}</p>
+          <p>Total Unpaid: {formatCurrency(data.summary.totalUnpaid)}</p>
+          <p>Distributors with Balance Due: {data.summary.withBalanceDue}</p>
+        </div>
+      </div>
+
+      {data.withBalanceDue.length > 0 && (
+        <div>
+          <InputField placeholder="Search By Name" className="my-5" onChange={(e) => setSearch(e.target.value)} value={search} />
+          <p className="text-sm mb-1 text-muted-foreground">Distributors with balance due: </p>
+          <PaginatedTable
+            itemsPerPage={10}
+            columns={[
+              {
+                key: "name",
+                header: "Distributor Name",
+                render: (dist) => dist.name,
+              },
+              {
+                key: "total",
+                header: "Total Tickets",
+                render: (dist) => dist.totalTickets,
+              },
+              {
+                key: "paid",
+                header: "Total Paid",
+                render: (dist) => formatCurrency(dist.totalPaid),
+              },
+              {
+                key: "unpaid",
+                header: "Balance Due",
+                render: (dist) => formatCurrency(dist.unpaidAmount),
+              },
+              {
+                key: "unpaidTickets",
+                header: "Unpaid Tickets",
+                render: (dist) => compressControlNumbers(dist.tickets.filter((t) => t.status !== "paidToCCA").map((t) => t.controlNumber)),
+              },
+            ]}
+            data={filtered}
+          />
+        </div>
+      )}
+    </div>
   );
 };
 

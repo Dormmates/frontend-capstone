@@ -2,11 +2,11 @@ import { Link, useParams } from "react-router-dom";
 import { useGetShow } from "@/_lib/@react-client-query/show.ts";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import {
+  useCheckCloseSchedule,
   useCloseSchedule,
   useCopySchedule,
   useDeleteSchedule,
   useGetShowSchedules,
-  useOpenSchedule,
   useReschedule,
 } from "@/_lib/@react-client-query/schedule.ts";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
@@ -34,15 +34,17 @@ import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
 import SalesReportDialog from "./SalesReportDialog";
 import { useQueryClient } from "@tanstack/react-query";
-import { CircleAlertIcon, CircleQuestionMarkIcon, Settings2Icon, Trash2Icon } from "lucide-react";
+import { CheckIcon, CircleAlertIcon, CircleQuestionMarkIcon, Settings2Icon, Trash2Icon, TriangleAlertIcon } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import FixedPrice from "@/components/FixedPrice";
 import SectionedPrice from "@/components/SectionedPrice";
+import DialogPopup from "@/components/DialogPopup";
+import { formatCurrency } from "@/utils";
+import { compressControlNumbers } from "@/utils/controlNumber";
+import { distributorTypeOptions } from "@/types/user";
 
 const ViewShow = () => {
   const queryClient = useQueryClient();
-  const closeSchedule = useCloseSchedule();
-  const openSchedule = useOpenSchedule();
   const deleteSchedule = useDeleteSchedule();
   const reschedule = useReschedule();
   const duplicate = useCopySchedule();
@@ -60,40 +62,6 @@ const ViewShow = () => {
   useEffect(() => {
     document.title = `${show?.title}`;
   }, [show]);
-
-  const handleCloseSchedule = (scheduleId: string) => {
-    toast.promise(
-      closeSchedule.mutateAsync(scheduleId).then(() => {
-        queryClient.setQueryData<Schedule[]>(["schedules", id], (oldData) => {
-          if (!oldData) return oldData;
-          return oldData.map((schedule) => (schedule.scheduleId === scheduleId ? { ...schedule, isOpen: false } : schedule));
-        });
-      }),
-      {
-        position: "top-center",
-        loading: "Closing schedule...",
-        success: "Schedule Closed ",
-        error: (err: any) => err.message || "Failed to close schedule",
-      }
-    );
-  };
-
-  const handleOpenSchedule = (scheduleId: string) => {
-    toast.promise(
-      openSchedule.mutateAsync(scheduleId).then(() => {
-        queryClient.setQueryData<Schedule[]>(["schedules", id], (oldData) => {
-          if (!oldData) return oldData;
-          return oldData.map((schedule) => (schedule.scheduleId === scheduleId ? { ...schedule, isOpen: true } : schedule));
-        });
-      }),
-      {
-        position: "top-center",
-        loading: "Opening schedule...",
-        success: "Schedule is now Open ",
-        error: (err: any) => err.message || "Failed to open schedule",
-      }
-    );
-  };
 
   const handleDeleteSchedule = (scheduleId: string) => {
     toast.promise(
@@ -198,11 +166,6 @@ const ViewShow = () => {
 
   return (
     <ContentWrapper>
-      {/* <Breadcrumbs
-        backHref={show?.showType == "majorProduction" ? "/majorShows" : "/shows"}
-        items={[{ name: "Show", href: show?.showType == "majorProduction" ? "/majorShows" : "/shows" }, { name: show?.title ?? "Show Not Found." }]}
-      /> */}
-
       <Breadcrumbs items={[{ name: "Show", href: "#" }, { name: show?.title ?? "Show Not Found." }]} />
 
       <div className="mt-10">
@@ -236,7 +199,7 @@ const ViewShow = () => {
                 <h1 className="font-semibold text-2xl ">Show Schedules</h1>
               </div>
               <div className="flex gap-2">
-                {show.showType === "majorProduction" && user?.roles.includes("head") && (
+                {(user?.roles.includes("head") || show.showType !== "majorProduction") && (
                   <>
                     <SalesReportDialog
                       showSchedules={showSchedules}
@@ -328,7 +291,7 @@ const ViewShow = () => {
                   render: (schedule) => (
                     <div className="flex gap-2 justify-end items-center ">
                       <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
-                        <Button>{show.showType === "majorProduction" && user?.roles.includes("head") ? "Manage Schedule" : "View Schedule"}</Button>
+                        <Button>{user?.roles.includes("head") || show.showType !== "majorProduction" ? "Manage Schedule" : "View Schedule"}</Button>
                       </Link>
 
                       {(user?.roles.includes("head") || show.showType !== "majorProduction") && (
@@ -342,20 +305,18 @@ const ViewShow = () => {
                             <DropdownMenuContent>
                               <DropdownMenuLabel>Select Options</DropdownMenuLabel>
                               <DropdownMenuGroup>
-                                <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
+                                {schedule.isOpen && <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>}
                                 <DropdownMenuItem onClick={() => setCopySchedule(schedule)}>Copy Schedule</DropdownMenuItem>
-                                {user?.roles.includes("head") && (
+                                {user?.roles.includes("head") && schedule.isOpen && (
                                   <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                    <AlertModal
-                                      confirmation={schedule.isOpen ? "Close" : "Open"}
-                                      actionText="Confirm"
-                                      onConfirm={() =>
-                                        schedule.isOpen ? handleCloseSchedule(schedule.scheduleId) : handleOpenSchedule(schedule.scheduleId)
-                                      }
-                                      title={schedule.isOpen ? "Close Schedule" : "Open Schedule"}
+                                    <DialogPopup
+                                      className="max-w-5xl"
                                       description={schedule.isOpen ? "This action will close this schedule." : "This action will open this schedule."}
-                                      trigger={<p>{schedule.isOpen ? "Close Schedule" : "Open Schedule"}</p>}
-                                    />
+                                      title={schedule.isOpen ? "Close Schedule" : "Open Schedule"}
+                                      triggerElement={<p>{schedule.isOpen ? "Close Schedule" : "Open Schedule"}</p>}
+                                    >
+                                      <CloseSchedule scheduleId={schedule.scheduleId} />
+                                    </DialogPopup>
                                   </DropdownMenuItem>
                                 )}
                               </DropdownMenuGroup>
@@ -480,6 +441,143 @@ const ViewShow = () => {
         </Modal>
       )}
     </ContentWrapper>
+  );
+};
+
+type CloseScheduleProps = {
+  scheduleId: string;
+};
+
+const CloseSchedule = ({ scheduleId }: CloseScheduleProps) => {
+  const { data, isLoading, isError } = useCheckCloseSchedule(scheduleId);
+  const closeSchedule = useCloseSchedule();
+  const queryClient = useQueryClient();
+
+  if (isLoading) {
+    return <h1>Loadingg....</h1>;
+  }
+
+  if (isError || !data) {
+    return <h1>Erorr</h1>;
+  }
+
+  const handleCloseSchedule = () => {
+    toast.promise(closeSchedule.mutateAsync(scheduleId)),
+      {
+        position: "top-center",
+        loading: "Closing schedule...",
+        success: () => {
+          queryClient.setQueryData<Schedule[]>(["schedules", scheduleId], (oldData) => {
+            if (!oldData) return oldData;
+            return oldData.map((schedule) => (schedule.scheduleId === scheduleId ? { ...schedule, isOpen: false } : schedule));
+          });
+          return "Schedule Closed ";
+        },
+        error: (err: any) => err.message || "Failed to close schedule",
+      };
+  };
+
+  return (
+    <div>
+      <div className={`border-2 rounded-md p-4 ${data.canBeClosed ? "bg-green/10 border-green" : "bg-red/20 border-red"}`}>
+        <div className="flex items-start gap-3">
+          {data.canBeClosed ? (
+            <CheckIcon className="w-6 h-6 mt-1 flex-shrink-0 text-green" />
+          ) : (
+            <TriangleAlertIcon className="w-6 h-6 mt-1 flex-shrink-0 text-red" />
+          )}
+
+          <div className="flex flex-col gap-1">
+            <p className={`font-bold ${data.canBeClosed ? "text-green" : "text-red"}`}>
+              {data.canBeClosed ? "Schedule can be closed." : "Schedule cannot be closed."}
+            </p>
+            <p className={`text-sm font-medium leading-snug ${data.canBeClosed ? "text-green" : "text-red"}`}>
+              {data.canBeClosed
+                ? "All distributors have settled their balances. You may now close this schedule."
+                : "Some distributors still have unpaid balances. Please review and settle before closing."}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="my-5">
+        <p className="font-bold">Summary</p>
+        <div>
+          <p>Total Distributors: {data.summary.totalDistributors}</p>
+          <p>Total Unpaid: {formatCurrency(data.summary.totalUnpaid)}</p>
+          <p>Distributors with Balance Due: {data.summary.withBalanceDue}</p>
+          <p>
+            Unsold/Unallocated tickets: {data.summary.notAllocatedTickets.length} (
+            {compressControlNumbers(data.summary.notAllocatedTickets.map((t) => t.controlNumber))})
+          </p>
+        </div>
+      </div>
+
+      {data.withBalanceDue.length > 0 && (
+        <div>
+          <PaginatedTable
+            columns={[
+              {
+                key: "name",
+                header: "Distributor Name",
+                render: (dist) => dist.name,
+              },
+              {
+                key: "department",
+                header: "Type",
+                render: (dist) => distributorTypeOptions.find((t) => t.value === dist.distributorType)?.name,
+              },
+              {
+                key: "total",
+                header: "Total Tickets",
+                render: (dist) => dist.totalTickets,
+              },
+              {
+                key: "paid",
+                header: "Total Paid",
+                render: (dist) => formatCurrency(dist.totalPaid),
+              },
+              {
+                key: "unpaid",
+                header: "Balance Due",
+                render: (dist) => formatCurrency(dist.unpaidAmount),
+              },
+              {
+                key: "unpaidTickets",
+                header: "Unpaid Tickets",
+                render: (dist) => compressControlNumbers(dist.tickets.filter((t) => t.status !== "paidToCCA").map((t) => t.controlNumber)),
+              },
+            ]}
+            data={data.withBalanceDue}
+          />
+        </div>
+      )}
+
+      {data.canBeClosed && (
+        <>
+          <div className="mt-4 border border-yellow bg-yellow/20 rounded-md p-4">
+            <div className="flex flex-col gap-2">
+              <p className="text-yellow-800 font-bold text-sm">Important Reminder</p>
+              <p className="text-yellow-700 text-sm">
+                Once you close this schedule, all actions related to its tickets; including
+                <span className="font-semibold">refunds, reallocations, and further edits</span> will be permanently disabled.
+              </p>
+              <p className="text-yellow-700 text-sm">
+                Please ensure that all sales have been properly <span className="font-semibold">remitted or turned over to the finance office</span>{" "}
+                before proceeding.
+              </p>
+              <p className="text-yellow-700 text-sm font-semibold">
+                This schedule <span className="text-red-700">cannot be reopened</span> once it has been closed.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-3 flex justify-end">
+            <Button onClick={handleCloseSchedule}>Close Schedule</Button>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 

@@ -25,7 +25,7 @@ const SalesByDistributor = ({ report }: Props) => {
           <TableHead className="border border-gray-400 font-bold text-black">Distributor Name</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Distributor Type</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Tickets Sold</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black">Total Remitted</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-black">Total Sales</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black">Commission</TableHead>
         </TableRow>
       </TableHeader>

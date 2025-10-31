@@ -34,11 +34,11 @@ const DistributorTicketsAllocated = () => {
       const matchesSale =
         !filter.saleStatus ||
         filter.saleStatus == "all" ||
-        (filter.saleStatus === "sold" ? ticket.isRemitted || ticket.status === "sold" : !ticket.isRemitted);
+        (filter.saleStatus === "sold" ? ticket.isPaid || ticket.status === "sold" : !ticket.isPaid);
       const matchesVerification =
         !filter.verificationStatus ||
         filter.verificationStatus == "all" ||
-        (filter.verificationStatus === "verified" ? ticket.isRemitted : !ticket.isRemitted);
+        (filter.verificationStatus === "verified" ? ticket.isPaid : !ticket.isPaid);
 
       return matchesSearch && matchesSale && matchesVerification;
     });
@@ -86,7 +86,7 @@ const DistributorTicketsAllocated = () => {
               key: "status",
               header: "Sale Status from Distributor",
               render: (ticket) =>
-                ticket.status == "sold" || ticket.isRemitted ? (
+                ticket.status == "sold" || ticket.isPaid ? (
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-green"></span>Sold
                   </div>
@@ -100,9 +100,9 @@ const DistributorTicketsAllocated = () => {
               key: "verification",
               header: "Verification Status",
               render: (ticket) =>
-                ticket.isRemitted && ticket.status !== "sold" ? (
+                ticket.isPaid && ticket.status !== "sold" ? (
                   <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-green"></span>Remitted
+                    <span className="w-3 h-3 rounded-full bg-green"></span>Paid to CCA
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">

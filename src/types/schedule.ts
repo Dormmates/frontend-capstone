@@ -63,8 +63,8 @@ interface TicketBreakdown {
   remaining: number;
   notAllocated: number;
   allocated: number;
-  unremitted: number;
-  remitted: number;
+  unpaid: number;
+  paid: number;
 }
 
 interface DistributorSummary {
@@ -75,10 +75,10 @@ interface DistributorSummary {
   totalAllocatedTickets: number;
   soldTickets: number;
   unsoldTickets: number;
-  remittedTickets: number;
-  pendingRemittance: number;
+  paidTickets: number;
+  unPaidTickets: number;
   expected: number;
-  remitted: number;
+  paid: number;
   balanceDue: number;
 }
 
@@ -94,25 +94,13 @@ export interface ScheduleSummary {
       allocated: number;
       sold: number;
       unsold: number;
-      remitted: number;
+      paidToCCA: number;
     };
   };
   salesSummary: {
     expected: number;
-    current: number;
-    remaining: number;
-    netAfterCommission: number;
-  };
-  schedulePrices: {
-    ticketPrice?: number;
-    ticketPricesBySection?: {
-      orchestraMiddle: number;
-      orchestraLeft: number;
-      orchestraRight: number;
-      balconyMiddle: number;
-      balconyRight: number;
-      balconyLeft: number;
-    };
+    cashOnHand: number;
+    remittedToFinance: number;
   };
 }
 

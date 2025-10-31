@@ -30,7 +30,7 @@ const links = [
     path: "/allocation/history",
   },
   {
-    name: "Remittance Logs",
+    name: "Payment Logs",
     path: "/remittance/history",
   },
 ];
@@ -63,9 +63,9 @@ const ViewDistributorLayout = () => {
       };
 
     const totalAllocatedTickets = data.length;
-    const soldTickets = data.filter((ticket) => ticket.status == "sold" || ticket.isRemitted).length;
+    const soldTickets = data.filter((ticket) => ticket.status == "sold" || ticket.isPaid || ticket.status === "remitted").length;
     const unsoldTickets = totalAllocatedTickets - soldTickets;
-    const remittedTickets = data.filter((ticket) => ticket.isRemitted).length;
+    const remittedTickets = data.filter((ticket) => ticket.isPaid || ticket.status === "remitted").length;
 
     const pendingRemittance = totalAllocatedTickets - remittedTickets;
     const expected = data.reduce<number>(
@@ -73,7 +73,7 @@ const ViewDistributorLayout = () => {
       0
     );
     const remitted = data
-      .filter((ticket) => ticket.isRemitted)
+      .filter((ticket) => ticket.isPaid)
       .reduce<number>((acc, ticket) => acc + (Number(ticket.ticketPrice) - (schedule.ticketPricing ? schedule.ticketPricing.commissionFee : 0)), 0);
     const balanceDue = expected - remitted;
 
@@ -91,10 +91,10 @@ const ViewDistributorLayout = () => {
 
   const remittanceChartConfig = {
     verified: {
-      label: "Verified Remittance",
+      label: "Paid To CCA",
     },
     pending: {
-      label: "Pending Remittance",
+      label: "Pending for payment",
     },
   } satisfies ChartConfig;
 
@@ -134,10 +134,10 @@ const ViewDistributorLayout = () => {
           <div className="flex gap-3 items-center">
             <>
               <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsRemitTicket(true)} className="bg-primary">
-                Remit Tickets
+                Receive Distributor Payment
               </Button>
               <Button variant="secondary" disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnRemitTicket(true)}>
-                Unremit Tickets
+                Revert Distributor Payment
               </Button>
               <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsUnallocateTicket(true)} variant="outline">
                 Unallocate Ticket
@@ -150,11 +150,11 @@ const ViewDistributorLayout = () => {
           <Card>
             <CardHeader>
               <CardTitle>Sale Progress</CardTitle>
-              <CardDescription>Shows the amount of expected sale and that have been remitted</CardDescription>
+              <CardDescription>Shows the amount of expected sale and that have been paid to CCA</CardDescription>
               <CardContent className="p-0">
                 <div className="flex w-fit items-center justify-between gap-2">
                   <p>Expected: {formatCurrency(summary.expected)}</p>
-                  <p>Remitted: {formatCurrency(summary.remitted)}</p>
+                  <p>Paid: {formatCurrency(summary.remitted)}</p>
                 </div>
                 <Progress value={summary.expected ? (summary.remitted / summary.expected) * 100 : 0} className="h-4 rounded-full w-full mt-2" />
               </CardContent>
@@ -203,9 +203,9 @@ const ViewDistributorLayout = () => {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Remittance Overview</CardTitle>
+                <CardTitle>Payment Overview</CardTitle>
                 <CardDescription className="max-w-md">
-                  Shows the number of tickets that have been remitted versus those still pending for this distributor
+                  Shows the number of tickets that have been paid versus those still pending for this distributor
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -261,9 +261,7 @@ const ViewDistributorLayout = () => {
           onClose={() => setIsUnallocateTicket(false)}
         >
           <UnallocateTicket
-            controlNumbersAllocated={data
-              .filter((ticket) => !ticket.isRemitted && ticket.status === "allocated")
-              .map((ticket) => ticket.controlNumber)}
+            controlNumbersAllocated={data.filter((ticket) => !ticket.isPaid && ticket.status === "allocated").map((ticket) => ticket.controlNumber)}
             close={() => setIsUnallocateTicket(false)}
             disabled={unAllocateTicket.isPending}
             onSubmit={(controlNumbers) => {
@@ -299,7 +297,7 @@ const ViewDistributorLayout = () => {
       {isRemitTicket && (
         <Modal
           className="max-w-5xl max-h-[98%] overflow-auto"
-          title="Remit Ticket Sales"
+          title="Receive Distributor Payment"
           isOpen={isRemitTicket}
           onClose={() => setIsRemitTicket(false)}
         >
@@ -310,7 +308,7 @@ const ViewDistributorLayout = () => {
       {isUnRemitTicket && (
         <Modal
           className="max-w-5xl max-h-[98%] overflow-auto"
-          title="Unremit Ticket Sales"
+          title="Revert Distributor Payment"
           isOpen={isUnRemitTicket}
           onClose={() => setIsUnRemitTicket(false)}
         >

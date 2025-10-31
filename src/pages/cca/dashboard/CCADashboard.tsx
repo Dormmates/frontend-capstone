@@ -1,14 +1,11 @@
 import { ContentWrapper } from "@/components/layout/Wrapper";
 import { useAuthContext } from "@/context/AuthContext";
-import TopShowsByTicketsSold from "./TopShowsByTicketsSold";
 import TopShowsByTotalRevenue from "./TopShowsByTotalRevenue";
 import TopShowsByGenre from "./TopShowsByGenre";
 import TopDistributors from "./TopDistributors";
 import { useEffect, useMemo, useState } from "react";
 import { useGetDepartments } from "@/_lib/@react-client-query/department";
 import Dropdown from "@/components/Dropdown";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KPISummary from "./KPISummary";
 import UpcomingShows from "./UpcomingShows";
 import noData from "@/assets/images/no-data.png";
@@ -76,31 +73,14 @@ const CCADashboard = () => {
         </section>
 
         <UpcomingShows isHead={isHead} selectedDepartment={selectedDepartment} />
+        <div className="flex flex-col lg:flex-row w-full gap-5">
+          <div className="w-full lg:w-1/2">
+            <TopDistributors isHead={isHead} selectedDepartment={selectedDepartment} />
+          </div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
-          <TopDistributors isHead={isHead} selectedDepartment={selectedDepartment} />
-
-          <Card className="h-fit">
-            <CardHeader>
-              <CardTitle>
-                <p>Top Shows </p>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="tickets">
-                <TabsList>
-                  <TabsTrigger value="tickets">By Sold Tickets</TabsTrigger>
-                  <TabsTrigger value="revenue">By Total Revenue</TabsTrigger>
-                </TabsList>
-                <TabsContent value="tickets">
-                  <TopShowsByTicketsSold isHead={isHead} selectedDepartment={selectedDepartment} />
-                </TabsContent>
-                <TabsContent value="revenue">
-                  <TopShowsByTotalRevenue isHead={isHead} selectedDepartment={selectedDepartment} />
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
+          <div className="w-full lg:w-1/2">
+            <TopShowsByTotalRevenue isHead={isHead} selectedDepartment={selectedDepartment} />
+          </div>
         </div>
 
         <TopShowsByGenre isHead={isHead} selectedDepartment={selectedDepartment} />

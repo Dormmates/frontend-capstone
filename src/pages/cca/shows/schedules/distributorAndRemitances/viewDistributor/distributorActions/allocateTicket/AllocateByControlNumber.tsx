@@ -49,8 +49,9 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
   const [selectedType, setSelectedType] = useState("cca");
   const [selectedDepartment, setSelectedDepartment] = useState("all");
 
+  const [haveAllocations, setHaveAllocations] = useState(false);
   const [selectedDistributors, setSelectedDistributors] = useState<ScheduleDistributorForAllocation[]>([]);
-  const [ticketsCount, setTicketsCount] = useState(0);
+  const [ticketsCount, setTicketsCount] = useState<number | undefined>();
 
   const departmentOptions = useMemo(() => {
     if (!departments) return [];
@@ -83,34 +84,37 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
   }, [searchedDistributors]);
 
   const validate = () => {
-    let isValid = true;
-    const newErrors: typeof error = {};
-
-    if (ticketsCount <= 0) {
-      toast.error("Tickets count must be greater than 0", { position: "top-center" });
-      newErrors.ticketsCount = "Value must be greater than 0";
-      isValid = false;
-    }
-
-    const totalAvailable = unAllocatedTickets.total;
-
-    if (ticketsCount * selectedDistributors.length > totalAvailable) {
-      toast.error("Not enough unallocated tickets to distribute", {
-        position: "top-center",
-      });
-      newErrors.ticketsCount = "Exceeds available unallocated tickets";
-      isValid = false;
-    }
-
-    if (isValid) {
+    if (selectedDistributors.some((s) => s.tickets.length > 0)) {
+      setHaveAllocations(true);
+    } else {
       setIsAllocationSummary(true);
     }
+  };
 
-    setError(newErrors);
-    return isValid;
+  const validateTicketsCount = (count: number | undefined, selectedCount: number) => {
+    const totalNeeded = (count ?? 0) * selectedCount;
+    const totalAvailable = unAllocatedTickets.total;
+
+    if (count === undefined) {
+      setError({});
+    } else if (count <= 0) {
+      setError({ ticketsCount: "Value must be greater than 0" });
+    } else if (totalNeeded > totalAvailable) {
+      setError({
+        ticketsCount: `Exceeds available unallocated tickets (${totalAvailable} remaining)`,
+      });
+    } else {
+      setError({});
+    }
+  };
+
+  const sortDistributors = (list: ScheduleDistributorForAllocation[]) => {
+    return [...list].sort((a, b) => a.lastName.localeCompare(b.lastName));
   };
 
   const submit = () => {
+    if (!ticketsCount) return;
+
     const payload = {
       allocations: selectedDistributors.map((d) => ({ distributorId: d.userId, ticketCount: ticketsCount, name: d.lastName + ", " + d.firstName })),
       scheduleId: scheduleId as string,
@@ -175,25 +179,43 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
           <p className="font-semibold mb-2">Selected Distributors: {selectedDistributors.length}</p>
           {selectedDistributors.length !== 0 && (
             <div className="mb-5">
-              <p className="font-semibold mb-2">Total Tickets to be Allocated: {selectedDistributors.length * ticketsCount}</p>
               <p className="text-sm text-muted-foreground mb-4">
                 Specify how many tickets each distributor will receive. Control numbers will be automatically assigned.
               </p>
-              <div className="flex items-end gap-5">
-                <InputField
-                  error={error.ticketsCount}
-                  value={ticketsCount}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (/^\d*$/.test(value)) {
-                      setTicketsCount(Number(value));
-                    }
+              <div className="flex flex-col sm:flex-row sm:items-end gap-5">
+                <div className="flex-1">
+                  <InputField
+                    error={error.ticketsCount}
+                    value={ticketsCount ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d*$/.test(value)) {
+                        const numericValue = value === "" ? undefined : Number(value);
+                        setTicketsCount(numericValue);
+                        validateTicketsCount(numericValue, selectedDistributors.length);
+                      }
+                    }}
+                    label="Enter ticket count"
+                    placeholder="e.g. 5"
+                  />
 
-                    setError((prev) => ({ ...prev, ticketsCount: "" }));
-                  }}
-                  label="Enter ticket count"
-                />
-                <Button onClick={validate}>Allocate Tickets</Button>
+                  {selectedDistributors.length > 0 && (ticketsCount ?? 0) > 0 && (
+                    <p className="text-sm mt-1 text-muted-foreground">
+                      Total to allocate:{" "}
+                      <span
+                        className={`font-semibold ${
+                          (ticketsCount ?? 0) * selectedDistributors.length > unAllocatedTickets.total ? "text-red-500" : "text-green-600"
+                        }`}
+                      >
+                        {(ticketsCount ?? 0) * selectedDistributors.length} / {unAllocatedTickets.total}
+                      </span>
+                    </p>
+                  )}
+                </div>
+
+                <Button onClick={validate} disabled={!ticketsCount || !!error.ticketsCount || selectedDistributors.length === 0}>
+                  Allocate Tickets
+                </Button>
               </div>
             </div>
           )}
@@ -210,9 +232,13 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
                       onCheckedChange={(checked) => {
                         if (checked) {
                           const newSelections = paginatedItems.filter((dist) => !selectedDistributors.some((s) => s.userId === dist.userId));
-                          setSelectedDistributors((prev) => [...prev, ...newSelections]);
+                          const updated = sortDistributors([...selectedDistributors, ...newSelections]);
+                          setSelectedDistributors(updated);
+                          validateTicketsCount(ticketsCount, updated.length);
                         } else {
-                          setSelectedDistributors((prev) => prev.filter((s) => !paginatedItems.some((dist) => dist.userId === s.userId)));
+                          const updated = selectedDistributors.filter((s) => !paginatedItems.some((dist) => dist.userId === s.userId));
+                          setSelectedDistributors(updated);
+                          validateTicketsCount(ticketsCount, updated.length);
                         }
                       }}
                     />
@@ -242,11 +268,14 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
                           <Checkbox
                             checked={isSelected}
                             onCheckedChange={(checked) => {
+                              let updated;
                               if (checked) {
-                                setSelectedDistributors((prev) => [...prev, dist]);
+                                updated = sortDistributors([...selectedDistributors, dist]);
                               } else {
-                                setSelectedDistributors((prev) => prev.filter((d) => d.userId !== dist.userId));
+                                updated = selectedDistributors.filter((d) => d.userId !== dist.userId);
                               }
+                              setSelectedDistributors(updated);
+                              validateTicketsCount(ticketsCount, updated.length);
                             }}
                           />
                         </TableCell>
@@ -280,6 +309,64 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
           />
         </div>
       </div>
+      {haveAllocations && (
+        <Modal
+          title="Confirm Additional Allocation"
+          description="Some distributors already have allocated tickets."
+          isOpen={haveAllocations}
+          onClose={() => setHaveAllocations(false)}
+          className="max-w-2xl"
+        >
+          <div className="flex flex-col gap-4">
+            <div className="bg-amber-50 border-l-4 border-amber-500 text-amber-800 p-4 rounded-lg">
+              <p className="font-semibold">⚠️ Please confirm:</p>
+              <p>The following distributors already have ticket allocations. Are you sure you want to assign them more tickets?</p>
+            </div>
+
+            <PaginatedTable
+              data={selectedDistributors.filter((d) => d.tickets.length > 0)}
+              itemsPerPage={5}
+              columns={[
+                {
+                  key: "name",
+                  header: "Distributor Name",
+                  render: (d) => `${d.lastName}, ${d.firstName}`,
+                },
+                {
+                  key: "department",
+                  header: "Department",
+                  render: (d) => d.department.name,
+                },
+                {
+                  key: "currentTickets",
+                  header: "Currently Allocated Tickets",
+                  render: (d) => d.tickets.length,
+                },
+                {
+                  key: "controlNumbers",
+                  header: "Control Numbers",
+                  render: (d) => compressControlNumbers(d.tickets.map((d) => d.controlNumber)),
+                },
+              ]}
+            />
+
+            <div className="flex justify-end gap-3 mt-5">
+              <Button variant="outline" onClick={() => setHaveAllocations(false)}>
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  setHaveAllocations(false);
+                  setIsAllocationSummary(true);
+                }}
+              >
+                Proceed Anyway
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {isAllocationSummary && (
         <Modal
@@ -287,7 +374,10 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
           title="Allocation Summary"
           description="Please review the allocation summary first"
           isOpen={isAllocationSummary}
-          onClose={() => setIsAllocationSummary(false)}
+          onClose={() => {
+            if (allocateTicket.isPending) return;
+            setIsAllocationSummary(false);
+          }}
         >
           <PaginatedTable
             data={selectedDistributors}

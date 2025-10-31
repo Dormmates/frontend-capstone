@@ -32,7 +32,7 @@ const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) =
               <p>Top Distributors</p>
             </div>
           </CardTitle>
-          <CardDescription>Shows the top-performing distributors calculated from cumulative remitted ticket sales.</CardDescription>
+          <CardDescription>Shows the top-performing distributors calculated from cumulative ticket sales.</CardDescription>
         </CardHeader>
         <CardContent>
           <Skeleton className="h-64 w-full rounded-xl bg-muted" />

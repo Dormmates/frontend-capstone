@@ -1,4 +1,4 @@
-export type SeatStatus = "reserved" | "vip" | "available" | "sold" | "complimentarySeat";
+export type SeatStatus = "reserved" | "paidToCCA" | "available" | "sold" | "complimentarySeat";
 export type SeatSection = "orchestraLeft" | "orchestraRight" | "orchestraMiddle" | "balconyLeft" | "balconyRight" | "balconyMiddle";
 
 export interface SeatMetaData {

@@ -41,13 +41,13 @@ const DistributorCompleteRemittanceHistory = () => {
             key: "type",
             header: "Remittance Type",
             render: (log) =>
-              log.actionType === "remit" ? (
+              log.actionType === "payToCCA" ? (
                 <p className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green rounded-full"></span>Remit
+                  <span className="w-2 h-2 bg-green rounded-full"></span>Pay to CCA
                 </p>
               ) : (
                 <p className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-red rounded-full"></span>Unremit
+                  <span className="w-2 h-2 bg-red rounded-full"></span>Revert Payment
                 </p>
               ),
           },

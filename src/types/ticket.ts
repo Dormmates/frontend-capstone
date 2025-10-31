@@ -1,7 +1,7 @@
 import type { SeatingConfiguration } from "./schedule";
 import type { SeatSection } from "./seat";
 
-export type TicketStatuses = "sold" | "lost" | "not_allocated" | "allocated";
+export type TicketStatuses = "sold" | "lost" | "not_allocated" | "allocated" | "remitted" | "paidToCCA";
 type TicketSection = "orchestra" | "balcony";
 
 export interface Ticket {
@@ -17,21 +17,10 @@ export interface Ticket {
   ticketId: string;
   seatNumber: string | null;
   distributorId: string | null;
-  isRemitted: boolean;
   trainerSold: boolean;
   customerName: string | null;
   customerEmail: string | null;
-  ticketTransferMetaData: {
-    oldControlNumber: number;
-    oldShowId: string;
-    oldShowTitle: string;
-    oldScheduleId: string;
-    oldScheduleDate: string;
-    newShowId: string;
-    newShowTitle: string;
-    newScheduleId: string;
-    newScheduleDate: string;
-  } | null;
+  isPaid: boolean;
 }
 
 export interface AllocatedTicketToDistributor {
@@ -42,8 +31,8 @@ export interface AllocatedTicketToDistributor {
   ticketSection: string | null;
   seatSection: SeatSection | null;
   controlNumber: number;
-  isRemitted: boolean;
   dateAllocated: Date;
+  isPaid: boolean;
   allocatedBy: {
     userId: string;
     firstName: string;
@@ -81,7 +70,7 @@ export interface AllocationHistory {
 export interface RemittanceHistory {
   showId: string;
   scheduleId: string;
-  actionType: "remit" | "unremit";
+  actionType: "payToCCA" | "unPayToCCA";
   remittanceId: string;
   receivedBy: string;
   dateRemitted: Date;
@@ -119,9 +108,9 @@ export interface DistributorScheduleTickets {
     controlNumber: number;
     seatNumber: string | null;
     ticketSection: TicketSection;
-    isRemitted: boolean;
     dateAllocated: Date;
     allocatedBy: string;
+    isPaid: boolean;
   }[];
 }
 

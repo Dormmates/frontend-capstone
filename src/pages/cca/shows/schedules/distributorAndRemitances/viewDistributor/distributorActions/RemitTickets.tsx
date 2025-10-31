@@ -43,7 +43,10 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
 
   const systemSold = useMemo(() => compressControlNumbers(distributorTickets.soldTickets.map((t) => t.controlNumber)), [distributorTickets]);
   const systemUnSold = useMemo(() => compressControlNumbers(distributorTickets.unsoldTickets.map((t) => t.controlNumber)), [distributorTickets]);
-  const avaialbleToBeRemitted = useMemo(() => [...parseControlNumbers(systemSold), ...parseControlNumbers(systemUnSold)], [systemSold, systemUnSold]);
+  const avaialbleToBeRemitted = useMemo(
+    () => [...parseControlNumbers(systemSold), ...parseControlNumbers(systemUnSold)].sort((a, b) => a - b),
+    [systemSold, systemUnSold]
+  );
 
   const [form] = useState<FormProps>({
     sold: systemSold,
@@ -63,73 +66,14 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
     const newErrors: typeof error = {};
     let isValid = true;
 
-    // let soldList: number[] = [];
-    // let lostList: number[] = [];
-    // let discountedList: number[] = [];
-
-    // try {
-    //   soldList = parseControlNumbers(form.sold);
-    // } catch (err: any) {
-    //   newErrors.sold = err.message;
-    //   isValid = false;
-    // }
-
-    // try {
-    //   lostList = parseControlNumbers(form.lost || "");
-    // } catch (err: any) {
-    //   newErrors.lost = err.message;
-    //   isValid = false;
-    // }
-
-    // try {
-    //   discountedList = parseControlNumbers(form.discounted || "");
-    // } catch (err: any) {
-    //   newErrors.discounted = err.message;
-    //   isValid = false;
-    // }
-
     if (selectedControlNumbers.length == 0) {
       toast.error(`Must atleast have one sold`, { position: "top-center" });
       isValid = false;
     }
 
-    // for (const num of soldList) {
-    //   if (!avaialbleToBeRemitted.includes(num)) {
-    //     newErrors.sold = `Control number ${num} is not available to be remitted`;
-    //     isValid = false;
-    //     break;
-    //   }
-    // }
-
-    // for (const num of lostList) {
-    //   if (!avaialbleToBeRemitted.includes(num)) {
-    //     newErrors.lost = `Control number ${num} is not available to be remitted`;
-    //     isValid = false;
-    //     break;
-    //   }
-    // }
-
-    // // Lost cannot overlap with sold or unsold
-    // const overlapLostSold = lostList.filter((num) => soldList.includes(num));
-
-    // if (overlapLostSold.length > 0) {
-    //   newErrors.lost = `Control number(s) ${overlapLostSold.join(", ")} cannot be in both lost and sold`;
-    //   isValid = false;
-    // }
-
-    // // Discounted must be in sold
-    // for (const num of discountedList) {
-    //   if (!soldList.includes(num)) {
-    //     newErrors.discounted = `Discounted ticket ${num} must also be in sold tickets`;
-    //     isValid = false;
-    //     break;
-    //   }
-    // }
-
     setErrors(newErrors);
 
     if (isValid) {
-      // setParsed({ soldList, lostList, discountedList });
       setShowSummary(true);
     }
   };
@@ -154,16 +98,16 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
 
     toast.promise(remit.mutateAsync(payload), {
       position: "top-center",
-      loading: "Processing remittance...",
+      loading: "Processing transaction...",
       success: () => {
         queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", schedule.scheduleId], exact: true });
         queryClient.invalidateQueries({ queryKey: ["schedule", "allocated", schedule.scheduleId, distributorId], exact: true });
         queryClient.invalidateQueries({ queryKey: ["schedule", "remittanceHistory", schedule.scheduleId, distributorId], exact: true });
         setShowSummary(false);
         closeRemit();
-        return "Tickets remitted";
+        return "Transaction Completed";
       },
-      error: (err: any) => err.message || "Failed to remit tickets",
+      error: (err: any) => err.message || "Failed to complete the transaction, please try again later",
     });
   };
 
@@ -196,7 +140,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
                 <p className="font-bold">Note: </p>
                 <p>
                   Some tickets have already been marked as <span className="font-medium">sold</span> by the distributor. You may review and make
-                  corrections before submitting this remittance.
+                  corrections before submitting this transaction.
                 </p>
               </div>
               <Button
@@ -220,7 +164,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
           </div>
 
           <Button disabled={remit.isPending} onClick={validate} className=" self-end mt-5">
-            Remit Tickets
+            Receive Payment
           </Button>
         </>
       )}
@@ -229,7 +173,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
         <Dialog open={showSummary} onOpenChange={() => setShowSummary(false)}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Remittance Summary</DialogTitle>
+              <DialogTitle>Distributor Payment Summary</DialogTitle>
               <DialogDescription>Please review the summary before proceding</DialogDescription>
             </DialogHeader>
             <RemittanceSummary

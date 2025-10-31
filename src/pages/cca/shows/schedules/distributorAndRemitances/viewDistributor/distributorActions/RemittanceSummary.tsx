@@ -54,7 +54,7 @@ const RemittanceSummary = ({
       <LongCard className="w-full" label="Ticket Summary">
         <LongCardItem label="Sold Tickets" value={`${soldTickets.length} ticket(s) `} />
         <LongCardItem label="Lost Tickets" value={`${lostTickets.length} ticket(s)`} />
-        <LongCardItem label="Discounted Tickets" value={`${discountedTickets.length} ticket(s)`} />
+        {/* <LongCardItem label="Discounted Tickets" value={`${discountedTickets.length} ticket(s)`} /> */}
       </LongCard>
 
       <div className="mt-4 p-3 bg-muted border border-lightGrey rounded-md">
@@ -98,7 +98,7 @@ const RemittanceSummary = ({
         </div>
         <Separator className="my-2" />
         <div className="flex items-center justify-between">
-          <p>Expected Amount to Remit: </p>
+          <p>Amount: </p>
           <p className="text-lg font-medium">{formatCurrency(expectedRemit)}</p>
         </div>
       </div>

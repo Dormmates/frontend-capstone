@@ -32,27 +32,27 @@ const DistributorRemittanceHistory = () => {
         columns={[
           {
             key: "total",
-            header: "Total Tickets Remitted",
+            header: "Total Tickets",
             render: (log) => log.tickets.length,
           },
           {
             key: "date",
-            header: "Date Remitted",
+            header: "Date",
             render: (log) => formatToReadableDate(log.dateRemitted + ""),
           },
           {
             key: "time",
-            header: "Time Remitted",
+            header: "Time",
             render: (log) => formatToReadableTime(log.dateRemitted + ""),
           },
           {
             key: "to",
-            header: "Remitted To",
+            header: "Trainer",
             render: (log) => log.receivedBy,
           },
           {
             key: "amount",
-            header: "Amount Remitted",
+            header: "Amount",
             render: (log) =>
               formatCurrency(
                 log.tickets.reduce(
@@ -63,15 +63,15 @@ const DistributorRemittanceHistory = () => {
           },
           {
             key: "type",
-            header: "Remittance Type",
+            header: "Payment Type",
             render: (log) =>
-              log.actionType === "remit" ? (
+              log.actionType === "payToCCA" ? (
                 <p className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green rounded-full"></span>Remit
+                  <span className="w-2 h-2 bg-green rounded-full"></span>Receive Payment
                 </p>
               ) : (
                 <p className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-red rounded-full"></span>Unremit
+                  <span className="w-2 h-2 bg-red rounded-full"></span>Revert Distributor Payment
                 </p>
               ),
           },
@@ -91,7 +91,7 @@ const DistributorRemittanceHistory = () => {
         <Dialog open={!!selectedHistory} onOpenChange={() => setSelectedHistory(null)}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Remittance Summary</DialogTitle>
+              <DialogTitle>Transaction Summary</DialogTitle>
             </DialogHeader>
             <RemittanceSummary
               seatingType={schedule.seatingType}

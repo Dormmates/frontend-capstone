@@ -325,7 +325,7 @@ const ViewShowSchedules = ({
 
     return seatMap.reduce(
       (summary, seat) => {
-        if (seat.status == "vip" || seat.isComplimentary || seat.status === "reserved" || seat.ticketControlNumber == 0) summary.available++;
+        if (seat.isComplimentary || seat.status === "reserved" || seat.ticketControlNumber == 0) summary.available++;
         if (seat.status === "available" && !seat.isComplimentary && seat.ticketControlNumber !== 0) summary.available++;
         return summary;
       },
@@ -430,13 +430,7 @@ const ViewShowSchedules = ({
               <SeatMap
                 showToggle={false}
                 recStyle={(seat) => {
-                  if (
-                    seat.status == "vip" ||
-                    seat.isComplimentary ||
-                    seat.status === "reserved" ||
-                    seat.ticketControlNumber == 0 ||
-                    seat.status === "sold"
-                  )
+                  if (seat.isComplimentary || seat.status === "reserved" || seat.ticketControlNumber == 0 || seat.status === "sold")
                     return "fill-darkGrey";
                   if (selectedSeat && seat.ticketControlNumber === selectedSeat.ticketControlNumber) return "fill-blue-500";
                   if (seat.status === "available") return "fill-white";

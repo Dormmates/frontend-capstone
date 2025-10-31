@@ -19,7 +19,7 @@ const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
   const totalSales = soldTickets.reduce((acc, ticket) => acc + Number(ticket.ticketPrice), 0);
   const commission = soldTickets.length * (Number(schedule.commissionFee) || 0);
   const amountRemitted = schedule.tickets
-    .filter((ticket) => ticket.isRemitted)
+    .filter((ticket) => ticket.isPaid)
     .reduce((acc, curr) => (acc += curr.ticketPrice - (Number(schedule.commissionFee) || 0)), 0);
   const amountToRemit = totalSales - commission;
 
@@ -34,7 +34,7 @@ const DistributorDashboard = () => {
     if (!data) return { allocatedTickets: 0, soldTickets: 0, unsoldTickets: 0 };
 
     const allocatedTickets = data.reduce((acc, cur) => acc + cur.tickets.length, 0);
-    const soldTickets = data.reduce((acc, cur) => acc + cur.tickets.filter((ticket) => ticket.status === "sold" || ticket.isRemitted).length, 0);
+    const soldTickets = data.reduce((acc, cur) => acc + cur.tickets.filter((ticket) => ticket.status === "sold" || ticket.isPaid).length, 0);
     const unsoldTickets = allocatedTickets - soldTickets;
 
     return { allocatedTickets, soldTickets, unsoldTickets };
@@ -145,19 +145,14 @@ const DistributorDashboard = () => {
               header: "Tickets Allocated",
               render: (schedule) => schedule.tickets.length,
             },
-            // {
-            //   key: "sold",
-            //   header: "Sold Tickets",
-            //   render: (schedule) => schedule.tickets.filter((ticket) => ticket.status === "sold" || ticket.isRemitted).length,
-            // },
             {
               key: "remitted",
-              header: "Remitted Tickets",
-              render: (schedule) => schedule.tickets.filter((ticket) => ticket.isRemitted).length,
+              header: "Paid Tickets",
+              render: (schedule) => schedule.tickets.filter((ticket) => ticket.isPaid).length,
             },
             {
               key: "amountRemitted",
-              header: "Amount Remitted",
+              header: "Amount Paid",
               render: (schedule) => {
                 const { amountRemitted } = calculateRemittanceAmount(schedule);
                 return formatCurrency(amountRemitted);
@@ -165,7 +160,7 @@ const DistributorDashboard = () => {
             },
             {
               key: "amount",
-              header: "Pending Remittance",
+              header: "Pending Payment",
               render: (schedule) => {
                 const { amountToRemit } = calculateRemittanceAmount(schedule);
                 return formatCurrency(amountToRemit);

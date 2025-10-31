@@ -2,6 +2,7 @@ import { useGetTicketLogs } from "@/_lib/@react-client-query/schedule";
 import PaginatedTable from "./PaginatedTable";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
 import { formatCurrency } from "@/utils";
+import { formatSectionName } from "@/utils/seatmap";
 
 type ViewTicketProps = {
   scheduleId: string;
@@ -27,7 +28,7 @@ const ViewTicket = ({ scheduleId, controlNumber, ticketPrice, status }: ViewTick
       <div>
         <h1>Ticket Control Number: {controlNumber}</h1>
         <p>Ticket Price: {formatCurrency(ticketPrice)}</p>
-        <p>Ticket Status: {status.toUpperCase()}</p>
+        <p>Ticket Status: {formatSectionName(status)}</p>
         <p>Current Distributor: {data[0]?.currentDistributor ?? "No Distributor"}</p>
       </div>
 
@@ -58,7 +59,7 @@ const ViewTicket = ({ scheduleId, controlNumber, ticketPrice, status }: ViewTick
           {
             key: "actionType",
             header: "Action Type",
-            render: (data) => data.logType.toUpperCase(),
+            render: (data) => formatSectionName(data.logType),
           },
         ]}
       />

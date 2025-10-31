@@ -97,11 +97,11 @@ const ViewDistributor = () => {
           {
             key: "sold",
             header: "Sold Tickets",
-            render: (schedule) => schedule.tickets.filter((ticket) => ticket.status === "sold" || ticket.isRemitted).length,
+            render: (schedule) => schedule.tickets.filter((ticket) => ticket.status === "sold" || ticket.isPaid).length,
           },
           {
             key: "amount",
-            header: "Amount to be Remitted",
+            header: "Amount to be Paid",
             render: (schedule) => {
               const { amountToRemit } = calculateRemittanceAmount(schedule);
               return formatCurrency(amountToRemit);

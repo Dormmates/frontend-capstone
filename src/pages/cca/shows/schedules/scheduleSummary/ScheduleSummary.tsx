@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Pie, PieChart, Label as ChartLabel, Sector } from "recharts";
 import SimpleCard from "@/components/SimpleCard";
-import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
 import { formatCurrency } from "@/utils";
 import PaginatedTable from "@/components/PaginatedTable";
@@ -18,7 +17,6 @@ import type { PieSectorDataItem } from "recharts/types/polar/Pie";
 
 const ScheduleSummary = () => {
   const { scheduleId, showId } = useParams();
-  // const { show, schedule } = useOutletContext<{ show: ShowData; schedule: Schedule }>();
   const { data: summary, isLoading: loadingSummary, isError: summaryError } = useGetScheduleSummary(scheduleId as string);
 
   const { hash } = useLocation();
@@ -68,37 +66,28 @@ const ScheduleSummary = () => {
       label: "Not Allocated Tickets",
     },
     remitted: {
-      label: "Remitted Tickets",
+      label: "Paid Tickets",
     },
     pendingRemittance: {
-      label: "Pending for Remittance",
+      label: "Pending for Payment",
     },
   } satisfies ChartConfig;
 
   const ticketsAllocatedAndRemittanceChartData = [
     { name: "allocated", value: summary.ticketsSummary.regularTickets.allocated, fill: "hsl(var(--chart-2))" },
     { name: "notAllocated", value: summary.ticketsSummary.regularTickets.notAllocated, fill: "grey" },
-    { name: "remitted", value: summary.ticketsSummary.regularTickets.remitted, fill: "hsl(122 42.2% 45.8%)" },
-    { name: "pendingRemittance", value: summary.ticketsSummary.regularTickets.unremitted, fill: "hsl(0 54.2% 45.8%)" },
+    { name: "remitted", value: summary.ticketsSummary.regularTickets.paid, fill: "hsl(122 42.2% 45.8%)" },
+    { name: "pendingRemittance", value: summary.ticketsSummary.regularTickets.unpaid, fill: "hsl(0 54.2% 45.8%)" },
   ];
 
   return (
     <>
       <h1 className="text-2xl">Schedule Summary</h1>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Sales Progress ({((summary.salesSummary.current / summary.salesSummary.expected) * 100).toFixed(2)}%)</CardTitle>
-
-          <CardContent className="p-0">
-            <Progress value={(summary.salesSummary.current / summary.salesSummary.expected) * 100} />
-            <div className="mt-5">
-              <p>Forecasted Sales: {formatCurrency(summary.salesSummary.expected)}</p>
-              <p>Current Sales: {formatCurrency(summary.salesSummary.current)}</p>
-            </div>
-          </CardContent>
-        </CardHeader>
-      </Card>
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+        <SimpleCard label="Forecasted Sales" value={formatCurrency(summary.salesSummary.expected)} />
+        <SimpleCard label="Cash on Hand (CCA)" value={formatCurrency(summary.salesSummary.cashOnHand)} />
+        <SimpleCard label="Remitted to Finance" value={formatCurrency(summary.salesSummary.remittedToFinance)} />
+      </div>
 
       <DistributorActivities scheduleId={scheduleId as string} />
 
@@ -154,7 +143,7 @@ const ScheduleSummary = () => {
               <Card>
                 <CardHeader>
                   <CardTitle>Ticket Allocation & Remittance Overview</CardTitle>
-                  <CardDescription>Shows the distribution of allocated, unallocated, remitted, and pending regular tickets.</CardDescription>
+                  <CardDescription>Shows the distribution of allocated, unallocated, paid, and pending regular tickets.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ChartContainer config={ticketsAllocatedAndRemittanceChartConfig} className="mx-auto aspect-square max-h-[250px]">
@@ -230,8 +219,8 @@ const ScheduleSummary = () => {
                 },
                 {
                   key: "remitted",
-                  header: "Remitted",
-                  render: (distributor) => <span>{formatCurrency(distributor.remitted)}</span>,
+                  header: "Amount Paid",
+                  render: (distributor) => <span>{formatCurrency(distributor.paid)}</span>,
                 },
                 {
                   key: "balance",
@@ -270,8 +259,8 @@ const ScheduleSummary = () => {
               <span className="font-bold text-foreground">{summary.distributorSummary.distributorsTotal.unsold}</span>
             </p>
             <p className="text-sm text-muted-foreground flex gap-2">
-              Total Amount Remitted by all Distributors:
-              <span className="font-bold text-foreground">{formatCurrency(summary.distributorSummary.distributorsTotal.remitted)}</span>
+              Total Amount Paid by all Distributors:
+              <span className="font-bold text-foreground">{formatCurrency(summary.distributorSummary.distributorsTotal.paidToCCA)}</span>
             </p>
           </CardFooter>
         </Card>

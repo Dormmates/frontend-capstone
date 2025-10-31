@@ -43,8 +43,8 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
     const total = schedule.tickets.length;
     const sold = schedule.tickets.filter((t) => t.status === "sold").length;
     const unsold = schedule.tickets.length - sold;
-    const remitted = schedule.tickets.filter((t) => t.isRemitted).length;
-    const pending = schedule.tickets.filter((t) => !t.isRemitted).length;
+    const remitted = schedule.tickets.filter((t) => t.isPaid).length;
+    const pending = schedule.tickets.filter((t) => !t.isPaid).length;
     return { sold, unsold, remitted, pending, total };
   }, [schedule]);
 
@@ -131,7 +131,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
         </div>
 
         <div className="">
-          <Label>Remittance Progress {((summary.remitted / summary.total) * 100).toFixed(2)}%</Label>
+          <Label>Payment Progress {((summary.remitted / summary.total) * 100).toFixed(2)}%</Label>
           <Progress value={Number(((summary.remitted / summary.total) * 100).toFixed(2))} />
         </div>
       </div>
@@ -140,8 +140,8 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
         <TabsList className="bg-sidebar-border mb-2">
           {/* <TabsTrigger value="all">All</TabsTrigger> */}
           <TabsTrigger value="unsold">Unsold</TabsTrigger>
-          <TabsTrigger value="forRemittance">For Remittance / Marked As Sold</TabsTrigger>
-          <TabsTrigger value="remittedTickets">Remitted Tickets</TabsTrigger>
+          <TabsTrigger value="forRemittance">For Payment / Marked As Sold</TabsTrigger>
+          <TabsTrigger value="remittedTickets">Paid to CCA Tickets</TabsTrigger>
         </TabsList>
         <TabsContent value="all">
           <TicketTableData
@@ -164,7 +164,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
               scheduleId={schedule.scheduleId}
               seatingType={schedule.seatingType}
               type="unsold"
-              data={schedule.tickets.filter((t) => !t.isRemitted && t.status === "allocated")}
+              data={schedule.tickets.filter((t) => !t.isPaid && t.status === "allocated")}
               selectedTickets={selectedTickets}
               setSelectedTickets={setSelectedTickets}
             />
@@ -181,7 +181,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
               scheduleId={schedule.scheduleId}
               seatingType={schedule.seatingType}
               type="forRemittance"
-              data={schedule.tickets.filter((t) => !t.isRemitted && t.status === "sold")}
+              data={schedule.tickets.filter((t) => !t.isPaid && t.status === "sold")}
               selectedTickets={selectedTickets}
               setSelectedTickets={setSelectedTickets}
             />
@@ -192,7 +192,7 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
             scheduleId={schedule.scheduleId}
             seatingType={schedule.seatingType}
             type="remittedTickets"
-            data={schedule.tickets.filter((t) => t.isRemitted)}
+            data={schedule.tickets.filter((t) => t.isPaid)}
             selectedTickets={selectedTickets}
             setSelectedTickets={setSelectedTickets}
           />
@@ -323,7 +323,7 @@ const TicketTableData = ({ data, type, seatingType, scheduleId, selectedTickets,
               <TableHead>Seat Number</TableHead>
               <TableHead>Ticket Price</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Remittance Status</TableHead>
+              <TableHead>Payment Status</TableHead>
               {seatingType === "controlledSeating" && <TableHead className="text-end">Actions</TableHead>}
             </TableRow>
           </TableHeader>
@@ -339,7 +339,7 @@ const TicketTableData = ({ data, type, seatingType, scheduleId, selectedTickets,
                 <TableRow key={ticket.ticketId}>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      {!ticket.isRemitted && (
+                      {!ticket.isPaid && (
                         <input
                           className="cursor-pointer"
                           type="checkbox"
@@ -362,7 +362,7 @@ const TicketTableData = ({ data, type, seatingType, scheduleId, selectedTickets,
                   <TableCell>{ticket.seatNumber ?? "Free Seating"}</TableCell>
                   <TableCell>{formatCurrency(ticket.ticketPrice)}</TableCell>
                   <TableCell>
-                    {ticket.status === "sold" || ticket.isRemitted ? (
+                    {ticket.status === "sold" || ticket.isPaid ? (
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-green"></span>Sold
                       </div>
@@ -373,9 +373,9 @@ const TicketTableData = ({ data, type, seatingType, scheduleId, selectedTickets,
                     )}
                   </TableCell>
                   <TableCell>
-                    {ticket.isRemitted && ticket.status !== "sold" ? (
+                    {ticket.isPaid && ticket.status !== "sold" ? (
                       <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-green"></span>Remitted
+                        <span className="w-2 h-2 rounded-full bg-green"></span>Paid To CCA
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">

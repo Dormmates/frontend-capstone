@@ -38,8 +38,11 @@ import type { ShowData } from "@/types/show";
 
 const statusOptions = [
   { name: "All Status", value: "all" },
-  { name: "Sold", value: "sold" },
-  { name: "Unsold", value: "unsold" },
+  { name: "Paid to CCA", value: "paidToCCA" },
+  { name: "Marked Sold by Distirbutor", value: "sold" },
+  { name: "Allocated", value: "allocated" },
+  { name: "Not Allocated", value: "not_allocated" },
+  { name: "Remitted Tickets", value: "remitted" },
 ];
 
 const sectionOptions = [
@@ -78,9 +81,7 @@ const ScheduleTickets = () => {
 
     return tickets.filter((ticket) => {
       const matchStatus =
-        filterValues.status === "all" ||
-        (filterValues.status === "unsold" && !ticket.isRemitted) ||
-        (filterValues.status === "sold" && ticket.isRemitted);
+        filterValues.status === "all" || (filterValues.status === "paidToCCA" && ticket.isPaid) || filterValues.status == ticket.status;
 
       const matchSection =
         filterValues.section === "all" ||
@@ -114,16 +115,12 @@ const ScheduleTickets = () => {
         total: 0,
         sold: 0,
         unsold: 0,
-        allocated: 0,
-        notAllocated: 0,
         regularTickets: 0,
         complimentary: 0,
       };
 
-    const allocated = tickets.filter((t) => t.distributorId !== null).length;
-    const notAllocated = tickets.filter((ticket) => !ticket.isComplimentary).length - allocated;
-    const sold = tickets.filter((t) => t.isRemitted).length;
-    const unsold = allocated - sold;
+    const sold = tickets.filter((t) => t.isPaid || t.status === "remitted").length;
+    const unsold = tickets.length - sold;
     const regularTickets = tickets.filter((t) => !t.isComplimentary).length;
     const complimentary = tickets.filter((t) => t.isComplimentary).length;
 
@@ -131,16 +128,12 @@ const ScheduleTickets = () => {
       total: tickets.length,
       sold,
       unsold,
-      allocated,
-      notAllocated,
       regularTickets,
       complimentary,
     };
   }, [tickets]);
 
   const ticketInformationSummaryData = [
-    { name: "allocated", value: summary.allocated, fill: "hsl(var(--chart-1))" },
-    { name: "not", value: summary.notAllocated, fill: "grey" },
     { name: "sold", value: summary.sold, fill: "green" },
     { name: "unsold", value: summary.unsold, fill: "red" },
     { name: "complimentary", value: summary.complimentary, fill: "hsl(var(--chart-4))" },
@@ -223,11 +216,6 @@ const ScheduleTickets = () => {
         </Card>
       </div>
 
-      {/* <div className="flex gap-2 w-full justify-end">
-        <Button>Transfer Tickets</Button>
-        <Button>Refund Tickets</Button>
-      </div> */}
-
       <div>
         <div className="flex gap-5 mt-10 w-full">
           <InputField
@@ -273,6 +261,8 @@ const ScheduleTickets = () => {
             onPageChange={(newPage) => setPage(newPage)}
           />
         </div>
+
+        <p className="text-sm font-bold mb-1">Total: {filteredTickets.length}</p>
 
         <DataTable
           data={paginatedTicket}
@@ -323,7 +313,7 @@ const ScheduleTickets = () => {
             {
               key: "status",
               header: "Ticket Status",
-              render: (ticket) => ticket.status.toUpperCase(),
+              render: (ticket) => formatSectionName(ticket.status),
             },
             {
               key: "customer",
@@ -352,7 +342,7 @@ const ScheduleTickets = () => {
                     />
                   </DialogPopup>
 
-                  {(user?.roles.includes("head") || show.showType !== "majorProduction") && (
+                  {schedule.isOpen && (user?.roles.includes("head") || show.showType !== "majorProduction") && (
                     <>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -363,7 +353,7 @@ const ScheduleTickets = () => {
                         <DropdownMenuContent side="left" align="start">
                           <DropdownMenuLabel>Select Options</DropdownMenuLabel>
                           <DropdownMenuGroup>
-                            {!ticket.isComplimentary && ticket.isRemitted && (
+                            {!ticket.isComplimentary && ticket.isPaid && (
                               <DropdownMenuItem
                                 onClick={() => {
                                   setSelectedTicket(ticket);
@@ -383,7 +373,7 @@ const ScheduleTickets = () => {
                                 Sell Ticket
                               </DropdownMenuItem>
                             )}
-                            {!ticket.isComplimentary && ticket.isRemitted && (
+                            {!ticket.isComplimentary && ticket.isPaid && (
                               <DropdownMenuItem
                                 onClick={() => {
                                   setUnIsSellTicket(true);
@@ -522,7 +512,7 @@ const SellTicket = ({ ticket, scheduleId, setSellTicket, setSelectedTicket }: Se
         queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId], exact: true });
         setSellTicket(false);
         setSelectedTicket(null);
-        return "Ticket Sold and Remitted";
+        return "Ticket Sold and Paid";
       },
       error: (err) => err.message || "Failed to Sell Ticket, please try again later",
       loading: "Ticket is being processed",
@@ -542,7 +532,7 @@ const SellTicket = ({ ticket, scheduleId, setSellTicket, setSelectedTicket }: Se
           <p className="font-bold">Note: </p>
           <p>
             When a trainer sells a ticket directly, the ticket will be marked as <span className="font-medium">sold</span> and automatically{" "}
-            <span className="font-medium">remitted</span>. The trainer will be recorded as the seller of that ticket.
+            <span className="font-medium">paid</span>. The trainer will be recorded as the seller of that ticket.
           </p>
         </div>
       </div>
@@ -615,7 +605,7 @@ const UnSellTicket = ({ ticket, scheduleId, setUnSellTicket, setSelectedTicket }
         queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId], exact: true });
         setUnSellTicket(false);
         setSelectedTicket(null);
-        return "Ticket Unsold and Unremitted";
+        return "Ticket Unsold and Unpaid";
       },
       error: (err) => err.message || "Failed to Unsold the Ticket, please try again later",
       loading: "Ticket is being processed",
@@ -634,7 +624,7 @@ const UnSellTicket = ({ ticket, scheduleId, setUnSellTicket, setSelectedTicket }
         <div className="flex gap-1 flex-col">
           <p className="font-bold">Note: </p>
           <p>
-            Refunding the ticket will revert the ticket’s status to <span className="font-medium">available</span> and remove its remittance record.
+            Refunding the ticket will revert the ticket’s status to <span className="font-medium">available</span> and update its payment record.
             Please ensure this action is intended before proceeding.
           </p>
         </div>

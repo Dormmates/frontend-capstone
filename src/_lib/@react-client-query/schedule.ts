@@ -6,6 +6,33 @@ import type { FlattenedSeat } from "../../types/seat";
 import type { AllocatedTicketToDistributor, AllocationHistory, RemittanceHistory, Ticket, TicketLog, TicketStatuses } from "../../types/ticket";
 import type { TicketPricing } from "@/types/ticketpricing";
 import type { ShowDataWithSchedulesAndTickets } from "@/types/show";
+import type { DistributorTypes } from "@/types/user";
+
+interface DistributorClose {
+  department: string;
+  distributorId: string;
+  distributorType: DistributorTypes;
+  markedSoldTickets: number;
+  paidTickets: number;
+  totalPaid: number;
+  totalTickets: number;
+  unpaidAmount: number;
+  unpaidTickets: number;
+  tickets: Ticket[];
+  name: string;
+}
+
+interface CloseScheduleSummary {
+  canBeClosed: boolean;
+  summary: {
+    totalDistributors: number;
+    totalUnpaid: number;
+    withBalanceDue: number;
+    notAllocatedTickets: Ticket[];
+  };
+  distributors: DistributorClose[];
+  withBalanceDue: DistributorClose[];
+}
 
 export interface ScheduleDistributorForAllocation {
   userId: string;
@@ -279,7 +306,7 @@ export const useGetDistributorRemittanceHistory = (distributorId: string, schedu
   return useQuery<RemittanceHistory[], Error>({
     queryKey: ["schedule", "remittanceHistory", scheduleId, distributorId],
     queryFn: async () => {
-      const res = await request<RemittanceHistory[]>(`/api/schedule/${scheduleId}/remittanceHistory/${distributorId}`, {}, "get");
+      const res = await request<RemittanceHistory[]>(`/api/schedule/${scheduleId}/paymentHistory/${distributorId}`, {}, "get");
       return res.data;
     },
     retry: false,
@@ -290,7 +317,7 @@ export const useGetAllDistributorRemittanceHistory = (distributorId: string) => 
   return useQuery<RemittanceHistory[], Error>({
     queryKey: ["remittanceHistory", distributorId],
     queryFn: async () => {
-      const res = await request<RemittanceHistory[]>(`/api/schedule/remittanceHistory/${distributorId}`, {}, "get");
+      const res = await request<RemittanceHistory[]>(`/api/schedule/paymentHistory/${distributorId}`, {}, "get");
       return res.data;
     },
     retry: false,
@@ -363,7 +390,7 @@ export const useRemitTicketSale = () => {
       remarks?: string;
       actionBy: string;
     }) => {
-      const res = await request<any>("/api/schedule/remit", data, "post");
+      const res = await request<any>("/api/schedule/pay", data, "post");
       return res.data;
     },
     retry: false,
@@ -383,7 +410,7 @@ export const useUnRemitTicketSales = () => {
     }
   >({
     mutationFn: async (data: { remittedTickets: number[]; scheduleId: string; distributorId: string; actionBy: string; remarks?: string | null }) => {
-      const res = await request<any>("/api/schedule/unremit", data, "post");
+      const res = await request<any>("/api/schedule/unpay", data, "post");
       return res.data;
     },
     retry: false,
@@ -459,5 +486,16 @@ export const useTransferTicket = () => {
       const result = await request<any>(`/api/schedule/transfer`, payload, "post");
       return result.data;
     },
+  });
+};
+
+export const useCheckCloseSchedule = (scheduleId: string) => {
+  return useQuery<CloseScheduleSummary, Error>({
+    queryKey: ["close", scheduleId],
+    queryFn: async () => {
+      const res = await request<CloseScheduleSummary>(`/api/schedule/close/availability/${scheduleId}`, {}, "get");
+      return res.data;
+    },
+    retry: false,
   });
 };

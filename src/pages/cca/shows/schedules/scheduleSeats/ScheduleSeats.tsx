@@ -14,7 +14,7 @@ const ScheduleSeats = () => {
   const seatSummary = useMemo(() => {
     if (!data)
       return {
-        vip: 0,
+        paidToCCA: 0,
         complimentary: 0,
         sold: 0,
         reserved: 0,
@@ -24,15 +24,15 @@ const ScheduleSeats = () => {
 
     return data.reduce(
       (summary, seat) => {
-        if (seat.status == "vip") summary.vip++;
         if (seat.isComplimentary) summary.complimentary++;
+        if (seat.status === "paidToCCA") summary.paidToCCA++;
         if (seat.status === "sold") summary.sold++;
         if (seat.status === "reserved") summary.reserved++;
         if (seat.status === "available" && !seat.isComplimentary && seat.ticketControlNumber !== 0) summary.available++;
         if (seat.ticketControlNumber == 0) summary.notAvailable++;
         return summary;
       },
-      { vip: 0, complimentary: 0, sold: 0, reserved: 0, available: 0, notAvailable: 0 }
+      { paidToCCA: 0, complimentary: 0, sold: 0, reserved: 0, available: 0, notAvailable: 0 }
     );
   }, [data]);
 
@@ -56,10 +56,14 @@ const ScheduleSeats = () => {
         </div>
         <div className="flex gap-2 items-center">
           <div className="w-5 h-5 bg-green border"></div>
-          <p>Sold Seats: {seatSummary.sold}</p>
+          <p>Paid To CCA: {seatSummary.paidToCCA}</p>
         </div>
         <div className="flex gap-2 items-center">
-          <div className="w-5 h-5 bg-red border"></div>
+          <div className="w-5 h-5 bg-primary border"></div>
+          <p>Marked Sold By Distributor: {seatSummary.sold}</p>
+        </div>
+        <div className="flex gap-2 items-center">
+          <div className="w-5 h-5 bg-red/80 border"></div>
           <p>Reserved Seats: {seatSummary.reserved}</p>
         </div>
         <div className="flex gap-2 items-center">
@@ -75,10 +79,10 @@ const ScheduleSeats = () => {
       <SeatMap
         recStyle={(seat) => {
           if (seat.ticketControlNumber === 0) return "fill-darkGrey";
-          if (seat.status === "vip") return "fill-primary";
+          if (seat.status === "paidToCCA") return "fill-green";
           if (seat.isComplimentary) return "fill-blue-500";
-          if (seat.status === "sold") return "fill-green";
-          if (seat.status === "reserved") return "fill-red";
+          if (seat.status === "sold") return "fill-primary";
+          if (seat.status === "reserved") return "fill-red/80";
           if (seat.status === "available") return "fill-white";
           return "";
         }}

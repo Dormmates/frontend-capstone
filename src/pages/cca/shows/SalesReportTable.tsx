@@ -26,7 +26,6 @@ export const SalesReportTable = ({ report }: Props) => {
           <TableHead className="border border-gray-400 font-bold text-black ">Sold</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black ">Unsold</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black ">Total Sales</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black ">Discounts</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black ">Commission</TableHead>
           <TableHead className="border border-gray-400 font-bold text-black ">Net Sales</TableHead>
         </TableRow>
@@ -50,7 +49,6 @@ export const SalesReportTable = ({ report }: Props) => {
                 <TableCell className="border border-gray-400">{s.soldTickets}</TableCell>
                 <TableCell className="border border-gray-400">{s.unsoldTickets}</TableCell>
                 <TableCell className="border border-gray-400">{formatCurrency(s.ticketSales)}</TableCell>
-                <TableCell className="border border-gray-400">{formatCurrency(s.totalDiscount)}</TableCell>
                 <TableCell className="border border-gray-400">{formatCurrency(s.totalCommission)}</TableCell>
                 <TableCell className="border border-gray-400">{formatCurrency(s.netSales)}</TableCell>
               </TableRow>
@@ -87,11 +85,8 @@ export const SalesReportTable = ({ report }: Props) => {
                   <TableCell className="border border-gray-400">{sec.ticketsSold}</TableCell>
                   <TableCell className="border border-gray-400">{sec.totalTickets - sec.ticketsSold}</TableCell>
                   <TableCell className="border border-gray-400">{formatCurrency(sec.totalSales)}</TableCell>
-                  <TableCell className="border border-gray-400">{formatCurrency(sec.totalDiscount)}</TableCell>
                   <TableCell className="border border-gray-400">{formatCurrency(sec.totalCommission)}</TableCell>
-                  <TableCell className="border border-gray-400">
-                    {formatCurrency(sec.totalSales - (sec.totalDiscount + sec.totalCommission))}
-                  </TableCell>
+                  <TableCell className="border border-gray-400">{formatCurrency(sec.totalSales - sec.totalCommission)}</TableCell>
                 </TableRow>
 
                 {/* Add summary row AFTER last section */}
@@ -103,7 +98,6 @@ export const SalesReportTable = ({ report }: Props) => {
                     <TableCell className="border border-gray-400">{s.soldTickets}</TableCell>
                     <TableCell className="border border-gray-400">{s.unsoldTickets}</TableCell>
                     <TableCell className="border border-gray-400">{formatCurrency(s.ticketSales)}</TableCell>
-                    <TableCell className="border border-gray-400">{formatCurrency(s.totalDiscount)}</TableCell>
                     <TableCell className="border border-gray-400">{formatCurrency(s.totalCommission)}</TableCell>
                     <TableCell className="border border-gray-400">{formatCurrency(s.netSales)}</TableCell>
                   </TableRow>
@@ -121,7 +115,6 @@ export const SalesReportTable = ({ report }: Props) => {
           <TableCell className="border border-gray-400">{report.overallTotals.soldTickets}</TableCell>
           <TableCell className="border border-gray-400">{report.overallTotals.unsoldTickets}</TableCell>
           <TableCell className="border border-gray-400">{formatCurrency(report.overallTotals.ticketSales)}</TableCell>
-          <TableCell className="border border-gray-400">{formatCurrency(report.overallTotals.totalDiscount)}</TableCell>
           <TableCell className="border border-gray-400">{formatCurrency(report.overallTotals.totalCommission)}</TableCell>
           <TableCell className="border border-gray-400">{formatCurrency(report.overallTotals.netSales)}</TableCell>
         </TableRow>

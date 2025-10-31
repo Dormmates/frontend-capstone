@@ -35,11 +35,8 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
 
   const ticketsAvailableToBeRemitted = useMemo(() => {
     if (!distributorData) return [];
-    return distributorData.filter((data) => data.isRemitted).map((data) => data.controlNumber);
+    return distributorData.filter((data) => data.isPaid).map((data) => data.controlNumber);
   }, [distributorData]);
-
-  // const [form, setForm] = useState("");
-  // const [error, setError] = useState("");
 
   const validate = () => {
     if (selectedControlNumbers.length == 0) {
@@ -68,9 +65,9 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
         }),
       {
         position: "top-center",
-        loading: "Unremitting tickets...",
-        success: "Tickets unremitted ",
-        error: (err: any) => err.message || "Failed to unremit tickets",
+        loading: "Reverting Distributor Payment...",
+        success: "Tickets reverted to unpaid ",
+        error: (err: any) => err.message || "Failed to revert, please try again later",
       }
     );
   };
@@ -81,22 +78,22 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
 
       {ticketsAvailableToBeRemitted.length === 0 ? (
         <div className="mt-5">
-          <p className="font-medium text-xl">There are no Tickets Available to be UnRemitted</p>
+          <p className="font-medium text-xl">There are no Tickets Available to be Reverted</p>
           <p className="mt-4">Possible reasons:</p>
           <ul className="mt-2 list-disc list-inside space-y-1 ml-4">
-            <li>The distributor don't have Remittance History yet</li>
-            <li>All tickets are unremitted already or unallocated</li>
+            <li>The distributor don't have Payment History yet</li>
+            <li>All tickets are already reverted or unallocated</li>
           </ul>
         </div>
       ) : (
         <>
           <div className="flex items-center gap-2">
-            <p>Ticket Control Numbers that can be UnRemitted: </p>
+            <p>Ticket Control Numbers that can be Reverted: </p>
             <p className="text-sm font-medium">{compressControlNumbers(ticketsAvailableToBeRemitted)}</p>
           </div>
 
           <div className="border p-2 rounded-md mt-5">
-            <p className=" text-sm mb-4">Click Control Numbers to be Unremitted</p>
+            <p className=" text-sm mb-4">Click Control Numbers to be Reverted</p>
             <ControlNumberGrid
               selectedControlNumbers={selectedControlNumbers}
               setSelectedControlNumbers={setSelectedControlNumbers}
@@ -105,7 +102,7 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
           </div>
 
           <Button disabled={unremit.isPending} onClick={validate} className=" self-end mt-5">
-            Unremit Tickets
+            Revert Distributor Payment
           </Button>
         </>
       )}
@@ -124,8 +121,10 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
             </LongCard>
 
             <div className="flex justify-between mt-5">
-              <h2 className="font-medium mb-2">Amount to be Unremitted</h2>
-              <p className="text-lg font-semibold">{formatCurrency(unremitTickets.reduce((total, t) => total + (t.ticketPrice - 0 || 0), 0))}</p>
+              <h2 className="font-medium mb-2">Amount to be Reverted</h2>
+              <p className="text-lg font-semibold">
+                {formatCurrency(unremitTickets.reduce((total, t) => total + (t.ticketPrice - 0 - schedule.ticketPricing.commissionFee || 0), 0))}
+              </p>
             </div>
 
             <div className="flex flex-col mt-4">
@@ -138,7 +137,7 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
                 Cancel
               </Button>
               <Button disabled={unremit.isPending} onClick={handleSubmit}>
-                Confirm Unremit
+                Confirm Transaction
               </Button>
             </div>
           </div>

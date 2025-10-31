@@ -88,7 +88,6 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
   const haveChanges = useMemo(() => {
     return (
       showData.title.trim() !== showFormValue.title.trim() ||
-      // (showData.productionType !== "majorProduction" && showData.group !== (showFormValue.group || user?.departments.includes() || "")) ||
       showData.productionType !== showFormValue.productionType ||
       showData.description.trim() !== showFormValue.description.trim() ||
       JSON.stringify(showData.genre) !== JSON.stringify(showFormValue.genre) ||
