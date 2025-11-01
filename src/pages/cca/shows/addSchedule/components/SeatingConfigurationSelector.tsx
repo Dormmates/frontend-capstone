@@ -1,5 +1,5 @@
 import React from "react";
-import type { ScheduleFormData, SeatingConfiguration } from "@/types/schedule.ts";
+import type { ErrorKeys, ScheduleFormData, SeatingConfiguration } from "@/types/schedule.ts";
 import Dropdown from "@/components/Dropdown";
 
 const seatOptions = [
@@ -10,9 +10,11 @@ const seatOptions = [
 interface Props {
   scheduleData: ScheduleFormData;
   setScheduleData: React.Dispatch<React.SetStateAction<ScheduleFormData>>;
+  seatCount: number;
+  setErrors: React.Dispatch<React.SetStateAction<Partial<Record<ErrorKeys, string>>>>;
 }
 
-const SeatingConfigurationSelector = ({ scheduleData, setScheduleData }: Props) => {
+const SeatingConfigurationSelector = ({ setErrors, scheduleData, setScheduleData, seatCount }: Props) => {
   return (
     <Dropdown
       includeHeader={true}
@@ -22,10 +24,39 @@ const SeatingConfigurationSelector = ({ scheduleData, setScheduleData }: Props) 
       value={scheduleData.ticketType === "nonTicketed" ? "freeSeating" : scheduleData.seatingConfiguration}
       disabled={scheduleData.ticketType === "nonTicketed"}
       onChange={(value) => {
+        const totalSeats = seatCount;
+
         if (value === "freeSeating") {
-          setScheduleData((prev) => ({ ...prev, seatPricing: "fixed" }));
+          setScheduleData((prev) => ({
+            ...prev,
+            seatingConfiguration: "freeSeating",
+            seatPricing: "fixed",
+            totalTickets: undefined,
+            totalComplimentary: undefined,
+            ticketsControlNumber: "",
+            complimentaryControlNumber: "",
+          }));
+          return;
         }
-        setScheduleData((prev) => ({ ...prev, seatingConfiguration: value as SeatingConfiguration }));
+
+        if (value === "controlledSeating") {
+          const complimentary = 32;
+          const totalComplimentary = Math.min(complimentary, totalSeats);
+          const totalTickets = Math.max(totalSeats - totalComplimentary, 0);
+
+          const ticketsControlNumber = totalTickets > 0 ? `1-${totalTickets}` : "";
+          const complimentaryControlNumber = totalComplimentary > 0 ? `${totalTickets + 1}-${totalSeats}` : "";
+
+          setScheduleData((prev) => ({
+            ...prev,
+            seatingConfiguration: "controlledSeating",
+            totalComplimentary,
+            totalTickets,
+            ticketsControlNumber,
+            complimentaryControlNumber,
+          }));
+          setErrors((prev) => ({ ...prev, totalTickets: "", totalComplimentary: "" }));
+        }
       }}
     />
   );

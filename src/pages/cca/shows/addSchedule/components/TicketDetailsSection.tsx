@@ -24,6 +24,7 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
             value={scheduleData.totalTickets + ""}
             error={errors?.totalTickets}
             onWheel={(e) => e.currentTarget.blur()}
+            disabled={scheduleData.seatingConfiguration === "controlledSeating"}
           />
 
           <InputField
@@ -35,31 +36,32 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
             value={scheduleData.totalComplimentary + ""}
             error={errors?.totalComplimentary}
             onWheel={(e) => e.currentTarget.blur()}
-            disabled={!scheduleData.totalTickets}
           />
         </div>
 
-        <div className="flex gap-5 w-full">
-          <InputField
-            onChange={handleInputChange}
-            label="Control Number of Tickets"
-            className="w-full min-w-[300px]"
-            name="ticketsControlNumber"
-            value={!scheduleData.totalTickets ? "" : scheduleData.ticketsControlNumber}
-            error={errors?.ticketsControlNumber}
-            disabled
-          />
+        {scheduleData.seatingConfiguration === "freeSeating" && (
+          <div className="flex gap-5 w-full">
+            <InputField
+              onChange={handleInputChange}
+              label="Control Number of Tickets"
+              className="w-full min-w-[300px]"
+              name="ticketsControlNumber"
+              value={!scheduleData.totalTickets ? "" : scheduleData.ticketsControlNumber}
+              error={errors?.ticketsControlNumber}
+              disabled
+            />
 
-          <InputField
-            onChange={handleInputChange}
-            label="Control Number of Complimentary Tickets"
-            className="w-full min-w-[300px]"
-            name="complimentaryControlNumber"
-            value={!scheduleData.totalComplimentary ? "" : scheduleData.complimentaryControlNumber}
-            error={errors?.complimentaryControlNumber}
-            disabled
-          />
-        </div>
+            <InputField
+              onChange={handleInputChange}
+              label="Control Number of Complimentary Tickets"
+              className="w-full min-w-[300px]"
+              name="complimentaryControlNumber"
+              value={!scheduleData.totalComplimentary ? "" : scheduleData.complimentaryControlNumber}
+              error={errors?.complimentaryControlNumber}
+              disabled
+            />
+          </div>
+        )}
       </div>
     </>
   );

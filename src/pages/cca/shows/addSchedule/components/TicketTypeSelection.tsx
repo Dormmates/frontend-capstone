@@ -22,7 +22,14 @@ const TicketTypeSelection = ({ scheduleData, setScheduleData }: Props) => {
       items={ticketTypes}
       label="Ticket Types"
       value={scheduleData.ticketType}
-      onChange={(value) => setScheduleData((prev) => ({ ...prev, ticketType: value as TicketType }))}
+      onChange={(value) => {
+        alert(value);
+        setScheduleData((prev) => ({
+          ...prev,
+          ticketType: value as TicketType,
+          seatingConfiguration: value === "nonTicketed" ? "freeSeating" : prev.seatingConfiguration,
+        }));
+      }}
     />
   );
 };

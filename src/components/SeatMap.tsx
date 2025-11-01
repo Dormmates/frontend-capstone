@@ -81,6 +81,8 @@ const SeatMap = ({
   return (
     <div className="flex  flex-col gap-5">
       <div className="relative w-full h-[80vh] border border-gray-300 rounded-lg overflow-hidden bg-muted">
+        {disabled && <div className="absolute top-16 left-2 z-10 flex space-x-2 p-2 border border-red bg-red/30 text-red font-bold">View Only</div>}
+
         <div className="absolute top-2 left-2 z-10 flex space-x-2">
           <Button variant="outline" onClick={() => setScale((prev) => Math.min(prev + 0.1, 3))}>
             +

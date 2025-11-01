@@ -173,8 +173,8 @@ const AllocationSummary = ({ scheduleId }: AllocationSummaryProps) => {
 
   const filtered = useMemo(() => {
     if (!data?.withBalanceDue) return [];
-    return data?.withBalanceDue.filter((d) => d.name.toLowerCase().includes(search.toLowerCase()));
-  }, [search]);
+    return data.withBalanceDue.filter((d) => d.name.toLowerCase().includes(search.toLowerCase()));
+  }, [search, data]);
 
   if (isLoading) {
     return <h1>Loadingg....</h1>;
@@ -183,8 +183,6 @@ const AllocationSummary = ({ scheduleId }: AllocationSummaryProps) => {
   if (isError || !data) {
     return <h1>Erorr</h1>;
   }
-
-  console.log(data);
 
   return (
     <div>

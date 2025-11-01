@@ -9,35 +9,49 @@ export const flattenSeatMap = (seatMap: SeatMetaData[]): FlattenedSeat[] => {
     ticketPrice: 0,
   }));
 
-  return sortSeatsByRowAndNumber(flattened);
+  const sorted = sortSeatsByRowAndNumber(flattened);
+  return sorted;
 };
 
 export const formatSectionName = (sectionName: string) => {
   return sectionName.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
+const getRowLetters = (seatNumber: string) => seatNumber.match(/^[A-Z]+/i)?.[0] || "";
+
+const getSeatNumber = (seatNumber: string) => parseInt(seatNumber.match(/\d+/)?.[0] || "0", 10);
+
 export const sortSeatsByRowAndNumber = (seats: FlattenedSeat[]) => {
-  const SECTION_ORDER = ["orchestraLeft", "orchestraMiddle", "orchestraRight", "balconyLeft", "balconyMiddle", "balconyRight"];
-
-  const getSectionIndex = (section: string) => {
-    const index = SECTION_ORDER.indexOf(section);
-    return index === -1 ? SECTION_ORDER.length : index;
-  };
-
   return [...seats].sort((a, b) => {
-    const sectionDiff = getSectionIndex(a.section) - getSectionIndex(b.section);
-    if (sectionDiff !== 0) return sectionDiff;
+    const rowA = getRowLetters(a.seatNumber);
+    const rowB = getRowLetters(b.seatNumber);
 
-    const rowA = a.row.match(/^[A-Z]+/i)?.[0] || "";
-    const rowB = b.row.match(/^[A-Z]+/i)?.[0] || "";
+    if (rowA !== rowB) {
+      if (rowA.length !== rowB.length) return rowA.length - rowB.length;
+      return rowA.localeCompare(rowB, undefined, { numeric: true });
+    }
 
-    if (rowA.length !== rowB.length) return rowB.length - rowA.length;
-    if (rowA !== rowB) return rowA.localeCompare(rowB, undefined, { numeric: true });
+    return getSeatNumber(a.seatNumber) - getSeatNumber(b.seatNumber);
+  });
+};
 
-    const numA = parseInt((a.seatNumber.match(/\d+/) || ["0"])[0], 10);
-    const numB = parseInt((b.seatNumber.match(/\d+/) || ["0"])[0], 10);
+export const sortSeatsByStartingRow = (seats: FlattenedSeat[], startRow: string) => {
+  const sorted = sortSeatsByRowAndNumber(seats);
+  const allRows = Array.from(new Set(sorted.map((s) => getRowLetters(s.seatNumber))));
 
-    return numA - numB;
+  const startIndex = allRows.indexOf(startRow);
+  if (startIndex === -1) return sorted;
+
+  const orderedRows = [...allRows.slice(startIndex), ...allRows.slice(0, startIndex)];
+  const rowOrder: Record<string, number> = {};
+  orderedRows.forEach((r, i) => (rowOrder[r] = i));
+
+  return [...sorted].sort((a, b) => {
+    const rowA = getRowLetters(a.seatNumber);
+    const rowB = getRowLetters(b.seatNumber);
+    const rowDiff = (rowOrder[rowA] ?? 999) - (rowOrder[rowB] ?? 999);
+    if (rowDiff !== 0) return rowDiff;
+    return getSeatNumber(a.seatNumber) - getSeatNumber(b.seatNumber);
   });
 };
 

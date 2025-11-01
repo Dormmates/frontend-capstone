@@ -123,7 +123,7 @@ const EditGenre = ({ genre }: { genre: string }) => {
       title={`Change Name of Genre "${genre}"`}
       description="Rename this genre. This change will be reflected anywhere this genre is displayed."
       triggerElement={
-        <Button size="icon" variant="outline">
+        <Button size="icon" variant="secondary">
           <EditIcon />
         </Button>
       }

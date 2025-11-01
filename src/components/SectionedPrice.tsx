@@ -8,9 +8,13 @@ import { useDeleteSectionedPricing } from "@/_lib/@react-client-query/ticketpric
 import AlertModal from "./AlertModal";
 import { toast } from "sonner";
 
+import EditPriceName from "@/pages/cca/systemSettings/EditPriceName";
+import { useState } from "react";
+
 const SectionedPrice = ({ data, hideAction = false }: { data: SectionedPricing; hideAction?: boolean }) => {
   const queryClient = useQueryClient();
   const deletePrice = useDeleteSectionedPricing();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Card className="rounded-sm w-full max-w-sm">
@@ -58,32 +62,31 @@ const SectionedPrice = ({ data, hideAction = false }: { data: SectionedPricing; 
       </CardContent>
 
       <CardFooter className="p-2 flex justify-end gap-2">
-        {/* <Button variant="outline">
-          <EditIcon />
-        </Button> */}
-
         {!hideAction && (
-          <AlertModal
-            title={`Delete "${data.priceName}" pricing`}
-            description="Are you sure you want to delete this? The operation won't continue if this pricing is used by a schedule/s already."
-            onConfirm={() =>
-              toast.promise(deletePrice.mutateAsync(data.id), {
-                position: "top-center",
-                loading: `Deleting ${data.priceName}...`,
-                success: () => {
-                  queryClient.setQueryData<TicketPricing[]>(["pricings"], (oldData) => (oldData ? oldData.filter((p) => p.id !== data.id) : []));
-                  return `Deleted ${data.priceName}`;
-                },
-                error: (err) => err.message || "Failed to delete pricing",
-              })
-            }
-            confirmation="Delete"
-            trigger={
-              <Button size="icon" variant="outline">
-                <Trash2Icon className="text-red" />
-              </Button>
-            }
-          />
+          <div className="flex gap-2">
+            <EditPriceName isOpen={isOpen} setIsOpen={setIsOpen} priceId={data.id} priceName={data.priceName} />
+            <AlertModal
+              title={`Delete "${data.priceName}" pricing`}
+              description="Are you sure you want to delete this? The operation won't continue if this pricing is used by a schedule/s already."
+              onConfirm={() =>
+                toast.promise(deletePrice.mutateAsync(data.id), {
+                  position: "top-center",
+                  loading: `Deleting ${data.priceName}...`,
+                  success: () => {
+                    queryClient.setQueryData<TicketPricing[]>(["pricings"], (oldData) => (oldData ? oldData.filter((p) => p.id !== data.id) : []));
+                    return `Deleted ${data.priceName}`;
+                  },
+                  error: (err) => err.message || "Failed to delete pricing",
+                })
+              }
+              confirmation="Delete"
+              trigger={
+                <Button size="icon" variant="outline">
+                  <Trash2Icon className="text-red" />
+                </Button>
+              }
+            />
+          </div>
         )}
       </CardFooter>
     </Card>

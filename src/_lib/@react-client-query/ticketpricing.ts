@@ -30,19 +30,10 @@ export const useGetTicketPrices = () => {
   });
 };
 
-export const useUpdateFixedPricing = () => {
-  return useMutation<any, Error, FixedPricing>({
-    mutationFn: async (payload: FixedPricing) => {
-      const res = await request<any>("/api/pricing/fixed", payload, "patch");
-      return res.data;
-    },
-  });
-};
-
-export const useUpdateSectionedPricing = () => {
-  return useMutation<any, Error, SectionedPricing>({
-    mutationFn: async (payload: SectionedPricing) => {
-      const res = await request<any>("/api/pricing/sectioned", payload, "patch");
+export const useEditPriceName = () => {
+  return useMutation<any, Error, { newName: string; priceId: string }>({
+    mutationFn: async (payload) => {
+      const res = await request<any>("/api/pricing/name", payload, "patch");
       return res.data;
     },
   });

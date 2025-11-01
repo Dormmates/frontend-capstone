@@ -22,6 +22,7 @@ export interface ScheduleFormData {
 }
 
 export type ErrorKeys =
+  | "complimentary"
   | "dates"
   | "commisionFee"
   | "totalTickets"

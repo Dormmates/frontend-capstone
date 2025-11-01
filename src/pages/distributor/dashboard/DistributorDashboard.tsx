@@ -180,7 +180,12 @@ const DistributorDashboard = () => {
       </div>
 
       {selectedSchedule && (
-        <Modal className="w-[97%] max-w-[1000px] " isOpen={!!selectedSchedule} onClose={() => setSelectedSchedule(null)} title="Tickets Allocated">
+        <Modal
+          className="w-[97%] max-w-[1000px] overflow-y-auto max-h-[90%] "
+          isOpen={!!selectedSchedule}
+          onClose={() => setSelectedSchedule(null)}
+          title="Tickets Allocated"
+        >
           <ViewAllocatedTickets closeModal={() => setSelectedSchedule(null)} schedule={selectedSchedule} />
         </Modal>
       )}

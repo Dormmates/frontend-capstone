@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetShow } from "@/_lib/@react-client-query/show.ts";
 import React, { useEffect, useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
-import type { FlattenedSeat } from "@/types/seat.ts";
 import type { ScheduleFormData, ScheduleFormErrors, SeatPricing } from "@/types/schedule.ts";
 import ScheduleDateSelection from "./components/ScheduleDateSelection";
 import TicketTypeSelection from "./components/TicketTypeSelection";
@@ -10,7 +9,7 @@ import SeatingConfigurationSelector from "./components/SeatingConfigurationSelec
 import PricingSection from "./components/PricingSection";
 import { parseControlNumbers } from "@/utils/controlNumber.ts";
 import TicketDetailsSection from "./components/TicketDetailsSection";
-import { flattenSeatMap, sortSeatsByRowAndNumber } from "@/utils/seatmap.ts";
+import { flattenSeatMap } from "@/utils/seatmap.ts";
 import SeatMapSchedule from "./components/SeatMapSchedule";
 import { useAddSchedule, type AddSchedulePayload } from "@/_lib/@react-client-query/schedule.ts";
 import { useQueryClient } from "@tanstack/react-query";
@@ -24,9 +23,34 @@ import type { FixedPricing, SectionedPricing, TicketPricing } from "@/types/tick
 import FixedPrice from "@/components/FixedPrice.tsx";
 import SectionedPrice from "@/components/SectionedPrice.tsx";
 import { useAuthContext } from "@/context/AuthContext.tsx";
+import Dropdown from "@/components/Dropdown.tsx";
 
-// type ControlKey = "orchestraControlNumber" | "balconyControlNumber" | "complimentaryControlNumber";
-type ControlKey = "complimentaryControlNumber" | "ticketsControlNumber";
+export const rowOptions = [
+  { name: "Row AA", value: "AA" },
+  { name: "Row BB", value: "BB" },
+  { name: "Row CC", value: "CC" },
+  { name: "Row A", value: "A" },
+  { name: "Row B", value: "B" },
+  { name: "Row C", value: "C" },
+  { name: "Row D", value: "D" },
+  { name: "Row E", value: "E" },
+  { name: "Row F", value: "F" },
+  { name: "Row G", value: "G" },
+  { name: "Row H", value: "H" },
+  { name: "Row I", value: "I" },
+  { name: "Row J", value: "J" },
+  { name: "Row K", value: "K" },
+  { name: "Row L", value: "L" },
+  { name: "Row M", value: "M" },
+  { name: "Row N", value: "N" },
+  { name: "Row O", value: "O" },
+  { name: "Row P", value: "P" },
+  { name: "Row Q", value: "Q" },
+  { name: "Row R", value: "R" },
+  { name: "Row S", value: "S" },
+  { name: "Row T", value: "T" },
+  { name: "Row U", value: "U" },
+];
 
 const AddSchedule = () => {
   const { user } = useAuthContext();
@@ -36,6 +60,7 @@ const AddSchedule = () => {
   const { id } = useParams();
   const { data, isLoading, isError, error } = useGetShow(id as string);
   const [seatData, setSeatData] = useState(() => flattenSeatMap(seatMetaData));
+  const [startingRow, setStartingRow] = useState("A");
   const [scheduleData, setScheduleData] = useState<ScheduleFormData>({
     dates: [{ date: new Date(), time: "" }],
     ticketType: "ticketed",
@@ -61,31 +86,31 @@ const AddSchedule = () => {
   }, [navigate, data]);
 
   useEffect(() => {
+    if (scheduleData.seatingConfiguration !== "controlledSeating") return;
+
+    const totalTickets = parseInt(scheduleData.totalTickets + "") || 0;
+    const totalComplimentary = parseInt(scheduleData.totalComplimentary + "") || 0;
+
+    if (totalTickets + totalComplimentary > seatData.length) return;
+
+    const newTicketsControlNumber = totalTickets > 0 ? `1-${totalTickets}` : "";
+
+    const newComplimentaryControlNumber = totalComplimentary > 0 ? `${totalTickets + 1}-${totalTickets + totalComplimentary}` : "";
+
+    setScheduleData((prev) => ({
+      ...prev,
+      ticketsControlNumber: newTicketsControlNumber,
+      complimentaryControlNumber: newComplimentaryControlNumber,
+    }));
+  }, [scheduleData.totalTickets, scheduleData.totalComplimentary, scheduleData.seatingConfiguration, seatData.length]);
+
+  useEffect(() => {
     document.title = `${data?.title} - Add Schedule`;
   }, [data]);
 
   const [selectedPrice, setSelectedPrice] = useState<TicketPricing | null>(null);
-
   const [openScheduleSummary, setOpenScheduleSummary] = useState(false);
-
   const [errors, setErrors] = useState<ScheduleFormErrors>({});
-
-  const [isComplimentaryMode, setComplimentaryMode] = useState(false);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.metaKey) setComplimentaryMode(true);
-    };
-    const handleKeyUp = () => setComplimentaryMode(false);
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, []);
 
   useEffect(() => {
     if (selectedPrice?.type === "sectioned") {
@@ -138,48 +163,51 @@ const AddSchedule = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    const updatedData = {
-      ...scheduleData,
-      [name]: value,
-    };
+    let updatedData = { ...scheduleData, [name]: value };
 
-    const ticketsCount = parseInt(updatedData.totalTickets + "") || 0;
-    const complimentaryCount = parseInt(updatedData.totalComplimentary + "") || 0;
+    let ticketsCount = parseInt(updatedData.totalTickets + "") || 0;
+    let complimentaryCount = parseInt(updatedData.totalComplimentary + "") || 0;
+    const totalSeats = seatData.length;
 
-    setScheduleData(updatedData);
     setErrors((prev) => ({ ...prev, [name]: "" }));
 
-    if (name === "totalTickets" || name === "totalComplimentary") {
-      if (ticketsCount <= 0 && name === "totalTickets") {
-        setErrors((prev) => ({ ...prev, totalTickets: "Total tickets must be greater than 0." }));
-        setScheduleData((prev) => ({ ...prev, ticketsControlNumber: "", complimentaryControlNumber: "" }));
-        return;
+    if (scheduleData.seatingConfiguration === "controlledSeating") {
+      if (name === "totalComplimentary") {
+        if (complimentaryCount <= totalSeats) {
+          ticketsCount = Math.max(totalSeats - complimentaryCount, 0);
+          updatedData.totalTickets = ticketsCount;
+        }
+      } else if (name === "totalTickets") {
+        if (ticketsCount <= totalSeats) {
+          complimentaryCount = Math.max(totalSeats - ticketsCount, 0);
+          updatedData.totalComplimentary = complimentaryCount;
+        }
       }
-
-      if (ticketsCount + complimentaryCount > seatData.length) {
-        const msg = `Total tickets cannot exceed available seats (${seatData.length}).`;
-        setErrors((prev) => ({ ...prev, totalTickets: msg, totalComplimentary: msg }));
-        setScheduleData((prev) => ({ ...prev, ticketsControlNumber: "", complimentaryControlNumber: "" }));
-        return;
-      }
-
-      const newData = { ...updatedData };
-
-      if (ticketsCount > 0) {
-        newData.ticketsControlNumber = `1-${ticketsCount}`;
-      } else {
-        newData.ticketsControlNumber = "";
-      }
-
-      if (complimentaryCount > 0 && ticketsCount > 0) {
-        newData.complimentaryControlNumber = `${ticketsCount + 1}-${ticketsCount + complimentaryCount}`;
-      } else {
-        newData.complimentaryControlNumber = "";
-      }
-
-      setScheduleData(newData);
-      setErrors((prev) => ({ ...prev, totalTickets: "", totalComplimentary: "" }));
     }
+
+    if (ticketsCount + complimentaryCount > totalSeats) {
+      const msg = `Total tickets cannot exceed available seats (${totalSeats}).`;
+      setErrors((prev) => ({
+        ...prev,
+        totalTickets: msg,
+        totalComplimentary: msg,
+      }));
+
+      setScheduleData((prev) => ({
+        ...prev,
+        ...updatedData,
+        ticketsControlNumber: "",
+        complimentaryControlNumber: "",
+      }));
+      return;
+    }
+
+    updatedData.ticketsControlNumber = ticketsCount > 0 ? `1-${ticketsCount}` : "";
+    updatedData.complimentaryControlNumber =
+      complimentaryCount > 0 && ticketsCount > 0 ? `${ticketsCount + 1}-${ticketsCount + complimentaryCount}` : "";
+
+    setErrors((prev) => ({ ...prev, totalTickets: "", totalComplimentary: "" }));
+    setScheduleData(updatedData);
   };
 
   const handleDateChange = (value: Date, index: number) => {
@@ -234,97 +262,6 @@ const AddSchedule = () => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const getRemainingControlNumbers = (section: ControlKey, seats = seatData): number[] => {
-    const controlRange = scheduleData[section];
-    if (!controlRange) return [];
-
-    try {
-      const totalParsed = parseControlNumbers(controlRange);
-      const assigned = seats
-        .filter((s) =>
-          section === "ticketsControlNumber" ? s.ticketControlNumber > 0 && !s.isComplimentary : s.ticketControlNumber > 0 && s.isComplimentary
-        )
-        .map((s) => s.ticketControlNumber);
-
-      return totalParsed.filter((num) => !assigned.includes(num));
-    } catch {
-      return [];
-    }
-  };
-
-  const rebalanceControlNumbers = (seats: FlattenedSeat[]) => {
-    const regularSeats = seats.filter((s) => s.ticketControlNumber > 0 && !s.isComplimentary);
-    const complimentarySeats = seats.filter((s) => s.ticketControlNumber > 0 && s.isComplimentary);
-
-    const sortedRegular = sortSeatsByRowAndNumber(regularSeats);
-    const sortedComplimentary = sortSeatsByRowAndNumber(complimentarySeats);
-
-    const allRegularNumbers = sortedRegular.map((s) => s.ticketControlNumber);
-    const allComplimentaryNumbers = sortedComplimentary.map((s) => s.ticketControlNumber);
-
-    const minRegular = allRegularNumbers.length > 0 ? Math.min(...allRegularNumbers) : 1;
-    const minComplimentary = allComplimentaryNumbers.length > 0 ? Math.min(...allComplimentaryNumbers) : 1;
-
-    sortedRegular.forEach((seat, index) => {
-      seat.ticketControlNumber = minRegular + index;
-    });
-
-    sortedComplimentary.forEach((seat, index) => {
-      seat.ticketControlNumber = minComplimentary + index;
-    });
-  };
-
-  const toggleSeats = (clickedSeats: FlattenedSeat[]) => {
-    if (errors.complimentaryControlNumber || errors.ticketsControlNumber) {
-      toast.error("Please enter ticket control numbers first", { position: "top-center" });
-      return;
-    }
-
-    setSeatData((prev) => {
-      if (!clickedSeats || clickedSeats.length === 0) return prev;
-
-      const section = isComplimentaryMode ? "complimentaryControlNumber" : "ticketsControlNumber";
-      const updated = prev.map((s) => ({ ...s }));
-      const remaining = getRemainingControlNumbers(section).sort((a, b) => a - b);
-
-      const hasAssigned = clickedSeats.some((clickedSeat) =>
-        updated.find((s) => s.seatNumber === clickedSeat.seatNumber && s.section === clickedSeat.section && s.ticketControlNumber !== 0)
-      );
-
-      if (hasAssigned) {
-        // UNASSIGN MODE
-        clickedSeats.forEach((clickedSeat) => {
-          const idx = updated.findIndex((s) => s.seatNumber === clickedSeat.seatNumber && s.section === clickedSeat.section);
-          if (idx === -1) return;
-
-          updated[idx].ticketControlNumber = 0;
-          updated[idx].isComplimentary = false;
-        });
-      } else {
-        // ASSIGN MODE
-        for (const clickedSeat of clickedSeats) {
-          const idx = updated.findIndex((s) => s.seatNumber === clickedSeat.seatNumber && s.section === clickedSeat.section);
-          if (idx === -1) continue;
-
-          const seat = updated[idx];
-          if (remaining.length === 0) {
-            toast.error("No more control numbers available for this section", {
-              position: "top-center",
-            });
-            break;
-          }
-
-          const assignNum = remaining.shift()!;
-          seat.ticketControlNumber = assignNum;
-          seat.isComplimentary = isComplimentaryMode;
-        }
-      }
-
-      rebalanceControlNumbers(updated);
-      return updated;
-    });
   };
 
   const handleSubmit = () => {
@@ -392,7 +329,12 @@ const AddSchedule = () => {
         </div>
 
         <div>
-          <SeatingConfigurationSelector scheduleData={scheduleData} setScheduleData={setScheduleData} />
+          <SeatingConfigurationSelector
+            setErrors={setErrors}
+            seatCount={seatData.length}
+            scheduleData={scheduleData}
+            setScheduleData={setScheduleData}
+          />
         </div>
         {scheduleData.ticketType == "ticketed" && (
           <PricingSection
@@ -411,20 +353,26 @@ const AddSchedule = () => {
 
         {scheduleData.seatingConfiguration == "controlledSeating" && scheduleData.ticketType == "ticketed" && (
           <>
-            <div className="-mb-16 mt-5"></div>
+            <div className="">
+              <Dropdown
+                includeHeader={true}
+                label="Ticket Control Number Starting Row"
+                items={rowOptions}
+                value={startingRow}
+                onChange={(v) => setStartingRow(v)}
+              />
+            </div>
             <SeatMapSchedule
-              regularRemaining={getRemainingControlNumbers("ticketsControlNumber").length}
-              complimentaryRemaining={getRemainingControlNumbers("complimentaryControlNumber").length}
+              setErrors={setErrors}
+              error={errors.complimentary}
+              startingRow={startingRow}
+              scheduleData={{
+                ticketsControlNumber: `1-${seatData.length}`,
+              }}
+              disabled={addSchedule.isPending}
+              setSeatData={setSeatData}
+              complimentaryCount={scheduleData.totalComplimentary as number}
               seatMap={seatData}
-              seatClick={(clickedSeat: FlattenedSeat) => {
-                toggleSeats([clickedSeat]);
-              }}
-              rowClick={(clickedSeats: FlattenedSeat[]) => {
-                toggleSeats(clickedSeats);
-              }}
-              sectionClick={(clickedSeats: FlattenedSeat[]) => {
-                toggleSeats(clickedSeats);
-              }}
             />
           </>
         )}
@@ -436,17 +384,6 @@ const AddSchedule = () => {
             if (!validate()) {
               toast.error("Please fix all shown errors", { position: "top-center" });
               return;
-            }
-
-            if (scheduleData.ticketType === "ticketed") {
-              if (
-                (getRemainingControlNumbers("ticketsControlNumber").length != 0 ||
-                  getRemainingControlNumbers("complimentaryControlNumber").length != 0) &&
-                scheduleData.seatingConfiguration === "controlledSeating"
-              ) {
-                toast.error("Not all Ticket Controll Number are assigned", { position: "top-center" });
-                return;
-              }
             }
 
             setOpenScheduleSummary(true);
@@ -498,19 +435,29 @@ const AddSchedule = () => {
 
                     {/* Fees & Tickets */}
                     <p>
-                      <span className="font-semibold">Tickets:</span> {scheduleData.totalTickets} ({scheduleData.ticketsControlNumber})
+                      <span className="font-semibold">Tickets:</span> {scheduleData.totalTickets}{" "}
+                      {scheduleData.seatingConfiguration === "freeSeating" && `(${scheduleData.ticketsControlNumber})`}
                     </p>
 
                     <p>
-                      <span className="font-semibold">Complimentary Tickets:</span> {scheduleData.totalComplimentary} (
-                      {scheduleData.complimentaryControlNumber})
+                      <span className="font-semibold">Complimentary Tickets:</span> {scheduleData.totalComplimentary}{" "}
+                      {scheduleData.seatingConfiguration === "freeSeating" && `(${scheduleData.complimentaryControlNumber})`}
                     </p>
                   </div>
 
                   {/* Controlled Seating */}
                   {scheduleData.seatingConfiguration === "controlledSeating" && (
                     <div className="flex flex-col gap-2">
-                      <SeatMapSchedule disabled={true} seatMap={seatData} />
+                      <SeatMapSchedule
+                        startingRow={startingRow}
+                        scheduleData={{
+                          ticketsControlNumber: `1-${seatData.length}`,
+                        }}
+                        setSeatData={setSeatData}
+                        complimentaryCount={scheduleData.totalComplimentary as number}
+                        disabled={true}
+                        seatMap={seatData}
+                      />
                       <p className="text-red-500 text-sm self-end italic">Note: Unassigned Seat will be disabled</p>
                     </div>
                   )}
