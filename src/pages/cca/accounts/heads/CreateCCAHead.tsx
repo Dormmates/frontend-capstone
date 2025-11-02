@@ -63,7 +63,15 @@ const ByCreation = ({ closeModal }: CreateCCAHeadProps) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    let newValue = value;
+
+    if (name === "email") {
+      newValue = value.replace(/[^a-zA-Z0-9@._-]/g, "");
+    } else {
+      newValue = value.replace(/[^a-zA-Z\s]/g, "");
+    }
+
+    setForm((prev) => ({ ...prev, [name]: newValue }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 

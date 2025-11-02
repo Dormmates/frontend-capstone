@@ -1,15 +1,22 @@
 import { useGetDistributorData } from "@/_lib/@react-client-query/accounts";
+import { useGetAllDistributorAllocationHistory, useGetAllDistributorRemittanceHistory } from "@/_lib/@react-client-query/schedule";
 import { useGetShowsAndDistributorTickets } from "@/_lib/@react-client-query/show";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import { ContentWrapper } from "@/components/layout/Wrapper";
 import PaginatedTable from "@/components/PaginatedTable";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { DistributorScheduleTickets } from "@/types/ticket";
 import { distributorTypeOptions } from "@/types/user";
 import { formatCurrency } from "@/utils";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
 import { MailIcon, NetworkIcon, PhoneIcon, TypeIcon } from "lucide-react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import DistributorAllocationHistory from "./DistributorAllocationHistory";
+import DistributorRemittanceHistory from "./DistributorRemittanceHistory";
 
 const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
   const soldTickets = schedule.tickets.filter((ticket) => ticket.status === "sold");
@@ -25,7 +32,7 @@ const ViewDistributor = () => {
   const { data: distributor, isLoading: loadingDistributor, isError: distributorError } = useGetDistributorData(distributorId as string);
   const { data, isLoading, isError } = useGetShowsAndDistributorTickets(distributorId as string);
 
-  // const [viewHistory, setViewHistory] = useState(false);
+  const [viewHistory, setViewHistory] = useState(false);
 
   if (isLoading || loadingDistributor) {
     return <h1>Loading...</h1>;
@@ -119,57 +126,57 @@ const ViewDistributor = () => {
         ]}
       />
 
-      {/* <div className="flex items-center gap-2 mt-10">
+      <div className="flex items-center gap-2 mt-10">
         <Checkbox id="viewHistory" checked={viewHistory} onCheckedChange={(checked) => setViewHistory(!!checked)} />
         <Label htmlFor="viewHistory">View Distributor Histories?</Label>
-      </div> */}
+      </div>
 
-      {/* {viewHistory && <DistributorHistory />} */}
+      {viewHistory && <DistributorHistory />}
     </ContentWrapper>
   );
 };
 
-// const DistributorHistory = () => {
-//   const { distributorId } = useParams();
+const DistributorHistory = () => {
+  const { distributorId } = useParams();
 
-//   const {
-//     data: allocationHistory,
-//     isLoading: loadingAllocation,
-//     isError: errorAllocation,
-//   } = useGetAllDistributorAllocationHistory(distributorId as string);
+  const {
+    data: allocationHistory,
+    isLoading: loadingAllocation,
+    isError: errorAllocation,
+  } = useGetAllDistributorAllocationHistory(distributorId as string);
 
-//   const {
-//     data: remittanceHistory,
-//     isLoading: loadingRemittance,
-//     isError: erroRemittance,
-//   } = useGetAllDistributorRemittanceHistory(distributorId as string);
+  const {
+    data: remittanceHistory,
+    isLoading: loadingRemittance,
+    isError: erroRemittance,
+  } = useGetAllDistributorRemittanceHistory(distributorId as string);
 
-//   if (loadingAllocation || loadingRemittance) {
-//     return <h1>Loadingg</h1>;
-//   }
+  if (loadingAllocation || loadingRemittance) {
+    return <h1>Loadingg</h1>;
+  }
 
-//   if (!allocationHistory || !remittanceHistory || errorAllocation || erroRemittance) {
-//     return <h1>Error loading</h1>;
-//   }
+  if (!allocationHistory || !remittanceHistory || errorAllocation || erroRemittance) {
+    return <h1>Error loading</h1>;
+  }
 
-//   return (
-//     <div>
-//       <h1 className="text-xl mt-5">Distributor History</h1>
+  return (
+    <div>
+      <h1 className="text-xl mt-5">Distributor History</h1>
 
-//       <Tabs className="mt-5" defaultValue="Allocation History">
-//         <TabsList>
-//           <TabsTrigger value="Allocation History">Allocation History</TabsTrigger>
-//           <TabsTrigger value="Remittance History">Remittance History</TabsTrigger>
-//         </TabsList>
-//         <TabsContent value="Allocation History">
-//           <DistributorAllocationHistory allocationHistory={allocationHistory} />
-//         </TabsContent>
-//         <TabsContent value="Remittance History">
-//           <DistributorRemittanceHistory remittanceHistory={remittanceHistory} />
-//         </TabsContent>
-//       </Tabs>
-//     </div>
-//   );
-// };
+      <Tabs className="mt-5" defaultValue="Allocation History">
+        <TabsList>
+          <TabsTrigger value="Allocation History">Allocation History</TabsTrigger>
+          <TabsTrigger value="Remittance History">Payment History</TabsTrigger>
+        </TabsList>
+        <TabsContent value="Allocation History">
+          <DistributorAllocationHistory allocationHistory={allocationHistory} />
+        </TabsContent>
+        <TabsContent value="Remittance History">
+          <DistributorRemittanceHistory remittanceHistory={remittanceHistory} />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
 
 export default ViewDistributor;

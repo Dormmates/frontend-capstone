@@ -30,14 +30,14 @@ const DistributorRemittanceHistory = ({ remittanceHistory }: { remittanceHistory
             header: "Show Schedule",
             render: (log) => `${formatToReadableDate(log.showDate + "")} at ${formatToReadableTime(log.showDate + "")}`,
           },
-          { key: "tickets", header: "Tickets Remitted", render: (log) => log.tickets.length },
-          { key: "dateRemitted", header: "Date Remitted", render: (log) => formatToReadableDate(log.dateRemitted + "") },
-          { key: "timeRemitted", header: "Time Remitted", render: (log) => formatToReadableTime(log.dateRemitted + "") },
-          { key: "receivedBy", header: "Remitted To", render: (log) => log.receivedBy },
-          { key: "amount", header: "Amount Remitted", render: (log) => formatCurrency(log.totalRemittance) },
+          { key: "tickets", header: "Tickets", render: (log) => log.tickets.length },
+          { key: "dateRemitted", header: "Date", render: (log) => formatToReadableDate(log.dateRemitted + "") },
+          { key: "timeRemitted", header: "Time", render: (log) => formatToReadableTime(log.dateRemitted + "") },
+          { key: "receivedBy", header: "To", render: (log) => log.receivedBy },
+          { key: "amount", header: "Amount", render: (log) => formatCurrency(log.totalRemittance) },
           {
             key: "type",
-            header: "Remittance Type",
+            header: "Type",
             render: (log) =>
               log.actionType === "payToCCA" ? (
                 <p className="flex items-center gap-2">
@@ -62,7 +62,7 @@ const DistributorRemittanceHistory = ({ remittanceHistory }: { remittanceHistory
       />
 
       {selectedHistory && (
-        <Modal title="Remittance Summary" isOpen={!!selectedHistory} onClose={() => setSelectedHistory(null)}>
+        <Modal title="Transaction Summary" isOpen={!!selectedHistory} onClose={() => setSelectedHistory(null)}>
           <RemittanceSummary
             seatingType={selectedHistory.seatingType}
             remarksValue={selectedHistory.remarks}

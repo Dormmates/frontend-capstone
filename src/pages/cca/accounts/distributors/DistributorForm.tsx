@@ -28,13 +28,18 @@ type DistributorFormProps = {
 const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, onSubmit, onCancel, isSubmitting }: DistributorFormProps) => {
   const [formData, setFormData] = useState(initialValues);
   const [errors, setErrors] = useState<Partial<Record<keyof DistributorFormValues, string>>>({});
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     let newValue = value;
+
     if (name === "contactNumber") {
       newValue = value.replace(/\D/g, "");
+    } else if (name === "email") {
+      newValue = value.replace(/[^a-zA-Z0-9@._-]/g, "");
+    } else {
+      newValue = value.replace(/[^a-zA-Z\s]/g, "");
     }
+
     setFormData((prev) => ({ ...prev, [name]: newValue }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };

@@ -6,12 +6,15 @@ import InputField from "./InputField";
 import PasswordField from "./PasswordField";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import type { Distributor } from "@/types/user";
+import { distributorTypeOptions, type Distributor, type User } from "@/types/user";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { useChangePassword } from "@/_lib/@react-client-query/auth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import PasswordWithValidation from "./PasswordWithValidation";
+import { useEditTrainer } from "@/_lib/@react-client-query/accounts";
+import { isValidEmail } from "@/utils";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   openAccount: boolean;
@@ -21,6 +24,8 @@ type Props = {
 const Account = ({ openAccount, setOpenAccount }: Props) => {
   const { user, setUser, setToken } = useAuthContext();
   const changePassword = useChangePassword();
+  const editAccount = useEditTrainer();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const [userForm, setUserForm] = useState({
@@ -37,6 +42,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
   });
 
   const [passwordsError, setPasswordsError] = useState<{ currentPassword?: string; newPassword?: string }>({});
+  const [informationError, setInformationError] = useState<{ email?: string; firstName?: string; lastName?: string }>({});
 
   const closeAccountModal = () => {
     setOpenAccount(false);
@@ -45,7 +51,10 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setUserForm((prev) => ({ ...prev, [name]: value.trim() }));
+    if (/^[a-zA-Z\s]*$/.test(value)) {
+      setUserForm((prev) => ({ ...prev, [name]: value }));
+      setInformationError((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
   const handlePasswordInputsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,6 +62,15 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
 
     setPasswordForm((prev) => ({ ...prev, [name]: value.trim() }));
     setPasswordsError((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const hasInformationChanged = () => {
+    if (!user) return false;
+    return (
+      userForm.firstName.trim() !== user.firstName.trim() ||
+      userForm.lastName.trim() !== user.lastName.trim() ||
+      userForm.email.trim() !== user.email.trim()
+    );
   };
 
   const validatePasswordChange = () => {
@@ -70,6 +88,37 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
     }
 
     setPasswordsError(errors);
+    return isValid;
+  };
+
+  const validateInformationChange = () => {
+    const errors: typeof informationError = {};
+    let isValid = true;
+
+    if (!userForm.firstName) {
+      errors.firstName = "First name cannot be empty";
+      isValid = false;
+    }
+
+    if (!userForm.lastName.trim()) {
+      errors.lastName = "Last name cannot be empty";
+      isValid = false;
+    }
+
+    if (!userForm.email.trim()) {
+      errors.email = "Email Cannot be empty";
+      isValid = false;
+    } else {
+      if (!isValidEmail(userForm.email.trim())) {
+        errors.email = "Invalid email address";
+        isValid = false;
+      } else if (!userForm.email.trim().endsWith("@slu.edu.ph")) {
+        errors.email = "Email must end with @slu.edu.ph";
+        isValid = false;
+      }
+    }
+
+    setInformationError(errors);
     return isValid;
   };
 
@@ -112,6 +161,39 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
     );
   };
 
+  const subitInformationChange = () => {
+    if (!validateInformationChange()) return;
+
+    toast.promise(
+      editAccount.mutateAsync({
+        userId: user?.userId as string,
+        lastName: userForm.lastName,
+        firstName: userForm.firstName,
+        email: userForm.email,
+      }),
+      {
+        success: () => {
+          queryClient.setQueryData<User | undefined>(["user"], (oldUser) => {
+            if (!oldUser) return oldUser;
+
+            return {
+              ...oldUser,
+              firstName: userForm.firstName,
+              lastName: userForm.lastName,
+              email: userForm.email,
+            };
+          });
+
+          setUser((prev) => prev && { ...prev, ...userForm });
+          return "Information Updated";
+        },
+        error: (err) => err.message || "Failed to update information, please try again later",
+        loading: "Updating information...",
+        position: "top-center",
+      }
+    );
+  };
+
   return (
     <Dialog open={openAccount} onOpenChange={closeAccountModal}>
       <DialogContent className="w-[90%] max-w-4xl max-h-[90vh] p-0 ">
@@ -130,12 +212,17 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
               <Card className="mt-5">
                 <CardHeader>
                   <CardTitle>Basic Information</CardTitle>
-                  <CardDescription>To update your personal informations, please contact CCA Head</CardDescription>
+                  <CardDescription>
+                    {user?.roles.includes("head")
+                      ? "You can edit your personal information below."
+                      : "To update your personal information, please contact CCA Head."}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-col gap-5 ">
                     <div className="flex flex-col md:flex-row gap-5">
                       <InputField
+                        error={informationError.firstName}
                         disabled={!user?.roles.includes("head")}
                         label="First Name"
                         value={userForm.firstName}
@@ -143,6 +230,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                         name="firstName"
                       />
                       <InputField
+                        error={informationError.lastName}
                         disabled={!user?.roles.includes("head")}
                         label="Last Name"
                         value={userForm.lastName}
@@ -151,6 +239,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                       />
                     </div>
                     <InputField
+                      error={informationError.email}
                       disabled={!user?.roles.includes("head")}
                       label="Email"
                       type="email"
@@ -169,8 +258,6 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                           name="contactNumber"
                         />
                       )}
-
-                      {/* {user?.department?.name && <InputField label="Trainer of" disabled={true} value={user.department.name} onChange={() => {}} />} */}
                     </div>
 
                     {user?.roles.includes("distributor") && (
@@ -178,7 +265,7 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                         <InputField
                           label="Distributor Type (Cannot Edit)"
                           disabled={true}
-                          value={(user as Distributor).distributor.distributorType + ""}
+                          value={distributorTypeOptions.find((t) => t.value === (user as Distributor).distributor.distributorType)?.name}
                           onChange={() => {}}
                         />
 
@@ -191,6 +278,12 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
                           />
                         )}
                       </div>
+                    )}
+
+                    {user?.roles.includes("head") && (
+                      <Button disabled={!hasInformationChanged() || editAccount.isPending} onClick={subitInformationChange} className="self-end">
+                        Save Changes
+                      </Button>
                     )}
                   </div>
                 </CardContent>

@@ -25,8 +25,18 @@ const TrainerForm = ({ initalValues, onSubmit, close, isSubmitting }: TrainerFor
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setTrainerData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+
+    if (name === "email") {
+      if (/^[a-zA-Z0-9@._-]*$/.test(value)) {
+        setTrainerData((prev) => ({ ...prev, [name]: value }));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
+      }
+    } else {
+      if (/^[a-zA-Z\s]*$/.test(value)) {
+        setTrainerData((prev) => ({ ...prev, [name]: value }));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
+      }
+    }
   };
 
   const validate = () => {
