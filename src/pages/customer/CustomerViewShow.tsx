@@ -1,27 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
-// import { useParams, useNavigate } from "react-router-dom";
-// import type { Schedule } from "@/types/schedule";
 
 import type { ShowDataWithSchedules } from "@/types/show";
 import Countdown from "@/components/Countdown";
 import { formatSectionName } from "@/utils/seatmap";
 import { formatCurrency, getSectionedPriceRange } from "@/utils";
 import type { SectionedPricing } from "@/types/ticketpricing";
+import { useGetScheduleSeatMap } from "@/_lib/@react-client-query/schedule";
+import SeatMap from "@/components/SeatMap";
+import { useGetAvailableTickets } from "@/_lib/@react-client-query/customer";
 
 type CustomerViewShowProps = {
   show: ShowDataWithSchedules;
 };
 
 const CustomerViewShow = ({ show }: CustomerViewShowProps) => {
-  // const { showId } = useParams();
-  // const navigate = useNavigate();
-
-  // const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
-
   useEffect(() => {
     document.title = `${show?.title}`;
   }, [show]);
@@ -79,31 +75,40 @@ const CustomerViewShow = ({ show }: CustomerViewShowProps) => {
       )}
 
       {show.nextSchedule && (
-        <div className="mt-10 border p-4 rounded-md shadow-md">
-          <h1 className="text-md text-muted-foreground ">Earliest Show Start</h1>
-          <div className="gap-10 flex-col md:flex-row flex w-full justify-between  mt-2">
-            <div>
-              <h1 className="text-2xl font-bold">
-                {formatToReadableDate(show.nextSchedule.datetime + "")} at {formatToReadableTime(show.nextSchedule.datetime + "")}
-              </h1>
-              <p className="text-xl">
-                Starts in: <Countdown showDate={show.nextSchedule.datetime} />
-              </p>
-            </div>
-            <div>
-              <p className="text-xl">{formatSectionName(show.nextSchedule.seatingType)}</p>
-              {show.nextSchedule.ticketType === "ticketed" ? (
+        <>
+          <div className="mt-10 border p-4 rounded-md shadow-md">
+            <h1 className="text-md text-muted-foreground ">Earliest Show Start</h1>
+            <div className="gap-10 flex-col md:flex-row flex w-full justify-between  mt-2">
+              <div>
+                <h1 className="text-2xl font-bold">
+                  {formatToReadableDate(show.nextSchedule.datetime + "")} at {formatToReadableTime(show.nextSchedule.datetime + "")}
+                </h1>
                 <p className="text-xl">
-                  {show.nextSchedule.ticketPricing.type === "fixed"
-                    ? formatCurrency(show.nextSchedule.ticketPricing.fixedPrice)
-                    : getSectionedPriceRange(show.nextSchedule.ticketPricing as SectionedPricing).rangeText}
+                  Starts in: <Countdown showDate={show.nextSchedule.datetime} />
                 </p>
-              ) : (
-                <div>Free (Non-Ticketed)</div>
-              )}
+              </div>
+              <div>
+                <p className="text-xl">
+                  {formatSectionName(show.nextSchedule.seatingType === "freeSeating" ? "Open Seating" : show.nextSchedule.seatingType)}
+                </p>
+                {show.nextSchedule.ticketType === "ticketed" ? (
+                  <p className="text-xl">
+                    {show.nextSchedule.ticketPricing.type === "fixed"
+                      ? formatCurrency(show.nextSchedule.ticketPricing.fixedPrice)
+                      : getSectionedPriceRange(show.nextSchedule.ticketPricing as SectionedPricing).rangeText}
+                  </p>
+                ) : (
+                  <div>Free (Non-Ticketed)</div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+          {show.nextSchedule.seatingType === "controlledSeating" ? (
+            <ShowSeatMap scheduleId={show.nextSchedule.scheduleId} />
+          ) : (
+            <ShowTicketAvailability scheduleId={show.nextSchedule.scheduleId} />
+          )}
+        </>
       )}
 
       {show.remainingUpcomingSchedules.length !== 0 && (
@@ -134,7 +139,7 @@ const CustomerViewShow = ({ show }: CustomerViewShowProps) => {
               <h1 className="text-xl font-medium">{formatToReadableDate(schedules[0].datetime + "")}</h1>
               <div className="flex gap-2 mt-5">
                 {schedules.map((schedule) => (
-                  <Button key={schedule.scheduleId} className="w-fit p-10 text-lg" variant="outline" onClick={() => {}}>
+                  <Button key={schedule.scheduleId} className="w-fit p-10 text-lg cursor-not-allowed" variant="outline" onClick={() => {}}>
                     {formatToReadableTime(schedule.datetime + "")}
                   </Button>
                 ))}
@@ -144,6 +149,99 @@ const CustomerViewShow = ({ show }: CustomerViewShowProps) => {
         </div>
       )}
     </>
+  );
+};
+
+type ShowSeatMapProps = {
+  scheduleId: string;
+};
+
+const ShowSeatMap = ({ scheduleId }: ShowSeatMapProps) => {
+  const { data, isLoading, isError } = useGetScheduleSeatMap(scheduleId);
+
+  const summary = useMemo(() => {
+    if (!data) return { ticketOnCCA: 0, notAvailable: 0, ticketOnDistributor: 0 };
+
+    return data.reduce(
+      (acc, curr) => {
+        if (curr.isComplimentary) {
+          acc.notAvailable += 1;
+        } else if (curr.status === "paidToCCA" || curr.status === "sold") {
+          acc.notAvailable += 1;
+        } else if (curr.status === "reserved") {
+          acc.ticketOnDistributor += 1;
+        } else if (curr.status === "available") {
+          acc.ticketOnCCA += 1;
+        }
+        return acc;
+      },
+      { ticketOnCCA: 0, notAvailable: 0, ticketOnDistributor: 0 }
+    );
+  }, [data]);
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (!data || isError) {
+    return <h1>Error</h1>;
+  }
+
+  const seatColorMap = {
+    available: "fill-white",
+    reserved: "fill-yellow-500",
+    sold: "fill-red",
+    paidToCCA: "fill-red",
+    complimentary: "fill-darkGrey",
+  };
+
+  return (
+    <div className="space-y-5 mt-5">
+      <div className="flex flex-col gap-4 ">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 bg-white rounded-sm border" />
+          <p className="text-sm font-medium">Available: {summary.ticketOnCCA}</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 bg-yellow-500 rounded-sm border" />
+          <p className="text-sm font-medium">Ticket on Distributor: {summary.ticketOnDistributor}</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 bg-darkGrey rounded-sm border" />
+          <p className="text-sm font-medium">Not Available: {summary.notAvailable}</p>
+        </div>
+      </div>
+
+      <SeatMap
+        recStyle={(seat) => {
+          if (seat.isComplimentary) return seatColorMap.complimentary;
+          if (seat.status === "reserved") return seatColorMap.reserved;
+          if (seat.status === "available") return seatColorMap.available;
+          if (seat.status === "sold" || seat.status === "paidToCCA") return seatColorMap.sold;
+          return "fill-gray-400";
+        }}
+        seatMap={data}
+      />
+    </div>
+  );
+};
+
+const ShowTicketAvailability = ({ scheduleId }: { scheduleId: string }) => {
+  const { data, isLoading, isError } = useGetAvailableTickets(scheduleId);
+
+  if (isLoading) {
+    return <h1>Loading</h1>;
+  }
+
+  if (!data || isError) {
+    return <h1>Error</h1>;
+  }
+
+  return (
+    <div className="w-full border mt-5 p-5 rounded-md shadow-md">
+      <h1 className="text-md text-muted-foreground">Ticket Availability</h1>
+      <p className="text-3xl font-bold mt-2">{data} tickets Available </p>
+    </div>
   );
 };
 

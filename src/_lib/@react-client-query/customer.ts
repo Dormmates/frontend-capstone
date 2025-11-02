@@ -44,3 +44,14 @@ export const useGetShowWithSchedules = (showId: string) => {
     retry: false,
   });
 };
+
+export const useGetAvailableTickets = (scheduleId: string) => {
+  return useQuery<number, Error>({
+    queryKey: ["tickets", "available", scheduleId],
+    queryFn: async () => {
+      const res = await request<number>(`/api/customer/availableTickets/${scheduleId}`, {}, "get");
+      return res.data;
+    },
+    retry: false,
+  });
+};
