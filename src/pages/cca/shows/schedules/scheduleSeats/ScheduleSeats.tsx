@@ -5,6 +5,8 @@ import NotFound from "../../../../NotFound";
 import { useGetScheduleSeatMap } from "@/_lib/@react-client-query/schedule.ts";
 import { useMemo } from "react";
 import SeatMap from "@/components/SeatMap";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const ScheduleSeats = () => {
   const { schedule } = useOutletContext<{ schedule: Schedule }>();
@@ -39,11 +41,11 @@ const ScheduleSeats = () => {
   if (schedule.seatingType === "freeSeating") return <NotFound />;
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 
   if (!data || isError) {
-    return <h1>Error</h1>;
+    return <Error />;
   }
 
   return (

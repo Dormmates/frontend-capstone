@@ -7,6 +7,7 @@ import Breadcrumbs from "@/components/BreadCrumbs";
 import { CircleAlertIcon, InfoIcon } from "lucide-react";
 import NotFound from "@/components/NotFound";
 import { useEffect } from "react";
+import Loading from "@/components/Loading";
 
 const ViewShowScheduleLayout = () => {
   const { showId, scheduleId } = useParams();
@@ -25,7 +26,7 @@ const ViewShowScheduleLayout = () => {
   ];
 
   if (loadingShow || scheduleLoading) {
-    return <p>Loading...</p>;
+    return <Loading />;
   }
 
   return (

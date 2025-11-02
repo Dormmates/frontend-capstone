@@ -10,6 +10,7 @@ import AllocateByControlNumber from "./AllocateByControlNumber";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import NotFound from "@/components/NotFound";
 import { Button } from "@/components/ui/button";
+import Loading from "@/components/Loading";
 
 const TicketAllocation = () => {
   const { scheduleId, showId } = useParams();
@@ -38,7 +39,7 @@ const TicketAllocation = () => {
   }, [loadingSchedule, schedule, navigate, showId, scheduleId]);
 
   if (loadingShow || loadingSchedule || loadingTickets) {
-    return <h1>Loadingg....</h1>;
+    return <Loading />;
   }
 
   return (

@@ -17,6 +17,8 @@ import { toast } from "sonner";
 import { EditIcon, Users } from "lucide-react";
 import { useAuthContext } from "@/context/AuthContext";
 import DeleteAccount from "../DeleteAccount";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const Distributors = () => {
   const { user } = useAuthContext();
@@ -61,11 +63,11 @@ const Distributors = () => {
   }, []);
 
   if (loadingDistributors) {
-    return <h1>Loaddingg..</h1>;
+    return <Loading />;
   }
 
   if (errorDistributor || !distributors) {
-    return <h1>Error </h1>;
+    return <Error />;
   }
 
   return (

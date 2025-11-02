@@ -39,7 +39,6 @@ import {
   Settings,
   ViewPerformingGroups,
 } from "../pages/cca/index";
-
 import SalesReport from "@/pages/cca/shows/SalesReport";
 import TicketSeatLocation from "@/components/TicketSeatLocation";
 import LandingPage from "@/pages/customer/LandingPage";
@@ -50,8 +49,6 @@ import OpenShow from "@/pages/customer/OpenShow";
 
 const AppRoute = () => {
   const { user } = useAuthContext();
-
-  console.log(user);
 
   return (
     <Routes>

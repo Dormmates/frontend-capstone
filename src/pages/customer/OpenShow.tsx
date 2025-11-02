@@ -5,13 +5,14 @@ import Breadcrumbs from "@/components/BreadCrumbs";
 import NotFound from "@/components/NotFound";
 import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
+import Loading from "@/components/Loading";
 
 const OpenShow = () => {
   const { showId } = useParams();
   const { data, isLoading } = useGetShowWithSchedules(showId as string);
 
   if (isLoading) {
-    return <h1>Loadingg</h1>;
+    return <Loading />;
   }
 
   return (

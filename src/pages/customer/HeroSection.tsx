@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "./Navbar";
 import Countdown from "@/components/Countdown";
 import { useNavigate } from "react-router-dom";
+import Loading from "@/components/Loading";
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ const HeroSection = () => {
     currentX.current = null;
   };
 
-  if (isLoading) return <h1 className="text-center text-white mt-20">Loading...</h1>;
+  if (isLoading) return <Loading />;
   if (isError || !data || data.length === 0) return <DefaultLandingPage />;
 
   return (

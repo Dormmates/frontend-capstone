@@ -14,6 +14,8 @@ import DialogPopup from "@/components/DialogPopup";
 import { compressControlNumbers } from "@/utils/controlNumber";
 import { useEffect } from "react";
 import type { PieSectorDataItem } from "recharts/types/polar/Pie";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const ScheduleSummary = () => {
   const { scheduleId, showId } = useParams();
@@ -31,11 +33,11 @@ const ScheduleSummary = () => {
   }, [hash]);
 
   if (loadingSummary) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 
   if (!summary || summaryError) {
-    return <h1>Error loading</h1>;
+    return <Error />;
   }
 
   const ticketsChartConfig = {

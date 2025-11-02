@@ -15,6 +15,8 @@ import PaginatedTable from "@/components/PaginatedTable";
 import EditShow from "./showActions/EditShow";
 import { DramaIcon, SpotlightIcon, TheaterIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const showTypes = [
   { name: "All Show Type", value: "all" },
@@ -76,8 +78,8 @@ const PerformingGroupShows = () => {
     });
   }, [activeShows, filter.search, filter.showType, filter.department]);
 
-  if (showsLoading || departmentsLoading) return <h1>Loading...</h1>;
-  if (!shows || !departmentsData || !user) return <h1>Error: No shows fetched.</h1>;
+  if (showsLoading || departmentsLoading) return <Loading />;
+  if (!shows || !departmentsData || !user) return <Error />;
 
   return (
     <ContentWrapper>

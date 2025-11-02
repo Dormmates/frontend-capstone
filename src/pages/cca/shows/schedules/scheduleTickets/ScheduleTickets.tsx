@@ -35,6 +35,8 @@ import { Label as InputLabel } from "@/components/ui/label";
 import { useAuthContext } from "@/context/AuthContext";
 import TransferTicket from "./TransferTicket";
 import type { ShowData } from "@/types/show";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const statusOptions = [
   { name: "All Status", value: "all" },
@@ -158,11 +160,11 @@ const ScheduleTickets = () => {
   } satisfies ChartConfig;
 
   if (loadingTickets) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 
   if (!tickets || errorTickets || !summary) {
-    return <h1>Error loading tickets</h1>;
+    return <Error />;
   }
 
   return (

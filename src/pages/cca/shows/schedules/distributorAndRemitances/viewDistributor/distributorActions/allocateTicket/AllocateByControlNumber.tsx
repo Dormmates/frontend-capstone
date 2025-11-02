@@ -19,6 +19,8 @@ import { useAuthContext } from "@/context/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
 import Modal from "@/components/Modal";
 import PaginatedTable from "@/components/PaginatedTable";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 type Props = {
   scheduleId: string;
@@ -140,11 +142,11 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
   };
 
   if (loadingDistributors || loadingDepartments) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 
   if (!distributors || distributorsError || errorDepartments) {
-    return <h1>Failed to load distributors</h1>;
+    return <Error />;
   }
 
   return (

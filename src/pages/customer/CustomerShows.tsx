@@ -5,6 +5,7 @@ import { ContentWrapper, PageWrapper } from "@/components/layout/Wrapper";
 import type { ShowType } from "@/types/show";
 
 import { Link, useNavigate } from "react-router-dom";
+import Loading from "@/components/Loading";
 
 const CustomerHome = () => {
   const { data: departments, isLoading } = useGetDepartments();
@@ -14,7 +15,7 @@ const CustomerHome = () => {
   }, []);
 
   if (isLoading) {
-    return <h1>Loading..</h1>;
+    return <Loading />;
   }
 
   return (

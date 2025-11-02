@@ -16,6 +16,8 @@ import { useAuthContext } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { EditIcon, Users } from "lucide-react";
 import DeleteAccount from "../DeleteAccount";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const Trainers = () => {
   const { user } = useAuthContext();
@@ -58,11 +60,11 @@ const Trainers = () => {
   }, []);
 
   if (loadingTrainers || loadingDepartments) {
-    return <h1>Loading..</h1>;
+    return <Loading />;
   }
 
   if (!trainers || !departments) {
-    return <h1>Error</h1>;
+    return <Error />;
   }
 
   return (

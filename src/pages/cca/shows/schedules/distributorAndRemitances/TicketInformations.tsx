@@ -1,5 +1,7 @@
 import { useGenerateTicketInformation } from "@/_lib/@react-client-query/schedule";
+import Error from "@/components/Error";
 import { ContentWrapper, PageWrapper } from "@/components/layout/Wrapper";
+import Loading from "@/components/Loading";
 import PaginatedTable from "@/components/PaginatedTable";
 import { Button } from "@/components/ui/button";
 import { formatTicket } from "@/utils/controlNumber";
@@ -10,9 +12,8 @@ const TicketInformations = () => {
   const { scheduleId } = useParams<{ scheduleId: string }>();
   const { data, isLoading, isError } = useGenerateTicketInformation(scheduleId as string);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Failed to load report</p>;
-  if (!data) return <p>No data available</p>;
+  if (isLoading) return <Loading />;
+  if (isError || !data) return <Error />;
 
   return (
     <PageWrapper>

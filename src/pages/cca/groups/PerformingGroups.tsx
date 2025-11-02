@@ -25,6 +25,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useAuthContext } from "@/context/AuthContext";
 import { Link } from "react-router-dom";
 import { MultiSelect } from "@/components/MultiSelect";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const PerformingGroups = () => {
   const { user } = useAuthContext();
@@ -143,11 +145,11 @@ const PerformingGroups = () => {
   };
 
   if (fetchingDepartments) {
-    return <h1>Loading</h1>;
+    return <Loading />;
   }
 
   if (errorLoadingDepartments || !departments) {
-    return <h1>Error Loading</h1>;
+    return <Error />;
   }
 
   return (

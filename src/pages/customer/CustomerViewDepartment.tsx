@@ -11,6 +11,7 @@ import { ChevronLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
 import Countdown from "@/components/Countdown";
+import Loading from "@/components/Loading";
 
 const CustomerViewDepartment = () => {
   const { departmentId } = useParams();
@@ -21,7 +22,7 @@ const CustomerViewDepartment = () => {
   const [selectedShow, setSelectedShow] = useState<ShowDataWithSchedules | null>(null);
 
   if (loadingShows || loadingDepartment) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 
   return (

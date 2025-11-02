@@ -70,6 +70,20 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      keyframes: {
+        flip: {
+          "0%, 100%": { transform: "rotateY(0deg)" },
+          "50%": { transform: "rotateY(180deg)" },
+        },
+        bounceDot: {
+          "0%, 80%, 100%": { transform: "translateY(0)" },
+          "40%": { transform: "translateY(-8px)" },
+        },
+      },
+      animation: {
+        flip: "flip 2s ease-in-out infinite",
+        bounceDot: "bounceDot 1.4s infinite ease-in-out both",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

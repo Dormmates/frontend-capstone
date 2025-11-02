@@ -15,6 +15,8 @@ import { useAuthContext } from "@/context/AuthContext";
 import DialogPopup from "@/components/DialogPopup";
 import { formatCurrency } from "@/utils";
 import InputField from "@/components/InputField";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const ScheduleDistributorAndRemittances = () => {
   const { user } = useAuthContext();
@@ -48,11 +50,11 @@ const ScheduleDistributorAndRemittances = () => {
   }, [searchValue, distributors, selectedDepartment, selectedType]);
 
   if (isLoading || loadingDepartments) {
-    return <h1>Loading....</h1>;
+    return <Loading />;
   }
 
   if (!distributors || isError || errorDepartments) {
-    return <h1>Error</h1>;
+    return <Error />;
   }
 
   return (

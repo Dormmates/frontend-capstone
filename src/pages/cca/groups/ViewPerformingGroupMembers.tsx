@@ -21,6 +21,7 @@ import UnArchiveAccount from "../accounts/UnArchiveAccount";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import NotFound from "@/components/NotFound";
 import DeleteAccount from "../accounts/DeleteAccount";
+import Loading from "@/components/Loading";
 
 const ViewPerformingGroups = () => {
   const addDistributor = useNewDistributor();
@@ -96,7 +97,7 @@ const ViewPerformingGroups = () => {
   }, [groupOptions]);
 
   if (loadingDistributors || loadingDepartments) {
-    return <h1>Loaddingg..</h1>;
+    return <Loading />;
   }
 
   return (

@@ -17,6 +17,8 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import DistributorAllocationHistory from "./DistributorAllocationHistory";
 import DistributorRemittanceHistory from "./DistributorRemittanceHistory";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
   const soldTickets = schedule.tickets.filter((ticket) => ticket.status === "sold");
@@ -35,11 +37,11 @@ const ViewDistributor = () => {
   const [viewHistory, setViewHistory] = useState(false);
 
   if (isLoading || loadingDistributor) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 
   if (!data || isError || distributorError || !distributor) {
-    return <h1>Error</h1>;
+    return <Error />;
   }
 
   return (
@@ -152,11 +154,11 @@ const DistributorHistory = () => {
   } = useGetAllDistributorRemittanceHistory(distributorId as string);
 
   if (loadingAllocation || loadingRemittance) {
-    return <h1>Loadingg</h1>;
+    return <h1 className="mt-5">Loading....</h1>;
   }
 
   if (!allocationHistory || !remittanceHistory || errorAllocation || erroRemittance) {
-    return <h1>Error loading</h1>;
+    return <Error />;
   }
 
   return (

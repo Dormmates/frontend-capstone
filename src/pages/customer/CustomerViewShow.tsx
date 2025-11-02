@@ -40,8 +40,6 @@ const CustomerViewShow = ({ show }: CustomerViewShowProps) => {
     return acc;
   }, {} as Record<string, typeof show.remainingUpcomingSchedules>);
 
-  console.log(show.nextSchedule);
-
   return (
     <>
       <div className="relative flex flex-col gap-5  md:flex-row rounded-xl overflow-hidden shadow-md">

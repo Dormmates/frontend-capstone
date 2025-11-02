@@ -8,6 +8,8 @@ import cca_logo from "@/assets/images/cca-logo.png";
 import SalesByDistributor from "./SalesByDistributor";
 import { Label } from "@/components/ui/label";
 import { SaveIcon } from "lucide-react";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const SalesReport = () => {
   const { showId, scheduleIds } = useParams<{ showId: string; scheduleIds: string }>();
@@ -17,9 +19,8 @@ const SalesReport = () => {
   const [searchParams] = useSearchParams();
   const includeDistributors = searchParams.get("distributors") === "true";
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Failed to load report</p>;
-  if (!data) return <p>No data available</p>;
+  if (isLoading) return <Loading />;
+  if (isError || !data) return <Error />;
 
   return (
     <PageWrapper className="overflow-y-auto max-w-full">

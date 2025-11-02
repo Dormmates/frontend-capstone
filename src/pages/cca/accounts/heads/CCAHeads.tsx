@@ -15,6 +15,8 @@ import CreateCCAHead from "./CreateCCAHead";
 import { UserRoundXIcon, Users } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const CCAHeads = () => {
   const queryClient = useQueryClient();
@@ -52,11 +54,11 @@ const CCAHeads = () => {
   }, []);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 
   if (!data || isError) {
-    return <h1>Error</h1>;
+    return <Error />;
   }
 
   return (

@@ -1,4 +1,3 @@
-import AccountRequests from "./accounts/AccountRequests";
 import CCAHeads from "./accounts/heads/CCAHeads";
 import Distributors from "./accounts/distributors/ExternalDistributors";
 import ViewDistributor from "./accounts/distributors/ViewDistributor";
@@ -38,7 +37,6 @@ export {
   Settings,
   ViewDistributor,
   CCALogin,
-  AccountRequests,
   CCAHeads,
   Distributors,
   MajorProductionShows,

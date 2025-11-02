@@ -1,5 +1,7 @@
 import { useGetScheduleInformation, useGetScheduleSeatMap } from "@/_lib/@react-client-query/schedule";
 import Breadcrumbs from "@/components/BreadCrumbs";
+import Error from "@/components/Error";
+import Loading from "@/components/Loading";
 import SeatMap from "@/components/SeatMap";
 import type { Schedule } from "@/types/schedule";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date";
@@ -20,8 +22,8 @@ const CustomerViewSchedule = () => {
 
   const schedule = context?.schedule ?? fetchedSchedule;
 
-  if (isLoading) return <p>Loading schedule...</p>;
-  if (!schedule || isError) return <p>Error loading schedule</p>;
+  if (isLoading) return <Loading />;
+  if (!schedule || isError) return <Error />;
 
   return (
     <div className="mt-20">

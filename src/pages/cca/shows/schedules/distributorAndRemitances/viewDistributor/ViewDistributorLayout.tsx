@@ -19,6 +19,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import type { PieSectorDataItem } from "recharts/types/polar/Pie";
 import { Progress } from "@/components/ui/progress";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const links = [
   {
@@ -109,11 +111,11 @@ const ViewDistributorLayout = () => {
   ];
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 
   if (!data || isError) {
-    return <h1>Error</h1>;
+    return <Error />;
   }
 
   if (!data[0]) {

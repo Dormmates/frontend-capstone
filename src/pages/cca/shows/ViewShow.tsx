@@ -42,6 +42,7 @@ import DialogPopup from "@/components/DialogPopup";
 import { formatCurrency } from "@/utils";
 import { compressControlNumbers } from "@/utils/controlNumber";
 import { distributorTypeOptions } from "@/types/user";
+import Loading from "@/components/Loading";
 
 const ViewShow = () => {
   const queryClient = useQueryClient();
@@ -161,7 +162,7 @@ const ViewShow = () => {
   };
 
   if (isShowLoading || isSchedulesLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

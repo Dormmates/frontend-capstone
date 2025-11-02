@@ -13,6 +13,8 @@ import ViewArchivedShows from "./ViewArchivedShows";
 import PaginatedTable from "@/components/PaginatedTable";
 import EditShow from "./showActions/EditShow";
 import { TheaterIcon } from "lucide-react";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const MajorProductionShows = () => {
   const { user } = useAuthContext();
@@ -44,8 +46,8 @@ const MajorProductionShows = () => {
     document.title = `Major Production Shows`;
   }, []);
 
-  if (showsLoading) return <h1>Loading...</h1>;
-  if (!shows || !user) return <h1>Error: No shows fetched.</h1>;
+  if (showsLoading) return <Loading />;
+  if (!shows || !user) return <Error />;
 
   return (
     <ContentWrapper>
