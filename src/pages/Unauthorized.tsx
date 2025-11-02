@@ -9,7 +9,7 @@ const Unauthorized = () => {
 
   return (
     <>
-      <PageWrapper>
+      <PageWrapper className="min-h-screen flex justify-center items-center">
         <ContentWrapper className="grid place-items-center m-0 h-dvh">
           <div className="flex flex-col items-center justify-center gap-4 text-center">
             <img className="w-full max-w-[80px]" src={errorIcon} alt="error-icon" />

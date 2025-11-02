@@ -10,7 +10,7 @@ const NotFound = () => {
 
   return (
     <>
-      <PageWrapper>
+      <PageWrapper className="min-h-screen flex justify-center items-center">
         <ContentWrapper>
           <div className="flex flex-col justify-center items-center gap-2 md:flex-row mx-auto">
             <img className="w-full max-w-[500px]" src={error} alt="error-image-404" />
