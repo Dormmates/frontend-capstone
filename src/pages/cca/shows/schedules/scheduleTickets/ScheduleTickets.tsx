@@ -333,19 +333,23 @@ const ScheduleTickets = () => {
               key: "action",
               header: "Actions",
               headerClassName: "text-right",
-              render: (ticket) => (
-                <div className="flex gap-2 justify-end  items-center ">
-                  <DialogPopup className="max-w-3xl" title="Ticket Information" triggerElement={<Button variant="secondary">View Ticket</Button>}>
-                    <ViewTicket
-                      status={ticket.status}
-                      ticketPrice={ticket.ticketPrice}
-                      scheduleId={scheduleId as string}
-                      controlNumber={ticket.controlNumber}
-                    />
-                  </DialogPopup>
+              render: (ticket) => {
+                const canTransfer = !ticket.isComplimentary && ticket.isPaid;
+                const canSell = !ticket.isComplimentary && ticket.status === "not_allocated";
+                const canRefund = !ticket.isComplimentary && ticket.isPaid;
 
-                  {schedule.isOpen && (user?.roles.includes("head") || show.showType !== "majorProduction") && (
-                    <>
+                return (
+                  <div className="flex gap-2 justify-end items-center">
+                    <DialogPopup className="max-w-3xl" title="Ticket Information" triggerElement={<Button variant="secondary">View Ticket</Button>}>
+                      <ViewTicket
+                        status={ticket.status}
+                        ticketPrice={ticket.ticketPrice}
+                        scheduleId={scheduleId as string}
+                        controlNumber={ticket.controlNumber}
+                      />
+                    </DialogPopup>
+
+                    {schedule.isOpen && (user?.roles.includes("head") || show.showType !== "majorProduction") && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="outline">
@@ -355,7 +359,8 @@ const ScheduleTickets = () => {
                         <DropdownMenuContent side="left" align="start">
                           <DropdownMenuLabel>Select Options</DropdownMenuLabel>
                           <DropdownMenuGroup>
-                            {!ticket.isComplimentary && ticket.isPaid && (
+                            {/* Transfer */}
+                            {canTransfer ? (
                               <DropdownMenuItem
                                 onClick={() => {
                                   setSelectedTicket(ticket);
@@ -364,8 +369,12 @@ const ScheduleTickets = () => {
                               >
                                 Transfer Ticket
                               </DropdownMenuItem>
+                            ) : (
+                              <DropdownMenuItem disabled>Cannot transfer</DropdownMenuItem>
                             )}
-                            {!ticket.isComplimentary && ticket.status == "not_allocated" && (
+
+                            {/* Sell */}
+                            {canSell ? (
                               <DropdownMenuItem
                                 onClick={() => {
                                   setIsSellTicket(true);
@@ -374,8 +383,12 @@ const ScheduleTickets = () => {
                               >
                                 Sell Ticket
                               </DropdownMenuItem>
+                            ) : (
+                              <DropdownMenuItem disabled>Cannot directly sell</DropdownMenuItem>
                             )}
-                            {!ticket.isComplimentary && ticket.isPaid && (
+
+                            {/* Refund */}
+                            {canRefund ? (
                               <DropdownMenuItem
                                 onClick={() => {
                                   setUnIsSellTicket(true);
@@ -384,14 +397,16 @@ const ScheduleTickets = () => {
                               >
                                 Refund Ticket
                               </DropdownMenuItem>
+                            ) : (
+                              <DropdownMenuItem disabled>Cannot refund</DropdownMenuItem>
                             )}
                           </DropdownMenuGroup>
                         </DropdownMenuContent>
                       </DropdownMenu>
-                    </>
-                  )}
-                </div>
-              ),
+                    )}
+                  </div>
+                );
+              },
             },
           ]}
         />

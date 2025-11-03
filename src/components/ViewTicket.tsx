@@ -48,7 +48,7 @@ const ViewTicket = ({ scheduleId, controlNumber, ticketPrice, status }: ViewTick
           },
           {
             key: "actionBy",
-            header: "Action By",
+            header: "Trainer",
             render: (data) => data.actionBy,
           },
           {
@@ -59,7 +59,10 @@ const ViewTicket = ({ scheduleId, controlNumber, ticketPrice, status }: ViewTick
           {
             key: "actionType",
             header: "Action Type",
-            render: (data) => formatSectionName(data.logType),
+            render: (data) =>
+              formatSectionName(
+                data.logType === "payToCCA" ? "Paid To CCA" : data.logType === "unPayToCCA" ? "Revert Distributor Payment" : data.logType
+              ),
           },
         ]}
       />

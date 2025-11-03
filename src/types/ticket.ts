@@ -2,6 +2,7 @@ import type { SeatingConfiguration } from "./schedule";
 import type { SeatSection } from "./seat";
 
 export type TicketStatuses = "sold" | "lost" | "not_allocated" | "allocated" | "remitted" | "paidToCCA";
+type TicketActionLogTypes = "allocate" | "unallocate" | "payToCCA" | "unPayToCCA" | "soldTicket" | "unsoldTicket" | "transfer" | "refund" | "remit";
 type TicketSection = "orchestra" | "balcony";
 
 export interface Ticket {
@@ -115,7 +116,7 @@ export interface DistributorScheduleTickets {
 }
 
 export interface TicketLog {
-  logType: string;
+  logType: TicketActionLogTypes;
   actionBy: string;
   logDate: string;
   distributorName: string;
