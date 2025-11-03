@@ -458,7 +458,7 @@ const ScheduleTickets = () => {
             setUnIsSellTicket(false);
             setSelectedTicket(null);
           }}
-          title="Unsold the Ticket"
+          title="Refund Ticket"
           isOpen={isUnSellTicket && !!selectedTicket}
         >
           <UnSellTicket

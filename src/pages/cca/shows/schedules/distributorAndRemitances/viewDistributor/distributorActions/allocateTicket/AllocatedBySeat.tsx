@@ -174,21 +174,29 @@ const AllocatedBySeat = ({ unAllocatedTickets, showData }: Props) => {
           disabled={false}
           seatMap={data}
           seatClick={(seat) => {
-            if (seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status === "reserved") return;
+            if (seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status === "reserved" || seat.status == "paidToCCA") return;
             handleClick([seat]);
           }}
           rowClick={(seats) => {
-            const selectableSeats = seats.filter((seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved");
+            const selectableSeats = seats.filter(
+              (seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved" && seat.status !== "paidToCCA"
+            );
             if (selectableSeats.length === 0) return;
             handleClick(selectableSeats);
           }}
           sectionClick={(seats) => {
-            const selectableSeats = seats.filter((seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved");
+            const selectableSeats = seats.filter(
+              (seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved" && seat.status !== "paidToCCA"
+            );
             if (selectableSeats.length === 0) return;
             handleClick(selectableSeats);
           }}
           recStyle={(seat) => `${
-            seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status == "reserved" || seat.status === "sold"
+            seat.isComplimentary ||
+            seat.ticketControlNumber == 0 ||
+            seat.status == "reserved" ||
+            seat.status === "sold" ||
+            seat.status === "paidToCCA"
               ? "fill-darkGrey !cursor-not-allowed"
               : "hover:fill-blue-200 cursor-pointer"
           }
