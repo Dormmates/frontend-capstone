@@ -111,6 +111,7 @@ const ScheduleDistributorAndRemittances = () => {
         </div>
 
         <PaginatedTable
+          className="min-w-[1000px]"
           itemsPerPage={10}
           emptyMessage="No Distributors found."
           data={searchedDistributors}

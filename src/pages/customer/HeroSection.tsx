@@ -133,11 +133,11 @@ const HeroSection = () => {
             <img src={show.showCover} alt={show.title} className="absolute inset-0 w-full h-full object-cover object-center" />
             <div className="absolute inset-0 bg-black/80"></div>
 
-            <div className="absolute bottom-28 w-full text-white flex justify-between px-10 flex-col gap-10 xl:flex-row">
+            <div className="absolute bottom-28 w-full text-white flex justify-between px-5 md:px-10 flex-col gap-10 xl:flex-row">
               <div className="flex flex-col">
                 <p className="text-lg text-gray-300 uppercase tracking-wide">Upcoming Show</p>
-                <h1 className="text-primary text-6xl font-bold mb-2">{show.title}</h1>
-                <p className="text-lg text-gray-200 mb-2 tracking-tighter">{show.description}</p>
+                <h1 className="text-primary text-4xl md:text-6xl font-bold mb-2">{show.title}</h1>
+                <p className="text-lg text-gray-200 mb-2 tracking-tighter max-h-[200px] line-clamp-3">{show.description}</p>
                 <p className="text-lg">
                   <span className="font-semibold">Date:</span> {formatToReadableDate(show.date)}
                 </p>
@@ -146,7 +146,7 @@ const HeroSection = () => {
                 </p>
               </div>
               <div className="flex flex-col justify-end gap-5 items-end">
-                <p className="text-2xl">
+                <p className="text-2xl text-right">
                   Show Starts in: <Countdown showDate={show.date} />
                 </p>
                 <Button onClick={() => navigate(`/show/${show.showId}`)} size="lg" className="w-fit">

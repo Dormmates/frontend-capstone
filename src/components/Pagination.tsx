@@ -25,7 +25,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPage, onPageC
   const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
   return (
-    <div className="flex items-center justify-center space-x-2 mt-4">
+    <div className="flex flex-wrap items-center justify-center space-x-2 mt-4">
       <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>
         <ChevronLeft className="h-4 w-4" />
       </Button>

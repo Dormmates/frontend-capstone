@@ -118,11 +118,11 @@ const ViewPerformingGroups = () => {
         <NotFound title="Performing Group Not Found" description="This Performing Group does not exist or have been deleted already" />
       ) : (
         <>
-          <div className="flex justify-between mt-10">
-            <SimpleCard icon={<Users size={18} />} label="Total Members" value={activeDistributors.length} />
+          <div className="flex flex-col md:flex-row gap-5 justify-between mt-10">
+            <SimpleCard className="w-fit" icon={<Users size={18} />} label="Total Members" value={activeDistributors.length} />
 
             {canOpenDialog && (
-              <div className="self-end flex gap-2">
+              <div className="md:self-end flex gap-2">
                 <DialogPopup
                   isOpen={isOpen}
                   setIsOpen={(value) => {
@@ -198,8 +198,8 @@ const ViewPerformingGroups = () => {
                     </div>
 
                     <div className="flex items-center gap-1 text-muted-foreground font-semibold text-sm">
-                      <MailIcon className="w-4 h-4" />
-                      <p>{distributor.email}</p>
+                      <MailIcon className="w-4 h-4 " />
+                      <p className="truncate">{distributor.email}</p>
                     </div>
                     <div className="flex items-center gap-1 text-muted-foreground font-semibold text-sm">
                       <PhoneIcon className="w-4 h-4" />

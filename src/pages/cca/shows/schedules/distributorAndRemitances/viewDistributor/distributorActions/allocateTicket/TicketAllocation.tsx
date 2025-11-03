@@ -11,6 +11,9 @@ import Breadcrumbs from "@/components/BreadCrumbs";
 import NotFound from "@/components/NotFound";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/Loading";
+import AllocatedBySeat from "./AllocatedBySeat";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
 
 const TicketAllocation = () => {
   const { scheduleId, showId } = useParams();
@@ -75,23 +78,39 @@ const TicketAllocation = () => {
             </LongCard>
           </div>
 
-          {/* <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
             {schedule.seatingType == "controlledSeating" ? (
               <>
-                <AllocatedBySeat showData={showData} unAllocatedTickets={unAllocatedTickets} />
+                <Label>Allocation Method</Label>
+                <Tabs defaultValue="number">
+                  <TabsList>
+                    <TabsTrigger value="number">Auto</TabsTrigger>
+                    <TabsTrigger value="seat">By Seat Map</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="number">
+                    <AllocateByControlNumber
+                      scheduleId={scheduleId as string}
+                      departmentId={showData.showType !== "majorProduction" ? showData.department?.departmentId ?? "" : ""}
+                      unAllocatedTickets={unAllocatedTickets}
+                    />
+                  </TabsContent>
+                  <TabsContent value="seat">
+                    <AllocatedBySeat showData={showData} unAllocatedTickets={unAllocatedTickets} />
+                  </TabsContent>
+                </Tabs>
               </>
             ) : (
-              <> */}
-          <div className="flex flex-col gap-3">
-            <AllocateByControlNumber
-              scheduleId={scheduleId as string}
-              departmentId={showData.showType !== "majorProduction" ? showData.department?.departmentId ?? "" : ""}
-              unAllocatedTickets={unAllocatedTickets}
-            />
-          </div>
-          {/* </>
+              <>
+                <div className="flex flex-col gap-3">
+                  <AllocateByControlNumber
+                    scheduleId={scheduleId as string}
+                    departmentId={showData.showType !== "majorProduction" ? showData.department?.departmentId ?? "" : ""}
+                    unAllocatedTickets={unAllocatedTickets}
+                  />
+                </div>
+              </>
             )}
-          </div> */}
+          </div>
         </div>
       )}
     </ContentWrapper>

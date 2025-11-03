@@ -30,14 +30,14 @@ const CustomerLayout = () => {
         </Button>
       )}
 
-      <footer className="w-full bg-accent flex flex-col md:flex-row md:justify-between p-20 border border-t-primary mt-[200px]">
+      <footer className="w-full bg-accent flex flex-col md:flex-row md:justify-between gap-5 p-5 lg:p-20 border border-t-primary mt-[200px]">
         <div>
           <h1 className="text-primary text-3xl font-bold">SLU Center for Culture and the Arts</h1>
           <p className="max-w-[500px] text-muted-foreground">
             Promoting cultural excellence and artistic expression through music, dance, theater, and creative performances.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col xl:flex-row gap-2">
           <MapPinIcon className="w-4 text-primary" />
           <p className="max-w-[500px] text-muted-foreground">
             Fr. Joseph Van den Daelen, CICM – Center for Culture and the Arts (CCA) Bldg., Saint Louis University Main Campus, A. Bonifacio St.,

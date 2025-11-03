@@ -171,6 +171,7 @@ const PerformingGroups = () => {
           </div>
           <div className="mt-10">
             <PaginatedTable
+              className="min-w-[1000px]"
               itemsPerPage={10}
               data={departments}
               columns={[
@@ -305,8 +306,8 @@ const PerformingGroups = () => {
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
-                    if (file.size > 1024 * 1024) {
-                      alert("Image must be less than 1MB.");
+                    if (file.size > 10 * 1024 * 1024) {
+                      alert("Image must be less than 10MB.");
                       return;
                     }
 

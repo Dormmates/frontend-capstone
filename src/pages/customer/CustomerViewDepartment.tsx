@@ -36,7 +36,7 @@ const CustomerViewDepartment = () => {
               <div className="w-48 aspect-square">
                 <img className="w-full h-full object-contain" src={department?.logoUrl} alt="" />
               </div>
-              <h1 className="text-5xl">{department?.name}</h1>
+              <h1 className="text-5xl text-center">{department?.name}</h1>
             </div>
           </div>
 

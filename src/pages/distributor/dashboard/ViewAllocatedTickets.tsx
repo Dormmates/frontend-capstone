@@ -138,10 +138,9 @@ const ViewAllocatedTickets = ({ schedule, closeModal }: Props) => {
 
       <Tabs defaultValue="unsold">
         <TabsList className="bg-sidebar-border mb-2">
-          {/* <TabsTrigger value="all">All</TabsTrigger> */}
           <TabsTrigger value="unsold">Unsold</TabsTrigger>
-          <TabsTrigger value="forRemittance">For Payment / Marked As Sold</TabsTrigger>
-          <TabsTrigger value="remittedTickets">Paid to CCA Tickets</TabsTrigger>
+          <TabsTrigger value="forRemittance">Marked as Sold</TabsTrigger>
+          <TabsTrigger value="remittedTickets">Paid</TabsTrigger>
         </TabsList>
         <TabsContent value="all">
           <TicketTableData
@@ -293,8 +292,8 @@ const TicketTableData = ({ data, type, seatingType, scheduleId, selectedTickets,
   return (
     <div>
       {selectedTickets.length > 0 && <p className="font-bold text-sm mb-2">Selected Tickets: {selectedTickets.length}</p>}
-      <div className="overflow-x-auto rounded-lg border min-w-[500px]">
-        <Table>
+      <div className="overflow-x-auto rounded-lg border w-full ">
+        <Table className="min-w-[500px]">
           <TableHeader className="bg-muted">
             <TableRow>
               <TableHead className="flex items-center gap-2 text-muted-foreground">

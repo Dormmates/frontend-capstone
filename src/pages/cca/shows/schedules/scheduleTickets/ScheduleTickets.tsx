@@ -172,7 +172,7 @@ const ScheduleTickets = () => {
       <h1 className="text-2xl">Schedule Tickets</h1>
 
       <div className="flex flex-col lg:flex-row gap-3">
-        <div className="flex gap-2 lg:flex-col">
+        <div className="grid gap-3 grid-cols-2 lg:grid-cols-1">
           <SimpleCard label="Total Tickets" value={summary.total} />
           <SimpleCard label="Regular Tickets" value={summary.regularTickets} />
           <SimpleCard label="Complimentary Tickets" value={summary.complimentary} />
@@ -219,9 +219,9 @@ const ScheduleTickets = () => {
       </div>
 
       <div>
-        <div className="flex gap-5 mt-10 w-full">
+        <div className="flex flex-col lg:flex-row gap-5 mt-10 w-full">
           <InputField
-            className="max-w-[400px]"
+            className="max-w-xl"
             placeholder="Search Tickets by Control Number"
             value={filterValues.controlNumber}
             onChange={(e) => setFilterValues((prev) => ({ ...prev, controlNumber: e.target.value.trim() }))}
@@ -256,7 +256,7 @@ const ScheduleTickets = () => {
           </div>
         </div>
 
-        <div className="flex justify-end mb-5">
+        <div className="hidden lg:flex justify-end mb-5">
           <Pagination
             currentPage={page}
             totalPage={Math.ceil(filteredTickets.length / ITEMS_PER_PAGE)}
@@ -264,7 +264,7 @@ const ScheduleTickets = () => {
           />
         </div>
 
-        <p className="text-sm font-bold mb-1">Total: {filteredTickets.length}</p>
+        <p className="text-sm font-bold mb-1 mt-5 lg:mt-0">Total: {filteredTickets.length}</p>
 
         <DataTable
           data={paginatedTicket}
@@ -395,6 +395,14 @@ const ScheduleTickets = () => {
             },
           ]}
         />
+
+        <div className="flex lg:hidden justify-center mb-5">
+          <Pagination
+            currentPage={page}
+            totalPage={Math.ceil(filteredTickets.length / ITEMS_PER_PAGE)}
+            onPageChange={(newPage) => setPage(newPage)}
+          />
+        </div>
       </div>
 
       {isSellTicket && !!selectedTicket && (

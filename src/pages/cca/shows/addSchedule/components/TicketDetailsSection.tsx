@@ -14,7 +14,7 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
       <div className="flex flex-col gap-5">
         <h1 className="text-xl mb-5">Ticket Details</h1>
 
-        <div className="flex gap-5 ">
+        <div className="flex flex-col md:flex-row gap-5 ">
           <InputField
             onChange={handleInputChange}
             label=" Total Number of Tickets"
@@ -40,7 +40,7 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
         </div>
 
         {scheduleData.seatingConfiguration === "freeSeating" && (
-          <div className="flex gap-5 w-full">
+          <div className="flex flex-col md:flex-row gap-5 w-full">
             <InputField
               onChange={handleInputChange}
               label="Control Number of Tickets"

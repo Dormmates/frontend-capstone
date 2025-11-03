@@ -47,9 +47,9 @@ const DistributorTicketsAllocated = () => {
   return (
     <>
       <div className="flex flex-col">
-        <div className="flex gap-3 items-center mb-10">
+        <div className="flex flex-col lg:flex-row gap-3 items-center mb-10">
           <Input
-            className="max-w-[450px]"
+            className="max-w-xl"
             onChange={(e) => setFilter((prev) => ({ ...prev, search: e.target.value }))}
             value={filter.search}
             placeholder="Search Ticket By Control Number"

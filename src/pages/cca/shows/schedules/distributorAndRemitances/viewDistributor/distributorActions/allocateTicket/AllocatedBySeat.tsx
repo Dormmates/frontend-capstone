@@ -19,6 +19,8 @@ import { useAuthContext } from "@/context/AuthContext";
 import LongCard from "@/components/LongCard";
 import LongCardItem from "@/components/LongCardItem";
 import { compressSeats } from "@/utils/seatmap";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 type Props = {
   unAllocatedTickets: { total: number; tickets: Ticket[] };
@@ -46,13 +48,14 @@ const AllocatedBySeat = ({ unAllocatedTickets, showData }: Props) => {
   const [isAllocationSummary, setIsAllocationSummary] = useState(false);
 
   const seatAvailabilityCount = useMemo(() => {
-    if (!data) return { available: 0, unavailable: 0, reserved: 0, sold: 0 };
+    if (!data) return { available: 0, unavailable: 0 };
     const available = data.filter((seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status === "available").length;
-    const reserved = data.filter((seat) => seat.status === "reserved").length;
-    const sold = data.filter((seat) => seat.status === "sold").length;
-    const unavailable = data.length - available - reserved;
 
-    return { available, unavailable, reserved, sold };
+    const unavailable = data.filter(
+      (seat) => seat.isComplimentary || seat.ticketControlNumber === 0 || ["reserved", "sold"].includes(seat.status)
+    ).length;
+
+    return { available, unavailable };
   }, [data]);
 
   const handleClick = (seats: FlattenedSeat[]) => {
@@ -120,16 +123,16 @@ const AllocatedBySeat = ({ unAllocatedTickets, showData }: Props) => {
   };
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 
   if (isError || !data) {
-    return <h1>Error</h1>;
+    return <Error />;
   }
 
   return (
     <>
-      <div className="flex gap-2 flex-col">
+      <div className="flex gap-2 flex-col mt-8">
         <Label>Choose Distributor</Label>
         <Button
           disabled={unAllocatedTickets.total === 0}
@@ -138,7 +141,7 @@ const AllocatedBySeat = ({ unAllocatedTickets, showData }: Props) => {
           variant="outline"
         >
           <div className="flex gap-12">
-            {selectedDistributor ? <h1>{selectedDistributor.firstName + " " + selectedDistributor.lastName}</h1> : <h1>No Selected Distributor</h1>}
+            {selectedDistributor ? <h1>{selectedDistributor.firstName + " " + selectedDistributor.lastName}</h1> : <h1></h1>}
             <p className="text-lightGrey font-normal">click to choose distributor</p>
           </div>
         </Button>
@@ -162,14 +165,6 @@ const AllocatedBySeat = ({ unAllocatedTickets, showData }: Props) => {
             <div className="flex gap-2 items-center ">
               <div className="w-4 h-4 bg-white border"></div>
               <p>Available Seats: {seatAvailabilityCount.available}</p>
-            </div>
-            <div className="flex gap-2 items-center ">
-              <div className="w-4 h-4 bg-red border"></div>
-              <p>Reserved Seats : {seatAvailabilityCount.reserved}</p>
-            </div>
-            <div className="flex gap-2 items-center ">
-              <div className="w-4 h-4 bg-green border"></div>
-              <p>Sold Seats : {seatAvailabilityCount.sold}</p>
             </div>
           </div>
         </div>
@@ -197,8 +192,7 @@ const AllocatedBySeat = ({ unAllocatedTickets, showData }: Props) => {
               ? "fill-darkGrey !cursor-not-allowed"
               : "hover:fill-blue-200 cursor-pointer"
           }
-        ${seat.status === "sold" && "fill-green !cursor-not-allowed"}
-        ${seat.status === "reserved" && "fill-red !cursor-not-allowed"}
+    
         ${choosenSeats.includes(seat) ? "fill-blue-600" : ""}`}
         />
       </div>
@@ -315,7 +309,7 @@ const ChooseDistributor = ({ onChoose, selectedDistributor, closeModal, schedule
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col md:items-center gap-4">
         <div className="w-full max-w-[300px]">
           <InputField placeholder="Search Distributor by Name" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
         </div>
@@ -327,6 +321,7 @@ const ChooseDistributor = ({ onChoose, selectedDistributor, closeModal, schedule
         </p>
 
         <PaginatedTable
+          className="min-w-[800px]"
           data={searchedDistributors}
           columns={[
             {

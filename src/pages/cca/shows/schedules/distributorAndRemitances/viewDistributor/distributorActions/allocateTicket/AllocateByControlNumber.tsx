@@ -163,19 +163,21 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
       </div>
 
       <div className="flex flex-col gap-6">
-        <div className="flex items-center gap-4">
-          <div className="w-full max-w-[300px]">
+        <div className="flex flex-col items-start md:items-center gap-4">
+          <div className="w-full max-w-xl">
             <InputField placeholder="Search Distributor by Name" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
           </div>
-          <Dropdown value={selectedType} items={distributorTypeOptions} onChange={(value) => setSelectedType(value)} />
-          {selectedType == "cca" && (
-            <Dropdown
-              disabled={!!departmentId}
-              value={!!departmentId ? departmentId : selectedDepartment}
-              items={departmentOptions}
-              onChange={(value) => setSelectedDepartment(value)}
-            />
-          )}
+          <div className="flex gap-2">
+            <Dropdown value={selectedType} items={distributorTypeOptions} onChange={(value) => setSelectedType(value)} />
+            {selectedType == "cca" && (
+              <Dropdown
+                disabled={!!departmentId}
+                value={!!departmentId ? departmentId : selectedDepartment}
+                items={departmentOptions}
+                onChange={(value) => setSelectedDepartment(value)}
+              />
+            )}
+          </div>
         </div>
         <div>
           <p className="font-semibold mb-2">Selected Distributors: {selectedDistributors.length}</p>

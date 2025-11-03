@@ -52,7 +52,7 @@ const MajorProductionShows = () => {
   return (
     <ContentWrapper>
       <h1 className="text-3xl">Major Production Shows</h1>
-      <div className="flex justify-between ">
+      <div className="flex flex-col gap-5 justify-between ">
         <div className="flex gap-5 mt-10">
           <SimpleCard
             icon={<TheaterIcon size={18} />}
@@ -61,21 +61,16 @@ const MajorProductionShows = () => {
           />
         </div>
         {user.roles.includes("head") && (
-          <Link className="self-end" to={"/shows/add?showType=major"}>
+          <Link className="lg:self-end" to={"/shows/add?showType=major"}>
             <Button>Add New Major Production</Button>
           </Link>
         )}
       </div>
       <div className="mt-10 mb-5 flex gap-5">
-        <Input
-          className="min-w-[450px] max-w-[450px]"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search Show by Title"
-        />
+        <Input className="w-fulls max-w-xl" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search Show by Title" />
       </div>
       <PaginatedTable
-        className={filteredShows.length != 0 ? "min-w-[1200px]" : ""}
+        className={filteredShows.length != 0 ? "min-w-[700px]" : ""}
         columns={[
           {
             key: "title",

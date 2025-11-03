@@ -29,7 +29,7 @@ const EditShow = ({ show }: EditShowProps) => {
       }
       description="Edit show information and click save"
       title="Edit Show"
-      className="w-full max-w-4xl"
+      className="max-w-[98%] w-full overflow-x-auto max-h-[90%] md:max-w-4xl"
     >
       <ShowForm
         showType={"group"}

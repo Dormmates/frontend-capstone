@@ -85,7 +85,7 @@ const ScheduleSummary = () => {
   return (
     <>
       <h1 className="text-2xl">Schedule Summary</h1>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
         <SimpleCard label="Forecasted Sales" value={formatCurrency(summary.salesSummary.expected)} />
         <SimpleCard label="Cash on Hand (CCA)" value={formatCurrency(summary.salesSummary.cashOnHand)} />
         <SimpleCard label="Remitted to Finance" value={formatCurrency(summary.salesSummary.remittedToFinance)} />

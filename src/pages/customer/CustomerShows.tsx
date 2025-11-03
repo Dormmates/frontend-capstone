@@ -21,8 +21,8 @@ const CustomerHome = () => {
   return (
     <PageWrapper>
       <ContentWrapper>
-        <div className="flex flex-col items-center w-full justify-center gap-5 mt-20 ">
-          <h1 className="text-6xl font-bold text-center">All CCA Performances</h1>
+        <div className="flex flex-col items-center w-full justify-center gap-5 mt-20 px-5 md:px-0">
+          <h1 className="text-4xl md:text-6xl font-bold text-center">All CCA Performances</h1>
           <p className="text-xl text-center">
             Experience the creativity of SLU’s artists. Browse current, upcoming, and past shows from every performing group.
           </p>
@@ -41,8 +41,8 @@ const CustomerHome = () => {
           </div>
         </div>
 
-        <section className="mt-20">
-          <h1 className="text-center text-5xl mb-20">Major Production Shows</h1>
+        <section className="mt-20 px-5 lg:px-0">
+          <h1 className="text-center text-4xl md:text-5xl mb-20">Major Production Shows</h1>
           <ShowsList showType="majorProduction" />
         </section>
       </ContentWrapper>

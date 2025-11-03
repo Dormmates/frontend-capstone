@@ -133,7 +133,7 @@ const ViewDistributorLayout = () => {
       <div className="flex flex-col gap-5 ">
         <h1 className="text-2xl">{distributorName}</h1>
         {(user?.roles.includes("head") || show.showType !== "majorProduction") && (
-          <div className="flex gap-3 items-center">
+          <div className="flex flex-col gap-3 md:items-center md:flex-row">
             <>
               <Button disabled={!schedule.isOpen || show.isArchived} onClick={() => setIsRemitTicket(true)} className="bg-primary">
                 Receive Distributor Payment

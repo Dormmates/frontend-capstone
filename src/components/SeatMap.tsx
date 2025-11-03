@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import type { FlattenedSeat } from "../types/seat.ts";
 import { formatSectionName } from "../utils/seatmap.ts";
 import { Button } from "./ui/button.tsx";
@@ -36,6 +36,28 @@ const SeatMap = ({
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (window.innerWidth < 640) setScale(2.5);
+    else if (window.innerWidth < 1024) setScale(1.2);
+  }, []);
+
+  const handleTouchStart = (e: React.TouchEvent<SVGSVGElement>) => {
+    const touch = e.touches[0];
+    setIsDragging(true);
+    setStartPos({ x: touch.clientX - position.x, y: touch.clientY - position.y });
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
+    if (!isDragging) return;
+    const touch = e.touches[0];
+    setPosition({
+      x: touch.clientX - startPos.x,
+      y: touch.clientY - startPos.y,
+    });
+  };
+
+  const handleTouchEnd = () => setIsDragging(false);
 
   const handleMouseEnter = (e: React.MouseEvent<SVGRectElement>, seat: FlattenedSeat) => {
     const mouseX = e.clientX + 10;
@@ -112,6 +134,9 @@ const SeatMap = ({
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             <g>
               {Object.entries(grouped).map(([sectionName, rows]) => (

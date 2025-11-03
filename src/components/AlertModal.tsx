@@ -87,7 +87,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
             value={input}
           />
         </div>
-        <AlertDialogFooter>
+        <AlertDialogFooter className="gap-2">
           <Button
             variant="outline"
             onClick={() => {

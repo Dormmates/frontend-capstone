@@ -73,12 +73,7 @@ const CCAHeads = () => {
       </div>
 
       <div className="mt-10 flex flex-col">
-        <Input
-          className="min-w-[450px] max-w-[450px] mb-5"
-          onChange={(e) => setSearch(e.target.value)}
-          value={search}
-          placeholder="Search by CCA Head Name"
-        />
+        <Input className="w-full max-w-xl mb-5" onChange={(e) => setSearch(e.target.value)} value={search} placeholder="Search by CCA Head Name" />
 
         <PaginatedTable
           data={searchedTrainers}

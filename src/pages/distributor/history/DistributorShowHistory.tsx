@@ -38,7 +38,10 @@ const DistributorShowHistory = () => {
             Showing Schedules for <strong>{showDetails.showTitle}</strong>
           </span>
           {uniqueShowSchedules.map((schedule) => (
-            <div key={schedule.scheduleId} className="flex flex-row p-5 gap-10 border w-fit rounded-lg items-center">
+            <div
+              key={schedule.scheduleId}
+              className="flex flex-col sm:flex-row p-5 gap-3 md:gap-10 border w-full sm:w-fit rounded-lg sm:items-center"
+            >
               <div className="flex flex-col w-[150px]">
                 <span className="font-semibold">Show Date</span>
                 <span>{formatToReadableDate(schedule.showDate + "")}</span>

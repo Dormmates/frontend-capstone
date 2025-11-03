@@ -71,11 +71,11 @@ const DistributorHistory = () => {
   return (
     <ContentWrapper>
       <h1 className="font-bold text-4xl">Distributor History</h1>
-      <div className="flex gap-3 mt-10">
+      <div className="grid gap-2 grid-cols-2 lg:grid-cols-4 mt-10">
         <SimpleCard label="Total Tickets Allocated" value={totalComputed.allocation} />
         <SimpleCard label="Total Tickets Sold" value={totalComputed.remittance} />
         <SimpleCard label="Total Sales" value={formatCurrency(totalComputed.remittanceAmount)} />
-        <SimpleCard label="Total Commission Received" value={formatCurrency(totalComputed.commission)} />
+        <SimpleCard label="Total Commission" value={formatCurrency(totalComputed.commission)} />
       </div>
 
       <div>

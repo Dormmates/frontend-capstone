@@ -195,7 +195,7 @@ const ViewShow = () => {
         )}
         {show && showSchedules && (
           <div className="mt-10">
-            <div className="flex justify-between mb-10">
+            <div className="flex flex-col gap-4 md:flex-row justify-between mb-10">
               <div className="flex flex-col gap-5">
                 <h1 className="font-semibold text-2xl ">Show Schedules</h1>
               </div>

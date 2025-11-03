@@ -85,7 +85,7 @@ const PerformingGroupShows = () => {
     <ContentWrapper>
       <h1 className="text-3xl">Performing Group Shows</h1>
       <div className="flex justify-between mt-10">
-        <div className="grid grid-cols-2 md:grid-cols-3 md:gap-5 gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 md:gap-5 gap-2">
           <SimpleCard className="w-full" icon={<TheaterIcon size={18} />} label="Total Show" value={activeShows.length} />
           <SimpleCard
             className="w-full"
@@ -132,7 +132,7 @@ const PerformingGroupShows = () => {
       </div>
 
       <PaginatedTable
-        className={filteredShows.length != 0 ? "min-w-[1200px]" : ""}
+        className={filteredShows.length != 0 ? "min-w-[850px]" : ""}
         columns={[
           {
             key: "title",

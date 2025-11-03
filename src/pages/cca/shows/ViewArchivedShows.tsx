@@ -46,7 +46,7 @@ const ViewArchivedShows = ({ archivedShows }: Props) => {
               render: (showData) => (
                 <div className="flex justify-end items-center gap-2">
                   <Link to={`/shows/${showData.showId}`}>
-                    <Button>Go To Schedules</Button>
+                    <Button size="sm">Go To Schedules</Button>
                   </Link>
                   <UnArchiveShow show={showData} />
                   <DeleteShow show={showData} />
