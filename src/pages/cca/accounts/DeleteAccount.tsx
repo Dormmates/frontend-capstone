@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
 import { InfoIcon, Trash2Icon } from "lucide-react";
+import { formatSectionName } from "@/utils/seatmap";
 
 type DeleteAccountProps = {
   user: User;
@@ -29,7 +30,6 @@ const DeleteAccount = ({ user, queryKey }: DeleteAccountProps) => {
 
   return (
     <AlertModal
-      tooltip="Delete User"
       confirmation="Delete"
       actionText="Delete User"
       onConfirm={handleSubmit}
@@ -38,7 +38,7 @@ const DeleteAccount = ({ user, queryKey }: DeleteAccountProps) => {
           <Trash2Icon />
         </Button>
       }
-      title="Delete User"
+      title={`Delete ${formatSectionName(queryKey.replace(/s$/, ""))}`}
       description="This will permanently delete this user"
     >
       <div>User Name: {user.firstName + " " + user.lastName}</div>

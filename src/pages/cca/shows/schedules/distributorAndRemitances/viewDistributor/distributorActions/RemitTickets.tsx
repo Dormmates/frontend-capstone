@@ -119,10 +119,10 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
 
       {avaialbleToBeRemitted.length === 0 ? (
         <div className="mt-5">
-          <p className="font-medium text-xl">There are no Tickets Available to be Remitted</p>
+          <p className="font-medium text-xl">There are no Tickets Available to be paid</p>
           <p className="mt-4">Possible reasons:</p>
           <ul className="mt-2 list-disc list-inside space-y-1 ml-4">
-            <li>All tickets have already been remitted</li>
+            <li>All tickets have already been paid</li>
             <li>No more unsold tickets by the distributor</li>
             <li>No more tickets were allocated to the distributor for this schedule</li>
           </ul>

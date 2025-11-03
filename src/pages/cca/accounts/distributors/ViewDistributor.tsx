@@ -46,7 +46,7 @@ const ViewDistributor = () => {
 
   return (
     <ContentWrapper>
-      <h1 className="text-3xl">Distributor Informations</h1>
+      <h1 className="text-3xl">Distributor Information</h1>
 
       <div className="my-10">
         <Breadcrumbs items={[{ name: "Distributors" }, { name: distributor.firstName + " " + distributor.lastName }]} />

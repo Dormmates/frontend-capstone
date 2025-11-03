@@ -5,6 +5,7 @@ import { useUnArchiveAccount } from "@/_lib/@react-client-query/accounts";
 import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
 import { ArchiveIcon } from "lucide-react";
+import { formatSectionName } from "@/utils/seatmap";
 
 type ArchiveAccountProps = {
   user: User;
@@ -29,7 +30,6 @@ const UnArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
   };
   return (
     <AlertModal
-      tooltip="Unarchive Account"
       actionText="Unarchive Account"
       onConfirm={handleSubmit}
       trigger={
@@ -37,7 +37,7 @@ const UnArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
           <ArchiveIcon />
         </Button>
       }
-      title="Unarchive User"
+      title={`Unarchive ${formatSectionName(queryKey.replace(/s$/, ""))}`}
       description="This will unarchive the user and move the user from the main list"
     >
       <div>{user.firstName + " " + user.lastName}</div>

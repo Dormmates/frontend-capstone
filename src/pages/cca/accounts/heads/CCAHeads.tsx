@@ -68,7 +68,7 @@ const CCAHeads = () => {
       <div className="flex justify-between mt-10">
         <SimpleCard icon={<Users size={18} />} label="Total Trainers" value={data?.length + ""} />
         <div className="flex items-end">
-          <Button onClick={() => setIsAddHead(true)}>Add New CCA Head</Button>
+          <Button onClick={() => setIsAddHead(true)}>Add CCA Head</Button>
         </div>
       </div>
 
@@ -138,7 +138,7 @@ const CCAHeads = () => {
 
       {isAddHead && (
         <Modal
-          title="Create new CCA Head"
+          title="Create  CCA Head"
           description="You can either create new CCA Head account or make existing trainer to be CCA Head"
           isOpen={isAddHead}
           onClose={() => setIsAddHead(false)}
@@ -151,7 +151,7 @@ const CCAHeads = () => {
         <Modal
           isOpen={showArchived}
           onClose={() => setShowArchived(false)}
-          title="Archived Heads"
+          title="Archived CCA Heads"
           description="Archived Heads can be  unarchived"
           className="max-w-5xl"
         >

@@ -111,12 +111,12 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
         <Modal
           onClose={() => setShowSummary(false)}
           isOpen={showSummary}
-          title="Unremit Ticket Sales Summary"
-          description="Review the details before confirming unremit"
+          title="Revert Payment Summary"
+          description="Review the details before confirming the transaction"
         >
           <div className="flex flex-col -mt-2 w-full max-w-[650px]">
             <LongCard className="w-full mt-3" label="Ticket Summary">
-              <LongCardItem label="Total Tickets to Unremit" value={`${unremitTickets.length} ticket(s)`} />
+              <LongCardItem label="Total Tickets" value={`${unremitTickets.length} ticket(s)`} />
               <LongCardItem label="Control Numbers" value={compressControlNumbers(selectedControlNumbers)} />
             </LongCard>
 

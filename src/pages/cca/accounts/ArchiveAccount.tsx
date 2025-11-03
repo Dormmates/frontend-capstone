@@ -6,6 +6,7 @@ import { useArchiveAccount } from "@/_lib/@react-client-query/accounts";
 import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
 import { ArchiveIcon } from "lucide-react";
+import { formatSectionName } from "@/utils/seatmap";
 
 type ArchiveAccountProps = {
   user: User;
@@ -30,7 +31,6 @@ const ArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
   return (
     <AlertModal
       confirmation="Archive"
-      tooltip="Archive Account"
       actionText="Archive Account"
       onConfirm={handleSubmit}
       trigger={
@@ -38,7 +38,7 @@ const ArchiveAccount = ({ user, queryKey }: ArchiveAccountProps) => {
           <ArchiveIcon />
         </Button>
       }
-      title="Archive User"
+      title={`Archive ${formatSectionName(queryKey.replace(/s$/, ""))}`}
       description="This will archive the user and remove the user from the main list"
     >
       <div>{user.firstName + " " + user.lastName}</div>

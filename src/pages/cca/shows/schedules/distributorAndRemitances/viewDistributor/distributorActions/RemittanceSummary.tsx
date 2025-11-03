@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
+import { formatSectionName } from "@/utils/seatmap";
 
 type Props = {
   seatingType: SeatingConfiguration;
@@ -39,7 +40,7 @@ const RemittanceSummary = ({
   const allSoldOrLost = [...soldTickets, ...lostTickets];
 
   const totalSales = allSoldOrLost.reduce((acc, curr) => acc + Number(curr.ticketPrice), 0);
-  const totalDiscount = discountedTickets.reduce((acc, curr) => acc + Number(curr.ticketPrice) * ((discountPercentage || 0) / 100), 0);
+  // const totalDiscount = discountedTickets.reduce((acc, curr) => acc + Number(curr.ticketPrice) * ((discountPercentage || 0) / 100), 0);
 
   const expectedRemit = allSoldOrLost.reduce((acc, curr) => {
     let priceAfterCommission = Number(curr.ticketPrice) - commissionFee;
@@ -73,7 +74,8 @@ const RemittanceSummary = ({
 
             return Object.entries(sectionMap).map(([section, data]) => (
               <p key={section} className="ml-2">
-                {section} ({data.count} ticket{data.count > 1 ? "s" : ""}): {Array.from(data.prices).map(formatCurrency).join(", ")}
+                {formatSectionName(section)} ({data.count} ticket{data.count > 1 ? "s" : ""}):{" "}
+                {Array.from(data.prices).map(formatCurrency).join(", ")}
               </p>
             ));
           })()
@@ -92,10 +94,10 @@ const RemittanceSummary = ({
           <p className="text-darkGrey">Total Distributor Commission: </p>
           <p>{formatCurrency(allSoldOrLost.length * commissionFee)}</p>
         </div>
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <p className="text-darkGrey">Total Discount: </p>
           <p>{formatCurrency(totalDiscount)}</p>
-        </div>
+        </div> */}
         <Separator className="my-2" />
         <div className="flex items-center justify-between">
           <p>Amount: </p>

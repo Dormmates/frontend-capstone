@@ -343,8 +343,8 @@ const ViewPerformingGroups = () => {
         <Modal
           isOpen={showArchived}
           onClose={() => setShowArchived(false)}
-          title="Archived Distributors"
-          description="Archived distributors can be  unarchived"
+          title="Archived CCA Members"
+          description="Archived members can be  unarchived"
           className="max-w-5xl"
         >
           <div>
