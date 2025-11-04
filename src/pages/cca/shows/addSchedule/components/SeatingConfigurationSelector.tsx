@@ -40,7 +40,7 @@ const SeatingConfigurationSelector = ({ setErrors, scheduleData, setScheduleData
         }
 
         if (value === "controlledSeating") {
-          const complimentary = 32;
+          const complimentary = 33;
           const totalComplimentary = Math.min(complimentary, totalSeats);
           const totalTickets = Math.max(totalSeats - totalComplimentary, 0);
 

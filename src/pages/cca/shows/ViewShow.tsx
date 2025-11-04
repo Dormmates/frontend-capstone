@@ -7,6 +7,7 @@ import {
   useCopySchedule,
   useDeleteSchedule,
   useGetShowSchedules,
+  useOpenSchedule,
   useReschedule,
 } from "@/_lib/@react-client-query/schedule.ts";
 import { formatToReadableDate, formatToReadableTime } from "@/utils/date.ts";
@@ -47,6 +48,7 @@ import Loading from "@/components/Loading";
 const ViewShow = () => {
   const queryClient = useQueryClient();
   const deleteSchedule = useDeleteSchedule();
+  const openSchedule = useOpenSchedule();
   const reschedule = useReschedule();
   const duplicate = useCopySchedule();
 
@@ -57,6 +59,7 @@ const ViewShow = () => {
 
   const [isReschedule, setIsReschedule] = useState<Schedule | null>(null);
   const [copySchedule, setCopySchedule] = useState<Schedule | null>(null);
+  const [isCloseSchedule, setIsCloseSchedule] = useState(false);
   const [newDate, setNewDate] = useState({ date: new Date(), time: "" });
   const [openSalesReport, setOpenSalesReport] = useState(false);
 
@@ -306,18 +309,59 @@ const ViewShow = () => {
                             <DropdownMenuContent>
                               <DropdownMenuLabel>Select Options</DropdownMenuLabel>
                               <DropdownMenuGroup>
-                                {schedule.isOpen && <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>}
+                                <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => setCopySchedule(schedule)}>Copy Schedule</DropdownMenuItem>
                                 {user?.roles.includes("head") && schedule.isOpen && (
                                   <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                     <DialogPopup
+                                      isOpen={isCloseSchedule}
+                                      setIsOpen={(value) => setIsCloseSchedule(value)}
                                       className="max-w-5xl"
                                       description={schedule.isOpen ? "This action will close this schedule." : "This action will open this schedule."}
                                       title={schedule.isOpen ? "Close Schedule" : "Open Schedule"}
                                       triggerElement={<p>{schedule.isOpen ? "Close Schedule" : "Open Schedule"}</p>}
                                     >
-                                      <CloseSchedule scheduleId={schedule.scheduleId} />
+                                      <CloseSchedule
+                                        showId={show.showId}
+                                        closeModal={() => setIsCloseSchedule(false)}
+                                        scheduleId={schedule.scheduleId}
+                                      />
                                     </DialogPopup>
+                                  </DropdownMenuItem>
+                                )}
+
+                                {user?.roles.includes("head") && !schedule.isOpen && (
+                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                    <AlertModal
+                                      confirmation="Open"
+                                      actionText="Open"
+                                      onConfirm={() => {
+                                        toast.promise(openSchedule.mutateAsync(schedule.scheduleId), {
+                                          position: "top-center",
+                                          loading: "Opening schedule...",
+                                          success: () => {
+                                            queryClient.setQueryData(["schedules", show.showId], (old: Schedule[] | undefined) => {
+                                              if (!old) return old;
+                                              return old.map((s) => (s.scheduleId === schedule.scheduleId ? { ...s, isOpen: true } : s));
+                                            });
+
+                                            return "Schedule Opened";
+                                          },
+                                          error: (err: any) => err.message || "Failed to open schedule",
+                                        });
+                                      }}
+                                      title="Open Schedule"
+                                      trigger={<p>Open Schedule</p>}
+                                    >
+                                      <div className="-mt-2 space-y-2 text-center">
+                                        <p className="text-sm text-muted-foreground">
+                                          Are you sure you want to <span className="font-semibold text-primary">reopen</span> this schedule?
+                                        </p>
+                                        <p className="text-sm font-medium">
+                                          {formatToReadableDate(schedule.datetime + "")} at {formatToReadableTime(schedule.datetime + "")}
+                                        </p>
+                                      </div>
+                                    </AlertModal>
                                   </DropdownMenuItem>
                                 )}
                               </DropdownMenuGroup>
@@ -447,9 +491,11 @@ const ViewShow = () => {
 
 type CloseScheduleProps = {
   scheduleId: string;
+  showId: string;
+  closeModal: () => void;
 };
 
-const CloseSchedule = ({ scheduleId }: CloseScheduleProps) => {
+const CloseSchedule = ({ scheduleId, closeModal, showId }: CloseScheduleProps) => {
   const { data, isLoading, isError } = useCheckCloseSchedule(scheduleId);
   const closeSchedule = useCloseSchedule();
   const queryClient = useQueryClient();
@@ -463,19 +509,16 @@ const CloseSchedule = ({ scheduleId }: CloseScheduleProps) => {
   }
 
   const handleCloseSchedule = () => {
-    toast.promise(closeSchedule.mutateAsync(scheduleId)),
-      {
-        position: "top-center",
-        loading: "Closing schedule...",
-        success: () => {
-          queryClient.setQueryData<Schedule[]>(["schedules", scheduleId], (oldData) => {
-            if (!oldData) return oldData;
-            return oldData.map((schedule) => (schedule.scheduleId === scheduleId ? { ...schedule, isOpen: false } : schedule));
-          });
-          return "Schedule Closed ";
-        },
-        error: (err: any) => err.message || "Failed to close schedule",
-      };
+    toast.promise(closeSchedule.mutateAsync(scheduleId), {
+      position: "top-center",
+      loading: "Closing schedule...",
+      success: () => {
+        queryClient.invalidateQueries({ queryKey: ["schedules", showId] });
+        closeModal();
+        return "Schedule Closed";
+      },
+      error: (err: any) => err.message || "Failed to close schedule",
+    });
   };
 
   return (
@@ -574,7 +617,9 @@ const CloseSchedule = ({ scheduleId }: CloseScheduleProps) => {
           </div>
 
           <div className="mt-3 flex justify-end">
-            <Button onClick={handleCloseSchedule}>Close Schedule</Button>
+            <Button disabled={closeSchedule.isPending} onClick={handleCloseSchedule}>
+              Close Schedule
+            </Button>
           </div>
         </>
       )}

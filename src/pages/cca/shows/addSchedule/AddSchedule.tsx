@@ -367,11 +367,12 @@ const AddSchedule = () => {
               error={errors.complimentary}
               startingRow={startingRow}
               scheduleData={{
-                ticketsControlNumber: `1-${seatData.length}`,
+                ticketsControlNumber: scheduleData.ticketsControlNumber,
+                complimentaryControlNumber: scheduleData.complimentaryControlNumber,
               }}
+              complimentaryCount={scheduleData.totalComplimentary as number}
               disabled={addSchedule.isPending}
               setSeatData={setSeatData}
-              complimentaryCount={scheduleData.totalComplimentary as number}
               seatMap={seatData}
             />
           </>
@@ -435,13 +436,12 @@ const AddSchedule = () => {
 
                     {/* Fees & Tickets */}
                     <p>
-                      <span className="font-semibold">Tickets:</span> {scheduleData.totalTickets}{" "}
-                      {scheduleData.seatingConfiguration === "freeSeating" && `(${scheduleData.ticketsControlNumber})`}
+                      <span className="font-semibold">Tickets:</span> {scheduleData.totalTickets} {`(${scheduleData.ticketsControlNumber})`}
                     </p>
 
                     <p>
                       <span className="font-semibold">Complimentary Tickets:</span> {scheduleData.totalComplimentary}{" "}
-                      {scheduleData.seatingConfiguration === "freeSeating" && `(${scheduleData.complimentaryControlNumber})`}
+                      {`(${scheduleData.complimentaryControlNumber})`}
                     </p>
                   </div>
 
@@ -449,13 +449,16 @@ const AddSchedule = () => {
                   {scheduleData.seatingConfiguration === "controlledSeating" && (
                     <div className="flex flex-col gap-2">
                       <SeatMapSchedule
+                        setErrors={setErrors}
+                        error={errors.complimentary}
                         startingRow={startingRow}
                         scheduleData={{
-                          ticketsControlNumber: `1-${seatData.length}`,
+                          ticketsControlNumber: scheduleData.ticketsControlNumber,
+                          complimentaryControlNumber: scheduleData.complimentaryControlNumber,
                         }}
-                        setSeatData={setSeatData}
                         complimentaryCount={scheduleData.totalComplimentary as number}
                         disabled={true}
+                        setSeatData={setSeatData}
                         seatMap={seatData}
                       />
                       <p className="text-red-500 text-sm self-end italic">Note: Unassigned Seat will be disabled</p>
