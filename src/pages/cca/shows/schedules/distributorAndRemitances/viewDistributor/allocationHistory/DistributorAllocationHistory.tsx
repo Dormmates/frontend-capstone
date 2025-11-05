@@ -47,7 +47,7 @@ const DistributorAllocationHistory = () => {
           },
           {
             key: "action",
-            header: "Action By",
+            header: "Trainer",
             render: (log) => log.allocatedBy.firstName + " " + log.allocatedBy.lastName,
           },
           {

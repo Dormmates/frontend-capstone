@@ -12,6 +12,7 @@ const HeroSection = () => {
   const { data, isLoading, isError } = useGetLandingPageUpcomingShows();
   const [index, setIndex] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isFixed, setIsFixed] = useState(false);
 
   const startX = useRef<number | null>(null);
   const currentX = useRef<number | null>(null);
@@ -67,6 +68,19 @@ const HeroSection = () => {
     return () => slider?.removeEventListener("transitionend", handleTransitionEnd);
   }, [index, data]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsFixed(true);
+      } else {
+        setIsFixed(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     startX.current = e.touches[0].clientX;
   };
@@ -111,7 +125,11 @@ const HeroSection = () => {
 
   return (
     <div className="min-h-screen w-full relative overflow-hidden select-none">
-      <Navbar className="text-white absolute flex items-center gap-10 text-lg z-[999] top-0 left-0 w-full px-10 py-5 transition-all duration-500" />
+      <Navbar
+        className={`text-white absolute flex items-center gap-10 text-lg z-[999] top-0 left-0 w-full px-10 py-5 ${
+          isFixed ? "!fixed top-0 left-0 w-full z-50 bg-background border-b border-border shadow-md !text-foreground" : ""
+        }`}
+      />
 
       <div
         ref={sliderRef}

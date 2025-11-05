@@ -31,7 +31,7 @@ const TransferTicket = ({ ticket, schedule, show }: TransferTicketProps) => {
   const queryClient = useQueryClient();
   const transferTicket = useTransferTicket();
 
-  const { data: shows, isLoading } = useGetShowsWithAvailableTicket({ scheduleId: schedule.scheduleId });
+  const { data: shows, isLoading } = useGetShowsWithAvailableTicket({ scheduleId: schedule.scheduleId, showId: show.showId });
   const [selectedShow, setSelectedShow] = useState<ShowDataWithSchedulesAndTickets | null>(null);
   const [selectedShowSchedule, setSelectedShowSchedule] = useState<ScheduleWithTickets | null>(null);
   const [selectedControlNumbers, setSelectedControlNumbers] = useState<number[]>([]);
@@ -97,7 +97,7 @@ const TransferTicket = ({ ticket, schedule, show }: TransferTicketProps) => {
   };
 
   return (
-    <div className="max-h-[80vh] overflow-y-auto p-4">
+    <div className="max-h-[80vh] overflow-y-auto ">
       <div>
         <p>Ticket Control Number to transfer: {formatTicket(ticket.controlNumber)}</p>
         <p>Show: {show.title}</p>
@@ -121,7 +121,7 @@ const TransferTicket = ({ ticket, schedule, show }: TransferTicketProps) => {
               ) : null;
             })()}
 
-          <div className="mt-5">
+          {/* <div className="mt-5">
             <p className="font-bold text-sm mb-2">Transfer to Other Shows:</p>
             <div className="grid gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
               {shows
@@ -130,10 +130,10 @@ const TransferTicket = ({ ticket, schedule, show }: TransferTicketProps) => {
                   <ShowCard key={filteredShow.showId} show={filteredShow} setSelectedShow={setSelectedShow} />
                 ))}
             </div>
-          </div>
+          </div> */}
         </div>
       ) : (
-        !selectedShow && <div>No Shows Available.</div>
+        !selectedShow && <div className="w-full p-5 py-10 text-center border mt-5 rounded-md">No Available Schedule to Transfer</div>
       )}
 
       {selectedShow && (

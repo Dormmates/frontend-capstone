@@ -465,7 +465,7 @@ export const useRefundTicket = () => {
   });
 };
 
-export const useGetShowsWithAvailableTicket = (query?: { departmentId?: string; scheduleId?: string }) => {
+export const useGetShowsWithAvailableTicket = (query?: { departmentId?: string; scheduleId?: string; showId?: string }) => {
   return useQuery<ShowDataWithSchedulesAndTickets[], Error>({
     queryKey: ["ticket", "availability", query],
     queryFn: async () => {

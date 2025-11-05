@@ -54,7 +54,7 @@ const RemittanceSummary = ({
     <div className="flex flex-col mt-5 w-full max-w-[650px]">
       <LongCard className="w-full" label="Ticket Summary">
         <LongCardItem label="Sold Tickets" value={`${soldTickets.length} ticket(s) `} />
-        <LongCardItem label="Lost Tickets" value={`${lostTickets.length} ticket(s)`} />
+        {/* <LongCardItem label="Lost Tickets" value={`${lostTickets.length} ticket(s)`} /> */}
         {/* <LongCardItem label="Discounted Tickets" value={`${discountedTickets.length} ticket(s)`} /> */}
       </LongCard>
 

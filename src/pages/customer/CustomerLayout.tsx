@@ -30,7 +30,7 @@ const CustomerLayout = () => {
         </Button>
       )}
 
-      <footer className="w-full bg-accent flex flex-col md:flex-row md:justify-between gap-5 p-5 lg:p-20 border border-t-primary mt-[200px]">
+      <footer className="w-full bg-muted flex flex-col md:flex-row md:justify-between gap-5 p-5 lg:p-20 border border-t-primary mt-[200px]">
         <div>
           <h1 className="text-primary text-3xl font-bold">SLU Center for Culture and the Arts</h1>
           <p className="max-w-[500px] text-muted-foreground">
