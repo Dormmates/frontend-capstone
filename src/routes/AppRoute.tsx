@@ -49,9 +49,9 @@ import OpenShow from "@/pages/customer/OpenShow";
 import Loading from "@/components/Loading";
 
 const AppRoute = () => {
-  const { user } = useAuthContext();
+  const { user, isLoadingUser } = useAuthContext();
 
-  if (!user) {
+  if (isLoadingUser) {
     return (
       <section className="flex min-h-screen w-full items-center justify-center">
         <Loading />

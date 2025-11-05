@@ -120,7 +120,12 @@ const HeroSection = () => {
     currentX.current = null;
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading)
+    return (
+      <section className="flex min-h-screen w-full items-center justify-center">
+        <Loading />
+      </section>
+    );
   if (isError || !data || data.length === 0) return <DefaultLandingPage />;
 
   return (
