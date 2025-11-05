@@ -144,7 +144,7 @@ const ScheduleSummary = () => {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle>Ticket Allocation & Remittance Overview</CardTitle>
+                  <CardTitle>Ticket Statuses Overview</CardTitle>
                   <CardDescription>Shows the distribution of allocated, unallocated, paid, and pending regular tickets.</CardDescription>
                 </CardHeader>
                 <CardContent>

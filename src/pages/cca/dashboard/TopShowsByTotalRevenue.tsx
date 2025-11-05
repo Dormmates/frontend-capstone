@@ -57,7 +57,7 @@ const TopShowsByTotalRevenue = ({ isHead, selectedDepartment }: TopShowsByTotalR
         <CardTitle>
           <p>Top Shows by Total Revenue</p>
         </CardTitle>
-        <CardDescription>Visual comparison of ticket sales per show.</CardDescription>
+        <CardDescription>Visual comparison of Top 5 shows.</CardDescription>
       </CardHeader>
       <CardContent className="">
         {isError || chartData.length == 0 ? (
@@ -85,8 +85,22 @@ const TopShowsByTotalRevenue = ({ isHead, selectedDepartment }: TopShowsByTotalR
               <XAxis dataKey="sold" type="number" hide />
               <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
               <Bar maxBarSize={50} dataKey="sold" layout="vertical" radius={4}>
-                <LabelList dataKey="name" position="insideLeft" offset={8} className="fill-white font-bold" fontSize={12} />
-                <LabelList dataKey="sold" position="right" offset={8} className="fill-foreground" fontSize={12} />
+                <LabelList
+                  dataKey="name"
+                  position="right"
+                  offset={8}
+                  content={(props) => {
+                    const { x, y, value } = props;
+
+                    const label = String(value);
+
+                    return (
+                      <text x={Number(x) + 8} y={Number(y) + 25} textAnchor="start" fontSize={12} className="">
+                        {label}
+                      </text>
+                    );
+                  }}
+                />
               </Bar>
             </BarChart>
           </ChartContainer>
