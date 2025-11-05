@@ -46,9 +46,18 @@ import TicketInformations from "@/pages/cca/shows/schedules/distributorAndRemita
 import CustomerLayout from "@/pages/customer/CustomerLayout";
 import CustomerViewDepartment from "@/pages/customer/CustomerViewDepartment";
 import OpenShow from "@/pages/customer/OpenShow";
+import Loading from "@/components/Loading";
 
 const AppRoute = () => {
   const { user } = useAuthContext();
+
+  if (!user) {
+    return (
+      <section className="flex min-h-screen w-full items-center justify-center">
+        <Loading />
+      </section>
+    );
+  }
 
   return (
     <Routes>
