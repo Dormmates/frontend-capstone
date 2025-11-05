@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGetShowsAndDistributorTickets } from "@/_lib/@react-client-query/show.ts";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useAuthContext } from "@/context/AuthContext.tsx";
@@ -43,6 +43,10 @@ const DistributorDashboard = () => {
   }, [data]);
 
   const [selectedSchedule, setSelectedSchedule] = useState<DistributorScheduleTickets | null>(null);
+
+  useEffect(() => {
+    document.title = "SLU CCA - Distributor";
+  }, []);
 
   const ticketsChartConfig = {
     sold: {

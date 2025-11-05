@@ -5,6 +5,8 @@ import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import { useMemo } from "react";
 import { formatCurrency } from "@/utils";
 import SimpleCard from "@/components/SimpleCard";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const DistributorHistory = () => {
   const { user } = useAuthContext();
@@ -61,11 +63,11 @@ const DistributorHistory = () => {
   }, [allocationHistory, remittanceHistory]);
 
   if (loadingAllocation || loadingRemittance) {
-    return <h1>Loadingg</h1>;
+    return <Loading />;
   }
 
   if (!allocationHistory || !remittanceHistory || errorAllocation || erroRemittance) {
-    return <h1>Error loading</h1>;
+    return <Error />;
   }
 
   return (
