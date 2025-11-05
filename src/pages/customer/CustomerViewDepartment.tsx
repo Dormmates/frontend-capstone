@@ -126,7 +126,9 @@ const CustomerViewDepartment = () => {
                   </>
                 )}
               </div>
-              {departmentShows?.featuredShow && <h1 className="mt-10 font-bold text-xl -mb-8">Explore Other Shows</h1>}
+              {departmentShows?.featuredShow && departmentShows?.otherShows.length > 0 && (
+                <h1 className="mt-10 font-bold text-xl -mb-8">Explore Other Shows</h1>
+              )}
               <div className="grid md:grid-cols-2 gap-5 mt-10">
                 {departmentShows?.otherShows.map((show) => (
                   <div

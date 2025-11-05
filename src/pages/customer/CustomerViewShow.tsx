@@ -188,9 +188,7 @@ const ShowSeatMap = ({ scheduleId }: ShowSeatMapProps) => {
   const seatColorMap = {
     available: "fill-white",
     reserved: "fill-yellow-500",
-    sold: "fill-red",
-    paidToCCA: "fill-red",
-    complimentary: "fill-darkGrey",
+    notAvailable: "fill-darkGrey",
   };
 
   return (
@@ -212,10 +210,10 @@ const ShowSeatMap = ({ scheduleId }: ShowSeatMapProps) => {
 
       <SeatMap
         recStyle={(seat) => {
-          if (seat.isComplimentary) return seatColorMap.complimentary;
+          if (seat.isComplimentary) return seatColorMap.notAvailable;
           if (seat.status === "reserved") return seatColorMap.reserved;
           if (seat.status === "available") return seatColorMap.available;
-          if (seat.status === "sold" || seat.status === "paidToCCA") return seatColorMap.sold;
+          if (seat.status === "sold" || seat.status === "paidToCCA") return seatColorMap.notAvailable;
           return "fill-gray-400";
         }}
         seatMap={data}
