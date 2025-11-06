@@ -56,7 +56,7 @@ export const request = async <T>(
       }
 
       if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
-        throw new Error("Network error, please check your connection and try again.");
+        throw new Error("You are being rate-limited. Please wait a few minutes before trying again.");
       }
       const message =
         err.response?.data?.error?.message || err.response?.data?.message || err.response?.statusText || err.message || "An error occurred";
