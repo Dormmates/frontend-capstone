@@ -47,8 +47,23 @@ export const request = async <T>(
   try {
     return await axios<T>(config);
   } catch (err: any) {
-    const message =
-      err?.response?.data?.error?.message || err?.response?.data?.message || err?.response?.statusText || err?.message || "An error occurred";
-    throw new Error(message);
+    // Handle specific known error types
+    if (axios.isAxiosError(err)) {
+      const status = err.response?.status;
+
+      if (status === 429) {
+        throw new Error("Too many requests, please try again later.");
+      }
+
+      if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
+        throw new Error("Network error, please check your connection and try again.");
+      }
+      const message =
+        err.response?.data?.error?.message || err.response?.data?.message || err.response?.statusText || err.message || "An error occurred";
+
+      throw new Error(message);
+    }
+
+    throw new Error("An unexpected error occurred.");
   }
 };
