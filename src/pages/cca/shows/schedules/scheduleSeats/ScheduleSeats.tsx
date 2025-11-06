@@ -53,10 +53,6 @@ const ScheduleSeats = () => {
       <h1 className="text-2xl">Seat Map</h1>
       <div className="flex gap-2 flex-col justify-end">
         <div className="flex gap-2 items-center">
-          <div className="w-5 h-5 bg-blue-500 border"></div>
-          <p>Complimentary Seats: {seatSummary.complimentary}</p>
-        </div>
-        <div className="flex gap-2 items-center">
           <div className="w-5 h-5 bg-green border"></div>
           <p>Paid To CCA: {seatSummary.paidToCCA}</p>
         </div>
@@ -74,7 +70,7 @@ const ScheduleSeats = () => {
         </div>
         <div className="flex gap-2 items-center">
           <div className="w-5 h-5 bg-darkGrey border"></div>
-          <p>Not Available Seats: {seatSummary.notAvailable}</p>
+          <p>Complimentary / Not Available Seats: {seatSummary.notAvailable + seatSummary.complimentary}</p>
         </div>
       </div>
 
@@ -82,7 +78,7 @@ const ScheduleSeats = () => {
         recStyle={(seat) => {
           if (seat.ticketControlNumber === 0) return "fill-darkGrey";
           if (seat.status === "paidToCCA") return "fill-green";
-          if (seat.isComplimentary) return "fill-blue-500";
+          if (seat.isComplimentary) return "fill-darkGrey";
           if (seat.status === "sold") return "fill-primary";
           if (seat.status === "reserved") return "fill-red/80";
           if (seat.status === "available") return "fill-white";
