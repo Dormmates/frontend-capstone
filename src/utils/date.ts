@@ -30,3 +30,14 @@ export const formatTo12Hour = (time: string) => {
 
   return `${hour}:${minute}${ampm}`;
 };
+
+export const convertDatesPH = (dates: { date: Date; time: string }[]) => {
+  return dates.map(({ date, time }) => {
+    const [hours, minutes] = time.split(":").map(Number);
+
+    const combinedDate = new Date(date);
+    combinedDate.setHours(hours || 0, minutes || 0, 0, 0);
+
+    return { datetime: combinedDate };
+  });
+};

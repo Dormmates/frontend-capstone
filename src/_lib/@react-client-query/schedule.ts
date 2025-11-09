@@ -46,11 +46,12 @@ export interface ScheduleDistributorForAllocation {
   tickets: { controlNumber: number; status: TicketStatuses }[];
 }
 
-export interface AddSchedulePayload extends ScheduleFormData {
+export interface AddSchedulePayload extends Omit<ScheduleFormData, "dates"> {
   showId: string;
   controlNumbers?: { tickets: number[]; complimentary: number[] };
   seats?: FlattenedSeat[];
   ticketPricing: TicketPricing;
+  dates: { datetime: Date }[];
 }
 
 export const useAddSchedule = () => {

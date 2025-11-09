@@ -16,7 +16,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import Modal from "@/components/Modal";
-import { formatTo12Hour, formatToReadableDate } from "@/utils/date";
+import { convertDatesPH, formatTo12Hour, formatToReadableDate } from "@/utils/date";
 import { toast } from "sonner";
 import { seatMetaData } from "../../../../../seatmetedata.ts";
 import type { FixedPricing, SectionedPricing, TicketPricing } from "@/types/ticketpricing.ts";
@@ -265,7 +265,12 @@ const AddSchedule = () => {
   };
 
   const handleSubmit = () => {
-    const payload: AddSchedulePayload = { ...scheduleData, showId: data.showId, ticketPricing: selectedPrice as TicketPricing };
+    const payload: AddSchedulePayload = {
+      ...scheduleData,
+      dates: convertDatesPH(scheduleData.dates),
+      showId: data.showId,
+      ticketPricing: selectedPrice as TicketPricing,
+    };
 
     if (scheduleData.ticketType === "ticketed") {
       payload.controlNumbers = {
