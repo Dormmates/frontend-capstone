@@ -158,6 +158,7 @@ const AppRoute = () => {
                 <Route path="manage/distributors/:distributorId" element={<ViewDistributor />} />
                 <Route path="manage/distributors" element={<Distributors />} />
                 <Route path="shows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
+                <Route path="majorShows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
                 <Route path="performing-groups" element={<PerformingGroups />} />
                 <Route path="performing-groups/:groupId" element={<ViewPerformingGroups />} />
                 <Route path="performing-groups/:groupId/distributors/:distributorId" element={<ViewDistributor />} />

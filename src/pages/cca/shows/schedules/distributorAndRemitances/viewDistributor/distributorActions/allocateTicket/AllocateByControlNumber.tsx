@@ -186,7 +186,7 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
               <p className="text-sm text-muted-foreground mb-4">
                 Specify how many tickets each distributor will receive. Control numbers will be automatically assigned.
               </p>
-              <div className="flex flex-col sm:flex-row sm:items-end gap-5">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-5">
                 <div className="flex-1">
                   <InputField
                     error={error.ticketsCount}
@@ -228,25 +228,27 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
             <Table>
               <TableHeader className="bg-muted">
                 <TableRow>
-                  <TableHead className="w-[40px] text-center">
-                    <Checkbox
-                      checked={
-                        paginatedItems.length > 0 && paginatedItems.every((dist) => selectedDistributors.some((s) => s.userId === dist.userId))
-                      }
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          const newSelections = paginatedItems.filter((dist) => !selectedDistributors.some((s) => s.userId === dist.userId));
-                          const updated = sortDistributors([...selectedDistributors, ...newSelections]);
-                          setSelectedDistributors(updated);
-                          validateTicketsCount(ticketsCount, updated.length);
-                        } else {
-                          const updated = selectedDistributors.filter((s) => !paginatedItems.some((dist) => dist.userId === s.userId));
-                          setSelectedDistributors(updated);
-                          validateTicketsCount(ticketsCount, updated.length);
+                  {unAllocatedTickets.total > 0 && (
+                    <TableHead className="w-[40px] text-center">
+                      <Checkbox
+                        checked={
+                          paginatedItems.length > 0 && paginatedItems.every((dist) => selectedDistributors.some((s) => s.userId === dist.userId))
                         }
-                      }}
-                    />
-                  </TableHead>
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            const newSelections = paginatedItems.filter((dist) => !selectedDistributors.some((s) => s.userId === dist.userId));
+                            const updated = sortDistributors([...selectedDistributors, ...newSelections]);
+                            setSelectedDistributors(updated);
+                            validateTicketsCount(ticketsCount, updated.length);
+                          } else {
+                            const updated = selectedDistributors.filter((s) => !paginatedItems.some((dist) => dist.userId === s.userId));
+                            setSelectedDistributors(updated);
+                            validateTicketsCount(ticketsCount, updated.length);
+                          }
+                        }}
+                      />
+                    </TableHead>
+                  )}
                   <TableHead className="text-muted-foreground py-5">Full Name</TableHead>
                   <TableHead className="text-muted-foreground py-5">Type</TableHead>
                   <TableHead className="text-muted-foreground py-5">Performing Group</TableHead>
@@ -268,21 +270,23 @@ const AllocateByControlNumber = ({ scheduleId, departmentId, unAllocatedTickets 
 
                     return (
                       <TableRow key={dist.userId}>
-                        <TableCell className="text-center">
-                          <Checkbox
-                            checked={isSelected}
-                            onCheckedChange={(checked) => {
-                              let updated;
-                              if (checked) {
-                                updated = sortDistributors([...selectedDistributors, dist]);
-                              } else {
-                                updated = selectedDistributors.filter((d) => d.userId !== dist.userId);
-                              }
-                              setSelectedDistributors(updated);
-                              validateTicketsCount(ticketsCount, updated.length);
-                            }}
-                          />
-                        </TableCell>
+                        {unAllocatedTickets.total > 0 && (
+                          <TableCell className="text-center">
+                            <Checkbox
+                              checked={isSelected}
+                              onCheckedChange={(checked) => {
+                                let updated;
+                                if (checked) {
+                                  updated = sortDistributors([...selectedDistributors, dist]);
+                                } else {
+                                  updated = selectedDistributors.filter((d) => d.userId !== dist.userId);
+                                }
+                                setSelectedDistributors(updated);
+                                validateTicketsCount(ticketsCount, updated.length);
+                              }}
+                            />
+                          </TableCell>
+                        )}
                         <TableCell>{dist.lastName + ", " + dist.firstName}</TableCell>
                         <TableCell>{distributorTypeOptions.find((d) => d.value === dist.distributorType)?.name}</TableCell>
                         <TableCell>{dist.department.name}</TableCell>

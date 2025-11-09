@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useGetShow } from "@/_lib/@react-client-query/show.ts";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
 import LongCard from "@/components/LongCard";
 import LongCardItem from "@/components/LongCardItem";
@@ -9,11 +9,11 @@ import { useGetScheduleInformation, useGetScheduleTickets } from "@/_lib/@react-
 import AllocateByControlNumber from "./AllocateByControlNumber";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import NotFound from "@/components/NotFound";
-import { Button } from "@/components/ui/button";
 import Loading from "@/components/Loading";
 import AllocatedBySeat from "./AllocatedBySeat";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
+import { CircleAlertIcon } from "lucide-react";
 
 const TicketAllocation = () => {
   const { scheduleId, showId } = useParams();
@@ -37,7 +37,7 @@ const TicketAllocation = () => {
 
   useEffect(() => {
     if ((!loadingSchedule && schedule && !schedule.isOpen) || showData?.isArchived) {
-      navigate(`/shows/schedule/${showId}/${scheduleId}/d&r`, { replace: true });
+      navigate(`/${showData?.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${showId}/${scheduleId}/d&r`, { replace: true });
     }
   }, [loadingSchedule, schedule, navigate, showId, scheduleId]);
 
@@ -47,22 +47,10 @@ const TicketAllocation = () => {
 
   return (
     <ContentWrapper className="flex flex-col">
-      {unAllocatedTickets.total === 0 && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6 text-center space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800">No More Tickets Available</h2>
-            <p className="text-gray-600 text-sm">
-              All tickets for this schedule have already been allocated. You can return to the schedule page to review existing allocations or
-              remittances.
-            </p>
-            <Link to={`/shows/schedule/${showId}/${scheduleId}/d&r`} className="block">
-              <Button className="w-full mt-2">Return to Schedule</Button>
-            </Link>
-          </div>
-        </div>
-      )}
-
-      <Breadcrumbs items={[{ name: "Return to Distributor List", href: "" }]} backHref={`/shows/schedule/${showId}/${scheduleId}/d&r`} />
+      <Breadcrumbs
+        items={[{ name: "Return to Distributor List", href: "" }]}
+        backHref={`/${showData?.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${showId}/${scheduleId}/d&r`}
+      />
 
       {!showData || showError || errorSchedule || !schedule || ticketsError || !tickets ? (
         <NotFound title="Schedule Not Found" description="This Schedule does not exist or have been deleted already" />
@@ -77,6 +65,19 @@ const TicketAllocation = () => {
               <LongCardItem label="Time" value={formatToReadableTime(schedule.datetime + "")} />
             </LongCard>
           </div>
+
+          {unAllocatedTickets.total === 0 && (
+            <div className="flex flex-col bg-muted border shadow-sm border-l-red border-l-4 rounded-md w-full p-3 gap-1">
+              <div className="flex items-center gap-2">
+                <CircleAlertIcon className="text-red w-4 font-bold" />
+                <p className="font-medium text-sm">Note - No More Tickets Available</p>
+              </div>
+
+              <p className=" text-sm">
+                All tickets for this schedule have already been allocated. You can return to the schedule page to review existing allocations.
+              </p>
+            </div>
+          )}
 
           <div className="flex flex-col gap-2">
             {schedule.seatingType == "controlledSeating" ? (

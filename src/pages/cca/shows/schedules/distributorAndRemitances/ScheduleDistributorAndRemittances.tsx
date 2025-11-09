@@ -103,7 +103,9 @@ const ScheduleDistributorAndRemittances = () => {
                 </Button>
 
                 <Button disabled={!schedule.isOpen || show.isArchived}>
-                  <Link to={`/shows/${showId}/${scheduleId}/allocation`}>Allocate Ticket</Link>
+                  <Link to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/${showId}/${scheduleId}/allocation`}>
+                    Allocate Ticket
+                  </Link>
                 </Button>
               </>
             )}
