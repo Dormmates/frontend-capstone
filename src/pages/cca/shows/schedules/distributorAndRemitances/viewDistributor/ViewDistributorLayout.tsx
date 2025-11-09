@@ -119,7 +119,7 @@ const ViewDistributorLayout = () => {
   }
 
   if (!data[0]) {
-    navigate(`/shows/schedule/${showId}/${scheduleId}/d&r/`);
+    navigate(`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${showId}/${scheduleId}/d&r/`);
   }
 
   const distributorName = data[0]?.distributor;
@@ -127,8 +127,14 @@ const ViewDistributorLayout = () => {
   return (
     <div className="flex flex-col gap-5 mt-5">
       <Breadcrumbs
-        backHref={`/shows/schedule/${showId}/${scheduleId}/d&r/`}
-        items={[{ name: "Distributor List", href: `/shows/schedule/${showId}/${scheduleId}/d&r/` }, { name: distributorName }]}
+        backHref={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${showId}/${scheduleId}/d&r/`}
+        items={[
+          {
+            name: "Distributor List",
+            href: `/${show.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${showId}/${scheduleId}/d&r/`,
+          },
+          { name: distributorName },
+        ]}
       />
       <div className="flex flex-col gap-5 ">
         <h1 className="text-2xl">{distributorName}</h1>
@@ -243,7 +249,7 @@ const ViewDistributorLayout = () => {
             key={index}
             end={link.path == ""}
             className={({ isActive }) => (isActive ? "font-semibold" : "font-normal text-lightGrey")}
-            to={`/shows/schedule/${showId}/${scheduleId}/d&r/${distributorId}${link.path}`}
+            to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${showId}/${scheduleId}/d&r/${distributorId}${link.path}`}
           >
             {link.name}
           </NavLink>

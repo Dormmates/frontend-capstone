@@ -120,7 +120,11 @@ const ViewDistributor = () => {
             key: "action",
             header: "Actions",
             render: (schedule) => (
-              <Link to={`/shows/schedule/${schedule.show.showId}/${schedule.scheduleId}/d&r/${distributorId}`}>
+              <Link
+                to={`/${schedule.show.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${schedule.show.showId}/${
+                  schedule.scheduleId
+                }/d&r/${distributorId}`}
+              >
                 <Button variant="outline">Go To Detailed View</Button>
               </Link>
             ),

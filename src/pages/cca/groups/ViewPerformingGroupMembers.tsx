@@ -187,7 +187,7 @@ const ViewPerformingGroups = () => {
               {searchedDistributors.map((distributor) => {
                 return (
                   <div
-                    onClick={() => navigate(`/manage/distributors/${distributor.userId}`)}
+                    onClick={() => navigate(`/performing-groups/${groupId}/distributors/${distributor.userId}`)}
                     className={`p-5 border rounded-md shadow-sm font-medium cursor-pointer hover:shadow-xl `}
                     key={distributor.userId}
                   >

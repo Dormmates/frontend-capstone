@@ -74,7 +74,7 @@ const AddSchedule = () => {
 
   useEffect(() => {
     if (data && data.isArchived) {
-      navigate(`/shows/${data.showId}`, { replace: true });
+      navigate(`/${data.showType === "majorProduction" ? "majorShows" : "shows"}/${data.showId}`, { replace: true });
     }
   }, [navigate, data]);
 
@@ -281,7 +281,7 @@ const AddSchedule = () => {
     toast.promise(
       addSchedule.mutateAsync(payload).then(() => {
         queryClient.invalidateQueries({ exact: true, queryKey: ["schedules", id] });
-        navigate(`/shows/${id}`, { replace: true });
+        navigate(`/${data.showType === "majorProduction" ? "majorShows" : "shows"}/${id}`, { replace: true });
       }),
       {
         position: "top-center",
@@ -295,9 +295,9 @@ const AddSchedule = () => {
   return (
     <ContentWrapper>
       <Breadcrumbs
-        backHref={`/shows/${id}`}
+        backHref={`/${data.showType === "majorProduction" ? "majorShows" : "shows"}/${id}`}
         items={[
-          { name: `Return to Schedule List`, href: `/shows/${id}` },
+          { name: `Return to Schedule List`, href: `/${data.showType === "majorProduction" ? "majorShows" : "shows"}/${id}` },
           { name: "Add Schedule", href: "" },
         ]}
       />

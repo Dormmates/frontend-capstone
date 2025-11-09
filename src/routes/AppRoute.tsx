@@ -108,29 +108,59 @@ const AppRoute = () => {
 
             {(user.roles.includes("head") || user.departments.length !== 0) && (
               <>
+                {/* ===================== SHOW MANAGEMENT ROUTES ===================== */}
                 <Route path="shows" element={<PerformingGroupShows />} />
                 <Route path="majorShows" element={<MajorProductionShows />} />
-                <Route path="shows/add" element={<CreateShow />} />
-                <Route path="shows/add/schedule/:id" element={<AddSchedule />} />
-                <Route path="shows/schedule/:showId/:scheduleId" element={<ViewShowScheduleLayout />}>
-                  <Route index element={<ScheduleSummary />} />
-                  <Route path="d&r" element={<ScheduleDistributorAndRemittances />} />
-                  <Route path="seats" element={<ScheduleSeats />} />
-                  <Route path="tickets" element={<ScheduleTickets />} />
-                  {/* <Route path="tally" element={<ScheduleTallyData />} /> */}
-                  <Route path="reservations" element={<ScheduleReservations />} />
-                  <Route path="d&r/:distributorId" element={<ViewDistributorLayout />}>
-                    <Route index element={<DistributorTicketsAllocated />} />
-                    <Route path="allocation/history" element={<DistributorAllocationHistory />} />
-                    <Route path="remittance/history" element={<DistributorRemittanceHistory />} />
+
+                {/* ---------- Performing Group Shows ---------- */}
+                <Route path="shows">
+                  <Route path="add" element={<CreateShow />} />
+                  <Route path="add/schedule/:id" element={<AddSchedule />} />
+
+                  <Route path="schedule/:showId/:scheduleId" element={<ViewShowScheduleLayout />}>
+                    <Route index element={<ScheduleSummary />} />
+                    <Route path="d&r" element={<ScheduleDistributorAndRemittances />} />
+                    <Route path="seats" element={<ScheduleSeats />} />
+                    <Route path="tickets" element={<ScheduleTickets />} />
+                    <Route path="reservations" element={<ScheduleReservations />} />
+                    <Route path="d&r/:distributorId" element={<ViewDistributorLayout />}>
+                      <Route index element={<DistributorTicketsAllocated />} />
+                      <Route path="allocation/history" element={<DistributorAllocationHistory />} />
+                      <Route path="remittance/history" element={<DistributorRemittanceHistory />} />
+                    </Route>
                   </Route>
+
+                  <Route path=":id" element={<ViewShow />} />
                 </Route>
-                <Route path="shows/:id" element={<ViewShow />} />
+
+                {/* ---------- MAJOR PRODUCTION SHOWS ---------- */}
+                <Route path="majorShows">
+                  <Route path="add" element={<CreateShow />} />
+                  <Route path="add/schedule/:id" element={<AddSchedule />} />
+
+                  <Route path="schedule/:showId/:scheduleId" element={<ViewShowScheduleLayout />}>
+                    <Route index element={<ScheduleSummary />} />
+                    <Route path="d&r" element={<ScheduleDistributorAndRemittances />} />
+                    <Route path="seats" element={<ScheduleSeats />} />
+                    <Route path="tickets" element={<ScheduleTickets />} />
+                    <Route path="reservations" element={<ScheduleReservations />} />
+
+                    <Route path="d&r/:distributorId" element={<ViewDistributorLayout />}>
+                      <Route index element={<DistributorTicketsAllocated />} />
+                      <Route path="allocation/history" element={<DistributorAllocationHistory />} />
+                      <Route path="remittance/history" element={<DistributorRemittanceHistory />} />
+                    </Route>
+                  </Route>
+
+                  <Route path=":id" element={<ViewShow />} />
+                </Route>
+
                 <Route path="manage/distributors/:distributorId" element={<ViewDistributor />} />
                 <Route path="manage/distributors" element={<Distributors />} />
                 <Route path="shows/:showId/:scheduleId/allocation" element={<TicketAllocation />} />
                 <Route path="performing-groups" element={<PerformingGroups />} />
                 <Route path="performing-groups/:groupId" element={<ViewPerformingGroups />} />
+                <Route path="performing-groups/:groupId/distributors/:distributorId" element={<ViewDistributor />} />
               </>
             )}
 

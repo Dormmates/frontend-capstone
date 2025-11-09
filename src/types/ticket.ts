@@ -1,5 +1,6 @@
 import type { SeatingConfiguration } from "./schedule";
 import type { SeatSection } from "./seat";
+import type { ShowType } from "./show";
 
 export type TicketStatuses = "sold" | "lost" | "not_allocated" | "allocated" | "remitted" | "paidToCCA";
 type TicketActionLogTypes = "allocate" | "unallocate" | "payToCCA" | "unPayToCCA" | "soldTicket" | "unsoldTicket" | "transfer" | "refund" | "remit";
@@ -101,6 +102,7 @@ export interface DistributorScheduleTickets {
     showCover: string;
     showId: string;
     title: string;
+    showType: ShowType;
   };
   tickets: {
     ticketId: string;

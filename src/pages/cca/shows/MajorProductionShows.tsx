@@ -61,7 +61,7 @@ const MajorProductionShows = () => {
           />
         </div>
         {user.roles.includes("head") && (
-          <Link className="lg:self-end" to={"/shows/add?showType=major"}>
+          <Link className="lg:self-end" to={"/majorShows/add?showType=major"}>
             <Button>Add New Major Production</Button>
           </Link>
         )}
@@ -98,7 +98,7 @@ const MajorProductionShows = () => {
             headerClassName: "text-right",
             render: (show: ShowData) => (
               <div className="flex justify-end items-center gap-2">
-                <Link to={`/shows/${show.showId}`}>
+                <Link to={`/majorShows/${show.showId}`}>
                   <Button>Go To Schedules</Button>
                 </Link>
 

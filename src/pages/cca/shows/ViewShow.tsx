@@ -216,7 +216,7 @@ const ViewShow = () => {
                       }}
                     />
                     <Button disabled={show.isArchived}>
-                      <Link className="self-end" to={`/shows/add/schedule/${id}`}>
+                      <Link className="self-end" to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/add/schedule/${id}`}>
                         Add New Schedule
                       </Link>
                     </Button>
@@ -294,7 +294,7 @@ const ViewShow = () => {
                   headerClassName: "text-right",
                   render: (schedule) => (
                     <div className="flex gap-2 justify-end items-center ">
-                      <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
+                      <Link to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${id}/${schedule.scheduleId}/`}>
                         <Button>{user?.roles.includes("head") || show.showType !== "majorProduction" ? "Manage Schedule" : "View Schedule"}</Button>
                       </Link>
 

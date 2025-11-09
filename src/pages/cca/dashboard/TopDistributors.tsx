@@ -164,7 +164,11 @@ const TopDistributors = ({ isHead, selectedDepartment }: TopDistributorsProps) =
                                   </div>
 
                                   <div className="">
-                                    <Link to={`/shows/schedule/${show.showId}/${sched.scheduleId}/d&r/${distributor.userId}`}>
+                                    <Link
+                                      to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${show.showId}/${
+                                        sched.scheduleId
+                                      }/d&r/${distributor.userId}`}
+                                    >
                                       <Button size="sm" variant="secondary">
                                         Open
                                       </Button>

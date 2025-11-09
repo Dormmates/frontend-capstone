@@ -152,7 +152,7 @@ const ScheduleDistributorAndRemittances = () => {
               headerClassName: "text-right",
               render: (dist) => (
                 <div className="flex justify-end">
-                  <Link to={`/shows/schedule/${showId}/${scheduleId}/d&r/${dist.userId}`}>
+                  <Link to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${showId}/${scheduleId}/d&r/${dist.userId}`}>
                     <Button variant="outline">View Distributor</Button>
                   </Link>
                 </div>
