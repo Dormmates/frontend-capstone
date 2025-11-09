@@ -1,4 +1,4 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useGetDistributorTicketActivities, useGetScheduleSummary } from "@/_lib/@react-client-query/schedule.ts";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -18,7 +18,7 @@ import Loading from "@/components/Loading";
 import Error from "@/components/Error";
 
 const ScheduleSummary = () => {
-  const { scheduleId, showId } = useParams();
+  const { scheduleId } = useParams();
   const { data: summary, isLoading: loadingSummary, isError: summaryError } = useGetScheduleSummary(scheduleId as string);
 
   const { hash } = useLocation();
@@ -228,20 +228,6 @@ const ScheduleSummary = () => {
                   key: "balance",
                   header: "Balance Due",
                   render: (distributor) => <span>{formatCurrency(distributor.balanceDue)}</span>,
-                },
-                {
-                  key: "action",
-                  header: "Action",
-                  headerClassName: "text-end",
-                  render: (distributor) => (
-                    <div className="flex justify-end">
-                      <div className="flex justify-end">
-                        <Link to={`/shows/schedule/${showId}/${scheduleId}/d&r/${distributor.userId}`}>
-                          <Button variant="outline">View Distributor</Button>
-                        </Link>
-                      </div>
-                    </div>
-                  ),
                 },
               ]}
               data={summary.distributorSummary.distributors}
