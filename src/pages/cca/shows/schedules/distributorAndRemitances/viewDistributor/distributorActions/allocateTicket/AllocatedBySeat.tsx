@@ -174,19 +174,36 @@ const AllocatedBySeat = ({ unAllocatedTickets, showData }: Props) => {
           disabled={false}
           seatMap={data}
           seatClick={(seat) => {
-            if (seat.isComplimentary || seat.ticketControlNumber == 0 || seat.status === "reserved" || seat.status == "paidToCCA") return;
+            if (
+              seat.isComplimentary ||
+              seat.ticketControlNumber == 0 ||
+              seat.status === "reserved" ||
+              seat.status == "paidToCCA" ||
+              seat.status === "sold"
+            )
+              return;
             handleClick([seat]);
           }}
           rowClick={(seats) => {
             const selectableSeats = seats.filter(
-              (seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved" && seat.status !== "paidToCCA"
+              (seat) =>
+                !seat.isComplimentary &&
+                seat.ticketControlNumber !== 0 &&
+                seat.status !== "reserved" &&
+                seat.status !== "paidToCCA" &&
+                seat.status !== "sold"
             );
             if (selectableSeats.length === 0) return;
             handleClick(selectableSeats);
           }}
           sectionClick={(seats) => {
             const selectableSeats = seats.filter(
-              (seat) => !seat.isComplimentary && seat.ticketControlNumber !== 0 && seat.status !== "reserved" && seat.status !== "paidToCCA"
+              (seat) =>
+                !seat.isComplimentary &&
+                seat.ticketControlNumber !== 0 &&
+                seat.status !== "reserved" &&
+                seat.status !== "paidToCCA" &&
+                seat.status !== "sold"
             );
             if (selectableSeats.length === 0) return;
             handleClick(selectableSeats);
