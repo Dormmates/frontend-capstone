@@ -334,8 +334,8 @@ const ChooseDistributor = ({ onChoose, selectedDistributor, closeModal, schedule
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col md:items-center gap-4">
-        <div className="w-full max-w-[300px]">
+      <div className="flex flex-col md:items-center md:flex-row gap-4">
+        <div className="w-full md:max-w-[300px]">
           <InputField placeholder="Search Distributor by Name" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
         </div>
         <Dropdown value={selectedType} items={distributorTypeOptions} onChange={(value) => setSelectedType(value)} />
