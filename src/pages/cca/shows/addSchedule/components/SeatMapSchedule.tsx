@@ -155,7 +155,9 @@ const SeatMapSchedule = ({ setErrors, error, startingRow, seatMap, disabled = fa
       const updated = [...prev];
       const compAssignedCount = updated.filter((s) => s.isComplimentary).length;
 
-      if (compAssignedCount < complimentaryCount) return updated;
+      if (compAssignedCount < complimentaryCount) {
+        return updated.map((s) => (s.isComplimentary ? s : { ...s, ticketControlNumber: 0 }));
+      }
 
       let regIdx = 0;
       for (const seat of updated) {

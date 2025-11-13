@@ -64,10 +64,10 @@ const ScheduleDistributorAndRemittances = () => {
       <SimpleCard className="w-fit" label="Total Distributors" value={distributors.length} />
 
       <div className="flex flex-col gap-10">
-        <div className="flex flex-col gap-5">
-          <div className="w-full flex  gap-2">
+        <div className="flex flex-col 2xl:flex-row  gap-5 items-center">
+          <div className="w-full flex  gap-2 items-center">
             <Input
-              className="w-full "
+              className="w-full 2xl:max-w-lg"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search Distributor by Name"
@@ -80,7 +80,7 @@ const ScheduleDistributorAndRemittances = () => {
             )}
           </div>
 
-          <div className="flex flex-wrap justify-end gap-2 mt-5">
+          <div className="flex w-full flex-wrap justify-end gap-2 items-center">
             {(user?.roles.includes("head") || show.showType !== "majorProduction") && (
               <>
                 <DialogPopup

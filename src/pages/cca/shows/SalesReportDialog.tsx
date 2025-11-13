@@ -70,7 +70,7 @@ const SalesReportDialog = ({ showSchedules, openSalesReport, setOpenSalesReport,
               </TableRow>
             ) : (
               showSchedules.map((schedule) => (
-                <TableRow key={schedule.scheduleId} className={selectedSchedules.includes(schedule.scheduleId) ? "bg-blue-50" : ""}>
+                <TableRow key={schedule.scheduleId} className={selectedSchedules.includes(schedule.scheduleId) ? "" : ""}>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Checkbox
