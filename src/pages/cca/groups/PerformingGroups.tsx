@@ -27,6 +27,7 @@ import { Link } from "react-router-dom";
 import { MultiSelect } from "@/components/MultiSelect";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
+import { Client, Storage, ID } from "appwrite";
 
 const PerformingGroups = () => {
   const { user } = useAuthContext();
@@ -38,6 +39,7 @@ const PerformingGroups = () => {
 
   const { data: departments, isLoading: fetchingDepartments, isError: errorLoadingDepartments } = useGetDepartments(userId);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [addGroup, setAddGroup] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<Department | null>(null);
 
@@ -80,11 +82,37 @@ const PerformingGroups = () => {
   const handleAddDepartment = () => {
     if (!validateGroup(newGroup, true)) return;
 
+    setIsSubmitting(true);
+
+    const projectId = import.meta.env.VITE_APP_WRITE_PROJECT_ID;
+    const bucketId = import.meta.env.VITE_APP_WRITE_BUCKET_ID;
+    const endPoint = import.meta.env.VITE_APP_WRITE_ENDPOINT;
+    const client = new Client().setEndpoint(endPoint).setProject(projectId);
+    const storage = new Storage(client);
+
     toast.promise(
-      addDepartment.mutateAsync({
-        name: newGroup.name,
-        image: newGroup.image as File,
-      }),
+      (async () => {
+        let imageUrl;
+
+        if (newGroup.image) {
+          const response = await storage.createFile({
+            bucketId,
+            fileId: ID.unique(),
+            file: newGroup.image,
+          });
+
+          imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${response.$id}/view?project=${projectId}&mode=admin`;
+
+          if (!imageUrl) {
+            throw new globalThis.Error("Failed to upload image, please try again later");
+          }
+        }
+
+        return addDepartment.mutateAsync({
+          name: newGroup.name,
+          imageUrl: imageUrl as string,
+        });
+      })(),
       {
         position: "top-center",
         loading: "Adding group...",
@@ -92,9 +120,13 @@ const PerformingGroups = () => {
           queryClient.invalidateQueries({ exact: true, queryKey: ["departments"] });
           setAddGroup(false);
           setNewGroup({ name: "", imagePreview: "", image: null });
+          setIsSubmitting(false);
           return "Group added";
         },
-        error: (err) => err.message || "Failed to add group",
+        error: (err: Error) => {
+          setIsSubmitting(false);
+          return err.message || "Failed to add group";
+        },
       }
     );
   };
@@ -107,29 +139,55 @@ const PerformingGroups = () => {
       return;
     }
 
-    const payload: {
-      departmentId: string;
-      name: string;
-      image?: File;
-      oldFileId?: string;
-    } = {
-      departmentId: selectedGroup?.departmentId as string,
-      name: editGroup.name,
-      image: editGroup.image ?? undefined,
-      oldFileId: editGroup.image ? (getFileId(selectedGroup?.logoUrl as string) as string) : undefined,
-    };
+    setIsSubmitting(true);
 
-    toast.promise(editDepartment.mutateAsync(payload), {
-      position: "top-center",
-      loading: "Updating group...",
-      success: () => {
-        queryClient.invalidateQueries({ exact: true, queryKey: ["departments"] });
-        setSelectedGroup(null);
-        setEditGroup({ name: "", imagePreview: "", image: null });
-        return "Group updated";
-      },
-      error: (err) => err.message || "Failed to update group",
-    });
+    const projectId = import.meta.env.VITE_APP_WRITE_PROJECT_ID;
+    const bucketId = import.meta.env.VITE_APP_WRITE_BUCKET_ID;
+    const endPoint = import.meta.env.VITE_APP_WRITE_ENDPOINT;
+    const client = new Client().setEndpoint(endPoint).setProject(projectId);
+    const storage = new Storage(client);
+
+    toast.promise(
+      (async () => {
+        let imageUrl;
+
+        if (editGroup.image) {
+          const response = await storage.createFile({
+            bucketId,
+            fileId: ID.unique(),
+            file: editGroup.image,
+          });
+
+          imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${response.$id}/view?project=${projectId}&mode=admin`;
+
+          if (!imageUrl) {
+            throw new globalThis.Error("Failed to upload new image, please try again later");
+          }
+        }
+
+        return editDepartment.mutateAsync({
+          departmentId: selectedGroup?.departmentId as string,
+          name: editGroup.name,
+          oldFileId: editGroup.image ? getFileId(selectedGroup?.logoUrl as string) ?? undefined : undefined,
+          imageUrl,
+        });
+      })(),
+      {
+        position: "top-center",
+        loading: "Updating group...",
+        success: () => {
+          queryClient.invalidateQueries({ exact: true, queryKey: ["departments"] });
+          setSelectedGroup(null);
+          setEditGroup({ name: "", imagePreview: "", image: null });
+          setIsSubmitting(false);
+          return "Group updated";
+        },
+        error: (err: Error) => {
+          setIsSubmitting(false);
+          return err.message || "Failed to update group";
+        },
+      }
+    );
   };
 
   const handleDelete = (groupId: string) => {
@@ -300,7 +358,7 @@ const PerformingGroups = () => {
                 </div>
               )}
               <Input
-                disabled={addDepartment.isPending || editDepartment.isPending}
+                disabled={addDepartment.isPending || editDepartment.isPending || isSubmitting}
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
@@ -333,7 +391,7 @@ const PerformingGroups = () => {
             </div>
 
             <InputField
-              disabled={addDepartment.isPending || editDepartment.isPending}
+              disabled={addDepartment.isPending || editDepartment.isPending || isSubmitting}
               error={errors?.name}
               label={"Group Name"}
               value={addGroup ? newGroup.name : editGroup.name}
@@ -344,7 +402,10 @@ const PerformingGroups = () => {
               }
             />
 
-            <Button disabled={addDepartment.isPending || editDepartment.isPending} onClick={addGroup ? handleAddDepartment : handleEditDepartment}>
+            <Button
+              disabled={addDepartment.isPending || editDepartment.isPending || isSubmitting}
+              onClick={addGroup ? handleAddDepartment : handleEditDepartment}
+            >
               {addGroup ? "Add Group" : "Save Changes"}
             </Button>
           </div>

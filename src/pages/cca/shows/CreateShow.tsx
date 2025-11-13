@@ -7,10 +7,12 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { ContentWrapper } from "@/components/layout/Wrapper";
 import Breadcrumbs from "@/components/BreadCrumbs";
 import { toast } from "sonner";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Client, Storage, ID } from "appwrite";
 
 const CreateShow = () => {
   const [params] = useSearchParams();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const queryClient = useQueryClient();
   const createShow = useCreateShow();
   const navigate = useNavigate();
@@ -40,34 +42,61 @@ const CreateShow = () => {
       <h1 className="text-3xl font-medium my-10">Create a New Show</h1>
       <ShowForm
         showType={type as "group" | "major"}
-        isLoading={createShow.isPending}
-        onSubmit={(data) => {
+        isLoading={createShow.isPending || isSubmitting}
+        onSubmit={async (data) => {
+          setIsSubmitting(true);
+
+          const projectId = import.meta.env.VITE_APP_WRITE_PROJECT_ID;
+          const bucketId = import.meta.env.VITE_APP_WRITE_BUCKET_ID;
+          const endPoint = import.meta.env.VITE_APP_WRITE_ENDPOINT;
+
+          const client = new Client().setEndpoint(endPoint).setProject(projectId);
+          const storage = new Storage(client);
+
           toast.promise(
-            createShow.mutateAsync({
-              showTitle: data.title.trim(),
-              description: data.description.trim(),
-              department: data.productionType == "majorProduction" ? "" : data.group,
-              genre: data.genre.join(", "),
-              createdBy: user?.userId as string,
-              showType: data.productionType,
-              image: data.image as File,
-            }),
-            {
-              position: "top-center",
-              loading: "Creating show...",
-              success: (data) => {
-                queryClient.setQueryData<ShowData>(["show", data.showId], data);
-                queryClient.setQueryData(["shows"], (oldData: ShowData[] | undefined) => {
-                  if (!oldData) return oldData;
-                  return oldData.map((show) => (show.showId === data.showId ? data : show));
+            (async () => {
+              let imageUrl;
+
+              if (data.image) {
+                const response = await storage.createFile({
+                  bucketId,
+                  fileId: ID.unique(),
+                  file: data.image,
                 });
 
-                navigate(`/shows/add/schedule/${data.showId}`);
-                toast.info("Please add a schedule for the created show", { position: "top-center" });
+                imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${response.$id}/view?project=${projectId}&mode=admin`;
+
+                if (!imageUrl) {
+                  throw new Error("Failed to upload image, please try again later");
+                }
+              }
+
+              const created = await createShow.mutateAsync({
+                showTitle: data.title.trim(),
+                description: data.description.trim(),
+                department: data.productionType === "majorProduction" ? "" : data.group,
+                genre: data.genre.join(", "),
+                createdBy: user?.userId as string,
+                showType: data.productionType,
+                imageUrl,
+              });
+
+              return created;
+            })(),
+            {
+              loading: "Creating show...",
+              position: "top-center",
+              success: (created: ShowData) => {
                 queryClient.invalidateQueries({ queryKey: ["shows"] });
-                return "Show created";
+                navigate(`/${created.showType === "majorProduction" ? "majorShows" : "shows"}/add/schedule/${created.showId}`);
+                toast.info("Please add a schedule for the created show", { position: "top-center" });
+                setIsSubmitting(false);
+                return "Show created successfully";
               },
-              error: (err) => err.message || "Failed to create show",
+              error: (err: Error) => {
+                setIsSubmitting(false);
+                return err.message || "Failed to create show";
+              },
             }
           );
         }}

@@ -46,6 +46,9 @@ Before running the frontend locally, make sure you have:
    VITE_API_BASE_URL=http://localhost:3000
    VITE_PUSHER_KEY=your_pusher_key
    VITE_PUSHER_CLUSTER=ap1
+   VITE_APP_WRITE_PROJECT_ID=your_appwrite_project_id
+   VITE_APP_WRITE_BUCKET_ID=your_appwrite_bucket_id
+   VITE_APP_WRITE_ENDPOINT=your_appwrite_endpoint_id
    ```
 
 ## Running the Project Locally

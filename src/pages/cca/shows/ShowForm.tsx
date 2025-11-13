@@ -230,7 +230,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
-                    const allowedExtensions = ["png", "jpg", "jpeg"];
+                    const allowedExtensions = ["png", "jpg", "jpeg", "jfif"];
                     const fileExtension = file.name.split(".").pop()?.toLowerCase();
                     const maxSize = 30 * 1024 * 1024;
 

@@ -26,12 +26,9 @@ export const useGetDepartment = (departmentId: string) => {
 };
 
 export const useAddDepartment = () => {
-  return useMutation<any, Error, { name: string; image: File }>({
-    mutationFn: async (data: { name: string; image: File }) => {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("image", data.image);
-      const res = await request<any>("/api/department", formData, "postFormData");
+  return useMutation<any, Error, { name: string; imageUrl: string }>({
+    mutationFn: async (data) => {
+      const res = await request<any>("/api/department", data, "post");
 
       return res.data;
     },
@@ -40,21 +37,9 @@ export const useAddDepartment = () => {
 };
 
 export const useEditDepartment = () => {
-  return useMutation<any, Error, { departmentId: string; name: string; image?: File; oldFileId?: string }>({
-    mutationFn: async (data: { departmentId: string; name: string; image?: File; oldFileId?: string }) => {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("departmentId", data.departmentId);
-
-      if (data.image) {
-        formData.append("image", data.image);
-      }
-
-      if (data.oldFileId) {
-        formData.append("oldFileId", data.oldFileId);
-      }
-
-      const res = await request<any>("/api/department", formData, "patchFormData");
+  return useMutation<any, Error, { departmentId: string; name: string; oldFileId?: string; imageUrl?: string }>({
+    mutationFn: async (data) => {
+      const res = await request<any>("/api/department", data, "patch");
       return res.data;
     },
   });

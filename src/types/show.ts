@@ -10,7 +10,7 @@ export interface NewShowPayload {
   genre: string;
   createdBy: string;
   showType: ShowType;
-  image: File;
+  imageUrl?: string;
 }
 
 export interface UpdateShowPayload extends Omit<NewShowPayload, "createdBy"> {

@@ -7,21 +7,7 @@ import type { SalesReport } from "@/types/salesreport";
 export const useCreateShow = () => {
   return useMutation<ShowData, Error, NewShowPayload>({
     mutationFn: async (data: NewShowPayload) => {
-      const formData = new FormData();
-      formData.append("showTitle", data.showTitle);
-      formData.append("description", data.description);
-      formData.append("genre", data.genre);
-
-      if (data.department) {
-        formData.append("department", data.department);
-      }
-
-      formData.append("createdBy", data.createdBy);
-      formData.append("showType", data.showType);
-      formData.append("image", data.image);
-
-      const res = await request<any>("/api/show", data, "postFormData");
-
+      const res = await request<any>("/api/show", data, "post");
       return res.data;
     },
     retry: false,
@@ -31,22 +17,7 @@ export const useCreateShow = () => {
 export const useUpdateShow = () => {
   return useMutation<ShowData, Error, UpdateShowPayload>({
     mutationFn: async (data: UpdateShowPayload) => {
-      const formData = new FormData();
-      formData.append("showTitle", data.showTitle);
-      formData.append("description", data.description);
-      formData.append("genre", data.genre);
-      formData.append("showType", data.showType);
-      formData.append("image", data.image);
-
-      if (data.oldFileId) {
-        formData.append("oldFileId", data.oldFileId);
-      }
-
-      if (data.department) {
-        formData.append("department", data.department);
-      }
-
-      const res = await request<any>("/api/show", data, "patchFormData");
+      const res = await request<any>("/api/show", data, "patch");
       return res.data;
     },
     retry: false,

@@ -1,3 +1,4 @@
+import { Client, Storage, ID } from "appwrite";
 import ShowForm from "../ShowForm";
 import type { ShowData } from "@/types/show";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,6 +16,7 @@ type EditShowProps = {
 
 const EditShow = ({ show }: EditShowProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const queryClient = useQueryClient();
   const updateShow = useUpdateShow();
 
@@ -33,29 +35,61 @@ const EditShow = ({ show }: EditShowProps) => {
     >
       <ShowForm
         showType={"group"}
-        isLoading={updateShow.isPending}
-        onSubmit={(data) => {
+        isLoading={updateShow.isPending || isSubmitting}
+        onSubmit={async (data) => {
+          setIsSubmitting(true);
+          const projectId = import.meta.env.VITE_APP_WRITE_PROJECT_ID;
+          const bucketId = import.meta.env.VITE_APP_WRITE_BUCKET_ID;
+          const endPoint = import.meta.env.VITE_APP_WRITE_ENDPOINT;
+
+          const client = new Client().setEndpoint(endPoint).setProject(projectId);
+          const storage = new Storage(client);
+
           toast.promise(
-            updateShow.mutateAsync({
-              showId: show.showId as string,
-              showTitle: data.title.trim(),
-              description: data.description.trim(),
-              department: data.group,
-              genre: data.genre.join(", "),
-              showType: data.productionType,
-              image: data.image as File,
-              oldFileId: data.image ? (getFileId(show?.showCover as string) as string) : undefined,
-            }),
+            (async () => {
+              let imageUrl;
+
+              if (data.image) {
+                const response = await storage.createFile({
+                  bucketId,
+                  fileId: ID.unique(),
+                  file: data.image,
+                });
+
+                imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${response.$id}/view?project=${projectId}&mode=admin`;
+
+                if (!imageUrl) {
+                  throw new Error("Failed to upload new image cover, please try again later");
+                }
+              }
+
+              // Update the show after image upload
+              const updated = await updateShow.mutateAsync({
+                showId: show.showId as string,
+                showTitle: data.title.trim(),
+                description: data.description.trim(),
+                department: data.group,
+                genre: data.genre.join(", "),
+                showType: data.productionType,
+                oldFileId: data.image ? (getFileId(show?.showCover as string) as string) : undefined,
+                imageUrl,
+              });
+
+              return updated;
+            })(),
             {
               loading: "Updating show...",
               position: "top-center",
-              success: (updated) => {
+              success: () => {
                 setIsOpen(false);
-                queryClient.setQueryData<ShowData>(["show", updated.showId], updated);
+                setIsSubmitting(false);
                 queryClient.invalidateQueries({ queryKey: ["shows"] });
-                return "Show updated successfully ";
+                return "Show updated successfully";
               },
-              error: (err: Error) => err.message || "Failed to update show",
+              error: (err: Error) => {
+                setIsSubmitting(false);
+                return err.message || "Failed to update show";
+              },
             }
           );
         }}
