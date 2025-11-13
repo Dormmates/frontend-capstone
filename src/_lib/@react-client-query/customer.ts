@@ -17,6 +17,7 @@ export const useGetLandingPageUpcomingShows = () => {
       const res = await request<UpcomingShows[]>(`/api/customer/upcomingShows`, {}, "get");
       return res.data;
     },
+    retry: false,
   });
 };
 

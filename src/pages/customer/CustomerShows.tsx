@@ -6,6 +6,7 @@ import type { ShowType } from "@/types/show";
 
 import { Link, useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 const CustomerHome = () => {
   const { data: departments, isLoading } = useGetDepartments();
@@ -55,11 +56,15 @@ const ShowsList = ({ departmentId, limit, showType }: { departmentId?: string; l
   const navigate = useNavigate();
 
   if (loadingShows) {
-    return <h1>Loading Shows</h1>;
+    return <Loading />;
   }
 
   if (errorShows || !shows) {
-    return <h1>Error loading</h1>;
+    return (
+      <div className="!max-h-[300px] flex justify-center items-center">
+        <Error />
+      </div>
+    );
   }
 
   return (
