@@ -28,6 +28,7 @@ import { MultiSelect } from "@/components/MultiSelect";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
 import { Client, Storage, ID } from "appwrite";
+import imageCompression from "browser-image-compression";
 
 const PerformingGroups = () => {
   const { user } = useAuthContext();
@@ -95,10 +96,19 @@ const PerformingGroups = () => {
         let imageUrl;
 
         if (newGroup.image) {
+          const compressedBlob = await imageCompression(newGroup.image, {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1500,
+            useWebWorker: true,
+            fileType: "image/webp",
+          });
+
+          const compressedFile = new File([compressedBlob], newGroup.image.name.replace(/\.[^/.]+$/, "") + ".webp", { type: compressedBlob.type });
+
           const response = await storage.createFile({
             bucketId,
             fileId: ID.unique(),
-            file: newGroup.image,
+            file: compressedFile,
           });
 
           imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${response.$id}/view?project=${projectId}&mode=admin`;
@@ -152,12 +162,20 @@ const PerformingGroups = () => {
         let imageUrl;
 
         if (editGroup.image) {
+          const compressedBlob = await imageCompression(editGroup.image, {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1500,
+            useWebWorker: true,
+            fileType: "image/webp",
+          });
+
+          const compressedFile = new File([compressedBlob], editGroup.image.name.replace(/\.[^/.]+$/, "") + ".webp", { type: compressedBlob.type });
+
           const response = await storage.createFile({
             bucketId,
             fileId: ID.unique(),
-            file: editGroup.image,
+            file: compressedFile,
           });
-
           imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${response.$id}/view?project=${projectId}&mode=admin`;
 
           if (!imageUrl) {
@@ -364,11 +382,6 @@ const PerformingGroups = () => {
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
-                    if (file.size > 10 * 1024 * 1024) {
-                      alert("Image must be less than 10MB.");
-                      return;
-                    }
-
                     const imageURL = URL.createObjectURL(file);
 
                     if (addGroup) {

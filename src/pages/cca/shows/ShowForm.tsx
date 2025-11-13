@@ -232,21 +232,11 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
                   if (file) {
                     const allowedExtensions = ["png", "jpg", "jpeg", "jfif"];
                     const fileExtension = file.name.split(".").pop()?.toLowerCase();
-                    const maxSize = 30 * 1024 * 1024;
 
                     if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
                       toast("File extension not allowed", {
                         position: "top-center",
                         description: "Only PNG, JPG, and JPEG files are allowed.",
-                        duration: 5000,
-                      });
-                      return;
-                    }
-
-                    if (file.size > maxSize) {
-                      toast("Image too large", {
-                        position: "top-center",
-                        description: "Image must be less than 30MB.",
                         duration: 5000,
                       });
                       return;

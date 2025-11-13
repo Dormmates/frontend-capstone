@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
 import { EditIcon } from "lucide-react";
+import imageCompression from "browser-image-compression";
 
 type EditShowProps = {
   show: ShowData;
@@ -50,10 +51,19 @@ const EditShow = ({ show }: EditShowProps) => {
               let imageUrl;
 
               if (data.image) {
+                const compressedBlob = await imageCompression(data.image, {
+                  maxSizeMB: 1,
+                  maxWidthOrHeight: 1500,
+                  useWebWorker: true,
+                  fileType: "image/webp",
+                });
+
+                const compressedFile = new File([compressedBlob], data.image.name.replace(/\.[^/.]+$/, "") + ".webp", { type: compressedBlob.type });
+
                 const response = await storage.createFile({
                   bucketId,
                   fileId: ID.unique(),
-                  file: data.image,
+                  file: compressedFile,
                 });
 
                 imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${response.$id}/view?project=${projectId}&mode=admin`;

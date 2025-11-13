@@ -9,6 +9,7 @@ import Breadcrumbs from "@/components/BreadCrumbs";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Client, Storage, ID } from "appwrite";
+import imageCompression from "browser-image-compression";
 
 const CreateShow = () => {
   const [params] = useSearchParams();
@@ -58,10 +59,19 @@ const CreateShow = () => {
               let imageUrl;
 
               if (data.image) {
+                const compressedBlob = await imageCompression(data.image, {
+                  maxSizeMB: 1,
+                  maxWidthOrHeight: 1500,
+                  useWebWorker: true,
+                  fileType: "image/webp",
+                });
+
+                const compressedFile = new File([compressedBlob], data.image.name.replace(/\.[^/.]+$/, "") + ".webp", { type: compressedBlob.type });
+
                 const response = await storage.createFile({
                   bucketId,
                   fileId: ID.unique(),
-                  file: data.image,
+                  file: compressedFile,
                 });
 
                 imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${response.$id}/view?project=${projectId}&mode=admin`;
