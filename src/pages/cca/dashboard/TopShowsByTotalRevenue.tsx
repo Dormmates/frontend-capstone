@@ -95,7 +95,7 @@ const TopShowsByTotalRevenue = ({ isHead, selectedDepartment }: TopShowsByTotalR
                     const label = String(value);
 
                     return (
-                      <text x={Number(x) + 8} y={Number(y) + 25} textAnchor="start" fontSize={12} className="">
+                      <text className="fill-foreground" x={Number(x) + 8} y={Number(y) + 25} textAnchor="start" fontSize={12}>
                         {label}
                       </text>
                     );
