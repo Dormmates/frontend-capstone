@@ -170,7 +170,13 @@ const ViewShow = () => {
 
   return (
     <ContentWrapper>
-      <Breadcrumbs items={[{ name: "Show", href: "#" }, { name: show?.title ?? "Show Not Found." }]} />
+      <Breadcrumbs
+        backHref={`/${show?.showType === "majorProduction" ? "majorShows" : "shows"}`}
+        items={[
+          { name: "Show", href: `/${show?.showType === "majorProduction" ? "majorShows" : "shows"}` },
+          { name: show?.title ?? "Show Not Found." },
+        ]}
+      />
 
       <div className="mt-10">
         <div className="flex gap-5 flex-col sm:flex-row ">
