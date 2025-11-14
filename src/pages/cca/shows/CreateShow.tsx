@@ -39,8 +39,8 @@ const CreateShow = () => {
 
   return (
     <ContentWrapper className="mt-10">
-      <Breadcrumbs backHref="/shows" items={[{ name: "Return to shows" }]} />
-      <h1 className="text-3xl font-medium my-10">Create a New Show</h1>
+      <Breadcrumbs backHref={`/${type === "major" ? "majorShows" : "shows"}`} items={[{ name: "Return to shows" }]} />
+      <h1 className="text-3xl font-medium my-10">Create a New {type === "major" && "Major Production"} Show</h1>
       <ShowForm
         showType={type as "group" | "major"}
         isLoading={createShow.isPending || isSubmitting}
