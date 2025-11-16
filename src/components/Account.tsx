@@ -36,7 +36,6 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
   });
 
   const [newPassword, setNewPassword] = useState({ value: "", isValid: false });
-
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
   });
@@ -50,6 +49,12 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    if (name === "email") {
+      setUserForm((prev) => ({ ...prev, email: value }));
+      setInformationError((prev) => ({ ...prev, email: "" }));
+      return;
+    }
 
     if (/^[a-zA-Z\s]*$/.test(value)) {
       setUserForm((prev) => ({ ...prev, [name]: value }));
