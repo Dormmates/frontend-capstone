@@ -10,6 +10,7 @@ import { isValidEmail } from "@/utils";
 import { toast } from "sonner";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
 import logo from "@/assets/images/cca-logo.png";
+import { Link } from "react-router-dom";
 
 const CCALogin = () => {
   const login = useLogin();
@@ -64,12 +65,14 @@ const CCALogin = () => {
 
   return (
     <div className="bg-muted">
-      <header className="fixed right-10 top-10"></header>
       <PageWrapper className="min-h-screen flex items-center justify-center w-full ">
         <ContentWrapper className="w-full flex justify-center px-3">
           <Card className="w-full max-w-lg bg-background">
             <CardHeader>
-              <div className="flex justify-end mb-10">
+              <div className="flex justify-between mb-10 items-center">
+                <Link className="text-sm text-muted-foreground" to="/">
+                  Exit Login
+                </Link>
                 <ThemeSwitch />
               </div>
               <div className="flex flex-col gap-1">

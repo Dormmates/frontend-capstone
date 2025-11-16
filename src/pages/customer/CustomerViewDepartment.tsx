@@ -91,6 +91,9 @@ const CustomerViewDepartment = () => {
                 <Breadcrumbs backHref="/" items={[{ name: "Shows" }, { name: department?.name ?? "" }]} />
               </div>
               <div>
+                {departmentShows?.otherShows.length == 0 && !departmentShows?.featuredShow && (
+                  <div className="flex items-center justify-center border p-5 mt-10 h-36 rounded-md shadow-sm">No Shows Available.</div>
+                )}
                 {departmentShows?.featuredShow && (
                   <>
                     <h1 className="mt-10 font-bold text-xl mb-2">Upcoming Show</h1>

@@ -21,32 +21,40 @@ const CustomerHome = () => {
 
   return (
     <PageWrapper>
-      <ContentWrapper>
-        <div className="flex flex-col items-center w-full justify-center gap-5 mt-20 px-5 md:px-0">
-          <h1 className="text-4xl md:text-6xl font-bold text-center">All CCA Performances</h1>
-          <p className="text-xl text-center">
-            Experience the creativity of SLU’s artists. Browse current, upcoming, and past shows from every performing group.
-          </p>
+      {departments && (
+        <>
+          <ContentWrapper>
+            <div className="flex flex-col items-center w-full justify-center gap-5 mt-20 px-5 md:px-0">
+              <h1 className="text-4xl md:text-6xl font-bold text-center">All CCA Performances</h1>
+              <p className="text-xl text-center">
+                Experience the creativity of SLU’s artists. Browse current, upcoming, and past shows from every performing group.
+              </p>
 
-          <div className="flex flex-wrap gap-10 justify-center md:gap-20">
-            {(departments ?? []).map((d) => (
-              <div
-                key={d.departmentId}
-                className="aspect-square max-h-[300px] cursor-pointer flex items-center justify-center  rounded-lg transition duration-300"
-              >
-                <Link to={`/shows/${d.departmentId}`} className="flex items-center justify-center ">
-                  <img className="w-full h-full max-w-[120px] object-cover hover:scale-110 transition duration-300" src={d.logoUrl} alt={d.name} />
-                </Link>
+              <div className="flex flex-wrap gap-10 justify-center md:gap-20">
+                {(departments ?? []).map((d) => (
+                  <div
+                    key={d.departmentId}
+                    className="aspect-square max-h-[300px] cursor-pointer flex items-center justify-center  rounded-lg transition duration-300"
+                  >
+                    <Link to={`/shows/${d.departmentId}`} className="flex items-center justify-center ">
+                      <img
+                        className="w-full h-full max-w-[120px] object-cover hover:scale-110 transition duration-300"
+                        src={d.logoUrl}
+                        alt={d.name}
+                      />
+                    </Link>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        <section className="mt-20 px-5 lg:px-0">
-          <h1 className="text-center text-4xl md:text-5xl mb-20">Major Production Shows</h1>
-          <ShowsList showType="majorProduction" />
-        </section>
-      </ContentWrapper>
+            <section className="mt-20 px-5 lg:px-0">
+              <h1 className="text-center text-4xl md:text-5xl mb-20">Major Production Shows</h1>
+              <ShowsList showType="majorProduction" />
+            </section>
+          </ContentWrapper>
+        </>
+      )}
     </PageWrapper>
   );
 };
@@ -68,7 +76,7 @@ const ShowsList = ({ departmentId, limit, showType }: { departmentId?: string; l
   }
 
   return (
-    <div className="gap-10 grid md:grid-cols-2">
+    <div className={`gap-10 grid ${shows.length >= 2 && "md:grid-cols-2"}`}>
       {shows.map((show) => (
         <div
           onClick={() => navigate(`/show/${show.showId}`)}

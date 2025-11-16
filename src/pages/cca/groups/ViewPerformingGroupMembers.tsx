@@ -102,7 +102,10 @@ const ViewPerformingGroups = () => {
 
   return (
     <ContentWrapper>
-      <h1 className="text-3xl">{groupOptions.find((t) => t.value === groupId)?.name ?? "Performing Group"} Members</h1>
+      <div className="flex items-center gap-2">
+        <img className="aspect-square h-20 object-cover" src={departments?.find((d) => d.departmentId === groupId)?.logoUrl} alt="" />
+        <h1 className="text-3xl">{groupOptions.find((t) => t.value === groupId)?.name ?? "Performing Group"} Members</h1>
+      </div>
 
       <div className="my-10">
         <Breadcrumbs
