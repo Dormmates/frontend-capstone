@@ -9,6 +9,7 @@ import Dropdown from "@/components/Dropdown";
 import KPISummary from "./KPISummary";
 import UpcomingShows from "./UpcomingShows";
 import noData from "@/assets/images/no-data.png";
+import Loading from "@/components/Loading";
 
 const CCADashboard = () => {
   const { user } = useAuthContext();
@@ -30,7 +31,7 @@ const CCADashboard = () => {
   }, []);
 
   if (loadingDepartments) {
-    return <h1>Loading..</h1>;
+    return <Loading />;
   }
 
   if (!user?.roles.includes("head") && user?.departments.length === 0) {
