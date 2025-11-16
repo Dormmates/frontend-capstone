@@ -325,7 +325,7 @@ const ViewShowSchedules = ({
 
     return seatMap.reduce(
       (summary, seat) => {
-        if (seat.isComplimentary || seat.status === "reserved" || seat.ticketControlNumber == 0) summary.available++;
+        if (seat.isComplimentary || seat.status !== "available" || seat.ticketControlNumber == 0) summary.notAvailable++;
         if (seat.status === "available" && !seat.isComplimentary && seat.ticketControlNumber !== 0) summary.available++;
         return summary;
       },
@@ -360,7 +360,7 @@ const ViewShowSchedules = ({
             {
               key: "available",
               header: "Tickets Available",
-              render: (schedule) => schedule.tickets.length,
+              render: (schedule) => schedule.tickets.filter((t) => t.status === "not_allocated" && !t.isComplimentary).length,
             },
             {
               key: "type",
