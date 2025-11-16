@@ -46,19 +46,32 @@ const SeatMapSchedule = ({ setErrors, error, startingRow, seatMap, disabled = fa
             const compAssignedCount = updated.filter((s) => s.isComplimentary).length;
             if (compAssignedCount >= complimentaryCount) return;
 
-            const assignedNumbers = updated.filter((s) => s.isComplimentary).map((s) => s.ticketControlNumber);
-            const nextControlNumber = complimentaryNumbers.find((n) => !assignedNumbers.includes(n)) || 0;
-
-            updated[index] = { ...seat, isComplimentary: true, ticketControlNumber: nextControlNumber };
+            updated[index] = { ...seat, isComplimentary: true, ticketControlNumber: 0 };
             compChanged = true;
           }
         });
 
         if (compChanged) {
+          const compSeats = updated
+            .filter((s) => s.isComplimentary)
+            .sort((a, b) => {
+              const rowA = a.seatNumber.match(/^[A-Z]+/)![0];
+              const rowB = b.seatNumber.match(/^[A-Z]+/)![0];
+              if (rowA !== rowB) return rowA.localeCompare(rowB);
+              const numA = parseInt(a.seatNumber.match(/\d+/)![0], 10);
+              const numB = parseInt(b.seatNumber.match(/\d+/)![0], 10);
+              return numA - numB;
+            });
+
+          compSeats.forEach((seat, i) => {
+            const index = updated.findIndex((s) => s.seatNumber === seat.seatNumber && s.section === seat.section);
+            if (index !== -1) {
+              updated[index] = { ...updated[index], ticketControlNumber: complimentaryNumbers[i] || 0 };
+            }
+          });
+
           const compAssignedCount = updated.filter((s) => s.isComplimentary).length;
-          if (compAssignedCount < complimentaryCount) {
-            updated = updated.map((s) => (s.isComplimentary ? s : { ...s, ticketControlNumber: 0 }));
-          } else {
+          if (compAssignedCount >= complimentaryCount) {
             let regIdx = 0;
             updated = updated.map((s) => {
               if (!s.isComplimentary && regIdx < ticketNumbers.length) {
@@ -66,6 +79,8 @@ const SeatMapSchedule = ({ setErrors, error, startingRow, seatMap, disabled = fa
               }
               return s;
             });
+          } else {
+            updated = updated.map((s) => (!s.isComplimentary ? { ...s, ticketControlNumber: 0 } : s));
           }
         }
 
