@@ -349,7 +349,7 @@ const ScheduleTickets = () => {
                       />
                     </DialogPopup>
 
-                    {schedule.isOpen && (user?.roles.includes("head") || show.showType !== "majorProduction") && (
+                    {schedule.isOpen && !show.isArchived && (user?.roles.includes("head") || show.showType !== "majorProduction") && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="outline">
