@@ -274,16 +274,15 @@ const SeatMap = ({
                     <strong>{hoveredSeat.seatNumber}</strong>
                   </div>
                   <div>Section: {formatSectionName(hoveredSeat.section)}</div>
-                  <div>Row: {hoveredSeat.row}</div>
+                  <div>Row: {hoveredSeat.row.replace(/[0-9-]/g, "")}</div>
+
                   {!hoveredSeat.isComplimentary && hoveredSeat.ticketPrice !== 0 && <div>Price: ₱{hoveredSeat.ticketPrice}</div>}
                   {hoveredSeat.ticketControlNumber === 0 ? (
                     <div className="font-bold">Not Assigned Seat</div>
                   ) : (
                     <div>Ticket Control Number: {hoveredSeat.ticketControlNumber}</div>
                   )}
-                  {hoveredSeat.distributor && hoveredSeat.status === "reserved" && (
-                    <div className="font-bold">Reserved to: {hoveredSeat.distributor.name}</div>
-                  )}
+                  {hoveredSeat.distributor && <div className="font-bold">Distributor: {hoveredSeat.distributor.name}</div>}
                   {hoveredSeat.isComplimentary && <div className="font-bold">Complimentary Seat</div>}
                 </>
               )}
