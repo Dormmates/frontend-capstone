@@ -316,59 +316,66 @@ const ViewShow = () => {
                               <DropdownMenuLabel>Select Options</DropdownMenuLabel>
                               <DropdownMenuGroup>
                                 <DropdownMenuItem onClick={() => setIsReschedule(schedule)}>Reschedule</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setCopySchedule(schedule)}>Copy Schedule</DropdownMenuItem>
-                                {user?.roles.includes("head") && schedule.isOpen && (
-                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                    <DialogPopup
-                                      isOpen={isCloseSchedule}
-                                      setIsOpen={(value) => setIsCloseSchedule(value)}
-                                      className="max-w-5xl"
-                                      description={schedule.isOpen ? "This action will close this schedule." : "This action will open this schedule."}
-                                      title={schedule.isOpen ? "Close Schedule" : "Open Schedule"}
-                                      triggerElement={<p>{schedule.isOpen ? "Close Schedule" : "Open Schedule"}</p>}
-                                    >
-                                      <CloseSchedule
-                                        showId={show.showId}
-                                        closeModal={() => setIsCloseSchedule(false)}
-                                        scheduleId={schedule.scheduleId}
-                                      />
-                                    </DialogPopup>
-                                  </DropdownMenuItem>
-                                )}
 
-                                {user?.roles.includes("head") && !schedule.isOpen && (
-                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                    <AlertModal
-                                      confirmation="Open"
-                                      actionText="Open"
-                                      onConfirm={() => {
-                                        toast.promise(openSchedule.mutateAsync(schedule.scheduleId), {
-                                          position: "top-center",
-                                          loading: "Opening schedule...",
-                                          success: () => {
-                                            queryClient.setQueryData(["schedules", show.showId], (old: Schedule[] | undefined) => {
-                                              if (!old) return old;
-                                              return old.map((s) => (s.scheduleId === schedule.scheduleId ? { ...s, isOpen: true } : s));
+                                {schedule.ticketType === "ticketed" && (
+                                  <>
+                                    <DropdownMenuItem onClick={() => setCopySchedule(schedule)}>Copy Schedule</DropdownMenuItem>
+                                    {user?.roles.includes("head") && schedule.isOpen && (
+                                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                        <DialogPopup
+                                          isOpen={isCloseSchedule}
+                                          setIsOpen={(value) => setIsCloseSchedule(value)}
+                                          className="max-w-5xl"
+                                          description={
+                                            schedule.isOpen ? "This action will close this schedule." : "This action will open this schedule."
+                                          }
+                                          title={schedule.isOpen ? "Close Schedule" : "Open Schedule"}
+                                          triggerElement={<p>{schedule.isOpen ? "Close Schedule" : "Open Schedule"}</p>}
+                                        >
+                                          <CloseSchedule
+                                            showId={show.showId}
+                                            closeModal={() => setIsCloseSchedule(false)}
+                                            scheduleId={schedule.scheduleId}
+                                          />
+                                        </DialogPopup>
+                                      </DropdownMenuItem>
+                                    )}
+
+                                    {user?.roles.includes("head") && !schedule.isOpen && (
+                                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                        <AlertModal
+                                          confirmation="Open"
+                                          actionText="Open"
+                                          onConfirm={() => {
+                                            toast.promise(openSchedule.mutateAsync(schedule.scheduleId), {
+                                              position: "top-center",
+                                              loading: "Opening schedule...",
+                                              success: () => {
+                                                queryClient.setQueryData(["schedules", show.showId], (old: Schedule[] | undefined) => {
+                                                  if (!old) return old;
+                                                  return old.map((s) => (s.scheduleId === schedule.scheduleId ? { ...s, isOpen: true } : s));
+                                                });
+
+                                                return "Schedule Opened";
+                                              },
+                                              error: (err: any) => err.message || "Failed to open schedule",
                                             });
-
-                                            return "Schedule Opened";
-                                          },
-                                          error: (err: any) => err.message || "Failed to open schedule",
-                                        });
-                                      }}
-                                      title="Open Schedule"
-                                      trigger={<p>Open Schedule</p>}
-                                    >
-                                      <div className="-mt-2 space-y-2 text-center">
-                                        <p className="text-sm text-muted-foreground">
-                                          Are you sure you want to <span className="font-semibold text-primary">reopen</span> this schedule?
-                                        </p>
-                                        <p className="text-sm font-medium">
-                                          {formatToReadableDate(schedule.datetime + "")} at {formatToReadableTime(schedule.datetime + "")}
-                                        </p>
-                                      </div>
-                                    </AlertModal>
-                                  </DropdownMenuItem>
+                                          }}
+                                          title="Open Schedule"
+                                          trigger={<p>Open Schedule</p>}
+                                        >
+                                          <div className="-mt-2 space-y-2 text-center">
+                                            <p className="text-sm text-muted-foreground">
+                                              Are you sure you want to <span className="font-semibold text-primary">reopen</span> this schedule?
+                                            </p>
+                                            <p className="text-sm font-medium">
+                                              {formatToReadableDate(schedule.datetime + "")} at {formatToReadableTime(schedule.datetime + "")}
+                                            </p>
+                                          </div>
+                                        </AlertModal>
+                                      </DropdownMenuItem>
+                                    )}
+                                  </>
                                 )}
                               </DropdownMenuGroup>
                             </DropdownMenuContent>
