@@ -20,7 +20,7 @@ const TicketTypeSelection = ({ scheduleData, setScheduleData }: Props) => {
       placeholder="Select Ticket Type"
       className=" max-w-[250px]"
       items={ticketTypes}
-      label="Ticket Types"
+      label="Ticket Type"
       value={scheduleData.ticketType}
       onChange={(value) => {
         setScheduleData((prev) => ({

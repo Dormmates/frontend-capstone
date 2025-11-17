@@ -12,6 +12,7 @@ import type { SectionedPricing } from "@/types/ticketpricing";
 import { useGetScheduleSeatMap } from "@/_lib/@react-client-query/schedule";
 import SeatMap from "@/components/SeatMap";
 import { useGetAvailableTickets } from "@/_lib/@react-client-query/customer";
+import Loading from "@/components/Loading";
 
 type CustomerViewShowProps = {
   show: ShowDataWithSchedules;
@@ -178,11 +179,11 @@ const ShowSeatMap = ({ scheduleId }: ShowSeatMapProps) => {
   }, [data]);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 
   if (!data || isError) {
-    return <h1>Error</h1>;
+    return;
   }
 
   const seatColorMap = {
@@ -226,11 +227,11 @@ const ShowTicketAvailability = ({ scheduleId }: { scheduleId: string }) => {
   const { data, isLoading, isError } = useGetAvailableTickets(scheduleId);
 
   if (isLoading) {
-    return <h1>Loading</h1>;
+    return <Loading />;
   }
 
   if (!data || isError) {
-    return <h1>Error</h1>;
+    return;
   }
 
   return (
