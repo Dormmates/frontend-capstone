@@ -23,7 +23,6 @@ const TicketTypeSelection = ({ scheduleData, setScheduleData }: Props) => {
       label="Ticket Types"
       value={scheduleData.ticketType}
       onChange={(value) => {
-        alert(value);
         setScheduleData((prev) => ({
           ...prev,
           ticketType: value as TicketType,
