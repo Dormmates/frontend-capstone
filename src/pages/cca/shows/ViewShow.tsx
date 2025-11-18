@@ -617,14 +617,11 @@ const CloseSchedule = ({ scheduleId, closeModal, showId }: CloseScheduleProps) =
               <p className="text-yellow-800 font-bold text-sm">Important Reminder</p>
               <p className="text-yellow-700 text-sm">
                 Once you close this schedule, all actions related to its tickets; including
-                <span className="font-semibold">refunds, reallocations, and further edits</span> will be permanently disabled.
+                <span className="font-semibold"> refunds, reallocations, and further edits</span> will be disabled.
               </p>
               <p className="text-yellow-700 text-sm">
                 Please ensure that all sales have been properly <span className="font-semibold">remitted or turned over to the finance office</span>{" "}
                 before proceeding.
-              </p>
-              <p className="text-yellow-700 text-sm font-semibold">
-                This schedule <span className="text-red-700">cannot be reopened</span> once it has been closed.
               </p>
             </div>
           </div>
