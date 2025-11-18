@@ -54,6 +54,13 @@ export const useNotificationSocket = () => {
           queryClient.invalidateQueries({ queryKey: ["schedule", "logs", "distributorActivites", notif.metaData?.scheduleId as string] });
           break;
         }
+        case "allocateTicket":
+        case "unallocateTicket":
+        case "remitTicket":
+        case "unremitTicket": {
+          queryClient.invalidateQueries({ queryKey: ["show and schedules", "distributor"] });
+          break;
+        }
       }
     };
 
