@@ -86,18 +86,18 @@ const PerformingGroupShows = () => {
       <h1 className="text-3xl">Performing Group Shows</h1>
       <div className="flex justify-between mt-10">
         <div className="grid grid-cols-1 md:grid-cols-3 md:gap-5 gap-2">
-          <SimpleCard className="w-full" icon={<TheaterIcon size={18} />} label="Total Show" value={activeShows.length} />
+          <SimpleCard className="w-full" icon={<TheaterIcon size={18} />} label="Total Show" value={filteredShows.length} />
           <SimpleCard
             className="w-full"
             icon={<DramaIcon size={18} />}
             label="Major Concert"
-            value={activeShows.filter((s) => s.showType === "majorConcert").length}
+            value={filteredShows.filter((s) => s.showType === "majorConcert").length}
           />
           <SimpleCard
             className="w-full"
             icon={<SpotlightIcon size={18} />}
             label="Show Case"
-            value={activeShows.filter((s) => s.showType === "showCase").length}
+            value={filteredShows.filter((s) => s.showType === "showCase").length}
           />
         </div>
         <Link className="self-end" to={"/shows/add?showType=group"}>
