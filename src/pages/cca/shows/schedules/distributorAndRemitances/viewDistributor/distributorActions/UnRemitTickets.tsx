@@ -35,7 +35,7 @@ const UnRemitTickets = ({ distributorData, closeModal }: Props) => {
 
   const ticketsAvailableToBeRemitted = useMemo(() => {
     if (!distributorData) return [];
-    return distributorData.filter((data) => data.isPaid).map((data) => data.controlNumber);
+    return distributorData.filter((data) => data.isPaid && data.status !== "lost").map((data) => data.controlNumber);
   }, [distributorData]);
 
   const validate = () => {
