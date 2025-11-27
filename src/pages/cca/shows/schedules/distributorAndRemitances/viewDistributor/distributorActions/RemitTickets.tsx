@@ -60,14 +60,15 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
 
   const [showSummary, setShowSummary] = useState(false);
   const [selectedControlNumbers, setSelectedControlNumbers] = useState<number[]>(distributorTickets.soldTickets.map((t) => t.controlNumber));
+  const [selectedLostTickets, setSelectedLostTickets] = useState<number[]>([]);
   const [disabledCorrection, setDisabledCorrection] = useState(true);
 
   const validate = () => {
     const newErrors: typeof error = {};
     let isValid = true;
 
-    if (selectedControlNumbers.length == 0) {
-      toast.error(`Must atleast have one sold`, { position: "top-center" });
+    if (selectedControlNumbers.length == 0 && selectedLostTickets.length == 0) {
+      toast.error(`Select atleast one ticket`, { position: "top-center" });
       isValid = false;
     }
 
@@ -81,7 +82,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
   const handleSubmit = (remarks: string | null) => {
     const payload: any = {
       sold: selectedControlNumbers,
-      lost: parsed.lostList,
+      lost: selectedLostTickets,
       scheduleId: schedule.scheduleId,
       distributorId,
       actionBy: user?.userId,
@@ -148,6 +149,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
                 size="sm"
                 onClick={() => {
                   setSelectedControlNumbers(distributorTickets.soldTickets.map((t) => t.controlNumber));
+                  setSelectedLostTickets([]);
                   setDisabledCorrection((prev) => !prev);
                 }}
               >
@@ -156,6 +158,9 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
             </div>
 
             <ControlNumberGrid
+              selectedLostTickets={selectedLostTickets}
+              setSelectedLostTickets={setSelectedLostTickets}
+              addLost={true}
               disabled={disabledCorrection}
               selectedControlNumbers={selectedControlNumbers}
               setSelectedControlNumbers={setSelectedControlNumbers}
@@ -182,7 +187,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
               disabled={remit.isPending}
               onSubmit={(remarks) => handleSubmit(remarks)}
               soldTickets={distributorData.filter((ticket) => selectedControlNumbers.includes(ticket.controlNumber))}
-              lostTickets={distributorData.filter((ticket) => parsed.lostList.includes(ticket.controlNumber))}
+              lostTickets={distributorData.filter((ticket) => selectedLostTickets.includes(ticket.controlNumber))}
               discountedTickets={distributorData.filter((ticket) => parsed.discountedList.includes(ticket.controlNumber))}
               discountPercentage={form.discountPercentage}
               commissionFee={schedule.ticketPricing ? schedule.ticketPricing.commissionFee : 0}

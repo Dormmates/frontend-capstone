@@ -1,3 +1,5 @@
+import type { TicketStatuses } from "./ticket";
+
 export type SeatStatus = "reserved" | "paidToCCA" | "available" | "sold" | "complimentarySeat";
 export type SeatSection = "orchestraLeft" | "orchestraRight" | "orchestraMiddle" | "balconyLeft" | "balconyRight" | "balconyMiddle";
 
@@ -19,4 +21,5 @@ export interface FlattenedSeat extends SeatMetaData {
     type: string;
     department: string;
   };
+  ticketStatus?: TicketStatuses;
 }

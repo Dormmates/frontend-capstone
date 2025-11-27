@@ -6,64 +6,62 @@ import Pagination from "./Pagination";
 type ControlNumberGridProps = {
   tickets: number[];
   disabled?: boolean;
+
   selectedControlNumbers: number[];
   setSelectedControlNumbers: React.Dispatch<React.SetStateAction<number[]>>;
+
+  selectedLostTickets?: number[];
+  setSelectedLostTickets?: React.Dispatch<React.SetStateAction<number[]>>;
+
   maxSelectable?: number;
   allowSlideSelection?: boolean;
+  addLost?: boolean;
 };
 
 const ControlNumberGrid = ({
   tickets,
   disabled = false,
+
   selectedControlNumbers,
   setSelectedControlNumbers,
+
+  selectedLostTickets,
+  setSelectedLostTickets,
+
   maxSelectable,
   allowSlideSelection = true,
+  addLost = false,
 }: ControlNumberGridProps) => {
   const pageSize = 100;
   const [page, setPage] = useState(1);
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const [selectionMode, setSelectionMode] = useState<"add" | "remove" | null>(null);
   const [hoveredTickets, setHoveredTickets] = useState<number[]>([]);
+  const [markAs, setMarkAs] = useState<"sold" | "lost">("sold");
 
   const currentPageTickets = useMemo(() => {
     const start = (page - 1) * pageSize;
-    const end = start + pageSize;
-    return tickets.slice(start, end);
+    return tickets.slice(start, start + pageSize);
   }, [tickets, page]);
 
   const toggleSelection = (ticket: number) => {
-    setSelectedControlNumbers((prev) => {
-      if (maxSelectable === 1) {
-        if (prev[0] === ticket) return prev;
-        return [ticket];
+    if (markAs === "sold") {
+      setSelectedControlNumbers((prev) => (prev.includes(ticket) ? prev.filter((t) => t !== ticket) : [...prev, ticket].sort((a, b) => a - b)));
+
+      if (setSelectedLostTickets) {
+        setSelectedLostTickets((prev) => prev.filter((t) => t !== ticket));
       }
-
-      const isSelected = prev.includes(ticket);
-      let updated = [...prev];
-
-      if (isSelected) {
-        updated = updated.filter((t) => t !== ticket);
-      } else {
-        if (maxSelectable && updated.length >= maxSelectable) {
-          updated.shift();
-        }
-        updated.push(ticket);
-      }
-
-      return Array.from(new Set(updated)).sort((a, b) => a - b);
-    });
+    } else if (markAs === "lost" && setSelectedLostTickets) {
+      setSelectedLostTickets((prev) => (prev.includes(ticket) ? prev.filter((t) => t !== ticket) : [...prev, ticket].sort((a, b) => a - b)));
+      setSelectedControlNumbers((prev) => prev.filter((t) => t !== ticket));
+    }
   };
 
   const handleMouseDown = (ticket: number) => {
     if (disabled) return;
-    const isSelected = selectedControlNumbers.includes(ticket);
-    setSelectionMode(isSelected ? "remove" : "add");
+
     setIsMouseDown(true);
     setHoveredTickets([ticket]);
-    if (!allowSlideSelection) {
-      toggleSelection(ticket);
-    }
+    if (!allowSlideSelection) toggleSelection(ticket);
   };
 
   const handleMouseEnter = (ticket: number) => {
@@ -75,30 +73,17 @@ const ControlNumberGrid = ({
     if (!isMouseDown || disabled) {
       setHoveredTickets([]);
       setIsMouseDown(false);
-      setSelectionMode(null);
       return;
     }
 
     if (allowSlideSelection && hoveredTickets.length > 0) {
-      setSelectedControlNumbers((prev) => {
-        const updated = new Set(prev);
-        for (const ticket of hoveredTickets) {
-          if (selectionMode === "add" && (!maxSelectable || updated.size < maxSelectable)) {
-            updated.add(ticket);
-          } else if (selectionMode === "add" && maxSelectable && updated.size >= maxSelectable) {
-            updated.delete([...updated][0]);
-            updated.add(ticket);
-          } else if (selectionMode === "remove") {
-            updated.delete(ticket);
-          }
-        }
-        return Array.from(updated).sort((a, b) => a - b);
+      hoveredTickets.forEach((ticket) => {
+        toggleSelection(ticket);
       });
     }
 
     setHoveredTickets([]);
     setIsMouseDown(false);
-    setSelectionMode(null);
   };
 
   return (
@@ -108,10 +93,16 @@ const ControlNumberGrid = ({
           {!maxSelectable && (
             <Button
               onClick={() => {
-                if (maxSelectable) {
-                  setSelectedControlNumbers(tickets.slice(0, maxSelectable));
-                } else {
-                  setSelectedControlNumbers(tickets);
+                if (markAs === "sold") {
+                  const newTickets = maxSelectable ? tickets.slice(0, maxSelectable) : tickets;
+                  setSelectedControlNumbers(newTickets);
+                  if (setSelectedLostTickets) {
+                    setSelectedLostTickets([]);
+                  }
+                } else if (markAs === "lost" && setSelectedLostTickets) {
+                  const newTickets = maxSelectable ? tickets.slice(0, maxSelectable) : tickets;
+                  setSelectedLostTickets(newTickets);
+                  setSelectedControlNumbers([]);
                 }
               }}
               variant="secondary"
@@ -122,21 +113,48 @@ const ControlNumberGrid = ({
           )}
 
           {!maxSelectable && (
-            <Button onClick={() => setSelectedControlNumbers([])} variant="secondary" size="sm">
+            <Button
+              onClick={() => {
+                setSelectedControlNumbers([]);
+                if (setSelectedLostTickets) {
+                  setSelectedLostTickets([]);
+                }
+              }}
+              variant="secondary"
+              size="sm"
+            >
               Clear Selection
             </Button>
           )}
         </div>
       )}
+      <div className="text-sm font-bold space-y-1">
+        <p>
+          {addLost ? "Sold" : "Selected: "} ({selectedControlNumbers.length}): {compressControlNumbers(selectedControlNumbers)}
+        </p>
+        {addLost && (
+          <p>
+            Lost ({selectedLostTickets?.length ?? 0}): {compressControlNumbers(selectedLostTickets ?? [])}
+          </p>
+        )}
+      </div>
 
-      <p className="text-sm font-bold">
-        Selected ({selectedControlNumbers.length}
-        {maxSelectable ? ` / ${maxSelectable}` : ""}) : {compressControlNumbers(selectedControlNumbers)}
-      </p>
+      {addLost && !disabled && (
+        <>
+          <div className="flex flex-col w-fit gap-1">
+            <Button onClick={() => setMarkAs(markAs === "sold" ? "lost" : "sold")} size="sm" variant={markAs === "sold" ? "destructive" : "default"}>
+              {markAs === "lost" ? "Switch to Sold Mode" : "Switch to Lost Mode"}
+            </Button>
+
+            <p className="text-sm">{markAs === "lost" ? "Marking Tickets as Lost" : "Marking Tickets As Sold"}</p>
+          </div>
+        </>
+      )}
 
       <div className="flex flex-wrap gap-1">
         {currentPageTickets.map((ticket) => {
-          const isSelected = selectedControlNumbers.includes(ticket);
+          const isSold = selectedControlNumbers.includes(ticket);
+          const isLost = selectedLostTickets?.includes(ticket);
           const isHovered = hoveredTickets.includes(ticket);
 
           return (
@@ -148,7 +166,13 @@ const ControlNumberGrid = ({
                 if (!allowSlideSelection) toggleSelection(ticket);
               }}
               className={`transition-all duration-100 ${
-                isHovered ? "bg-blue-200 border-blue-400 text-blue-800" : isSelected ? "border-green border-2 font-bold" : ""
+                isHovered
+                  ? "bg-blue-200 border-blue-400 text-blue-800"
+                  : isSold
+                  ? "border-green border-2 font-bold"
+                  : isLost
+                  ? "border-red border-2 font-bold"
+                  : ""
               }`}
               disabled={disabled}
               variant="outline"

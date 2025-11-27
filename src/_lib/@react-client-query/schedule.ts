@@ -500,3 +500,12 @@ export const useCheckCloseSchedule = (scheduleId: string) => {
     retry: false,
   });
 };
+
+export const useMarkTicketAsNotLost = () => {
+  return useMutation<any, Error, { scheduleId: string; controlNumber: number }>({
+    mutationFn: async (payload) => {
+      const result = await request<any>("/api/schedule/markAsNotLost", payload, "post");
+      return result.data;
+    },
+  });
+};

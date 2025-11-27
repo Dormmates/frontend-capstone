@@ -1,5 +1,5 @@
 import { useOutletContext, useParams } from "react-router-dom";
-import { useGetScheduleTickets, useTrainerSellTicket, useRefundTicket } from "@/_lib/@react-client-query/schedule.ts";
+import { useGetScheduleTickets, useTrainerSellTicket, useRefundTicket, useMarkTicketAsNotLost } from "@/_lib/@react-client-query/schedule.ts";
 import { useEffect, useMemo, useState } from "react";
 import type { Schedule } from "@/types/schedule.ts";
 import { formatTicket } from "@/utils/controlNumber.ts";
@@ -37,6 +37,7 @@ import TransferTicket from "./TransferTicket";
 import type { ShowData } from "@/types/show";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
+import AlertModal from "@/components/AlertModal";
 
 const statusOptions = [
   { name: "All Status", value: "all" },
@@ -44,6 +45,7 @@ const statusOptions = [
   { name: "Marked Sold by Distirbutor", value: "sold" },
   { name: "Allocated", value: "allocated" },
   { name: "Not Allocated", value: "not_allocated" },
+  { name: "Lost Tickets", value: "lost" },
   { name: "Remitted Tickets", value: "remitted" },
 ];
 
@@ -66,6 +68,8 @@ const seatSectionOptions = [
 const ITEMS_PER_PAGE = 10;
 
 const ScheduleTickets = () => {
+  const queryClient = useQueryClient();
+  const markAsNotLost = useMarkTicketAsNotLost();
   const { user } = useAuthContext();
   const { schedule, show } = useOutletContext<{ schedule: Schedule; show: ShowData }>();
   const { scheduleId } = useParams();
@@ -334,9 +338,10 @@ const ScheduleTickets = () => {
               header: "Actions",
               headerClassName: "text-right",
               render: (ticket) => {
-                const canTransfer = !ticket.isComplimentary && ticket.isPaid;
+                const canTransfer = !ticket.isComplimentary && ticket.isPaid && ticket.status !== "lost";
                 const canSell = !ticket.isComplimentary && ticket.status === "not_allocated";
-                const canRefund = !ticket.isComplimentary && ticket.isPaid;
+                const canRefund = !ticket.isComplimentary && ticket.isPaid && ticket.status !== "lost";
+                const canMarkAsUnLost = !ticket.isComplimentary && ticket.status === "lost";
 
                 return (
                   <div className="flex gap-2 justify-end items-center">
@@ -399,6 +404,35 @@ const ScheduleTickets = () => {
                               </DropdownMenuItem>
                             ) : (
                               <DropdownMenuItem disabled>Cannot refund</DropdownMenuItem>
+                            )}
+
+                            {canMarkAsUnLost && (
+                              <AlertModal
+                                title={`Mark Ticket "${formatTicket(ticket.controlNumber)}" Not Lost`}
+                                onConfirm={() => {
+                                  toast.promise(
+                                    markAsNotLost.mutateAsync({ scheduleId: scheduleId as string, controlNumber: ticket.controlNumber }),
+                                    {
+                                      position: "top-center",
+                                      loading: "Marking Ticket as Not Lost...",
+                                      success: () => {
+                                        queryClient.invalidateQueries({ queryKey: ["schedule", "tickets", scheduleId] });
+                                        return "Marked as Not Lost";
+                                      },
+                                      error: (err) => err.message || "Failed To Mark Ticket as Not Lost",
+                                    }
+                                  );
+                                }}
+                                trigger={
+                                  <DropdownMenuItem
+                                    onSelect={(event) => {
+                                      event.preventDefault();
+                                    }}
+                                  >
+                                    Mark as Not Lost
+                                  </DropdownMenuItem>
+                                }
+                              />
                             )}
                           </DropdownMenuGroup>
                         </DropdownMenuContent>

@@ -31,7 +31,7 @@ const ScheduleSeats = () => {
         if (seat.status === "sold") summary.sold++;
         if (seat.status === "reserved") summary.reserved++;
         if (seat.status === "available" && !seat.isComplimentary && seat.ticketControlNumber !== 0) summary.available++;
-        if (seat.ticketControlNumber == 0) summary.notAvailable++;
+        if (seat.ticketControlNumber == 0 || seat.ticketStatus === "lost") summary.notAvailable++;
         return summary;
       },
       { paidToCCA: 0, complimentary: 0, sold: 0, reserved: 0, available: 0, notAvailable: 0 }
@@ -76,7 +76,7 @@ const ScheduleSeats = () => {
 
       <SeatMap
         recStyle={(seat) => {
-          if (seat.ticketControlNumber === 0) return "fill-darkGrey";
+          if (seat.ticketControlNumber === 0 || seat.ticketStatus === "lost") return "fill-darkGrey";
           if (seat.status === "paidToCCA") return "fill-green";
           if (seat.isComplimentary) return "fill-darkGrey";
           if (seat.status === "sold") return "fill-primary";
