@@ -104,13 +104,11 @@ const DistributorRemittanceHistory = () => {
               lostTickets={selectedHistory.tickets
                 .filter((t) => t.status === "lost")
                 .map((t) => ({ ticketPrice: t.ticketPrice, controlNumber: t.controlNumber, seatSection: t.seatSection }))}
-              soldTickets={selectedHistory.tickets
-                .filter((t) => t.status === "paidToCCA")
-                .map((t) => ({
-                  ticketPrice: t.ticketPrice,
-                  controlNumber: t.controlNumber,
-                  seatSection: t.seatSection,
-                }))}
+              soldTickets={selectedHistory.tickets.map((t) => ({
+                ticketPrice: t.ticketPrice,
+                controlNumber: t.controlNumber,
+                seatSection: t.seatSection,
+              }))}
             />
           </DialogContent>
         </Dialog>
