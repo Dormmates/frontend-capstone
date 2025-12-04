@@ -20,29 +20,14 @@ const CreateShow = () => {
   const { user } = useAuthContext();
 
   useEffect(() => {
-    const type = params.get("showType");
-
-    if (!type || (type !== "group" && type !== "major")) {
-      navigate("/shows", { replace: true });
-    }
-
-    if (!user?.roles.includes("head") && type === "major") {
-      navigate("/shows", { replace: true });
-    }
-  }, [params, navigate]);
-
-  useEffect(() => {
-    document.title = `Create New Show - ${type?.toUpperCase()}`;
+    document.title = `Create New Show`;
   }, [params]);
-
-  const type = params.get("showType");
 
   return (
     <ContentWrapper className="mt-10">
-      <Breadcrumbs backHref={`/${type === "major" ? "majorShows" : "shows"}`} items={[{ name: "Return to shows" }]} />
-      <h1 className="text-3xl font-medium my-10">Create a New {type === "major" && "Major Production"} Show</h1>
+      <Breadcrumbs backHref={`/shows`} items={[{ name: "Return to shows" }]} />
+      <h1 className="text-3xl font-medium my-10">Create a New Show</h1>
       <ShowForm
-        showType={type as "group" | "major"}
         isLoading={createShow.isPending || isSubmitting}
         onSubmit={async (data) => {
           setIsSubmitting(true);
@@ -98,7 +83,7 @@ const CreateShow = () => {
               position: "top-center",
               success: (created: ShowData) => {
                 queryClient.invalidateQueries({ queryKey: ["shows"] });
-                navigate(`/${created.showType === "majorProduction" ? "majorShows" : "shows"}/add/schedule/${created.showId}`);
+                navigate(`/shows/add/schedule/${created.showId}`);
                 toast.info("Please add a schedule for the created show", { position: "top-center" });
                 setIsSubmitting(false);
                 return "Show created successfully";
@@ -113,7 +98,7 @@ const CreateShow = () => {
         formType="create"
         showFormValue={{
           title: "",
-          productionType: type === "major" ? "majorProduction" : "",
+          productionType: "",
           description: "",
           genre: [],
           imageCover: "",

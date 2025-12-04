@@ -16,11 +16,11 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
 
         <div className="flex flex-col md:flex-row gap-5 ">
           <InputField
+            maxLength={3}
             onChange={handleInputChange}
             label=" Total Number of Tickets"
             className="w-full min-w-[300px]"
             name="totalTickets"
-            type="number"
             value={scheduleData.totalTickets + ""}
             error={errors?.totalTickets}
             onWheel={(e) => e.currentTarget.blur()}
@@ -28,11 +28,11 @@ const TicketDetailsSection = ({ scheduleData, handleInputChange, errors }: Props
           />
 
           <InputField
+            maxLength={3}
             onChange={handleInputChange}
             label="Total Number of Complimentary Tickets (Optional)"
             className="w-full min-w-[300px]"
             name="totalComplimentary"
-            type="number"
             value={scheduleData.totalComplimentary + ""}
             error={errors?.totalComplimentary}
             onWheel={(e) => e.currentTarget.blur()}

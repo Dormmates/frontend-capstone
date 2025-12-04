@@ -1,7 +1,6 @@
 import type { ShowData } from "@/types/show.ts";
 import SimpleCard from "@/components/SimpleCard";
 import DeleteShow from "./showActions/DeleteShow";
-import UnArchiveShow from "./showActions/UnArchiveShow";
 import { TheaterIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -48,7 +47,7 @@ const ViewArchivedShows = ({ archivedShows }: Props) => {
                   <Link to={`/shows/${showData.showId}`}>
                     <Button size="sm">Go To Schedules</Button>
                   </Link>
-                  <UnArchiveShow show={showData} />
+                  {/* <UnArchiveShow show={showData} /> */}
                   <DeleteShow show={showData} />
                 </div>
               ),

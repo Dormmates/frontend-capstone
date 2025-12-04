@@ -45,14 +45,43 @@ const ControlNumberGrid = ({
 
   const toggleSelection = (ticket: number) => {
     if (markAs === "sold") {
-      setSelectedControlNumbers((prev) => (prev.includes(ticket) ? prev.filter((t) => t !== ticket) : [...prev, ticket].sort((a, b) => a - b)));
+      setSelectedControlNumbers((prev) => {
+        const alreadySelected = prev.includes(ticket);
+        let newSelection = [...prev];
 
-      if (setSelectedLostTickets) {
-        setSelectedLostTickets((prev) => prev.filter((t) => t !== ticket));
-      }
+        if (alreadySelected) {
+          newSelection = newSelection.filter((t) => t !== ticket);
+        } else {
+          if (maxSelectable && newSelection.length >= maxSelectable) {
+            newSelection.shift();
+          }
+          newSelection.push(ticket);
+        }
+
+        if (setSelectedLostTickets) {
+          setSelectedLostTickets((lostPrev) => lostPrev.filter((t) => t !== ticket));
+        }
+
+        return newSelection.sort((a, b) => a - b);
+      });
     } else if (markAs === "lost" && setSelectedLostTickets) {
-      setSelectedLostTickets((prev) => (prev.includes(ticket) ? prev.filter((t) => t !== ticket) : [...prev, ticket].sort((a, b) => a - b)));
-      setSelectedControlNumbers((prev) => prev.filter((t) => t !== ticket));
+      setSelectedLostTickets((prev) => {
+        const alreadySelected = prev.includes(ticket);
+        let newSelection = [...prev];
+
+        if (alreadySelected) {
+          newSelection = newSelection.filter((t) => t !== ticket);
+        } else {
+          if (maxSelectable && newSelection.length >= maxSelectable) {
+            newSelection.shift();
+          }
+          newSelection.push(ticket);
+        }
+
+        setSelectedControlNumbers((soldPrev) => soldPrev.filter((t) => t !== ticket));
+
+        return newSelection.sort((a, b) => a - b);
+      });
     }
   };
 

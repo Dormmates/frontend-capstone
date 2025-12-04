@@ -33,9 +33,9 @@ const ViewShowScheduleLayout = () => {
     <ContentWrapper className="flex flex-col ">
       <div className="flex flex-col gap-5 ">
         <Breadcrumbs
-          backHref={`/${show?.showType === "majorProduction" ? "majorShows" : "shows"}/${showId}`}
+          backHref={`/shows/${showId}`}
           items={[
-            { name: "Schedules", href: `/${show?.showType === "majorProduction" ? "majorShows" : "shows"}/${showId}` },
+            { name: "Schedules", href: `/shows/${showId}` },
             { name: show?.title ?? "Not Found" },
             { name: `${formatToReadableDate(schedule?.datetime + "")} at ${formatToReadableTime(schedule?.datetime + "")}` },
           ]}
@@ -54,7 +54,7 @@ const ViewShowScheduleLayout = () => {
                       key={link.path}
                       end={link.path == ""}
                       className={({ isActive }) => (isActive ? "font-semibold text-lg" : "font-normal text-lightGrey")}
-                      to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${showId}/${scheduleId}/${link.path}`}
+                      to={`/shows/schedule/${showId}/${scheduleId}/${link.path}`}
                     >
                       {link.name}
                     </NavLink>

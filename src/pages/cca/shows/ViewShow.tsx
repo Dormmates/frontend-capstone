@@ -170,13 +170,7 @@ const ViewShow = () => {
 
   return (
     <ContentWrapper>
-      <Breadcrumbs
-        backHref={`/${show?.showType === "majorProduction" ? "majorShows" : "shows"}`}
-        items={[
-          { name: "Show", href: `/${show?.showType === "majorProduction" ? "majorShows" : "shows"}` },
-          { name: show?.title ?? "Show Not Found." },
-        ]}
-      />
+      <Breadcrumbs backHref={`/shows`} items={[{ name: "Shows", href: `/shows` }, { name: show?.title ?? "Show Not Found." }]} />
 
       <div className="mt-10">
         <div className="flex gap-5 flex-col sm:flex-row ">
@@ -222,7 +216,7 @@ const ViewShow = () => {
                       }}
                     />
                     <Button disabled={show.isArchived}>
-                      <Link className="self-end" to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/add/schedule/${id}`}>
+                      <Link className="self-end" to={`/shows/add/schedule/${id}`}>
                         Add New Schedule
                       </Link>
                     </Button>
@@ -300,7 +294,7 @@ const ViewShow = () => {
                   headerClassName: "text-right",
                   render: (schedule) => (
                     <div className="flex gap-2 justify-end items-center ">
-                      <Link to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${id}/${schedule.scheduleId}/`}>
+                      <Link to={`/shows/schedule/${id}/${schedule.scheduleId}/`}>
                         <Button>{user?.roles.includes("head") || show.showType !== "majorProduction" ? "Manage Schedule" : "View Schedule"}</Button>
                       </Link>
 

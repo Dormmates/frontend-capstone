@@ -13,13 +13,14 @@ import Modal from "@/components/Modal";
 import ArchiveShow from "./showActions/ArchiveShow";
 import PaginatedTable from "@/components/PaginatedTable";
 import EditShow from "./showActions/EditShow";
-import { DramaIcon, SpotlightIcon, TheaterIcon } from "lucide-react";
+import { ClapperboardIcon, DramaIcon, SpotlightIcon, TheaterIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
 
 const showTypes = [
   { name: "All Show Type", value: "all" },
+  { name: "Major Production", value: "majorProduction" },
   { name: "Major Concert", value: "majorConcert" },
   { name: "Show Case", value: "showCase" },
 ];
@@ -27,25 +28,20 @@ const showTypes = [
 const PerformingGroupShows = () => {
   const { user } = useAuthContext();
 
-  if (user?.departments.length === 0 && !user?.roles.includes("head")) {
-    return (
-      <ContentWrapper>
-        <h1>You are not currently assigned to any Department</h1>
-      </ContentWrapper>
-    );
-  }
-
-  const { data: shows, isLoading: showsLoading } = useGetShows();
+  const { data: shows, isLoading: showsLoading } = useGetShows({
+    includeMajorProduction: true,
+    departmentId: user?.roles.includes("head") ? undefined : user?.departments.map((d) => d.departmentId).join(","),
+  });
 
   useEffect(() => {
-    document.title = `Performing Group Shows`;
+    document.title = `Shows`;
   }, []);
 
   const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments(!user?.roles.includes("head") ? user?.userId : undefined);
 
   const [filter, setFilter] = useState({
     showType: "all",
-    department: user?.roles.includes("head") ? "all" : (user?.departments[0].departmentId as string),
+    department: "all",
     search: "",
   });
 
@@ -55,7 +51,7 @@ const PerformingGroupShows = () => {
     if (!departmentsData) return [];
     const options = departmentsData.map((d) => ({ name: d.name, value: d.departmentId }));
 
-    return user?.roles.includes("head") ? [{ name: "All Departments", value: "all" }, ...options] : options;
+    return [{ name: "All Departments", value: "all" }, ...options];
   }, [departmentsData]);
 
   const activeShows = useMemo(() => {
@@ -83,10 +79,16 @@ const PerformingGroupShows = () => {
 
   return (
     <ContentWrapper>
-      <h1 className="text-3xl">Performing Group Shows</h1>
+      <h1 className="text-3xl">Shows</h1>
       <div className="flex justify-between mt-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 md:gap-5 gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-4 md:gap-5 gap-2">
           <SimpleCard className="w-full" icon={<TheaterIcon size={18} />} label="Total Show" value={filteredShows.length} />
+          <SimpleCard
+            className="w-full"
+            icon={<ClapperboardIcon size={18} />}
+            label="Major Production"
+            value={filteredShows.filter((s) => s.showType === "majorProduction").length}
+          />
           <SimpleCard
             className="w-full"
             icon={<DramaIcon size={18} />}
@@ -100,7 +102,7 @@ const PerformingGroupShows = () => {
             value={filteredShows.filter((s) => s.showType === "showCase").length}
           />
         </div>
-        <Link className="self-end" to={"/shows/add?showType=group"}>
+        <Link className="self-end" to={"/shows/add"}>
           <Button>Add New Show</Button>
         </Link>
       </div>
@@ -119,12 +121,20 @@ const PerformingGroupShows = () => {
             onChange={(value) => setFilter((prev) => ({ ...prev, department: value }))}
             value={filter.department}
             items={departments}
+            disabled={filter.showType === "majorProduction"}
           />
+
           <Dropdown
             label="Show Types"
             placeholder="Select Show Type"
             className="max-w-[200px]"
-            onChange={(value) => setFilter((prev) => ({ ...prev, showType: value }))}
+            onChange={(value) => {
+              setFilter((prev) => ({ ...prev, showType: value }));
+
+              if (value === "majorProduction") {
+                setFilter((prev) => ({ ...prev, department: "all" }));
+              }
+            }}
             value={filter.showType}
             items={showTypes}
           />
@@ -147,7 +157,9 @@ const PerformingGroupShows = () => {
           {
             key: "department",
             header: "Department",
-            render: (show: ShowData) => <span className="capitalize">{show?.department?.name}</span>,
+            render: (show: ShowData) => (
+              <span className="capitalize">{show.showType === "majorProduction" ? "All Departments" : show.department?.name}</span>
+            ),
           },
           {
             key: "showType",

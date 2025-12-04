@@ -111,7 +111,7 @@ const UpcomingShows = ({ isHead, selectedDepartment }: UpcomingShowsProps) => {
                 key: "earliest",
                 header: "",
                 render: (show) => (
-                  <Link to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/${show.showId}`}>
+                  <Link to={`/shows/${show.showId}`}>
                     <Button size="sm">View Show</Button>
                   </Link>
                 ),

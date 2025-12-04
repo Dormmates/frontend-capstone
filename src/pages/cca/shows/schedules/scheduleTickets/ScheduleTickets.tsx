@@ -372,10 +372,10 @@ const ScheduleTickets = () => {
                                   setIsTransferTicket(true);
                                 }}
                               >
-                                Transfer Ticket
+                                Exchange Ticket
                               </DropdownMenuItem>
                             ) : (
-                              <DropdownMenuItem disabled>Cannot transfer</DropdownMenuItem>
+                              <DropdownMenuItem disabled>Cannot exchange</DropdownMenuItem>
                             )}
 
                             {/* Sell */}
@@ -479,7 +479,7 @@ const ScheduleTickets = () => {
             setIsTransferTicket(false);
             setSelectedTicket(null);
           }}
-          title="Transfer Ticket"
+          title="Exchange Ticket"
           isOpen={isTransferTicket && !!selectedTicket}
         >
           <TransferTicket show={show} schedule={schedule} ticket={selectedTicket} />

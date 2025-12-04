@@ -35,7 +35,6 @@ const EditShow = ({ show }: EditShowProps) => {
       className="max-w-[98%] w-full overflow-x-auto max-h-[90%] md:max-w-4xl"
     >
       <ShowForm
-        showType={"group"}
         isLoading={updateShow.isPending || isSubmitting}
         onSubmit={async (data) => {
           setIsSubmitting(true);

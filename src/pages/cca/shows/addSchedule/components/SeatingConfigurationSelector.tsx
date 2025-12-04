@@ -31,8 +31,8 @@ const SeatingConfigurationSelector = ({ setErrors, scheduleData, setScheduleData
             ...prev,
             seatingConfiguration: "freeSeating",
             seatPricing: "fixed",
-            totalTickets: undefined,
-            totalComplimentary: undefined,
+            totalTickets: 0,
+            totalComplimentary: 0,
             ticketsControlNumber: "",
             complimentaryControlNumber: "",
           }));

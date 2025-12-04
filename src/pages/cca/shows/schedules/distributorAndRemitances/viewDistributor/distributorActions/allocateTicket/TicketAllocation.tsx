@@ -37,7 +37,7 @@ const TicketAllocation = () => {
 
   useEffect(() => {
     if ((!loadingSchedule && schedule && !schedule.isOpen) || showData?.isArchived) {
-      navigate(`/${showData?.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${showId}/${scheduleId}/d&r`, { replace: true });
+      navigate(`/shows/schedule/${showId}/${scheduleId}/d&r`, { replace: true });
     }
   }, [loadingSchedule, schedule, navigate, showId, scheduleId]);
 
@@ -47,10 +47,7 @@ const TicketAllocation = () => {
 
   return (
     <ContentWrapper className="flex flex-col">
-      <Breadcrumbs
-        items={[{ name: "Return to Distributor List", href: "" }]}
-        backHref={`/${showData?.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${showId}/${scheduleId}/d&r`}
-      />
+      <Breadcrumbs items={[{ name: "Return to Distributor List", href: "" }]} backHref={`/shows/schedule/${showId}/${scheduleId}/d&r`} />
 
       {!showData || showError || errorSchedule || !schedule || ticketsError || !tickets ? (
         <NotFound title="Schedule Not Found" description="This Schedule does not exist or have been deleted already" />

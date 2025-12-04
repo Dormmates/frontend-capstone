@@ -6,6 +6,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import AlertModal from "@/components/AlertModal";
 import { toast } from "sonner";
 import { ArchiveIcon } from "lucide-react";
+import DialogPopup from "@/components/DialogPopup";
 
 type ArchiveShowProps = {
   show: ShowData;
@@ -36,7 +37,18 @@ const ArchiveShow = ({ show }: ArchiveShowProps) => {
     );
   };
 
-  return (
+  return show.showschedules.some((s) => s.isOpen) ? (
+    <DialogPopup
+      title="Cannot Archive Show"
+      triggerElement={
+        <Button size="icon" disabled={archiveShow.isPending} variant="outline">
+          <ArchiveIcon />
+        </Button>
+      }
+    >
+      <p>This show cannot be archived because it has open schedules. Please close all active schedules before archiving the show.</p>
+    </DialogPopup>
+  ) : (
     <AlertModal
       className="max-w-2xl"
       onConfirm={handleSubmit}
@@ -52,27 +64,9 @@ const ArchiveShow = ({ show }: ArchiveShowProps) => {
       <div>
         <h1 className="font-semibold mb-2">Archiving this show will permanently:</h1>
         <ul className="list-disc ml-6 space-y-1">
-          <li>Remove the show from the active and archived shows list.</li>
+          <li>Remove the show from the active and moved to archived shows list.</li>
           <li>Cannot perform any operations on the schedule.</li>
-          {/* <li>
-            Delete <strong>all schedules</strong> associated with this show.
-          </li>
-          <li>
-            Delete <strong>all allocated tickets</strong> linked to these schedules.
-          </li>
-          <li>
-            Delete <strong>all seat reservations</strong> for the schedules.
-          </li>
-          <li>
-            Delete <strong>all remittance and sales records</strong> for the show.
-          </li>
-          <li>
-            Delete <strong>all logs and history</strong> related to this show.
-          </li> */}
         </ul>
-        {/* <div className="border-red border  bg-gray p-2 rounded-sm mt-5">
-          <p className=" font-medium">This action will erase all data related to this show and cannot be undone.</p>
-        </div> */}
       </div>
     </AlertModal>
   );

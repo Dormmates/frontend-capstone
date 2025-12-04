@@ -34,10 +34,9 @@ interface ShowFormInterface {
   isLoading?: boolean;
   formType: "edit" | "create";
   onSubmit: (data: ShowFormProps) => void;
-  showType: "group" | "major";
 }
 
-const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: ShowFormInterface) => {
+const ShowForm = ({ showFormValue, isLoading, formType, onSubmit }: ShowFormInterface) => {
   const { user } = useAuthContext();
   const {
     data: groups,
@@ -57,18 +56,18 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
       newErrors.title = "Length must be greater than 4 characters";
     }
 
-    if (!showData.productionType && showType == "group") {
-      newErrors.productionType = "Please choose Production Type";
+    if (!showData.group && showData.productionType !== "majorProduction") {
+      newErrors.group = "Please choose Performing Group";
     }
 
-    if (!showData.group && showData.productionType !== "majorProduction" && showType == "group") {
-      newErrors.group = "Please choose Performing Group";
+    if (!showData.productionType) {
+      newErrors.productionType = "Please choose Production Type";
     }
 
     if (!showData.description) {
       newErrors.description = "Please add a description";
     } else if (showData.description.trim().length < 10) {
-      newErrors.description = "Description must be at least 10 characters long";
+      newErrors.description = "Description must be at least 10 characters long.";
     }
 
     if (showData.genre.length === 0) {
@@ -104,13 +103,38 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setShowData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+
+    if (name === "title") {
+      if (value.trim().length < 4) {
+        setErrors((prev) => ({
+          ...prev,
+          title: "Title length must be greater than 4 characters",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          title: undefined,
+        }));
+      }
+    }
   };
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+
     setShowData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+
+    if (value.trim().length < 10) {
+      setErrors((prev) => ({
+        ...prev,
+        description: "Description must be at least 10 characters long.",
+      }));
+    } else {
+      setErrors((prev) => ({
+        ...prev,
+        description: undefined,
+      }));
+    }
   };
 
   if (loadingDepartments || loadingGenres) {
@@ -140,6 +164,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
         <CardContent className="flex mt-5 flex-col gap-5 lg:flex-row">
           <div className="flex gap-5 flex-col w-full">
             <InputField
+              maxLength={50}
               error={errors.title}
               label="Show Title"
               disabled={isLoading}
@@ -148,46 +173,45 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit, showType }: Sh
               name="title"
             />
 
-            {showType == "group" && (
-              <div className="flex flex-col gap-5 lg:flex-row">
-                <Dropdown
-                  includeHeader={true}
-                  error={errors.group}
-                  disabled={isLoading || showData.productionType == "majorProduction"}
-                  className="w-full"
-                  label="Performing Group"
-                  placeholder={"Select Group"}
-                  items={showData.productionType == "majorProduction" ? [{ name: "All Group", value: "all" }] : groupOptions}
-                  value={showData.productionType == "majorProduction" ? "all" : (showData.group as string)}
-                  onChange={(value) => {
-                    setShowData((prev) => ({ ...prev, group: value }));
-                    setErrors((prev) => ({ ...prev, group: "" }));
-                  }}
-                />
+            <div className="flex flex-col gap-5 lg:flex-row">
+              <Dropdown
+                includeHeader={true}
+                error={errors.group}
+                disabled={isLoading || showData.productionType == "majorProduction"}
+                className="w-full"
+                label="Performing Group"
+                placeholder={"Select Group"}
+                items={showData.productionType == "majorProduction" ? [{ name: "All Group", value: "all" }] : groupOptions}
+                value={showData.productionType == "majorProduction" ? "all" : (showData.group as string)}
+                onChange={(value) => {
+                  setShowData((prev) => ({ ...prev, group: value }));
+                  setErrors((prev) => ({ ...prev, group: "" }));
+                }}
+              />
+              {(formType !== "edit" ||
+                user?.roles.includes("head") ||
+                (formType === "edit" && !user?.roles.includes("head") && showData.productionType !== "majorProduction")) && (
                 <Dropdown
                   includeHeader={true}
                   disabled={isLoading}
                   error={errors.productionType}
                   className="w-full"
                   label="Production Type"
-                  placeholder={"Choose Production Type"}
-                  items={
-                    user?.roles.includes("head") && formType !== "create"
-                      ? [...productionType, { name: "Major Production", value: "majorProduction" }]
-                      : productionType
-                  }
+                  placeholder="Choose Production Type"
+                  items={user?.roles.includes("head") ? [{ name: "Major Production", value: "majorProduction" }, ...productionType] : productionType}
                   value={showData.productionType}
                   onChange={(value) => {
                     setShowData((prev) => ({ ...prev, productionType: value as ShowType }));
                     setErrors((prev) => ({ ...prev, productionType: "" }));
                   }}
                 />
-              </div>
-            )}
+              )}
+            </div>
 
             <div className="flex flex-col gap-3">
               <Label>Description</Label>
               <Textarea
+                maxLength={700}
                 rows={5}
                 className={`${errors.description && "border-red"}`}
                 disabled={isLoading}

@@ -24,7 +24,8 @@ export interface ScheduleFormData {
 export type ErrorKeys =
   | "complimentary"
   | "dates"
-  | "commisionFee"
+  | "fixedCommisionFee"
+  | "sectionedCommisionFee"
   | "totalTickets"
   | "ticketsControlNumber"
   | "totalComplimentary"
@@ -35,7 +36,13 @@ export type ErrorKeys =
   | "orchestraRight"
   | "balconyLeft"
   | "balconyMiddle"
-  | "balconyRight";
+  | "balconyRight"
+  | "orchestraLeftPrice"
+  | "orchestraMiddlePrice"
+  | "orchestraRightPrice"
+  | "balconyLeftPrice"
+  | "balconyMiddlePrice"
+  | "balconyRightPrice";
 
 export type ScheduleFormErrors = Partial<Record<ErrorKeys, string>>;
 

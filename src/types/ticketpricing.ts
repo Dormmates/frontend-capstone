@@ -1,13 +1,10 @@
 export type FixedPricing = {
-  id: string;
   type: "fixed";
-  priceName: string;
   commissionFee: number;
   fixedPrice: number;
 };
 
 export type SectionedPricing = {
-  id: string;
   type: "sectioned";
   sectionPrices: {
     orchestraLeft: number;
@@ -17,7 +14,6 @@ export type SectionedPricing = {
     balconyMiddle: number;
     balconyRight: number;
   };
-  priceName: string;
   commissionFee: number;
 };
 

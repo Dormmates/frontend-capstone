@@ -2,14 +2,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetShow } from "@/_lib/@react-client-query/show.ts";
 import React, { useEffect, useState } from "react";
 import { ContentWrapper } from "@/components/layout/Wrapper.tsx";
-import type { ScheduleFormData, ScheduleFormErrors, SeatPricing } from "@/types/schedule.ts";
+import type { ErrorKeys, ScheduleFormData, ScheduleFormErrors, SeatPricing } from "@/types/schedule.ts";
 import ScheduleDateSelection from "./components/ScheduleDateSelection";
 import TicketTypeSelection from "./components/TicketTypeSelection";
 import SeatingConfigurationSelector from "./components/SeatingConfigurationSelector";
 import PricingSection from "./components/PricingSection";
 import { parseControlNumbers } from "@/utils/controlNumber.ts";
 import TicketDetailsSection from "./components/TicketDetailsSection";
-import { flattenSeatMap } from "@/utils/seatmap.ts";
+import { flattenSeatMap, formatSectionName } from "@/utils/seatmap.ts";
 import SeatMapSchedule from "./components/SeatMapSchedule";
 import { useAddSchedule, type AddSchedulePayload } from "@/_lib/@react-client-query/schedule.ts";
 import { useQueryClient } from "@tanstack/react-query";
@@ -19,7 +19,7 @@ import Modal from "@/components/Modal";
 import { convertDatesPH, formatTo12Hour, formatToReadableDate } from "@/utils/date";
 import { toast } from "sonner";
 import { seatMetaData } from "../../../../../seatmetedata.ts";
-import type { FixedPricing, SectionedPricing, TicketPricing } from "@/types/ticketpricing.ts";
+import type { FixedPricing, SectionedPricing } from "@/types/ticketpricing.ts";
 import FixedPrice from "@/components/FixedPrice.tsx";
 import SectionedPrice from "@/components/SectionedPrice.tsx";
 import { useAuthContext } from "@/context/AuthContext.tsx";
@@ -66,15 +66,15 @@ const AddSchedule = () => {
     ticketType: "ticketed",
     seatingConfiguration: "freeSeating",
     seatPricing: "fixed",
-    totalComplimentary: undefined,
-    totalTickets: undefined,
+    totalComplimentary: 0,
+    totalTickets: 0,
     ticketsControlNumber: "",
     complimentaryControlNumber: "",
   });
 
   useEffect(() => {
     if (data && data.isArchived) {
-      navigate(`/${data.showType === "majorProduction" ? "majorShows" : "shows"}/${data.showId}`, { replace: true });
+      navigate(`/shows/${data.showId}`, { replace: true });
     }
   }, [navigate, data]);
 
@@ -108,28 +108,41 @@ const AddSchedule = () => {
     document.title = `${data?.title} - Add Schedule`;
   }, [data]);
 
-  const [selectedPrice, setSelectedPrice] = useState<TicketPricing | null>(null);
+  const [fixedPrice, setFixedPrice] = useState<FixedPricing>({ commissionFee: 0, fixedPrice: 0, type: "fixed" });
+  const [sectionedPrice, setSectionedPrice] = useState<SectionedPricing>({
+    type: "sectioned",
+    sectionPrices: {
+      orchestraLeft: 0,
+      orchestraMiddle: 0,
+      orchestraRight: 0,
+      balconyLeft: 0,
+      balconyMiddle: 0,
+      balconyRight: 0,
+    },
+    commissionFee: 0,
+  });
+
   const [openScheduleSummary, setOpenScheduleSummary] = useState(false);
   const [errors, setErrors] = useState<ScheduleFormErrors>({});
 
   useEffect(() => {
-    if (selectedPrice?.type === "sectioned") {
+    if (scheduleData.seatPricing === "sectionedPricing") {
       setSeatData((prev) =>
         prev?.map((seat) => {
-          const price = selectedPrice.sectionPrices[seat.section as keyof typeof selectedPrice.sectionPrices];
+          const price = sectionedPrice.sectionPrices[seat.section as keyof typeof sectionedPrice.sectionPrices];
           return price !== undefined ? { ...seat, ticketPrice: price } : seat;
         })
       );
     }
-    if (selectedPrice?.type === "fixed") {
+    if (scheduleData.seatPricing === "fixed") {
       setSeatData((prev) =>
         prev?.map((seat) => ({
           ...seat,
-          ticketPrice: selectedPrice.fixedPrice,
+          ticketPrice: fixedPrice.fixedPrice,
         }))
       );
     }
-  }, [selectedPrice, setSeatData]);
+  }, [scheduleData.seatPricing, fixedPrice, sectionedPrice, setSeatData]);
 
   const hasErrors = Object.values(errors).some((error) => error && error.trim() !== "");
 
@@ -163,7 +176,11 @@ const AddSchedule = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    let updatedData = { ...scheduleData, [name]: value };
+    if (!/^[0-9]*$/.test(value)) return;
+
+    const numValue = value === "" ? 0 : Number(value);
+
+    let updatedData = { ...scheduleData, [name]: numValue };
 
     let ticketsCount = parseInt(updatedData.totalTickets + "") || 0;
     let complimentaryCount = parseInt(updatedData.totalComplimentary + "") || 0;
@@ -183,6 +200,21 @@ const AddSchedule = () => {
           updatedData.totalComplimentary = complimentaryCount;
         }
       }
+    }
+
+    if (ticketsCount < 100) {
+      setErrors((prev) => ({
+        ...prev,
+        totalTickets: "Ticket count should not be less than 100 tickets",
+      }));
+
+      setScheduleData((prev) => ({
+        ...prev,
+        ...updatedData,
+        ticketsControlNumber: "",
+        complimentaryControlNumber: "",
+      }));
+      return;
     }
 
     if (ticketsCount + complimentaryCount > totalSeats) {
@@ -251,12 +283,35 @@ const AddSchedule = () => {
     }
 
     if (scheduleData.ticketType === "ticketed") {
-      if (!selectedPrice || (scheduleData.seatingConfiguration === "freeSeating" && selectedPrice.type === "sectioned")) {
-        newErrors.ticketPrice = "Please select a valid ticket price.";
-      }
-
       if (!scheduleData.totalTickets) {
         newErrors.totalTickets = "Please input ticket count";
+      } else if (scheduleData.totalTickets < 100) {
+        newErrors.totalTickets = "Ticket count should not be less than 100 tickets";
+      }
+
+      if (scheduleData.seatPricing === "fixed") {
+        if (fixedPrice.fixedPrice < 50) {
+          newErrors.ticketPrice = "Ticket price must be greater than 50";
+        }
+
+        if (fixedPrice.commissionFee > fixedPrice.fixedPrice * 0.9) {
+          newErrors.fixedCommisionFee = "Commission Fee must not be greater than 10% of the price";
+        }
+      }
+
+      if (scheduleData.seatPricing === "sectionedPricing") {
+        Object.entries(sectionedPrice.sectionPrices).forEach(([sectionName, price]) => {
+          if (price < 50) {
+            newErrors[(sectionName + "Price") as ErrorKeys] = `${formatSectionName(sectionName)} price must be greater than 50`;
+          }
+        });
+
+        const sectionValues = Object.values(sectionedPrice.sectionPrices);
+        const minSectionPrice = Math.min(...sectionValues);
+
+        if (sectionedPrice.commissionFee > minSectionPrice * 0.9) {
+          newErrors.sectionedCommisionFee = "Commission fee must not be greater than 10% all section prices";
+        }
       }
     }
 
@@ -269,7 +324,7 @@ const AddSchedule = () => {
       ...scheduleData,
       dates: convertDatesPH(scheduleData.dates),
       showId: data.showId,
-      ticketPricing: selectedPrice as TicketPricing,
+      ticketPricing: scheduleData.seatPricing === "sectionedPricing" ? sectionedPrice : fixedPrice,
     };
 
     if (scheduleData.ticketType === "ticketed") {
@@ -286,7 +341,7 @@ const AddSchedule = () => {
     toast.promise(
       addSchedule.mutateAsync(payload).then(() => {
         queryClient.invalidateQueries({ exact: true, queryKey: ["schedules", id] });
-        navigate(`/${data.showType === "majorProduction" ? "majorShows" : "shows"}/${id}`, { replace: true });
+        navigate(`/shows/${id}`, { replace: true });
       }),
       {
         position: "top-center",
@@ -300,9 +355,9 @@ const AddSchedule = () => {
   return (
     <ContentWrapper>
       <Breadcrumbs
-        backHref={`/${data.showType === "majorProduction" ? "majorShows" : "shows"}/${id}`}
+        backHref={`/shows/${id}`}
         items={[
-          { name: `Return to Schedule List`, href: `/${data.showType === "majorProduction" ? "majorShows" : "shows"}/${id}` },
+          { name: `Return to Schedule List`, href: `/shows/${id}` },
           { name: "Add Schedule", href: "" },
         ]}
       />
@@ -329,7 +384,7 @@ const AddSchedule = () => {
           </div>
 
           <div>
-            <TicketTypeSelection scheduleData={scheduleData} setScheduleData={setScheduleData} />
+            <TicketTypeSelection setErrors={setErrors} scheduleData={scheduleData} setScheduleData={setScheduleData} />
           </div>
         </div>
 
@@ -345,8 +400,10 @@ const AddSchedule = () => {
           <PricingSection
             setErrors={setErrors}
             scheduleData={scheduleData}
-            setSelectedPrice={setSelectedPrice}
-            selectedPrice={selectedPrice}
+            fixedPrice={fixedPrice}
+            sectionedPrice={sectionedPrice}
+            setFixedPrice={setFixedPrice}
+            setSectionedPrice={setSectionedPrice}
             handleSeatPricingType={handleSeatPricingType}
             errors={errors}
           />
@@ -436,8 +493,8 @@ const AddSchedule = () => {
                       <span className="font-semibold">Seat Pricing:</span> {scheduleData.seatPricing}
                     </p>
 
-                    {scheduleData.seatPricing === "fixed" && <FixedPrice hideAction={true} data={selectedPrice as FixedPricing} />}
-                    {scheduleData.seatPricing === "sectionedPricing" && <SectionedPrice hideAction={true} data={selectedPrice as SectionedPricing} />}
+                    {scheduleData.seatPricing === "fixed" && <FixedPrice hideAction={true} data={fixedPrice} />}
+                    {scheduleData.seatPricing === "sectionedPricing" && <SectionedPrice hideAction={true} data={sectionedPrice} />}
 
                     {/* Fees & Tickets */}
                     <p>

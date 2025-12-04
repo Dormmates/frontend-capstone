@@ -103,9 +103,7 @@ const ScheduleDistributorAndRemittances = () => {
                 </Button>
 
                 <Button disabled={!schedule.isOpen || show.isArchived}>
-                  <Link to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/${showId}/${scheduleId}/allocation`}>
-                    Allocate Ticket
-                  </Link>
+                  <Link to={`/shows/${showId}/${scheduleId}/allocation`}>Allocate Ticket</Link>
                 </Button>
               </>
             )}
@@ -154,7 +152,7 @@ const ScheduleDistributorAndRemittances = () => {
               headerClassName: "text-right",
               render: (dist) => (
                 <div className="flex justify-end">
-                  <Link to={`/${show.showType === "majorProduction" ? "majorShows" : "shows"}/schedule/${showId}/${scheduleId}/d&r/${dist.userId}`}>
+                  <Link to={`/shows/schedule/${showId}/${scheduleId}/d&r/${dist.userId}`}>
                     <Button variant="outline">View Distributor</Button>
                   </Link>
                 </div>

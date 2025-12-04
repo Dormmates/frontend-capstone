@@ -4,7 +4,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import SideBar from "@/components/SideBar";
 import Header from "@/components/Header";
 import { useNotificationSocket } from "@/hooks/useNotificationSocket";
-import { DramaIcon, LayoutDashboardIcon, NetworkIcon, SettingsIcon, TheaterIcon, UsersIcon } from "lucide-react";
+import { DramaIcon, LayoutDashboardIcon, NetworkIcon, SettingsIcon, UsersIcon } from "lucide-react";
 import Modal from "@/components/Modal";
 import { toast } from "sonner";
 import UpdatePassword from "../UpdatePassword";
@@ -34,12 +34,12 @@ const CCALayout = () => {
       path: "/shows",
       hidden: !user?.roles.includes("head") && user?.departments.length === 0,
     },
-    {
-      icon: <TheaterIcon className="h-4 w-4" />,
-      name: "Major Production",
-      path: "/majorShows",
-      hidden: !user?.roles.includes("head") && user?.departments.length === 0,
-    },
+    // {
+    //   icon: <TheaterIcon className="h-4 w-4" />,
+    //   name: "Major Production",
+    //   path: "/majorShows",
+    //   hidden: !user?.roles.includes("head") && user?.departments.length === 0,
+    // },
     {
       icon: <NetworkIcon className="h-4 w-4" />,
       name: "Performing Groups",

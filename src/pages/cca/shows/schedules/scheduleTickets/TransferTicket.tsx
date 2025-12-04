@@ -113,7 +113,7 @@ const TransferTicket = ({ ticket, schedule, show }: TransferTicketProps) => {
               const sameShow = shows.find((s) => s.showId === show.showId);
               return sameShow ? (
                 <div>
-                  <p className="font-bold text-sm mb-2">Transfer to Same Show, Different Schedule:</p>
+                  <p className="font-bold text-sm mb-2">Exchange to Same Show, Different Schedule:</p>
                   <div className="grid gap-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
                     <ShowCard key={sameShow.showId} show={sameShow} setSelectedShow={setSelectedShow} />
                   </div>
@@ -133,7 +133,7 @@ const TransferTicket = ({ ticket, schedule, show }: TransferTicketProps) => {
           </div> */}
         </div>
       ) : (
-        !selectedShow && <div className="w-full p-5 py-10 text-center border mt-5 rounded-md">No Available Schedule to Transfer</div>
+        !selectedShow && <div className="w-full p-5 py-10 text-center border mt-5 rounded-md">No Available Schedule to exchange</div>
       )}
 
       {selectedShow && (
@@ -170,7 +170,7 @@ const TransferTicket = ({ ticket, schedule, show }: TransferTicketProps) => {
 
       {isTransferSummary && (selectedControlNumbers.length > 0 || selectedSeat) && selectedShow && selectedShowSchedule && (
         <Modal
-          title="Transfer Summary"
+          title="Exchange Summary"
           isOpen={isTransferSummary}
           onClose={() => {
             if (transferTicket.isPending) return;
@@ -208,7 +208,7 @@ const TransferTicket = ({ ticket, schedule, show }: TransferTicketProps) => {
                   return (
                     <>
                       <div className="border p-3 rounded-md w-full bg-muted">
-                        <h1 className="font-bold">Transferred To</h1>
+                        <h1 className="font-bold">Exchanged To</h1>
                         <p>New Ticket: {formatTicket(newTicketControlNumber)}</p>
                         <p>Ticket Price: {formatCurrency(newTicketPrice)}</p>
                         <p>Show: {selectedShow?.title}</p>
@@ -219,7 +219,7 @@ const TransferTicket = ({ ticket, schedule, show }: TransferTicketProps) => {
                       </div>
 
                       <div className="mt-3">
-                        <Label>Transfer Remarks (Optional)</Label>
+                        <Label>Exchange Remarks (Optional)</Label>
                         <Textarea disabled={transferTicket.isPending} value={transferRemarks} onChange={(e) => setTransferRemarks(e.target.value)} />
                       </div>
 
@@ -407,7 +407,7 @@ const ViewShowSchedules = ({
           {selectedShowSchedule.seatingType === "freeSeating" ? (
             <ControlNumberGrid
               maxSelectable={1}
-              allowSlideSelection={false}
+              allowSlideSelection={true}
               selectedControlNumbers={selectedControlNumbers}
               setSelectedControlNumbers={setSelectedControlNumbers}
               tickets={selectedShowSchedule.tickets.map((t) => t.controlNumber)}
@@ -454,7 +454,7 @@ const ViewShowSchedules = ({
 
       {(selectedControlNumbers.length !== 0 || selectedSeat) && (
         <div className="flex justify-end mt-5">
-          <Button onClick={() => setIsTransferSummary(true)}>Transfer Ticket</Button>
+          <Button onClick={() => setIsTransferSummary(true)}>Exchange Ticket</Button>
         </div>
       )}
     </div>
