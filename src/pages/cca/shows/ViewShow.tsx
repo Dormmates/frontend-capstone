@@ -60,7 +60,11 @@ const ViewShow = () => {
   const [isReschedule, setIsReschedule] = useState<Schedule | null>(null);
   const [copySchedule, setCopySchedule] = useState<Schedule | null>(null);
   const [isCloseSchedule, setIsCloseSchedule] = useState(false);
-  const [newDate, setNewDate] = useState({ date: new Date(), time: "" });
+
+  const defaultDate = new Date();
+  defaultDate.setDate(defaultDate.getDate() + 30);
+
+  const [newDate, setNewDate] = useState({ date: defaultDate, time: "" });
   const [openSalesReport, setOpenSalesReport] = useState(false);
 
   useEffect(() => {
@@ -191,9 +195,7 @@ const ViewShow = () => {
               <CircleAlertIcon className="text-red w-4 font-bold" />
               <p className="font-medium text-sm">Note - This Show is currently Archived</p>
             </div>
-            <p className="text-sm text-muted-foreground ">
-              Actions such as ticket allocation, remittance, and related tasks are restricted until the show is unarchived.
-            </p>
+            <p className="text-sm text-muted-foreground ">Actions such as ticket allocation, remittance, and related tasks are restricted.</p>
           </div>
         )}
         {show && showSchedules && (

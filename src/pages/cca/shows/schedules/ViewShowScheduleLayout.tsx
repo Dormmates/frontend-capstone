@@ -67,9 +67,7 @@ const ViewShowScheduleLayout = () => {
                   <CircleAlertIcon className="text-red w-4 font-bold" />
                   <p className="font-medium text-sm">Note - Schedule is currently closed</p>
                 </div>
-                <p className="text-sm text-muted-foreground ">
-                  Actions such as ticket allocation, remittance, and related tasks are restricted until the schedule is reopened.
-                </p>
+                <p className="text-sm text-muted-foreground ">Actions such as ticket allocation, remittance, and related tasks are restricted.</p>
               </div>
             )}
             {show.isArchived && (
@@ -78,9 +76,7 @@ const ViewShowScheduleLayout = () => {
                   <CircleAlertIcon className="text-red w-4 font-bold" />
                   <p className="font-medium text-sm">Note - This Show Schedule is currently Archived</p>
                 </div>
-                <p className="text-sm text-muted-foreground ">
-                  Actions such as ticket allocation, remittance, and related tasks are restricted until the show is unarchived.
-                </p>
+                <p className="text-sm text-muted-foreground ">Actions such as ticket allocation, remittance, and related tasks are restricted.</p>
               </div>
             )}
             {schedule.ticketType == "ticketed" ? (

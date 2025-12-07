@@ -53,6 +53,9 @@ export const rowOptions = [
 ];
 
 const AddSchedule = () => {
+  const defaultDate = new Date();
+  defaultDate.setDate(defaultDate.getDate() + 30);
+
   const { user } = useAuthContext();
   const navigate = useNavigate();
   const addSchedule = useAddSchedule();
@@ -62,7 +65,7 @@ const AddSchedule = () => {
   const [seatData, setSeatData] = useState(() => flattenSeatMap(seatMetaData));
   const [startingRow, setStartingRow] = useState("A");
   const [scheduleData, setScheduleData] = useState<ScheduleFormData>({
-    dates: [{ date: new Date(), time: "" }],
+    dates: [{ date: defaultDate, time: "" }],
     ticketType: "ticketed",
     seatingConfiguration: "freeSeating",
     seatPricing: "fixed",
@@ -161,7 +164,7 @@ const AddSchedule = () => {
   const addAnotherDate = () => {
     setScheduleData((prev) => ({
       ...prev,
-      dates: [...prev.dates, { date: new Date(), time: "" }],
+      dates: [...prev.dates, { date: defaultDate, time: "" }],
     }));
   };
 

@@ -18,6 +18,14 @@ interface DateSelectorProps {
 const DateSelector = ({ disabled, date, handleDateSelect, initialValue, error }: DateSelectorProps) => {
   const [open, setOpen] = useState(false);
 
+  const minDate = new Date();
+  minDate.setDate(minDate.getDate() + 30);
+  minDate.setHours(0, 0, 0, 0);
+
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() + 1);
+  maxDate.setHours(23, 59, 59, 999);
+
   return (
     <div className="flex flex-col ">
       <Label className="my-2">Date</Label>
@@ -30,16 +38,12 @@ const DateSelector = ({ disabled, date, handleDateSelect, initialValue, error }:
         </PopoverTrigger>
         <PopoverContent className="w-auto overflow-hidden p-0 z-[1000000]" align="start">
           <Calendar
-            disabled={(date) => {
-              const today = new Date();
-              today.setHours(0, 0, 0, 0);
-              return date < today;
-            }}
+            disabled={(d) => d < minDate || d > maxDate}
             className="border mt-2 rounded-md bg-background"
             required
             mode="single"
-            today={initialValue ?? new Date()}
-            selected={initialValue ?? (date || undefined)}
+            today={minDate}
+            selected={initialValue ?? date ?? minDate}
             onSelect={(selectedDate: Date) => {
               handleDateSelect(selectedDate);
               setOpen(false);

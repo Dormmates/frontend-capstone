@@ -15,6 +15,7 @@ import PasswordWithValidation from "./PasswordWithValidation";
 import { useEditTrainer } from "@/_lib/@react-client-query/accounts";
 import { isValidEmail } from "@/utils";
 import { useQueryClient } from "@tanstack/react-query";
+import { mask, unmask } from "@/utils/security";
 
 type Props = {
   openAccount: boolean;
@@ -31,8 +32,8 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
   const [userForm, setUserForm] = useState({
     firstName: user?.firstName + "",
     lastName: user?.lastName + "",
-    email: user?.email + "",
-    contactNumber: user?.roles.includes("distributor") ? (user as Distributor).distributor.contactNumber : "",
+    email: unmask(user?.email + ""),
+    contactNumber: user?.roles.includes("distributor") ? unmask((user as Distributor).distributor.contactNumber) : "",
   });
 
   const [newPassword, setNewPassword] = useState({ value: "", isValid: false });
@@ -185,11 +186,13 @@ const Account = ({ openAccount, setOpenAccount }: Props) => {
               ...oldUser,
               firstName: userForm.firstName,
               lastName: userForm.lastName,
-              email: userForm.email,
+              email: mask(userForm.email),
             };
           });
 
-          setUser((prev) => prev && { ...prev, ...userForm });
+          const { email, ...otherData } = userForm;
+
+          setUser((prev) => prev && { ...prev, ...otherData, email: mask(email) });
           return "Information Updated";
         },
         error: (err) => err.message || "Failed to update information, please try again later",

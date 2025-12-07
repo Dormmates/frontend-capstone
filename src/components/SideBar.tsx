@@ -30,6 +30,7 @@ import Account from "./Account";
 import { toast } from "sonner";
 import { ChevronDown, ChevronRight, LogOutIcon, UserIcon } from "lucide-react";
 import logo from "@/assets/images/cca-logo.png";
+import { unmask } from "@/utils/security";
 
 interface SideBarItems {
   icon: ReactNode;
@@ -162,7 +163,7 @@ export const SideBar = ({ items }: CCASideBarProps) => {
                         <AvatarFallback>Prof</AvatarFallback>
                       </Avatar>
                       <div className="flex-1 truncate">
-                        <span className="text-muted-foreground text-xs">{user?.email}</span>
+                        <span className="text-muted-foreground text-xs">{unmask(user?.email + "")}</span>
                       </div>
                     </div>
                   </DropdownMenuLabel>

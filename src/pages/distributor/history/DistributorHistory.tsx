@@ -32,31 +32,14 @@ const DistributorHistory = () => {
       };
     }
 
-    const currentTickets = new Map();
-
-    const sortedLogs = [...remittanceHistory].sort((a, b) => new Date(a.dateRemitted).getTime() - new Date(b.dateRemitted).getTime());
-
-    for (const log of sortedLogs) {
-      for (const t of log.tickets) {
-        if (log.actionType === "payToCCA") {
-          currentTickets.set(t.controlNumber, {
-            ...t,
-            totalCommission: log.totalCommission / log.tickets.length,
-            totalRemittance: log.totalRemittance / log.tickets.length,
-          });
-        } else if (log.actionType === "unPayToCCA") {
-          currentTickets.delete(t.controlNumber);
-        }
-      }
-    }
-
-    const ticketsArray = Array.from(currentTickets.values());
-    const totalCommission = ticketsArray.reduce((sum, t) => sum + (t.totalCommission ?? 0), 0);
-    const totalRemittance = ticketsArray.reduce((sum, t) => sum + (t.totalRemittance ?? 0), 0);
+    const paidLogs = remittanceHistory.filter((log) => log.actionType === "payToCCA");
+    const totalCommission = paidLogs.reduce((sum, log) => sum + (log.totalCommission ?? 0), 0);
+    const totalRemittance = paidLogs.reduce((sum, log) => sum + (log.totalRemittance ?? 0), 0);
+    const remittance = paidLogs.reduce((count, log) => count + (log.tickets?.length ?? 0), 0);
 
     return {
-      allocation: allocationHistory?.reduce((acc, cur) => acc + cur.tickets.length, 0) ?? 0,
-      remittance: ticketsArray.length,
+      allocation: allocationHistory?.reduce((acc, cur) => acc + (cur.tickets?.length ?? 0), 0) ?? 0,
+      remittance,
       commission: totalCommission,
       remittanceAmount: totalRemittance,
     };
