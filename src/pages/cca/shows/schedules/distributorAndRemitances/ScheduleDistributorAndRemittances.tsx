@@ -17,6 +17,7 @@ import { formatCurrency } from "@/utils";
 import InputField from "@/components/InputField";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
+import { unmask } from "@/utils/security";
 
 const ScheduleDistributorAndRemittances = () => {
   const { user } = useAuthContext();
@@ -124,7 +125,7 @@ const ScheduleDistributorAndRemittances = () => {
             {
               key: "email",
               header: "Email",
-              render: (dist) => dist.email,
+              render: (dist) => unmask(dist.email),
             },
             {
               key: "type",

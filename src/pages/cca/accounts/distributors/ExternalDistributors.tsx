@@ -19,6 +19,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import DeleteAccount from "../DeleteAccount";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
+import { unmask } from "@/utils/security";
 
 const Distributors = () => {
   const { user } = useAuthContext();
@@ -129,12 +130,12 @@ const Distributors = () => {
             {
               key: "email",
               header: "Email",
-              render: (distributor) => distributor.email,
+              render: (distributor) => unmask(distributor.email),
             },
             {
               key: "contact",
               header: "Contact Number",
-              render: (distributor) => distributor.distributor.contactNumber,
+              render: (distributor) => unmask(distributor.distributor.contactNumber),
             },
             {
               key: "type",
@@ -226,8 +227,8 @@ const Distributors = () => {
               userId: selectedDistributor.userId,
               firstName: selectedDistributor.firstName,
               lastName: selectedDistributor.lastName,
-              email: selectedDistributor.email,
-              contactNumber: selectedDistributor.distributor.contactNumber,
+              email: unmask(selectedDistributor.email),
+              contactNumber: unmask(selectedDistributor.distributor.contactNumber),
               type: selectedDistributor.distributor.distributorType,
               department: selectedDistributor.distributor.department?.departmentId || "",
             }}

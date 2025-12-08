@@ -17,6 +17,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
+import { unmask } from "@/utils/security";
 
 const CCAHeads = () => {
   const queryClient = useQueryClient();
@@ -91,7 +92,7 @@ const CCAHeads = () => {
             {
               key: "email",
               header: "Email",
-              render: (head) => head.email,
+              render: (head) => unmask(head.email),
             },
             {
               key: "action",

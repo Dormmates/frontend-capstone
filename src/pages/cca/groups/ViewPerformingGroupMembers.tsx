@@ -22,6 +22,7 @@ import Breadcrumbs from "@/components/BreadCrumbs";
 import NotFound from "@/components/NotFound";
 import DeleteAccount from "../accounts/DeleteAccount";
 import Loading from "@/components/Loading";
+import { unmask } from "@/utils/security";
 
 const ViewPerformingGroups = () => {
   const addDistributor = useNewDistributor();
@@ -202,11 +203,11 @@ const ViewPerformingGroups = () => {
 
                     <div className="flex items-center gap-1 text-muted-foreground font-semibold text-sm">
                       <MailIcon className="w-4 h-4 " />
-                      <p className="truncate">{distributor.email}</p>
+                      <p className="truncate">{unmask(distributor.email)}</p>
                     </div>
                     <div className="flex items-center gap-1 text-muted-foreground font-semibold text-sm">
                       <PhoneIcon className="w-4 h-4" />
-                      <p>{distributor.distributor.contactNumber}</p>
+                      <p>{unmask(distributor.distributor.contactNumber)}</p>
                     </div>
 
                     <div className="flex justify-start items-center gap-2 mt-5 flex-wrap">
@@ -295,8 +296,8 @@ const ViewPerformingGroups = () => {
               userId: selectedDistributor.userId,
               firstName: selectedDistributor.firstName,
               lastName: selectedDistributor.lastName,
-              email: selectedDistributor.email,
-              contactNumber: selectedDistributor.distributor.contactNumber,
+              email: unmask(selectedDistributor.email),
+              contactNumber: unmask(selectedDistributor.distributor.contactNumber),
               type: selectedDistributor.distributor.distributorType,
               department: selectedDistributor.distributor.department?.departmentId || "",
             }}

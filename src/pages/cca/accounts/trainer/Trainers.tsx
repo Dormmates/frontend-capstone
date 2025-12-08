@@ -18,6 +18,7 @@ import { EditIcon, Users } from "lucide-react";
 import DeleteAccount from "../DeleteAccount";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
+import { unmask } from "@/utils/security";
 
 const Trainers = () => {
   const { user } = useAuthContext();
@@ -108,7 +109,7 @@ const Trainers = () => {
             {
               key: "email",
               header: "Email",
-              render: (trainer) => trainer.email,
+              render: (trainer) => unmask(trainer.email),
             },
             {
               key: "action",
@@ -175,7 +176,7 @@ const Trainers = () => {
             initalValues={{
               firstName: selectedTrainer.firstName,
               lastName: selectedTrainer.lastName,
-              email: selectedTrainer.email,
+              email: unmask(selectedTrainer.email),
               userId: selectedTrainer.userId,
             }}
             onSubmit={(payload) => {

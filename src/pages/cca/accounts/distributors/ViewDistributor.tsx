@@ -19,6 +19,7 @@ import DistributorAllocationHistory from "./DistributorAllocationHistory";
 import DistributorRemittanceHistory from "./DistributorRemittanceHistory";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
+import { unmask } from "@/utils/security";
 
 const calculateRemittanceAmount = (schedule: DistributorScheduleTickets) => {
   const soldTickets = schedule.tickets.filter((ticket) => ticket.status === "sold");
@@ -57,10 +58,10 @@ const ViewDistributor = () => {
         <div className="border w-fit p-3 rounded-md mt-2 bg-muted">
           <div className="flex flex-col gap-1">
             <p className="flex items-center gap-2 text-sm">
-              <MailIcon className="w-4" /> <span>{distributor.email}</span>
+              <MailIcon className="w-4" /> <span>{unmask(distributor.email)}</span>
             </p>
             <p className="flex items-center gap-2 text-sm">
-              <PhoneIcon className="w-4" /> <span>{distributor.distributor.contactNumber}</span>
+              <PhoneIcon className="w-4" /> <span>{unmask(distributor.distributor.contactNumber)}</span>
             </p>
             <p className="flex items-center gap-2 text-sm">
               <TypeIcon className="w-4" />{" "}
