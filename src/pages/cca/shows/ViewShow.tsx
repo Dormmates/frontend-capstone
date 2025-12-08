@@ -44,6 +44,7 @@ import { formatCurrency } from "@/utils";
 import { compressControlNumbers } from "@/utils/controlNumber";
 import { distributorTypeOptions } from "@/types/user";
 import Loading from "@/components/Loading";
+import DistributorReportDialog from "./DistributorReportDialog";
 
 const ViewShow = () => {
   const queryClient = useQueryClient();
@@ -66,6 +67,7 @@ const ViewShow = () => {
 
   const [newDate, setNewDate] = useState({ date: defaultDate, time: "" });
   const [openSalesReport, setOpenSalesReport] = useState(false);
+  const [openDistributorReport, setOpenDistributorReport] = useState(false);
 
   useEffect(() => {
     document.title = `${show?.title}`;
@@ -207,6 +209,16 @@ const ViewShow = () => {
               <div className="flex gap-2">
                 {(user?.roles.includes("head") || show.showType !== "majorProduction") && (
                   <>
+                    <DistributorReportDialog
+                      showSchedules={showSchedules}
+                      openSalesReport={openDistributorReport}
+                      setOpenSalesReport={setOpenDistributorReport}
+                      onGenerateReport={(scheduleIds) => {
+                        const scheduleIdsParam = scheduleIds.join(",");
+                        const url = `/distributorReport/${id}/${scheduleIdsParam}`;
+                        window.open(url, "_blank");
+                      }}
+                    />
                     <SalesReportDialog
                       showSchedules={showSchedules}
                       openSalesReport={openSalesReport}
@@ -217,6 +229,7 @@ const ViewShow = () => {
                         window.open(url, "_blank");
                       }}
                     />
+
                     <Button disabled={show.isArchived}>
                       <Link className="self-end" to={`/shows/add/schedule/${id}`}>
                         Add New Schedule

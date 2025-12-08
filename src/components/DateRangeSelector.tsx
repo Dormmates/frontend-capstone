@@ -35,6 +35,8 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({ value, onChange }
           defaultMonth={value?.from}
           captionLayout="dropdown"
           showOutsideDays
+          startMonth={new Date(2025, 0)}
+          endMonth={new Date(new Date().getFullYear() + 1, 11)}
           fixedWeeks
         />
       </PopoverContent>

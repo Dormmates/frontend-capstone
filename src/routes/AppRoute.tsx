@@ -47,6 +47,7 @@ import CustomerLayout from "@/pages/customer/CustomerLayout";
 import CustomerViewDepartment from "@/pages/customer/CustomerViewDepartment";
 import OpenShow from "@/pages/customer/OpenShow";
 import Loading from "@/components/Loading";
+import DistributorSalesReport from "@/pages/cca/shows/DistributorSalesReport";
 
 const AppRoute = () => {
   const { user, isLoadingUser } = useAuthContext();
@@ -183,6 +184,7 @@ const AppRoute = () => {
       <Route path="/unathorized" element={<Unauthorized />} />
       <Route path="*" element={<NotFound />} />
       <Route path="salesreport/:showId/:scheduleIds" element={<SalesReport />} />
+      <Route path="distributorReport/:showId/:scheduleIds" element={<DistributorSalesReport />} />
       <Route path="ticketInformation/:scheduleId" element={<TicketInformations />} />
       <Route path="seatLocation/:controlNumberParam/:scheduleIdParam" element={<TicketSeatLocation />} />
     </Routes>
