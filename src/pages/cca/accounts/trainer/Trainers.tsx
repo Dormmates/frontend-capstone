@@ -238,7 +238,7 @@ const Trainers = () => {
                 {
                   key: "email",
                   header: "Email",
-                  render: (trainer) => trainer.email,
+                  render: (trainer) => unmask(trainer.email),
                 },
                 {
                   key: "action",

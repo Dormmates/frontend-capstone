@@ -363,12 +363,12 @@ const ViewPerformingGroups = () => {
                 {
                   key: "email",
                   header: "Email",
-                  render: (distributor) => distributor.email,
+                  render: (distributor) => unmask(distributor.email),
                 },
                 {
                   key: "contact",
                   header: "Contact Number",
-                  render: (distributor) => distributor.distributor.contactNumber,
+                  render: (distributor) => unmask(distributor.distributor.contactNumber),
                 },
                 {
                   key: "type",
