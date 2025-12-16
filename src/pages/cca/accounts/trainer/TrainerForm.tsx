@@ -80,6 +80,7 @@ const TrainerForm = ({ initalValues, onSubmit, close, isSubmitting }: TrainerFor
         <div className="mt-5 flex flex-col gap-5">
           <div className="flex gap-5">
             <InputField
+              maxLength={30}
               disabled={isSubmitting}
               error={errors?.firstName}
               placeholder="eg. Juan"
@@ -89,6 +90,7 @@ const TrainerForm = ({ initalValues, onSubmit, close, isSubmitting }: TrainerFor
               onChange={handleInputChange}
             />
             <InputField
+              maxLength={30}
               disabled={isSubmitting}
               error={errors?.lastName}
               placeholder="eg. Dela Cruz"
@@ -100,6 +102,7 @@ const TrainerForm = ({ initalValues, onSubmit, close, isSubmitting }: TrainerFor
           </div>
           <div className="flex gap-5">
             <InputField
+              maxLength={50}
               disabled={isSubmitting}
               error={errors?.email}
               type="email"

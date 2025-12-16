@@ -83,6 +83,11 @@ const PerformingGroups = () => {
   const handleAddDepartment = () => {
     if (!validateGroup(newGroup, true)) return;
 
+    if (newGroup.name.trim().length > 50) {
+      toast.info("Group name length is too long", { position: "top-center" });
+      return;
+    }
+
     setIsSubmitting(true);
 
     const projectId = import.meta.env.VITE_APP_WRITE_PROJECT_ID;
@@ -146,6 +151,11 @@ const PerformingGroups = () => {
 
     if (editGroup.name.trim() === (selectedGroup?.name?.trim() ?? "") && !editGroup.image) {
       toast.info("No Changes Detected", { position: "top-center" });
+      return;
+    }
+
+    if (editGroup.name.trim().length > 50) {
+      toast.info("Group name length is too long", { position: "top-center" });
       return;
     }
 
@@ -406,6 +416,7 @@ const PerformingGroups = () => {
             <InputField
               disabled={addDepartment.isPending || editDepartment.isPending || isSubmitting}
               error={errors?.name}
+              maxLength={30}
               label={"Group Name"}
               value={addGroup ? newGroup.name : editGroup.name}
               onChange={

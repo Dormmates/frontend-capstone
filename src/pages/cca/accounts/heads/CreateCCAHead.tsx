@@ -99,6 +99,7 @@ const ByCreation = ({ closeModal }: CreateCCAHeadProps) => {
       </CardHeader>
       <CardContent>
         <InputField
+          maxLength={30}
           disabled={addHead.isPending}
           name="firstName"
           label="First Name"
@@ -107,6 +108,7 @@ const ByCreation = ({ closeModal }: CreateCCAHeadProps) => {
           error={errors.firstName}
         />
         <InputField
+          maxLength={30}
           disabled={addHead.isPending}
           name="lastName"
           label="Last Name"
@@ -114,7 +116,15 @@ const ByCreation = ({ closeModal }: CreateCCAHeadProps) => {
           onChange={handleInputChange}
           error={errors.lastName}
         />
-        <InputField disabled={addHead.isPending} name="email" label="Email" value={form.email} onChange={handleInputChange} error={errors.email} />
+        <InputField
+          maxLength={50}
+          disabled={addHead.isPending}
+          name="email"
+          label="Email"
+          value={form.email}
+          onChange={handleInputChange}
+          error={errors.email}
+        />
       </CardContent>
       <CardFooter className="flex justify-end">
         <Button disabled={addHead.isPending} onClick={handleSubmit}>

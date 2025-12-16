@@ -128,7 +128,14 @@ const EditGenre = ({ genre }: { genre: string }) => {
         </Button>
       }
     >
-      <InputField disabled={edit.isPending} label="New Genre Name" value={input} error={error} onChange={(e) => setInput(e.target.value)} />
+      <InputField
+        maxLength={30}
+        disabled={edit.isPending}
+        label="New Genre Name"
+        value={input}
+        error={error}
+        onChange={(e) => setInput(e.target.value)}
+      />
       <div className="flex justify-end gap-2 mt-5">
         <Button disabled={edit.isPending} variant="outline" onClick={() => setIsOpen(false)}>
           Cancel
@@ -185,6 +192,7 @@ const AddNewGenre = () => {
       }
     >
       <InputField
+        maxLength={30}
         disabled={add.isPending}
         label="New Genre Name"
         value={input}

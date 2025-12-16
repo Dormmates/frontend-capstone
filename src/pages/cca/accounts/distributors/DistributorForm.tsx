@@ -100,6 +100,7 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
         <div className="mt-5 flex flex-col gap-5">
           <div className="flex gap-5">
             <InputField
+              maxLength={30}
               error={errors.firstName}
               label="First Name"
               disabled={isSubmitting}
@@ -109,6 +110,7 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
               onChange={handleInputChange}
             />
             <InputField
+              maxLength={30}
               error={errors.lastName}
               disabled={isSubmitting}
               placeholder="eg. Dela Cruz"
@@ -121,6 +123,7 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
 
           <div className="flex gap-5">
             <InputField
+              maxLength={50}
               disabled={isSubmitting}
               error={errors.email}
               type="email"
