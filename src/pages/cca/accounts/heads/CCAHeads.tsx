@@ -169,7 +169,7 @@ const CCAHeads = () => {
                 {
                   key: "email",
                   header: "Email",
-                  render: (head) => head.email,
+                  render: (head) => unmask(head.email),
                 },
                 {
                   key: "action",
