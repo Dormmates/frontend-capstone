@@ -21,22 +21,51 @@ type TrainerFormProps = {
 const TrainerForm = ({ initalValues, onSubmit, close, isSubmitting }: TrainerFormProps) => {
   const [trainerData, setTrainerData] = useState(initalValues);
 
-  const [errors, setErrors] = useState<Partial<Record<keyof TrainerFormValues, string>>>();
+  const [errors, setErrors] = useState<Partial<Record<keyof TrainerFormValues, string>>>({});
+
+  const validateField = (name: keyof TrainerFormValues, value: string): string => {
+    switch (name) {
+      case "firstName":
+        if (!value.trim()) return "First Name should have value";
+        return "";
+
+      case "lastName":
+        if (!value.trim()) return "Last Name should have value";
+        return "";
+
+      case "email":
+        if (!value.trim()) return "Email should have value";
+        if (!isValidEmail(value.trim())) return "Invalid Email Format";
+        return "";
+
+      default:
+        return "";
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
+    let newValue = value;
+
     if (name === "email") {
-      if (/^[a-zA-Z0-9@._-]*$/.test(value)) {
-        setTrainerData((prev) => ({ ...prev, [name]: value }));
-        setErrors((prev) => ({ ...prev, [name]: "" }));
-      }
+      newValue = value.replace(/[^a-zA-Z0-9@._-]/g, "");
     } else {
-      if (/^[a-zA-Z\s]*$/.test(value)) {
-        setTrainerData((prev) => ({ ...prev, [name]: value }));
-        setErrors((prev) => ({ ...prev, [name]: "" }));
-      }
+      newValue = value.replace(/[^a-zA-Z\s]/g, "");
     }
+
+    setTrainerData((prev) => {
+      const updated = { ...prev, [name]: newValue };
+
+      const errorMessage = validateField(name as keyof TrainerFormValues, newValue);
+
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: errorMessage || undefined,
+      }));
+
+      return updated;
+    });
   };
 
   const validate = () => {
@@ -67,7 +96,11 @@ const TrainerForm = ({ initalValues, onSubmit, close, isSubmitting }: TrainerFor
     return isValid;
   };
 
+  const hasErrors = Object.values(errors).some(Boolean);
+  const isFormIncomplete = !trainerData.firstName.trim() || !trainerData.lastName.trim() || !trainerData.email.trim();
+
   const handleSubmit = () => {
+    if (hasErrors || isFormIncomplete) return;
     if (!validate()) return;
     onSubmit(trainerData);
   };
@@ -122,7 +155,7 @@ const TrainerForm = ({ initalValues, onSubmit, close, isSubmitting }: TrainerFor
         <Button disabled={isSubmitting} onClick={close} variant="outline">
           Cancel
         </Button>
-        <Button disabled={isSubmitting} onClick={handleSubmit}>
+        <Button disabled={isSubmitting || hasErrors || isFormIncomplete} onClick={handleSubmit}>
           {initalValues.firstName ? "Save Changes" : "Add Trainer"}
         </Button>
       </div>

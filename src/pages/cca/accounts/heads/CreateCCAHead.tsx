@@ -38,6 +38,26 @@ const ByCreation = ({ closeModal }: CreateCCAHeadProps) => {
   const [form, setForm] = useState({ firstName: "", email: "", lastName: "" });
   const [errors, setErrors] = useState<{ firstName?: string; email?: string; lastName?: string }>({});
 
+  const validateField = (name: "firstName" | "lastName" | "email", value: string): string => {
+    switch (name) {
+      case "firstName":
+        if (!value.trim()) return "Please enter First Name";
+        return "";
+
+      case "lastName":
+        if (!value.trim()) return "Please enter Last Name";
+        return "";
+
+      case "email":
+        if (!value.trim()) return "Email should have value";
+        if (!isValidEmail(value.trim())) return "Invalid Email format";
+        return "";
+
+      default:
+        return "";
+    }
+  };
+
   const validate = () => {
     let isValid = true;
     const newErrors: typeof errors = {};
@@ -71,11 +91,25 @@ const ByCreation = ({ closeModal }: CreateCCAHeadProps) => {
       newValue = value.replace(/[^a-zA-Z\s]/g, "");
     }
 
-    setForm((prev) => ({ ...prev, [name]: newValue }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+    setForm((prev) => {
+      const updated = { ...prev, [name]: newValue };
+
+      const errorMessage = validateField(name as "firstName" | "lastName" | "email", newValue);
+
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: errorMessage || undefined,
+      }));
+
+      return updated;
+    });
   };
 
+  const hasErrors = Object.values(errors).some(Boolean);
+  const isFormIncomplete = !form.firstName.trim() || !form.lastName.trim() || !form.email.trim();
+
   const handleSubmit = () => {
+    if (hasErrors || isFormIncomplete) return;
     if (!validate()) return;
 
     toast.promise(addHead.mutateAsync(form), {
@@ -127,7 +161,7 @@ const ByCreation = ({ closeModal }: CreateCCAHeadProps) => {
         />
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button disabled={addHead.isPending} onClick={handleSubmit}>
+        <Button disabled={addHead.isPending || hasErrors || isFormIncomplete} onClick={handleSubmit}>
           Create
         </Button>
       </CardFooter>

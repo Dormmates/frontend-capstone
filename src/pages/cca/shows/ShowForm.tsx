@@ -155,6 +155,8 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit }: ShowFormInte
     value: genre.name,
   }));
 
+  const hasErrors = Object.values(errors).some(Boolean);
+
   return (
     <>
       <Card>
@@ -283,7 +285,7 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit }: ShowFormInte
       </Card>
 
       <div className="flex justify-end mt-5">
-        <Button disabled={isLoading || (formType === "edit" && !haveChanges)} onClick={submit}>
+        <Button disabled={isLoading || (formType === "edit" && !haveChanges) || hasErrors} onClick={submit}>
           {formType == "create" ? "Create Show" : "Save Changes"}
         </Button>
       </div>

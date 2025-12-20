@@ -28,6 +28,37 @@ type DistributorFormProps = {
 const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, onSubmit, onCancel, isSubmitting }: DistributorFormProps) => {
   const [formData, setFormData] = useState(initialValues);
   const [errors, setErrors] = useState<Partial<Record<keyof DistributorFormValues, string>>>({});
+
+  const validateField = (name: keyof DistributorFormValues, value: string, formData: DistributorFormValues): string => {
+    switch (name) {
+      case "firstName":
+        if (!value.trim()) return "First Name should have value";
+        if (value.trim().length < 2) return "First Name must be at least 2 characters";
+        return "";
+
+      case "lastName":
+        if (!value.trim()) return "Last Name should have value";
+        if (value.trim().length < 2) return "Last Name must be at least 2 characters";
+        return "";
+
+      case "email":
+        if (!value.trim()) return "Email should have value";
+        if (!isValidEmail(value.trim())) return "Invalid Email Format";
+        return "";
+
+      case "contactNumber":
+        if (!/^(09\d{9}|9\d{9})$/.test(value.trim())) return "Invalid contact number";
+        return "";
+
+      case "department":
+        if (formData.type === "cca" && !value) return "Please Choose Performing Group";
+        return "";
+
+      default:
+        return "";
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     let newValue = value;
@@ -40,8 +71,18 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
       newValue = value.replace(/[^a-zA-Z\s]/g, "");
     }
 
-    setFormData((prev) => ({ ...prev, [name]: newValue }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: newValue };
+
+      const errorMessage = validateField(name as keyof DistributorFormValues, newValue, updated);
+
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: errorMessage || undefined,
+      }));
+
+      return updated;
+    });
   };
 
   const validate = () => {
@@ -92,6 +133,8 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
       contactNumber: formData.contactNumber.trim(),
     });
   };
+
+  const hasErrors = Object.values(errors).some(Boolean);
 
   return (
     <div className="flex flex-col gap-5 -mt-5">
@@ -183,7 +226,7 @@ const DistributorForm = ({ initialValues, distributorTypeOptions, groupOptions, 
         <Button disabled={isSubmitting} onClick={onCancel} variant="outline">
           Cancel
         </Button>
-        <Button disabled={isSubmitting} onClick={handleSubmit}>
+        <Button disabled={isSubmitting || hasErrors} onClick={handleSubmit}>
           Save
         </Button>
       </div>
