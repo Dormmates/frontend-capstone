@@ -80,7 +80,7 @@ const RemittanceSummary = ({
             ));
           })()
         ) : (
-          <p>{formatCurrency(soldTickets[0]?.ticketPrice || 0)}</p>
+          <p>{formatCurrency(soldTickets[0]?.ticketPrice || lostTickets[0]?.ticketPrice || 0)}</p>
         )}
       </div>
 

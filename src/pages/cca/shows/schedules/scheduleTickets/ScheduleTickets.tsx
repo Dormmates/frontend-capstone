@@ -125,7 +125,7 @@ const ScheduleTickets = () => {
         complimentary: 0,
       };
 
-    const sold = tickets.filter((t) => t.isPaid || t.status === "remitted").length;
+    const sold = tickets.filter((t) => t.isPaid || t.status === "remitted" || t.status === "lost").length;
     const unsold = tickets.length - sold;
     const regularTickets = tickets.filter((t) => !t.isComplimentary).length;
     const complimentary = tickets.filter((t) => t.isComplimentary).length;
@@ -420,7 +420,7 @@ const ScheduleTickets = () => {
                                         return "Marked as Not Lost";
                                       },
                                       error: (err) => err.message || "Failed To Mark Ticket as Not Lost",
-                                    }
+                                    },
                                   );
                                 }}
                                 trigger={

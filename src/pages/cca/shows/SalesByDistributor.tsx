@@ -9,24 +9,27 @@ interface Props {
 }
 
 const SalesByDistributor = ({ report }: Props) => {
-  const schedulesByDate = report.schedules.reduce((acc, sched) => {
-    const dateStr = formatToReadableDate(sched.schedule.datetime + "");
-    if (!acc[dateStr]) acc[dateStr] = [];
-    acc[dateStr].push(sched);
-    return acc;
-  }, {} as Record<string, ScheduleReport[]>);
+  const schedulesByDate = report.schedules.reduce(
+    (acc, sched) => {
+      const dateStr = formatToReadableDate(sched.schedule.datetime + "");
+      if (!acc[dateStr]) acc[dateStr] = [];
+      acc[dateStr].push(sched);
+      return acc;
+    },
+    {} as Record<string, ScheduleReport[]>,
+  );
 
   return (
-    <Table className="text-black ">
+    <Table className="text-foreground ">
       <TableHeader className="bg-grey/20">
         <TableRow>
-          <TableHead className="border border-gray-400 font-bold text-black">Date</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black">Time</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black">Distributor Name</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black">Distributor Type</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black">Tickets Sold</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black">Total Sales</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black">Commission</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground">Date</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground">Time</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground">Distributor Name</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground">Distributor Type</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground">Tickets Sold</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground">Total Sales</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground">Commission</TableHead>
         </TableRow>
       </TableHeader>
 

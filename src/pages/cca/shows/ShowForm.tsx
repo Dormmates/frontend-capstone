@@ -176,20 +176,6 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit }: ShowFormInte
             />
 
             <div className="flex flex-col gap-5 lg:flex-row">
-              <Dropdown
-                includeHeader={true}
-                error={errors.group}
-                disabled={isLoading || showData.productionType == "majorProduction"}
-                className="w-full"
-                label="Performing Group"
-                placeholder={"Select Group"}
-                items={showData.productionType == "majorProduction" ? [{ name: "All Group", value: "all" }] : groupOptions}
-                value={showData.productionType == "majorProduction" ? "all" : (showData.group as string)}
-                onChange={(value) => {
-                  setShowData((prev) => ({ ...prev, group: value }));
-                  setErrors((prev) => ({ ...prev, group: "" }));
-                }}
-              />
               {(formType !== "edit" ||
                 user?.roles.includes("head") ||
                 (formType === "edit" && !user?.roles.includes("head") && showData.productionType !== "majorProduction")) && (
@@ -208,6 +194,20 @@ const ShowForm = ({ showFormValue, isLoading, formType, onSubmit }: ShowFormInte
                   }}
                 />
               )}
+              <Dropdown
+                includeHeader={true}
+                error={errors.group}
+                disabled={isLoading || showData.productionType == "majorProduction"}
+                className="w-full"
+                label="Performing Group"
+                placeholder={"Select Group"}
+                items={showData.productionType == "majorProduction" ? [{ name: "All Group", value: "all" }] : groupOptions}
+                value={showData.productionType == "majorProduction" ? "all" : (showData.group as string)}
+                onChange={(value) => {
+                  setShowData((prev) => ({ ...prev, group: value }));
+                  setErrors((prev) => ({ ...prev, group: "" }));
+                }}
+              />
             </div>
 
             <div className="flex flex-col gap-3">

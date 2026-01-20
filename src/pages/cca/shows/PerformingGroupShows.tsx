@@ -150,7 +150,7 @@ const PerformingGroupShows = () => {
             render: (show: ShowData) => (
               <div className="flex items-center justify-start gap-5">
                 <img className="w-14 h-14 object-cover object-center" src={show.showCover} alt="show image" />
-                <p>{show.title}</p>
+                <p className="max-w-[220px] md:max-w-[55%] truncate">{show.title}</p>
               </div>
             ),
           },

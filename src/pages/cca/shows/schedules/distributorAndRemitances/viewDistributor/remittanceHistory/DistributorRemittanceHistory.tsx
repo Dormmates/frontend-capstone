@@ -57,8 +57,8 @@ const DistributorRemittanceHistory = () => {
               formatCurrency(
                 log.tickets.reduce(
                   (acc, cur) => (acc += Number(cur.ticketPrice) - (schedule.ticketPricing ? schedule.ticketPricing.commissionFee : 0)),
-                  0
-                )
+                  0,
+                ),
               ),
           },
           {
@@ -104,11 +104,13 @@ const DistributorRemittanceHistory = () => {
               lostTickets={selectedHistory.tickets
                 .filter((t) => t.status === "lost")
                 .map((t) => ({ ticketPrice: t.ticketPrice, controlNumber: t.controlNumber, seatSection: t.seatSection }))}
-              soldTickets={selectedHistory.tickets.map((t) => ({
-                ticketPrice: t.ticketPrice,
-                controlNumber: t.controlNumber,
-                seatSection: t.seatSection,
-              }))}
+              soldTickets={selectedHistory.tickets
+                .filter((t) => !["lost"].includes(t.status))
+                .map((t) => ({
+                  ticketPrice: t.ticketPrice,
+                  controlNumber: t.controlNumber,
+                  seatSection: t.seatSection,
+                }))}
             />
           </DialogContent>
         </Dialog>

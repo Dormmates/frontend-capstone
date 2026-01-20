@@ -45,7 +45,7 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
   const systemUnSold = useMemo(() => compressControlNumbers(distributorTickets.unsoldTickets.map((t) => t.controlNumber)), [distributorTickets]);
   const avaialbleToBeRemitted = useMemo(
     () => [...parseControlNumbers(systemSold), ...parseControlNumbers(systemUnSold)].sort((a, b) => a - b),
-    [systemSold, systemUnSold]
+    [systemSold, systemUnSold],
   );
 
   const [form] = useState<FormProps>({
@@ -139,10 +139,17 @@ const RemitTickets = ({ distributorData, closeRemit }: Props) => {
             <div className="flex items-center gap-2 mb-3 text-yellow-700 text-sm bg-yellow-50 border border-yellow-200 rounded-md p-2">
               <div>
                 <p className="font-bold">Note: </p>
-                <p>
-                  Some tickets have already been marked as <span className="font-medium">sold</span> by the distributor. You may review and make
-                  corrections before submitting this transaction.
-                </p>
+                {distributorTickets.soldTickets.length > 0 ? (
+                  <p>
+                    Some tickets have already been marked as <span className="font-medium">sold</span> by the distributor. You may review and make
+                    corrections before submitting this transaction.
+                  </p>
+                ) : (
+                  <p>
+                    No tickets have been marked as <span className="font-medium">sold</span> yet. You may manually mark tickets as sold before
+                    submitting this transaction.
+                  </p>
+                )}
               </div>
               <Button
                 className="mb-2"

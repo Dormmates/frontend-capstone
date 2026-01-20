@@ -14,7 +14,7 @@ const ShowCard = ({ genres, title, showImage, description, className }: ShowCard
     <Card className={`w-fit ${className}`}>
       <CardHeader>
         <CardTitle>
-          <h1 className="font-bold text-xl uppercase">{title}</h1>
+          <h1 className="font-bold text-xl uppercase break-words">{title}</h1>
         </CardTitle>
         <CardDescription className="flex flex-wrap gap-1 mt-2">
           {genres.map((name, index) => (
@@ -27,7 +27,7 @@ const ShowCard = ({ genres, title, showImage, description, className }: ShowCard
       <CardContent className="flex flex-col gap-5 md:flex-row">
         <img className="w-full max-w-[200px] max-h-[300px] object-contain bg-black" src={showImage} alt="show image" />
         <div className="flex flex-col ">
-          <p className="text-sm text-muted-foreground ">{description}</p>
+          <p className="text-sm text-muted-foreground max-w-[100%] md:max-w-[60%] break-words">{description}</p>
         </div>
       </CardContent>
     </Card>

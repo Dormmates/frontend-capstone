@@ -15,19 +15,19 @@ const formatSectionName = (section: string): string => {
 
 export const SalesReportTable = ({ report }: Props) => {
   return (
-    <Table className="text-black">
+    <Table className="text-foreground">
       <TableHeader>
         <TableRow className="bg-grey/20">
-          <TableHead className="border border-gray-400 font-bold text-black">Date</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black">Time</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black ">Section</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black ">Ticket Price</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black ">Total Tickets</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black ">Sold</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black ">Unsold</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black ">Total Sales</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black ">Commission</TableHead>
-          <TableHead className="border border-gray-400 font-bold text-black ">Net Sales</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground">Date</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground">Time</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground ">Section</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground ">Ticket Price</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground ">Total Tickets</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground ">Sold</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground ">Unsold</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground ">Total Sales</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground ">Commission</TableHead>
+          <TableHead className="border border-gray-400 font-bold text-foreground ">Net Sales</TableHead>
         </TableRow>
       </TableHeader>
 
@@ -64,7 +64,7 @@ export const SalesReportTable = ({ report }: Props) => {
             const ticketPrice =
               s.schedule.ticketPricing?.type === "sectioned"
                 ? s.schedule.ticketPricing.sectionPrices[sec.section as keyof SectionedPricing["sectionPrices"]]
-                : s.schedule.ticketPricing?.fixedPrice ?? 0;
+                : (s.schedule.ticketPricing?.fixedPrice ?? 0);
 
             return (
               <React.Fragment key={`${s.schedule.scheduleId}-${sec.section}`}>
