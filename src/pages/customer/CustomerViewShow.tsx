@@ -23,23 +23,29 @@ const CustomerViewShow = ({ show }: CustomerViewShowProps) => {
     document.title = `${show?.title}`;
   }, [show]);
 
-  const groupedRemainingSchedules = show.remainingUpcomingSchedules.reduce((acc, schedule) => {
-    const dateKey = new Date(schedule.datetime).toDateString();
-    if (!acc[dateKey]) {
-      acc[dateKey] = [];
-    }
-    acc[dateKey].push(schedule);
-    return acc;
-  }, {} as Record<string, typeof show.remainingUpcomingSchedules>);
+  const groupedRemainingSchedules = show.remainingUpcomingSchedules.reduce(
+    (acc, schedule) => {
+      const dateKey = new Date(schedule.datetime).toDateString();
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(schedule);
+      return acc;
+    },
+    {} as Record<string, typeof show.remainingUpcomingSchedules>,
+  );
 
-  const groupedPastSchedules = show.pastSchedules.reduce((acc, schedule) => {
-    const dateKey = new Date(schedule.datetime).toDateString();
-    if (!acc[dateKey]) {
-      acc[dateKey] = [];
-    }
-    acc[dateKey].push(schedule);
-    return acc;
-  }, {} as Record<string, typeof show.remainingUpcomingSchedules>);
+  const groupedPastSchedules = show.pastSchedules.reduce(
+    (acc, schedule) => {
+      const dateKey = new Date(schedule.datetime).toDateString();
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(schedule);
+      return acc;
+    },
+    {} as Record<string, typeof show.remainingUpcomingSchedules>,
+  );
 
   return (
     <>
@@ -54,7 +60,7 @@ const CustomerViewShow = ({ show }: CustomerViewShowProps) => {
           </div>
 
           <div className="flex flex-col text-white">
-            <div className="font-bold text-2xl ">{show.title}</div>
+            <div className="font-bold text-2xl  break-words ">{show.title}</div>
             <div className="flex flex-wrap gap-2 mt-2">
               {show.genreNames.map((name, index) => (
                 <Badge key={index} variant="secondary" className="rounded-full bg-white/20 backdrop-blur-sm text-white border-none">
@@ -62,7 +68,9 @@ const CustomerViewShow = ({ show }: CustomerViewShowProps) => {
                 </Badge>
               ))}
             </div>
-            <p className="mt-3 text-gray-200 text-sm leading-relaxed max-h-fit overflow-y-auto pr-1 md:max-w-[550px]">{show.description}</p>
+            <p className="mt-3 text-gray-200 text-sm leading-relaxed max-h-fit overflow-y-auto pr-1 md:max-w-[550px] break-words">
+              {show.description}
+            </p>
           </div>
         </div>
       </div>
@@ -174,7 +182,7 @@ const ShowSeatMap = ({ scheduleId }: ShowSeatMapProps) => {
         }
         return acc;
       },
-      { ticketOnCCA: 0, notAvailable: 0, ticketOnDistributor: 0 }
+      { ticketOnCCA: 0, notAvailable: 0, ticketOnDistributor: 0 },
     );
   }, [data]);
 

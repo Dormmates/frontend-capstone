@@ -162,9 +162,9 @@ const HeroSection = () => {
                 <div className="absolute inset-0 bg-black/80"></div>
 
                 <div className="absolute bottom-28 w-full text-white flex justify-between px-5 md:px-10 flex-col gap-10 xl:flex-row">
-                  <div className="flex flex-col">
+                  <div className="flex flex-col max-w-[80%]">
                     <p className="text-lg text-gray-300 uppercase tracking-wide">Upcoming Show</p>
-                    <h1 className="text-primary text-4xl md:text-6xl font-bold mb-2">{show.title}</h1>
+                    <h1 className="text-primary text-4xl md:text-6xl font-bold mb-2 max-w-[80%] break-words">{show.title}</h1>
                     <p className="text-lg text-gray-200 mb-2 tracking-tighter max-h-[200px] line-clamp-3">{show.description}</p>
                     <p className="text-lg">
                       <span className="font-semibold">Date:</span> {formatToReadableDate(show.date)}
